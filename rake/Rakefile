@@ -35,6 +35,7 @@ local_info = HostInfo.new(
 
 builder.publisher = SshPublisher.new(umlcoop_info)
 
+desc "Publish the documentation to RubyForge"
 task :publish_rubyforge_doc => [:web] do
   Sys.run %{scp -rqp html/* jimweirich@rubyforge.org:/var/www/gforge-projects/rake}
 end
