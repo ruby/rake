@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION='0.3.2.4'
+RAKEVERSION='0.4.0'
 
 require 'rbconfig'
 require 'ftools'
@@ -92,7 +92,7 @@ class Task
   # Invoke the task if it is needed.  Prerequites are invoked first.
   def invoke
     if $trace
-      puts "** Invoke #{name} #{trace_flags}"
+      puts "** Invoke #{name} #{format_trace_flags}"
     end
     return if @already_invoked
     @already_invoked = true
@@ -101,13 +101,13 @@ class Task
   end
 
   # Format the trace flags for display.
-  def trace_flags
+  def format_trace_flags
     flags = []
     flags << "first_time" unless @already_invoked
     flags << "not_needed" unless needed?
     flags.empty? ? "" : "(" + flags.join(", ") + ")"
   end
-  private :trace_flags
+  private :format_trace_flags
 
   # Execute the actions associated with this task.
   def execute
@@ -883,35 +883,47 @@ class RakeApp
     opts.each { |opt, value| do_option(opt, value) }
   end
 
+  def load_rakefile
+    here = Dir.pwd
+    while ! have_rakefile
+      Dir.chdir("..")
+      if Dir.pwd == here || @nosearch
+	fail "No Rakefile found (looking for: #{RAKEFILES.join(', ')})"
+      end
+      here = Dir.pwd
+    end
+    puts "(in #{Dir.pwd})"
+    $rakefile = @rakefile
+    load @rakefile
+  end
+
+  # Collect the list of tasks on the command line.  If no tasks are
+  # give, return a list containing only the default task.
+  # Environmental assignments are processed at this time as well.
+  def collect_tasks
+    tasks = []
+    ARGV.each do |arg|
+      if arg =~ /^(\w+)=(.*)$/
+	ENV[$1] = $2
+      else
+	tasks << arg
+      end
+    end
+    tasks.push("default") if tasks.size == 0
+    tasks
+  end
+
   # Run the +rake+ application.
   def run
     handle_options
     begin
-      here = Dir.pwd
-      while ! have_rakefile
-	Dir.chdir("..")
-	if Dir.pwd == here || @nosearch
-	  fail "No Rakefile found (looking for: #{RAKEFILES.join(', ')})"
-	end
-	here = Dir.pwd
-      end
-      puts "(in #{Dir.pwd})"
-      $rakefile = @rakefile
-      load @rakefile
+      tasks = collect_tasks
+      load_rakefile
       if $show_tasks
 	display_tasks_and_comments
       elsif $show_prereqs
 	display_prerequisites
       else
-	tasks = []
-	ARGV.each do |arg|
-	  if arg =~ /^(\w+)=(.*)$/
-	    ENV[$1] = $2
-	  else
-	    tasks << arg
-	  end
-	end
-	tasks.push("default") if tasks.size == 0
 	tasks.each { |task_name| Task[task_name].invoke }
       end
     rescue Exception => ex
@@ -922,6 +934,7 @@ class RakeApp
       else
 	puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
       end
+      exit(1)
     end    
   end
 end
