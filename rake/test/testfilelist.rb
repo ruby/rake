@@ -27,7 +27,7 @@ class TestFileList < Test::Unit::TestCase
 
   def test_create_with_block
     fl = FileList.new { |f| f.include("x") }
-    assert_equal ["x"], fl
+    assert_equal ["x"], fl.resolve
   end
 
   def test_create_with_brackets
@@ -46,7 +46,7 @@ class TestFileList < Test::Unit::TestCase
     fl = FileList.new
     fl.include %w(a d c )
     fl.include('x', 'y')
-    assert_equal ['a', 'd', 'c', 'x', 'y'], fl
+    assert_equal ['a', 'd', 'c', 'x', 'y'], fl.resolve
   end
 
   def test_add_return
