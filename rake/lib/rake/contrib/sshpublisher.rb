@@ -14,15 +14,15 @@ module Rake
     end
     
     def upload
-      run %{scp -rq #{@local_dir}/* #{@host}:#{@remote_dir}}
+      sh %{scp -rq #{@local_dir}/* #{@host}:#{@remote_dir}}
     end
   end
   
   # Publish an entire directory to a fresh remote directory using SSH.
   class SshFreshDirPublisher < SshDirPublisher
     def upload
-      run %{ssh #{@host} rm -rf #{@remote_dir}} rescue nil
-      run %{ssh #{@host} mkdir #{@remote_dir}}
+      sh %{ssh #{@host} rm -rf #{@remote_dir}} rescue nil
+      sh %{ssh #{@host} mkdir #{@remote_dir}}
       super
     end
   end
@@ -40,7 +40,7 @@ module Rake
     # Upload the local directory to the remote directory.
     def upload
       @files.each do |fn|
-	run %{scp -q #{@local_dir}/#{fn} #{@host}:#{@remote_dir}}
+	sh %{scp -q #{@local_dir}/#{fn} #{@host}:#{@remote_dir}}
       end
     end
   end
