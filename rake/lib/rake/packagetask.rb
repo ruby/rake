@@ -32,7 +32,7 @@ module Rake
   #
   # Example:
   #
-  #   PackageTask.new("rake", "1.2.3") do |p|
+  #   Rake::PackageTask.new("rake", "1.2.3") do |p|
   #     p.need_tar = true
   #     p.package_files.include("lib/**/*.rb")
   #   end
