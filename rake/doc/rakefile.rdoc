@@ -5,13 +5,12 @@ contains executable Ruby code.  Anything legal in a ruby script is
 allowed in a Rakefile.
 
 Now that we understand there is no special syntax in a Rakefile, there
-are some conventions that are used in a Rakefile that a little unusual
-in a typical Ruby program.  Since a Rakefile is tailored to specifying
-tasks and actions, the idioms used in a Rakefile are designed to
-support that.
+are some conventions that are used in a Rakefile that are a little
+unusual in a typical Ruby program.  Since a Rakefile is tailored to
+specifying tasks and actions, the idioms used in a Rakefile are
+designed to support that.
 
 So, what goes into a Rakefile?
-
 
 == Tasks
 
@@ -121,7 +120,7 @@ Suppose we were trying to invoke task "mycode.o", but no task is
 defined for it.  But the rakefile has a rule that look like this ...
 
   rule '.o' => ['.c'] do |t|
-    Sys.run "cc #{t.source} -c -o #{t.name}"
+    sh "cc #{t.source} -c -o #{t.name}"
   end
 
 This rule will synthesize any task that ends in ".o".  It has a
@@ -147,7 +146,7 @@ The following rule is equivalent to the example above.
   rule /\.o$/ => [
     proc {|task_name| task_name.sub(/\.[^.]+$/, '.c') }
   ] do |t|
-    Sys.run "cc #{t.source} -c -o #{t.name}"
+    sh "cc #{t.source} -c -o #{t.name}"
   end    
 
 The following rule might be used for Java files ...
