@@ -7,6 +7,9 @@
 * Added test loader option to test task.  "testrb" is no longer the
   default test loader.  It is now eating syntax errors that should
   halt the unit tests.
+* Revamped FileList so that it works more like and array (addressed
+  flatten bug).  Added many tests around file list.
+* Added +ext+ method to both String and Array.
 
 == Version 0.5.0
 
