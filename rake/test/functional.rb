@@ -60,9 +60,18 @@ class FunctionalTest < Test::Unit::TestCase
     assert_match %r{^No Rakefile found}, @out
   end
 
+  def test_dry_run
+    Dir.chdir("test/data/default") do rake "-n", "other" end
+    assert_match %r{Execute \(dry run\) default}, @out
+    assert_match %r{Execute \(dry run\) other}, @out
+    assert_no_match %r{DEFAULT}, @out
+    assert_no_match %r{OTHER}, @out
+  end
+
   private
 
-  def rake(options="")
+  def rake(*option_list)
+    options = option_list.join(' ')
     shell = Session::Shell.new
     command = "ruby #{@ruby_options} #{@rake_path} #{options}"
     puts "COMMAND: [#{command}]" if @verbose
