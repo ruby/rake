@@ -43,6 +43,31 @@ $trace = nil
 $dryrun = nil
 $silent = false
 
+# Some objects are dupable, some are not.  So we define a version of
+# dup (called rake_dup) that returns self on the handful of classes
+# that are not dupable.
+
+module Kernel
+  def rake_dup() dup end        # :nodoc:
+end
+[NilClass, FalseClass, TrueClass, Fixnum, Symbol].each do |clazz|
+  clazz.class_eval { def rake_dup() self end }
+end
+
+module Rake
+  module Cloneable
+    def clone
+      sibling = self.class.new
+      instance_variables.each do |ivar|
+        value = self.instance_variable_get(ivar)
+        sibling.instance_variable_set(ivar, value.rake_dup)
+      end
+      sibling
+    end
+    alias dup clone
+  end
+end
+
 ######################################################################
 # A Task is the basic unit of work in a Rakefile.  Tasks have
 # associated actions (possibly more than one) and a list of
@@ -71,7 +96,7 @@ class Task
   # use +enhance+ to add actions and prerequisites.
   def initialize(task_name)
     @name = task_name
-    @prerequisites = []
+    @prerequisites = FileList[]
     @actions = []
     @already_invoked = false
     @comment = nil
@@ -170,13 +195,13 @@ class Task
     def [](task_name)
       task_name = task_name.to_s
       if task = TASKS[task_name]
-	return task
+        return task
       end
       if task = enhance_with_matching_rule(task_name)
-	return task
+        return task
       end
       if File.exist?(task_name)
-	return FileTask.define_task(task_name)
+        return FileTask.define_task(task_name)
       end
       fail "Don't know how to build task '#{task_name}'"
     end
@@ -221,28 +246,28 @@ class Task
     # the enhanced task or nil of no rule was found.
     def enhance_with_matching_rule(task_name, level=0)
       fail Rake::RuleRecursionOverflowError,
-	"Rule Recursion Too Deep" if level >= 16
+        "Rule Recursion Too Deep" if level >= 16
       RULES.each do |pattern, extensions, block|
-	if md = pattern.match(task_name)
-	  ext = extensions.first
-	  case ext
-	  when String
-	    source = task_name.sub(/\.[^.]*$/, ext)
-	  when Proc
-	    source = ext.call(task_name)
-	  else
-	    fail "Don't know how to handle rule dependent: #{ext.inspect}"
-	  end
-	  if File.exist?(source)
-	    task = FileTask.define_task({task_name => [source]}, &block)
-	    task.source = source
-	    return task
-	  elsif parent = enhance_with_matching_rule(source, level+1)
-	    task = FileTask.define_task({task_name => [parent.name]}, &block)
-	    task.source = parent.name
-	    return task
-	  end
-	end
+        if md = pattern.match(task_name)
+          ext = extensions.first
+          case ext
+          when String
+            source = task_name.sub(/\.[^.]*$/, ext)
+          when Proc
+            source = ext.call(task_name)
+          else
+            fail "Don't know how to handle rule dependent: #{ext.inspect}"
+          end
+          if File.exist?(source)
+            task = FileTask.define_task({task_name => [source]}, &block)
+            task.source = source
+            return task
+          elsif parent = enhance_with_matching_rule(source, level+1)
+            task = FileTask.define_task({task_name => [parent.name]}, &block)
+            task.source = parent.name
+            return task
+          end
+        end
       end
       nil
     rescue Rake::RuleRecursionOverflowError => ex
@@ -256,14 +281,14 @@ class Task
     def resolve_args(args)
       case args
       when Hash
-	fail "Too Many Task Names: #{args.keys.join(' ')}" if args.size > 1
-	fail "No Task Name Given" if args.size < 1
-	task_name = args.keys[0]
-	deps = args[task_name]
-	deps = [deps] if (String===deps) || (Regexp===deps) || (Proc===deps)
+        fail "Too Many Task Names: #{args.keys.join(' ')}" if args.size > 1
+        fail "No Task Name Given" if args.size < 1
+        task_name = args.keys[0]
+        deps = args[task_name]
+        deps = [deps] if (String===deps) || (Regexp===deps) || (Proc===deps)
       else
-	task_name = args
-	deps = []
+        task_name = args
+        deps = []
       end
       [task_name, deps]
     end
@@ -402,7 +427,7 @@ module FileUtils
     end
     unless block_given?
       block = lambda { |ok, status|
-	ok or fail "Command failed with status (#{status.exitstatus}): [#{cmd.join(" ")}]"
+        ok or fail "Command failed with status (#{status.exitstatus}): [#{cmd.join(" ")}]"
       }
     end
     fu_check_options options, :noop, :verbose
@@ -440,10 +465,10 @@ module FileUtils
       cp(*args)
     else
       begin
-	ln(*args)
+        ln(*args)
       rescue Errno::EOPNOTSUPP
-	LN_SUPPORTED[0] = false
-	cp(*args)
+        LN_SUPPORTED[0] = false
+        cp(*args)
       end
     end
   end
@@ -478,9 +503,9 @@ module RakeFileUtils
     module_eval(<<-EOS, __FILE__, __LINE__ + 1)
     def #{name}( *args, &block )
       super(*fu_merge_option(args,
-	  :verbose => $fileutils_verbose,
-	  :noop => $fileutils_nowrite),
-	&block)
+          :verbose => $fileutils_verbose,
+          :noop => $fileutils_nowrite),
+        &block)
     end
     EOS
   end
@@ -499,9 +524,9 @@ module RakeFileUtils
     $fileutils_verbose = value unless value.nil?
     if block_given?
       begin
-	yield
+        yield
       ensure
-	$fileutils_verbose = oldvalue
+        $fileutils_verbose = oldvalue
       end
     end
     $fileutils_verbose
@@ -521,9 +546,9 @@ module RakeFileUtils
     $fileutils_nowrite = value unless value.nil?
     if block_given?
       begin
-	yield
+        yield
       ensure
-	$fileutils_nowrite = oldvalue
+        $fileutils_nowrite = oldvalue
       end
     end
     oldvalue
@@ -601,27 +626,40 @@ module Rake
   # A FileList is essentially an array with a few helper methods
   # defined to make file manipulation a bit easier.
   #
-  class FileList < Array
+  class FileList 
+
+    include Cloneable
 
     # Rewrite all array methods (and to_s/inspect) to resolve the list
-    # before running.
-    method_list = Array.instance_methods - Object.instance_methods
-    %w[to_a inspect].each do |meth|
-      method_list << meth unless method_list.include? meth
-    end
+    # and forward to the delegate.
+
+    MUST_DEFINE = %w[to_a inspect]
+    MUST_NOT_DEFINE = %w[to_ary partition]
+    ARRAY_METHODS = Array.instance_methods - Object.instance_methods
+    SPECIAL_RETURN = %w[map collect sort sort_by select find_all reject grep]
+    
+    method_list = (ARRAY_METHODS + MUST_DEFINE - MUST_NOT_DEFINE).sort.uniq
+    
     method_list.each_with_index do |sym, i|
-      if sym =~ /^[A-Za-z_]+$/
-	name = sym
+      if SPECIAL_RETURN.include?(sym)
+        ln = __LINE__+1
+        class_eval %{
+          def #{sym}(*args, &block)
+            resolve if @pending
+            result = @items.send(:#{sym}, *args, &block)
+            FileList.new.import(result)
+          end
+        }, __FILE__, ln
       else
-	name = i
+        ln = __LINE__+1
+        class_eval %{
+          def #{sym}(*args, &block)
+            resolve if @pending
+            result = @items.send(:#{sym}, *args, &block)
+            result.object_id == @items.object_id ? self : result
+          end
+        }, __FILE__, ln
       end
-      alias_method "array_#{name}", sym
-      class_eval %{
-        def #{sym}(*args, &block)
-          resolve if @pending
-	  array_#{name}(*args, &block)
-	end
-      }
     end
 
     # Create a file list from the globbable patterns given.  If you
@@ -640,6 +678,7 @@ module Rake
       @pending = false
       @exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
       @exclude_re = nil
+      @items = []
       patterns.each { |pattern| include(pattern) }
       yield self if block_given?
     end
@@ -679,11 +718,10 @@ module Rake
     #   FileList['a.c', 'b.c'].exclude("a.*") => ['a.c', 'b.c']
     #
     def exclude(*patterns)
-      # TODO: check for pending
       patterns.each do |pat| @exclude_patterns << pat end
       if ! @pending
-	calculate_exclude_regexp
-	reject! { |fn| fn =~ @exclude_re }
+        calculate_exclude_regexp
+        reject! { |fn| fn =~ @exclude_re }
       end
       self
     end
@@ -694,57 +732,68 @@ module Rake
       calculate_exclude_regexp if ! @pending
     end
 
+    def ==(array)
+      to_ary == array
+    end
+
+    def to_ary
+      resolve
+      @items
+    end
+
     # Resolve all the pending adds now.
     def resolve
-      @pending = false
-      @pending_add.each do |fn| resolve_add(fn) end
-      @pending_add = []
-      resolve_exclude
+      if @pending
+        @pending = false
+        @pending_add.each do |fn| resolve_add(fn) end
+        @pending_add = []
+        resolve_exclude
+      end
       self
     end
 
     def calculate_exclude_regexp
       ignores = []
       @exclude_patterns.each do |pat|
-	case pat
-	when Regexp
-	  ignores << pat
-	when /[*.]/
-	  Dir[pat].each do |p| ignores << p end
-	else
-	  ignores << Regexp.quote(pat)
-	end
+        case pat
+        when Regexp
+          ignores << pat
+        when /[*.]/
+          Dir[pat].each do |p| ignores << p end
+        else
+          ignores << Regexp.quote(pat)
+        end
       end
       if ignores.empty?
-	@exclude_re = /^$/
+        @exclude_re = /^$/
       else
-	re_str = ignores.collect { |p| "(" + p.to_s + ")" }.join("|")
-	@exclude_re = Regexp.new(re_str)
+        re_str = ignores.collect { |p| "(" + p.to_s + ")" }.join("|")
+        @exclude_re = Regexp.new(re_str)
       end
     end
 
     def resolve_add(fn)
       case fn
       when Array
-	fn.each { |f| self.resolve_add(f) }
+        fn.each { |f| self.resolve_add(f) }
       when %r{[*?]}
-	add_matching(fn)
+        add_matching(fn)
       else
-	self << fn
+        self << fn
       end
     end
 
     def resolve_exclude
       @exclude_patterns.each do |pat|
-	case pat
-	when Regexp
-	  reject! { |fn| fn =~ pat }
-	when /[*.]/
-	  reject_list = Dir[pat]
-	  reject! { |fn| reject_list.include?(fn) }
-	else
-	  reject! { |fn| fn == pat }
-	end
+        case pat
+        when Regexp
+          reject! { |fn| fn =~ pat }
+        when /[*.]/
+          reject_list = Dir[pat]
+          reject! { |fn| reject_list.include?(fn) }
+        else
+          reject! { |fn| fn == pat }
+        end
       end
       self
     end
@@ -782,6 +831,15 @@ module Rake
       self
     end
 
+    def partition(&block)	# :nodoc:
+      resolve
+      result = @items.partition(&block)
+      [
+        FileList.new.import(result[0]),
+        FileList.new.import(result[1]),
+      ]
+    end
+    
     # Convert a FileList to a string by joining all elements with a space.
     def to_s
       resolve if @pending
@@ -791,7 +849,7 @@ module Rake
     # Add matching glob patterns.
     def add_matching(pattern)
       Dir[pattern].each do |fn|
-	self << fn unless exclude?(fn)
+        self << fn unless exclude?(fn)
       end
     end
     private :add_matching
@@ -810,12 +868,17 @@ module Rake
     ]
     @exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
 
+    def import(array)
+      @items = array
+      self
+    end
+
     class << self
       # Create a new file list including the files listed. Similar to:
       #
       #   FileList.new(*args)
       def [](*args)
-	new(*args)
+        new(*args)
       end
 
       # Set the ignore patterns back to the default value.  The
@@ -829,12 +892,12 @@ module Rake
       # ignored by Ruby's glob patterns and are not specifically
       # listed in the ignore patterns.
       def select_default_ignore_patterns
-	@exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
+        @exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
       end
 
       # Clear the ignore patterns.  
       def clear_ignore_patterns
-	@exclude_patterns = [ /^$/ ]
+        @exclude_patterns = [ /^$/ ]
       end
     end
   end
@@ -892,8 +955,8 @@ class RakeApp
   def have_rakefile
     RAKEFILES.each do |fn|
       if File.exist?(fn)
-	@rakefile = fn
-	return true
+        @rakefile = fn
+        return true
       end
     end
     return false
@@ -912,9 +975,9 @@ class RakeApp
     puts
     OPTIONS.sort.each do |long, short, mode, desc|
       if mode == GetoptLong::REQUIRED_ARGUMENT
-	if desc =~ /\b([A-Z]{2,})\b/
-	  long = long + "=#{$1}"
-	end
+        if desc =~ /\b([A-Z]{2,})\b/
+          long = long + "=#{$1}"
+        end
       end
       printf "  %-20s (%s)\n", long, short
       printf "      %s\n", desc
@@ -930,7 +993,7 @@ class RakeApp
     }.max
     Task.tasks.each do |t|
       if t.comment
-	printf "rake %-#{width}s  # %s\n", t.name, t.comment
+        printf "rake %-#{width}s  # %s\n", t.name, t.comment
       end
     end
   end
@@ -1005,7 +1068,7 @@ class RakeApp
     while ! have_rakefile
       Dir.chdir("..")
       if Dir.pwd == here || @nosearch
-	fail "No Rakefile found (looking for: #{RAKEFILES.join(', ')})"
+        fail "No Rakefile found (looking for: #{RAKEFILES.join(', ')})"
       end
       here = Dir.pwd
     end
@@ -1021,9 +1084,9 @@ class RakeApp
     tasks = []
     ARGV.each do |arg|
       if arg =~ /^(\w+)=(.*)$/
-	ENV[$1] = $2
+        ENV[$1] = $2
       else
-	tasks << arg
+        tasks << arg
       end
     end
     tasks.push("default") if tasks.size == 0
@@ -1037,19 +1100,19 @@ class RakeApp
       tasks = collect_tasks
       load_rakefile
       if $show_tasks
-	display_tasks_and_comments
+        display_tasks_and_comments
       elsif $show_prereqs
-	display_prerequisites
+        display_prerequisites
       else
-	tasks.each { |task_name| Task[task_name].invoke }
+        tasks.each { |task_name| Task[task_name].invoke }
       end
     rescue Exception => ex
       puts "rake aborted!"
       puts ex.message
       if $trace
-	puts ex.backtrace.join("\n")
+        puts ex.backtrace.join("\n")
       else
-	puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
+        puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
       end
       exit(1)
     end    
