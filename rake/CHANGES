@@ -1,12 +1,14 @@
 = Rake Changelog
 
-== Version next
+== Version 0.4.4
 * Fixed initialization problem with @comment.
 * Now using multi -r technique in TestTask.  Switch Rakefile back to
   using the built-in test task macros because the rake runtime is no
   longer needed.
 * Added 'TEST=filename' and 'TESTOPTS=options' to the Test Task
   macros.
+* Allow a +test_files+ attribute in test tasks.  This allows more
+  flexibility in specifying test files.
 
 == Version 0.4.3
 * Fixed Comment leakage.
