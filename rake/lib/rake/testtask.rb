@@ -5,6 +5,8 @@
 require 'rake'
 require 'rake/tasklib'
 
+require 'rake/ruby182_test_unit_fix' if RUBY_VERSION == '1.8.2'
+
 module Rake
 
   # Create a task that runs a set of tests.
@@ -87,7 +89,7 @@ module Rake
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
 	RakeFileUtils.verbose(@verbose) do
-	  ruby %{-I#{lib_path} #{warning_flag}-S testrb #{file_list.join(' ')} #{option_list}}
+	  ruby %{-I#{lib_path} #{warning_flag}-S #{fix} testrb #{file_list.join(' ')} #{option_list}}
 	end
       end
       self
@@ -107,6 +109,28 @@ module Rake
 	FileList[result]
       end
     end
+
+    def fix
+      case RUBY_VERSION
+      when '1.8.2'
+	fix_for_ruby182
+      else
+	nil
+      end || ''
+    end
+
+    def fix_for_ruby182
+      find_fix_file 'rake/ruby182_test_unit_fix'
+    end
+
+    def find_fix_file(fn)
+      $LOAD_PATH.each do |path|
+	file_path = File.join(path, "#{fn}.rb")
+	return file_path if File.exist? file_path
+      end
+      nil
+    end
+
 
   end
 end
