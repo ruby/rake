@@ -9,7 +9,7 @@
   halt the unit tests.
 * Revamped FileList so that it works more like and array (addressed
   flatten bug).  Added many tests around file list.
-* Added +ext+ method to both String and Array.
+* Added +ext+ method to both String and FileList.
 
 == Version 0.5.0
 
