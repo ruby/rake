@@ -3,14 +3,31 @@
 require 'build/rubyapp'
 require 'rake/testtask'
 require 'rake/packagetask'
+require 'rake/rdoctask'
+require 'rake/contrib/sshpublisher'
+require 'rake/contrib/rubyforgepublisher'
 
+if `ruby -Ilib ./bin/rake --version` =~ /\S+$/
+  PKG_VERSION = $&
+else
+  PKG_VERSION = "0.0.0"
+end
+
+desc "Default Task"
 task :default => :test
 
 builder = AppBuilder.new('rake')
 builder.revision_command "ruby -Ilib ./bin/rake --version"
 
+Rake::RDocTask.new { |rdoc|
+  rdoc.rdoc_dir = 'html'
+  rdoc.template = 'kilmer'
+  rdoc.options << '--line-numbers'
+  rdoc.rdoc_files.add('README', 'LICENSE', 'TODO', 'CHANGES')
+  rdoc.rdoc_files.add('lib/**/*.rb', 'doc/**/*.rdoc', 'test/*.rb')
+}.define
 
-pkg = Rake::PackageTask.new("rake", "0.2.7c")
+pkg = Rake::PackageTask.new("rake", PKG_VERSION)
 pkg.package_files << 'install.rb'
 pkg.package_files.add(
   '[A-Z]*',
@@ -23,55 +40,24 @@ pkg.package_files.add(
 pkg.package_files.reject! { |fn| fn =~ /\bCVS\b|~$/ }
 pkg.define
 
+Rake::TestTask.new { |t|
+  t.libs << "test"
+  t.verbose = true
+}.define
 
-builder.rdoc_files << ['README', 'LICENSE', 'TODO', 'CHANGES']
-#builder.rdoc_files.glob('lib/**/*.rb', 'doc/**/*.rdoc', 'test/*.rb')
-
-builder.clobber_files << %w(html pkg testdata)
-
-builder.create_tasks
-
-t = Rake::TestTask.new
-t.libs << "test"
-t.verbose = true
-t.define
-
-umlcoop_info = HostInfo.new(
-  'umlcoop',
-  'htdocs/software',
-  'htdocs/packages')
-
-local_info = HostInfo.new(
-  'localhost',
-  'working/projects/source2html/dummy/software',
-  'working/projects/source2html/dummy/packages')
-
-class RubyForgePublisher < SshDirPublisher
-  attr_reader :project, :proj_id, :user
-
-  def initialize(projname, user)
-    super(
-      "#{user}@rubyforge.org",
-      "/var/www/gforge-projects/#{projname}",
-      "html")
-  end
-end
-
-builder.web_publisher.add RubyForgePublisher.new('rake', 'jimweirich')
-builder.web_publisher.add SshFilePublisher.new(
-  'umlcoop',
-  'htdocs/software/rake',
-  '.',
-  'rake.blurb')
-
-# Additional dependencies beyond the standard
+load "publish.rf" if File.exist? "publish.rf"
 
 directory 'testdata'
 task :test => ['testdata']
 
-ctest = Rake::TestTask.new(:contrib_test)
-ctest.pattern = 'test/contrib/test*.rb'
-ctest.verbose = true
-ctest.define
+Rake::TestTask.new(:contrib_test) { |ctest|
+  ctest.pattern = 'test/contrib/test*.rb'
+  ctest.verbose = true
+}.define
+
+desc "Install the application"
+task :install do
+  ruby "install.rb"
+end
 
 task :testall => [:test, :contrib_test]
