@@ -532,16 +532,21 @@ module Rake
   #
   class FileList < Array
 
-    # Rewrite all array methods (and to_s) to resolve the list before
-    # running.
-    methods = Array.instance_methods - Object.instance_methods
-    methods << "to_a"
-    methods.each_with_index do |sym, i|
-      alias_method "array_#{i}", sym
+    # Rewrite all array methods (and to_s/inspect) to resolve the list
+    # before running.
+    method_list = Array.instance_methods - Object.instance_methods
+    method_list << "to_a" << "inspect"
+    method_list.each_with_index do |sym, i|
+      if sym =~ /^[A-Za-z_]+$/
+	name = sym
+      else
+	name = i
+      end
+      alias_method "array_#{name}", sym
       class_eval %{
         def #{sym}(*args, &block)
           resolve if @pending
-	  array_#{i}(*args, &block)
+	  array_#{name}(*args, &block)
 	end
       }
     end
@@ -607,6 +612,7 @@ module Rake
 	calculate_exclude_regexp
 	reject! { |fn| fn =~ @exclude_re }
       end
+      self
     end
 
     
@@ -705,6 +711,7 @@ module Rake
 
     # Convert a FileList to a string by joining all elements with a space.
     def to_s
+      resolve if @pending
       self.join(' ')
     end
 
