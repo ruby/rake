@@ -566,8 +566,20 @@ module RakeFileUtils
   
 end
 
+######################################################################
+# Include the FileUtils file manipulation functions in the top level
+# module, but mark them private so that they don't unintentionally
+# define methods on other objects.
+
+file_utils_methods = (FileUtils.methods - Object.methods)
 include RakeFileUtils
 
+file_utils_methods.each do |name|
+  private name.to_sym
+end
+file_utils_methods = nil
+
+######################################################################
 module Rake
 
   class RuleRecursionOverflowError < StandardError
