@@ -858,8 +858,16 @@ class RakeApp
       elsif $show_prereqs
 	display_prerequisites
       else
-	ARGV.push("default") if ARGV.size == 0
-	ARGV.each { |task_name| Task[task_name].invoke }
+	tasks = []
+	ARGV.each do |arg|
+	  if arg =~ /^(\w+)=(.*)$/
+	    ENV[$1] = $2
+	  else
+	    tasks << arg
+	  end
+	end
+	tasks.push("default") if tasks.size == 0
+	tasks.each { |task_name| Task[task_name].invoke }
       end
     rescue Exception => ex
       puts "rake aborted!"
