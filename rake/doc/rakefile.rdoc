@@ -143,11 +143,14 @@ allows for complex patterns and sources.
 
 The following rule is equivalent to the example above.
 
-  rule /\.o$/ => [
+  rule( /\.o$/ => [
     proc {|task_name| task_name.sub(/\.[^.]+$/, '.c') }
-  ] do |t|
+  ]) do |t|
     sh "cc #{t.source} -c -o #{t.name}"
   end    
+
+<b>NOTE:</b> Because of a _quirk_ in Ruby syntax, parenthesis are
+required on *rule* when the first argument is a regular expression.
 
 The following rule might be used for Java files ...
 
