@@ -2,6 +2,10 @@
 
 == Version next
 
+== Version 0.4.2
+* Added safe_ln that falls back to a copy if a file link is not supported.
+* Package builder now uses safe_ln.
+
 == Version 0.4.1
 * Task comments are now additive, combined with "/".
 * Works with (soon to be released) rubygems 0.6.2 (or 0.7.0)
