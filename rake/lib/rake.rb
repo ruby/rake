@@ -500,6 +500,18 @@ module Rake
   #
   class FileList < Array
 
+    methods = Array.instance_methods - Object.instance_methods
+    methods << "to_a"
+    methods.each_with_index do |sym, i|
+      alias_method "array_#{i}", sym
+      class_eval %{
+        def #{sym}(*args, &block)
+          resolve if @pending
+	  array_#{i}(*args, &block)
+	end
+      }
+    end
+
     # Create a file list from the globbable patterns given.  If you
     # wish to perform multiple includes or excludes at object build
     # time, use the "yield self" pattern.
@@ -512,6 +524,8 @@ module Rake
     #   end
     #
     def initialize(*patterns)
+      @pending_add = []
+      @pending = false
       patterns.each { |pattern| add(pattern) }
       yield self if block_given?
     end
@@ -524,19 +538,29 @@ module Rake
     #   file_list.include %w( math.c lib.h *.o )
     #
     def include(*filenames)
-      filenames.each do |fn|
-	case fn
-	when Array
-	  fn.each { |f| self.include(f) }
-	when %r{[*?]}
-	  add_matching(fn)
-	else
-	  self << fn
-	end
-      end
+      filenames.each do |fn| @pending_add << fn end
+      @pending = true
       self
     end
     alias :add :include 
+    
+    def resolve
+      @pending = false
+      @pending_add.each do |fn| resolve_add(fn) end
+      @pending_add = []
+      self
+    end
+
+    def resolve_add(fn)
+      case fn
+      when Array
+	fn.each { |f| self.resolve_add(f) }
+      when %r{[*?]}
+	add_matching(fn)
+      else
+	self << fn
+      end
+    end
 
     # Modify a file list by removing anything that matches any of the
     # patterns.  If a pattern is a Regexp, then matching is performed
