@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'fileutils'
 require 'rake/clean'
 require 'rake/help'
 
@@ -40,15 +41,15 @@ class SshDirPublisher
   end
 
   def upload
-    Sys.run %{scp -rq #{@local_dir}/* #{@host}:#{@remote_dir}}
+    run %{scp -rq #{@local_dir}/* #{@host}:#{@remote_dir}}
   end
 end
 
 # Publish an entire directory to a fresh remote directory using SSH.
 class SshFreshDirPublisher < SshDirPublisher
   def upload
-    Sys.run %{ssh #{@host} rm -rf #{@remote_dir}} rescue nil
-    Sys.run %{ssh #{@host} mkdir #{@remote_dir}}
+    run %{ssh #{@host} rm -rf #{@remote_dir}} rescue nil
+    run %{ssh #{@host} mkdir #{@remote_dir}}
     super
   end
 end
@@ -66,7 +67,7 @@ class SshFilePublisher
   # Upload the local directory to the remote directory.
   def upload
     @files.each do |fn|
-      Sys.run %{scp -q #{@local_dir}/#{fn} #{@host}:#{@remote_dir}}
+      run %{scp -q #{@local_dir}/#{fn} #{@host}:#{@remote_dir}}
     end
   end
 end
@@ -83,8 +84,8 @@ class AppBuilder
 
   def initialize(app_name)
     @name = app_name
-    @package_files = Rake::FileMatcher.new
-    @rdoc_files    = Rake::FileMatcher.new
+    @package_files = Rake::FileList.new
+    @rdoc_files    = Rake::FileList.new
     @clobber_files = CLOBBER
     @clean_files   = CLEAN
     @revision = '0.0.0'
@@ -125,30 +126,23 @@ class AppBuilder
     File.join(@rdoc_dir, "index.html")
   end
 
-  def runtests(dir='.')
-    Sys.quiet {
-      Sys.ruby %{-Ilib -e 'Dir["#{dir}/test*.rb"].each { |fn| require fn }'}
-    }
-  end
-  
   def create_package_directory(files)
-    Sys.delete_all 'pkg' rescue nil
-    Sys.makedirs(package_dir)
+    rm_r 'pkg' rescue nil
+    mkdir_p package_dir
     files.each do |fn|
       f = File.join(package_dir, fn)
       fdir = File.dirname(f)
-      Sys.makedirs(fdir) if !File.exist?(fdir)
+      mkdir_p(fdir) if !File.exist?(fdir)
       if File.directory?(fn)
-	Sys.makedirs(f)
+	mkdir_p(f)
       else
-	Sys.link fn, f
+	ln(fn, f)
       end
     end
   end
     
   def create_tasks
     desc "Default Task"
-    task :default => [:test]
     
     desc "Print the Application Revision"
     task :rev do
@@ -160,46 +154,9 @@ class AppBuilder
       :test, :acceptance
     ]
     
-    desc "Run unit tests"
-    task :test do			# Run the Unit Tests
-      runtests('test')
-    end
-    
     desc "Run acceptance tests"
     task :acceptance do	# Run acceptance tests
       runtests('acceptance')
-    end
-    
-    # == Package Creation
-    
-    desc "Force a rebuild of the package files"
-    task :repackage => [:clean_package, :package]
-    
-    desc "Remove package products" 
-    task :clean_package do
-      Sys.delete_all "pkg"
-    end
-    
-    desc "Build the distribution package" 
-    task :package => [		# Create a distribution package
-      "pkg/#{tgz_file}",
-      "pkg/#{zip_file}",
-    ]
-    
-    file "pkg/#{tgz_file}" => [package_dir] do
-      Sys.indir("pkg") do
-	Sys.run %{tar zcvf #{tgz_file} #{package_name}}
-      end
-    end
-    
-    file "pkg/#{zip_file}" => [package_dir] do
-      Sys.indir("pkg") do
-	Sys.run %{zip -r #{zip_file} #{package_name}}
-      end
-    end
-    
-    file package_dir do
-      create_package_directory(package_files)
     end
     
     # == Publishing
@@ -207,7 +164,7 @@ class AppBuilder
     desc "Force a rebuild of the web documents"
     task :reweb => [:clear_web, :web]
     task :clear_web do
-      Sys.delete_all "html"
+      rm_r "html" rescue nil
     end
     
     desc "Build the web page"
@@ -218,8 +175,8 @@ class AppBuilder
     directory @rdoc_dir
     task :rdoc => [rdoc_target]
     file rdoc_target => @rdoc_files.to_a + ["Rakefile"] do
-      Sys.delete_all @rdoc_dir
-      Sys.run %{rdoc -o #{@rdoc_dir} --line-numbers --main README -T kilmer #{@rdoc_files}}
+      rm_r @rdoc_dir rescue nil
+      run %{rdoc -o #{@rdoc_dir} --line-numbers --main README -T kilmer #{@rdoc_files}}
     end
     
     desc "Publish the web and package files"
@@ -241,7 +198,7 @@ class AppBuilder
     
     desc "Install the application"
     task :install do		# Install the application
-      Sys.ruby "install.rb"
+      ruby "install.rb"
     end
   end
 
