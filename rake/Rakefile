@@ -16,13 +16,6 @@ require 'rake/clean'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
-require 'rbconfig'
-if File.exists? File.join(Config::CONFIG['rubylibdir'], "rdoc/generators/template/html/jamis.rb")
-  RDOC_TEMPLATE = 'jamis'
-else
-  RDOC_TEMPLATE = 'kilmer'
-end
-
 CLEAN.include('**/*.o')
 CLOBBER.include('doc/example/main', 'testdata')
 
@@ -106,7 +99,7 @@ rd = Rake::RDocTask.new("rdoc") { |rdoc|
   rdoc.rdoc_dir = 'html'
 #  rdoc.template = 'kilmer'
 #  rdoc.template = 'css2'
-  rdoc.template = RDOC_TEMPLATE
+  rdoc.template = 'doc/jamis.rb'
   rdoc.title    = "Rake -- Ruby Make"
   rdoc.options << '--line-numbers' << '--inline-source' << '--main' << 'README'
   rdoc.rdoc_files.include('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
