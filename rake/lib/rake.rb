@@ -388,7 +388,7 @@ end
 
 ######################################################################
 # RakeFileUtils provides a custom version of the FileUtils methods
-# that respond to the <tt>verbose</tt> and <tt>nowrite</bb> commands.
+# that respond to the <tt>verbose</tt> and <tt>nowrite</tt> commands.
 #
 module RakeFileUtils
   include FileUtils

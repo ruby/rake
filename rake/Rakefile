@@ -60,7 +60,8 @@ Rake::RDocTask.new { |rdoc|
 #  rdoc.template = 'css2'
   rdoc.options << '--line-numbers'
   rdoc.rdoc_files.add('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
-  rdoc.rdoc_files.add('lib/**/*.rb', 'doc/**/*.rdoc', 'test/*.rb')
+  rdoc.rdoc_files.add('lib/**/*.rb', 'doc/**/*.rdoc')
+  rdoc.rdoc_files.exclude!(/\bcontrib\b/)
 }
 
 # ====================================================================
