@@ -48,9 +48,9 @@ class TestTestTask < Test::Unit::TestCase
   end
 
   def test_defined
-    assert ! Task.defined?(:a)
+    assert ! Task.task_defined?(:a)
     task :a
-    assert Task.defined?(:a)
+    assert Task.task_defined?(:a)
   end
 
   def test_multi_invocations
@@ -134,7 +134,7 @@ end
 ######################################################################
 class TestDirectoryTask < Test::Unit::TestCase
   def setup
-    rm_r "testdata"
+    rm_r "testdata", :verbose=>false
   end
 
   def test_create
@@ -142,7 +142,9 @@ class TestDirectoryTask < Test::Unit::TestCase
     assert FileTask, Task["testdata"].class
     assert FileTask, Task["testdata/a"].class
     assert FileTask, Task["testdata/a/b/c"].class
-    Task['testdata/a/b'].invoke
+    verbose(false) {
+      Task['testdata/a/b'].invoke
+    }
     assert File.exist?("testdata/a/b")
     assert ! File.exist?("testdata/a/b/c")
   end
@@ -334,6 +336,6 @@ class TestRules < Test::Unit::TestCase
     Task['classes/jw/X.class'].invoke
     assert ran, "Should have triggered rule"
   ensure
-    Sys.rm_r("testdata/src") rescue nil
+    rm_r("testdata/src", :verbose=>false) rescue nil
   end
 end
