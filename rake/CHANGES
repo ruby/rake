@@ -1,6 +1,6 @@
 = Rake Changelog
 
-== Version 0.4.16 prerelease
+== Version 0.5.0
 
 * Fixed documentation that was lacking the Rake module name (Tilman
   Sauerbeck).
@@ -9,7 +9,9 @@
 * Added warning option for the Test Task (requested by Eric Hodel).
 * The jamis rdoc template is only used if it exists.
 * Added fix for Ruby 1.8.2 test/unit and rails problem.
-* Added contributed rake man file.
+* Added contributed rake man file (Jani Monoses).
+* Added Brian Chandler's fix for problems in --trace and --dry-run
+  mode.
 
 == Version 0.4.15
 
