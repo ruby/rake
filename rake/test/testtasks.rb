@@ -273,8 +273,8 @@ class TestRules < Test::Unit::TestCase
     create_file(FTNFILE)
     delete_file(SRCFILE)
     delete_file(OBJFILE)
-    rule /\.o$/ => ['.c'] do @runs << :C end
-    rule /\.o$/ => ['.f'] do @runs << :F end
+    rule(/\.o$/ => ['.c']) do @runs << :C end
+    rule(/\.o$/ => ['.f']) do @runs << :F end
     t = Task[OBJFILE]
     t.invoke
     Task[OBJFILE].invoke
@@ -285,15 +285,15 @@ class TestRules < Test::Unit::TestCase
     create_file(FTNFILE)
     delete_file(SRCFILE)
     delete_file(OBJFILE)
-    rule /\.o$/ => ['.f'] do @runs << :F end
-    rule /\.o$/ => ['.c'] do @runs << :C end
+    rule(/\.o$/ => ['.f']) do @runs << :F end
+    rule(/\.o$/ => ['.c']) do @runs << :C end
     Task[OBJFILE].invoke
     assert_equal [:F], @runs
   end
 
   def test_create_with_source
     create_file(SRCFILE)
-    rule /\.o$/ => ['.c'] do |t|
+    rule(/\.o$/ => ['.c']) do |t|
       @runs << t.name
       assert_equal OBJFILE, t.name
       assert_equal SRCFILE, t.source
@@ -304,7 +304,7 @@ class TestRules < Test::Unit::TestCase
 
   def test_single_dependent
     create_file(SRCFILE)
-    rule /\.o$/ => '.c' do |t|
+    rule(/\.o$/ => '.c') do |t|
       @runs << t.name
     end
     Task[OBJFILE].invoke
@@ -343,7 +343,7 @@ class TestRules < Test::Unit::TestCase
 
   def test_precedence_rule_vs_implicit
     create_timed_files(OBJFILE, SRCFILE)
-    rule /\.o$/ => ['.c'] do
+    rule(/\.o$/ => ['.c']) do
       @runs << :RULE
     end
     Task[OBJFILE].invoke
