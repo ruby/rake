@@ -500,10 +500,16 @@ module Rake
   #
   class FileList < Array
 
-    # Create a file list from the globbable patterns given.
+    # Create a file list from the globbable patterns given.  If you
+    # wish to perform multiple includes or excludes at object build
+    # time, use the "yield self" pattern.
     #
     # Example:
     #   file_list = FileList.new['lib/**/*.rb', 'test/test*.rb']
+    #
+    #   pkg_files = FileList.new['lib/**/*'] do |fl|
+    #     fl.exclude(/\bCVS\b/)
+    #   end
     #
     def initialize(*patterns)
       patterns.each { |pattern| add(pattern) }
@@ -616,6 +622,9 @@ module Rake
     private :add_matching
 
     class << self
+      # Create a new file list including the files listed. Similar to
+      #
+      #   FileList.new(*args)
       def [](*args)
 	new(*args)
       end
