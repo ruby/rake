@@ -6,7 +6,6 @@ require 'rake/filelist'
 class TestFileList < Test::Unit::TestCase
   def test_create
     fl = Rake::FileList.new
-    assert_not_nil fl
     assert_equal 0, fl.size
   end
 
@@ -25,7 +24,7 @@ class TestFileList < Test::Unit::TestCase
 
   def test_match
     fl = Rake::FileList.new
-    fl.add_matching('test/test*.rb')
+    fl.add('test/test*.rb')
     assert fl.include?("test/testfilelist.rb")
     assert fl.size > 3
     fl.each { |fn| assert_match /\.rb$/, fn }
@@ -34,7 +33,7 @@ class TestFileList < Test::Unit::TestCase
   def test_add_matching
     fl = Rake::FileList.new
     fl << "a.java"
-    fl.add_matching("test/*.rb")
+    fl.add("test/*.rb")
     assert_equal "a.java", fl[0]
     assert fl.size > 2
     assert fl.include?("test/testfilelist.rb")
@@ -42,9 +41,9 @@ class TestFileList < Test::Unit::TestCase
 
   def test_multiple_patterns
     fl = Rake::FileList.new
-    fl.add_matching('*.c', '*xist*')
+    fl.add('*.c', '*xist*')
     assert_equal [], fl
-    fl.add_matching('testdata/*.c', 'testdata/*xist*')
+    fl.add('testdata/*.c', 'testdata/*xist*')
     assert_equal [
       'testdata/x.c', 'testdata/xyz.c', 'testdata/abc.c', 'testdata/existing'
     ].sort, fl.sort
