@@ -1,5 +1,11 @@
 = Rake Changelog
 
+== Version 0.4.9
+
+* Switched to Jamis Buck's RDoc template.
+* Removed autorequire from Rake's gem spec.  This prevents the Rake
+  libraries from loading while using rails.
+
 == Version 0.4.8
 
 * Added support for .rb versions of Rakefile.
