@@ -123,7 +123,11 @@ else
     #### Documentation and testing.
 
     s.has_rdoc = true
-    #s.test_suite_file = "test/rmagic-tests.rb"
+    s.extra_rdoc_files = rd.rdoc_files.reject { |fn| fn =~ /\.rb$/ }.to_a
+    s.rdoc_options <<
+      '--title' <<  'Rake -- Ruby Make' <<
+      '--main' << 'README' <<
+      '--line-numbers'
 
     #### Author and project details.
 
