@@ -219,7 +219,9 @@ class Task
     # task with the prerequisites and actions from the rule.  Set the
     # source attribute of the task appropriately for the rule.  Return
     # the enhanced task or nil of no rule was found.
-    def enhance_with_matching_rule(task_name)
+    def enhance_with_matching_rule(task_name, level=0)
+      fail Rake::RuleRecursionOverflowError,
+	"Rule Recursion Too Deep" if level >= 16
       RULES.each do |pattern, extensions, block|
 	if md = pattern.match(task_name)
 	  ext = extensions.first
@@ -235,10 +237,17 @@ class Task
 	    task = FileTask.define_task({task_name => [source]}, &block)
 	    task.source = source
 	    return task
+	  elsif parent = enhance_with_matching_rule(source, level+1)
+	    task = FileTask.define_task({task_name => [parent.name]}, &block)
+	    task.source = parent.name
+	    return task
 	  end
 	end
       end
       nil
+    rescue Rake::RuleRecursionOverflowError => ex
+      ex.add_target(task_name)
+      fail ex
     end
     
     private 
@@ -557,6 +566,21 @@ end
 include RakeFileUtils
 
 module Rake
+
+  class RuleRecursionOverflowError < StandardError
+    def initialize(*args)
+      super
+      @targets = []
+    end
+
+    def add_target(target)
+      @targets << target
+    end
+
+    def message
+      super + ": [" + @targets.reverse.join(' => ') + "]"
+    end
+  end
 
   ####################################################################
   # A FileList is essentially an array with a few helper methods
