@@ -73,6 +73,7 @@ class Task
     @prerequisites = []
     @actions = []
     @already_invoked = false
+    @comment = nil
   end
 
   # Enhance a task with prerequisites or actions.  Returns self.
