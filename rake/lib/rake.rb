@@ -260,7 +260,7 @@ class FileTask < Task
 
   # Time stamp for file task.
   def timestamp
-    File.new(name.to_s).mtime
+    File.mtime(name.to_s)
   end
 end
 
