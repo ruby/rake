@@ -27,6 +27,12 @@ module Rake
   # [<b>"<em>package_dir</em>/<em>name</em>-<em>version</em>.tgz"</b>]
   #   Create a gzipped tar package (if <em>need_tar</em> is true).  
   #
+  # [<b>"<em>package_dir</em>/<em>name</em>-<em>version</em>.tar.gz"</b>]
+  #   Create a gzipped tar package (if <em>need_tar_gz</em> is true).  
+  #
+  # [<b>"<em>package_dir</em>/<em>name</em>-<em>version</em>.tar.bz2"</b>]
+  #   Create a bzip2'd tar package (if <em>need_tar_bz2</em> is true).  
+  #
   # [<b>"<em>package_dir</em>/<em>name</em>-<em>version</em>.zip"</b>]
   #   Create a zip package archive (if <em>need_zip</em> is true).
   #
@@ -47,8 +53,14 @@ module Rake
     # Directory used to store the package files (default is 'pkg').
     attr_accessor :package_dir
 
-    # True if a gzipped tar file should be produced (default is false).
+    # True if a gzipped tar file (tgz) should be produced (default is false).
     attr_accessor :need_tar
+
+    # True if a gzipped tar file (tar.gz) should be produced (default is false).
+    attr_accessor :need_tar_gz
+
+    # True if a bzip2'd tar file (tar.bz2) should be produced (default is false).
+    attr_accessor :need_tar_bz2
 
     # True if a zip file should be produced (default is false)
     attr_accessor :need_zip
@@ -70,6 +82,8 @@ module Rake
       @package_files = Rake::FileList.new
       @package_dir = 'pkg'
       @need_tar = false
+      @need_tar_gz = false
+      @need_tar_bz2 = false
       @need_zip = false
     end
 
@@ -91,15 +105,21 @@ module Rake
 
       task :clobber => [:clobber_package]
 
-      if need_tar
-	task :package => ["#{package_dir}/#{tgz_file}"]
-	file "#{package_dir}/#{tgz_file}" => [package_dir_path] + package_files do
-	  chdir(package_dir) do
-	    sh %{tar zcvf #{tgz_file} #{package_name}}
+      [
+	[need_tar, tgz_file, "z"],
+	[need_tar_gz, tar_gz_file, "z"],
+	[need_tar_bz2, tar_bz2_file, "j"]
+      ].each do |(need, file, flag)|
+	if need
+	  task :package => ["#{package_dir}/#{file}"]
+	  file "#{package_dir}/#{file}" => [package_dir_path] + package_files do
+	    chdir(package_dir) do
+	      sh %{tar #{flag}cvf #{file} #{package_name}}
+	    end
 	  end
 	end
       end
-
+      
       if need_zip
 	task :package => ["#{package_dir}/#{zip_file}"]
 	file "#{package_dir}/#{zip_file}" => [package_dir_path] + package_files do
@@ -140,6 +160,14 @@ module Rake
 
     def tgz_file
       "#{package_name}.tgz"
+    end
+
+    def tar_gz_file
+      "#{package_name}.tar.gz"
+    end
+
+    def tar_bz2_file
+      "#{package_name}.tar.bz2"
     end
 
     def zip_file
