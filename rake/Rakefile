@@ -45,11 +45,11 @@ SRC_RB = FileList['lib/**/*.rb']
 # The default task is run if rake is given no explicit arguments.
 
 desc "Default Task"
-task :default => :testall
+task :default => :alltests
 
 # Test Tasks ---------------------------------------------------------
 
-Rake::TestTask.new(:testall) do |t|
+Rake::TestTask.new(:alltests) do |t|
   t.test_files = FileList[
     'test/test*.rb',
     'test/contrib/test*.rb',
@@ -59,35 +59,36 @@ Rake::TestTask.new(:testall) do |t|
   t.verbose = true
 end
 
-Rake::TestTask.new(:test) do |t|
+Rake::TestTask.new(:unittests) do |t|
   t.test_files = FileList['test/test*.rb']
   t.warning = true if t.respond_to? :warning
   t.verbose = true
 end
 
-Rake::TestTask.new(:testfun) do |t|
+Rake::TestTask.new(:funtests) do |t|
   t.pattern = 'test/fun*.rb'
   t.warning = true if t.respond_to? :warning
 end
 
-Rake::TestTask.new(:testcontrib) do |t|
+Rake::TestTask.new(:contribtests) do |t|
   t.pattern = 'test/contrib/test*.rb'
   t.verbose = true
   t.warning = true if t.respond_to? :warning
 end
 
 directory 'testdata'
-task :test => ['testdata']
-
+[:alltests, :unittests, :contribtests, :funtests].each do |t|
+  task t => ['testdata']
+end
 
 # Abbreviations
 
-task :ta => [:testall]
-task :tf => [:testfun]
-task :tc => [:testcontrib]
+task :a => [:alltests]
+task :u => [:unittests]
+task :f => [:funtests]
+task :c => [:contribtests]
 
 # CVS Tasks ----------------------------------------------------------
-
 
 # Install rake using the standard install.rb script.
 
