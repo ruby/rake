@@ -1,5 +1,10 @@
 = Rake Changelog
 
+== Version 0.4.14
+
+* Modified the TestTask to workaround the Ruby 1.8.2 change in
+  autoexecuting unit tests.
+
 == Version 0.4.13
 
 * Fixed the dry-run flag so it is operating again.
