@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'rake/filelist'
+
 module Rake
 
   class RDocTask

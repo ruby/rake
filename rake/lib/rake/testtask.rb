@@ -9,11 +9,12 @@ module Rake
       @libs = ["lib"]
       @pattern = 'test/test*.rb'
       @verbose = false
+      yield self if block_given?
     end
 
     def define
-      log = @verbose ? "puts fn;" : ""
       lib_path = @libs.join(':')
+      desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
 	ruby %{-I#{lib_path} -rrake/runtest -e 'Rake.run_tests("#{@pattern}", #{@verbose})'}
       end

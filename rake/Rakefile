@@ -41,8 +41,6 @@ Rake::TestTask.new { |t|
   t.verbose = true
 }.define
 
-load "publish.rf" if File.exist? "publish.rf"
-
 directory 'testdata'
 task :test => ['testdata']
 
@@ -56,4 +54,9 @@ task :install do
   ruby "install.rb"
 end
 
+desc "Run all test targets"
 task :testall => [:test, :contrib_test]
+
+# optional publish target
+load "publish.rf" if File.exist? "publish.rf"
+
