@@ -52,9 +52,9 @@ class TestFileList < Test::Unit::TestCase
   def test_add_return
     f = FileList.new
     g = f << "x"
-    assert_equal f.id, g.id
+    assert_equal f.object_id, g.object_id
     h = f.include("y")
-    assert_equal f.id, h.id
+    assert_equal f.object_id, h.object_id
   end
   
   def test_match
@@ -62,7 +62,7 @@ class TestFileList < Test::Unit::TestCase
     fl.include('test/test*.rb')
     assert fl.include?("test/testfilelist.rb")
     assert fl.size > 3
-    fl.each { |fn| assert_match /\.rb$/, fn }
+    fl.each { |fn| assert_match(/\.rb$/, fn) }
   end
 
   def test_add_matching
@@ -102,7 +102,7 @@ class TestFileList < Test::Unit::TestCase
     assert_equal [
       'testdata/x.c', 'testdata/abc.c', 'testdata/existing'
     ], fl
-    assert_equal fl.id, x.id
+    assert_equal fl.object_id, x.object_id
     fl.exclude('testdata/*.c')
     assert_equal ['testdata/existing'], fl
     fl.exclude('testdata/existing')
@@ -165,7 +165,7 @@ class TestFileList < Test::Unit::TestCase
     res = fl.sub!(/\.c$/, ".o")
     assert_equal ["x/a.o", "x/b.o"].sort, fl.sort
     assert_equal "x/a.c", f
-    assert_equal fl.id, res.id
+    assert_equal fl.object_id, res.object_id
   end
 
   def test_sub_with_block
