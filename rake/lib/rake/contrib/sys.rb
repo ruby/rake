@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 #--
-# Copyright (c) 2003 Jim Weirich
+# Copyright (c) 2003, 2004 Jim Weirich
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
