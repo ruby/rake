@@ -128,8 +128,8 @@ prerequisite a source file with an extension of ".c" must exist.  If
 Rake is able to find a file named "mycode.c", it will automatically
 create a task that builds "mycode.o" from "mycode.c".
 
-Notice that the source file "mycode.c" must exist.  Rake does not
-(currently) try to do multi-level task synthesis.
+If the file "mycode.c" does not exist, rake will attempt
+to recursively synthesize a rule for it. 
 
 When a task is synthesized from a rule, the +source+ attribute of the
 task is set to the matching source file.  This allows us to write
