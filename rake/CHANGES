@@ -1,5 +1,13 @@
 = Rake Changelog
 
+== Version 0.2.9
+
+This version contains numerous changes as the RubyConf.new(2003)
+presentation was being prepared.  The changes include:
+
+* The monolithic rubyapp task library is in the process of being
+  dropped in favor of lighter weight task libraries.
+
 == Version 0.2.7
 
 * Added "desc" for task descriptions.

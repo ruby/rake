@@ -84,7 +84,7 @@ given two object files name <tt>a.o</tt> and <tt>b.o</tt>.  The tasks
 for creating <tt>a.o</tt> and <tt>b.o</tt> are not shown.
 
   file "prog" => ["a.o", "b.o"] do |t|
-    Sys.run "cc -o #{t.name} #{t.prerequisites.join(' ')}"
+    sh "cc -o #{t.name} #{t.prerequisites.join(' ')}"
   end
 
 == Directory Tasks
@@ -98,9 +98,9 @@ that creates the directory.  For example, the following declaration
 
 is equivalent to ...
 
-  file "testdata"              do |t| Sys.makedirs(t.name) end
-  file "testdata/examples"     do |t| Sys.makedirs(t.name) end
-  file "testdata/examples/doc" do |t| Sys.makedirs(t.name) end
+  file "testdata"              do |t| mkdir t.name end
+  file "testdata/examples"     do |t| mkdir t.name end
+  file "testdata/examples/doc" do |t| mkdir t.name end
 
 The +directory+ method does not accept prerequisites or actions, but
 both prerequisites and actions can be added later.  For example ...
@@ -108,7 +108,7 @@ both prerequisites and actions can be added later.  For example ...
   directory "testdata"
   file "testdata" => ["otherdata"]
   file "testdata" do
-    Sys.copy_files "standard_data/*.data", testdata
+    cp Dir["standard_data/*.data"], "testdata"
   end
 
 == Rules

@@ -49,8 +49,8 @@ $dryrun = nil
 # its prerequisites have an opportunity to run and then it will
 # execute its own actions.
 #
-# Tasks are not usually created directly in a Rakefile, but rather use
-# the +file+ and +task+ global methods.
+# Tasks are not usually created directly using the new method, but
+# rather use the +file+ and +task+ convenience methods.
 #
 class Task
   TASKS = Hash.new
@@ -100,6 +100,7 @@ class Task
     execute if needed?
   end
 
+  # Format the trace flags for display.
   def trace_flags
     flags = []
     flags << "first_time" unless @already_invoked
@@ -112,9 +113,7 @@ class Task
   def execute
     puts "** Execute #{name}" if $trace
     self.class.enhance_with_matching_rule(name) if @actions.empty?
-#    unless $dryrun
     @actions.each { |act| result = act.call(self) }
-#    end
   end
 
   # Is this task needed?
@@ -243,7 +242,13 @@ end
 
 
 ######################################################################
+# A FileTask is a task that includes time based dependencies.  If any
+# of a FileTask's prerequisites have a timestamp that is later than
+# the file represented by this task, then the file must be rebuilt
+# (using the supplied actions).
+#
 class FileTask < Task
+
   # Is this file task needed?  Yes if it doesn't exist, or if its time
   # stamp is out of date.
   def needed?
@@ -263,17 +268,40 @@ end
 # Task Definition Functions ...
 
 # Declare a basic task.
+#
+# Example:
+#   task :clobber => [:clean] do
+#     rm_rf "html"
+#   end
+#
 def task(args, &block)
   Task.define_task(args, &block)
 end
 
+
 # Declare a file task.
+#
+# Example:
+#   file "config.cfg" => ["config.template"] do
+#     open("config.cfg", "w") do |outfile|
+#       open("config.template") do |infile|
+#         while line = infile.gets
+#           outfile.puts line
+#         end
+#       end
+#     end
+#  end
+#
 def file(args, &block)
   FileTask.define_task(args, &block)
 end
 
 # Declare a set of files tasks to create the given directories on
 # demand.
+#
+# Example:
+#   directory "testdata/doc"
+#
 def directory(dir)
   path = []
   split_all(dir).each do |p| 
@@ -285,16 +313,33 @@ def directory(dir)
 end
 
 # Declare a rule for auto-tasks.
+#
+# Example:
+#  rule '.o' => '.c' do |t|
+#    sh %{cc -o #{t.name} #{t.source}}
+#  end
+#
 def rule(args, &block)
   Task.create_rule(args, &block)
 end
 
 # Describe the next rake task.
+#
+# Example:
+#   desc "Run the Unit Tests"
+#   task :test => [:build]
+#     runtests
+#   end
+#
 def desc(comment)
   $last_comment = comment
 end
 
 
+######################################################################
+# This a FileUtils extension that defines several additional commands
+# to be added to the FileUtils utility functions.
+#
 module FileUtils
   RUBY = Config::CONFIG['ruby_install_name']
 
@@ -302,6 +347,10 @@ module FileUtils
   OPT_TABLE['ruby'] = %w(noop verbose)
 
   # Run the system command +cmd+.
+  #
+  # Example:
+  #   sh %{ls -ltr}
+  #
   def sh(cmd, options={})
     fu_check_options options, :noop, :verbose
     fu_output_message cmd if options[:verbose]
@@ -311,6 +360,10 @@ module FileUtils
   end
 
   # Run a Ruby interpreter with the given arguments.
+  #
+  # Example:
+  #   ruby %{-pe '$_.upcase!' <README}
+  #
   def ruby(*args)
     if Hash === args.last
       options = args.pop
@@ -322,8 +375,9 @@ module FileUtils
   
   # Split a file path into individual directory names.
   #
-  # For example:
+  # Example:
   #   split_all("a/b/c") =>  ['a', 'b', 'c']
+  #
   def split_all(path)
     head, tail = File.split(path)
     return [tail] if head == '.' || tail == '/'
@@ -332,7 +386,10 @@ module FileUtils
   end
 end
 
-
+######################################################################
+# RakeFileUtils provides a custom version of the FileUtils methods
+# that respond to the <tt>verbose</tt> and <tt>nowrite</bb> commands.
+#
 module RakeFileUtils
   include FileUtils
   
@@ -352,6 +409,15 @@ module RakeFileUtils
     EOS
   end
 
+  # Get/set the verbose flag controlling output from the FileUtils
+  # utilities.  If verbose is true, then the utility method is echoed
+  # to standard output.
+  #
+  # Examples:
+  #    verbose              # return the current value of the verbose flag
+  #    verbose(v)           # set the verbose flag to _v_.
+  #    verbose(v) { code }  # Execute code with the verbose flag set temporarily to _v_.
+  #                         # Return to the original value when code is done.
   def verbose(value=nil)
     oldvalue = $fileutils_verbose
     $fileutils_verbose = value unless value.nil?
@@ -365,6 +431,15 @@ module RakeFileUtils
     $fileutils_verbose
   end
 
+  # Get/set the nowrite flag controlling output from the FileUtils
+  # utilities.  If verbose is true, then the utility method is echoed
+  # to standard output.
+  #
+  # Examples:
+  #    verbose              # return the current value of the verbose flag
+  #    verbose(v)           # set the verbose flag to _v_.
+  #    verbose(v) { code }  # Execute code with the verbose flag set temporarily to _v_.
+  #                         # Return to the original value when code is done.
   def nowrite(value=nil)
     oldvalue = $fileutils_nowrite
     $fileutils_nowrite = value unless value.nil?
@@ -378,6 +453,20 @@ module RakeFileUtils
     oldvalue
   end
 
+  # Use this function to prevent protentially destructive ruby code
+  # from running when the :nowrite flag is set.
+  #
+  # Example: 
+  #
+  #   when_writing("Building Project") do
+  #     project.build
+  #   end
+  #
+  # The following code will build the project under normal conditions.
+  # If the nowrite(true) flag is set, then the example will print:
+  #      DRYRUN: Building Project
+  # instead of actually building the project.
+  #
   def when_writing(msg=nil)
     if $fileutils_nowrite
       puts "DRYRUN: #{msg}" if msg
@@ -386,6 +475,7 @@ module RakeFileUtils
     end
   end
 
+  # Merge the given options with the default values.
   def fu_merge_option(args, defaults)
     if Hash === args.last
       defaults.update(args.last)
@@ -403,11 +493,29 @@ end
 include RakeFileUtils
 
 module Rake
+
+  ####################################################################
+  # A FileList is essentially an array with a few helper methods
+  # defined to make file manipulation a bit easier.
+  #
   class FileList < Array
+
+    # Create a file list from the globbable patterns given.
+    #
+    # Example:
+    #   file_list = FileList['lib/**/*.rb', 'test/test*.rb']
+    #
     def initialize(*patterns)
       patterns.each { |pattern| add(pattern) }
     end
 
+    # Add file names defined by glob patterns to the file list.  If an
+    # array is given, add each element of the array.
+    #
+    # Example:
+    #   file_list.add("*.java", "*.cfg")
+    #   file_list.add %w( math.c lib.h *.o )
+    #
     def add(*filenames)
       filenames.each do |fn|
 	case fn
@@ -422,40 +530,67 @@ module Rake
       self
     end
 
+    # Create a new file list rejecting file that match the regular
+    # expression +pat+.
+    #
+    # Example:
+    #   FileList['a.c', 'b.c'].reject(/^a/) => ['b.c']
+    #
+    def exclude(pat)
+      reject { |fn| fn =~ pat }
+    end
+
+    # Same as exclude, but the original file list is modified.
+    def exclude!(pat)
+      reject! { |fn| fn =~ pat }
+      self
+    end
+
+    # Return a new FileList with the results of running +sub+ against
+    # each element of the oringal list.
+    #
+    # Example:
+    #   FileList['a.c', 'b.c'].sub(/\.c$/, '.o')  => ['a.o', 'b.o']
+    #
+    def sub(pat, rep)
+      collect { |fn| fn.sub(pat,rep) }
+    end
+
+    # Return a new FileList with the results of running +gsub+ against
+    # each element of the original list.
+    #
+    # Example:
+    #   FileList['lib/test/file', 'x/y'].gsub(/\//, "\\")
+    #      => ['lib\\test\\file', 'x\\y']
+    #
+    def gsub(pat, rep)
+      collect { |fn| fn.gsub(pat,rep) }
+    end
+
+    # Same as +sub+ except that the oringal file list is modified.
+    def sub!(pat, rep)
+      each_with_index { |fn, i| self[i] = fn.sub(pat,rep) }
+      self
+    end
+
+    # Same as +gsub+ except that the original file list is modified.
+    def gsub!(pat, rep)
+      each_with_index { |fn, i| self[i] = fn.gsub(pat,rep) }
+      self
+    end
+
+    # Convert a FileList to a string by joining all elements with a space.
+    def to_s
+      self.join(' ')
+    end
+
+    # Add matching glob patterns.
     def add_matching(*patterns)
       patterns.each do |pattern|
 	Dir[pattern].each { |fn| self << fn } if pattern
       end
     end
     private :add_matching
-
-    def exclude(pat)
-      reject { |fn| fn =~ pat }
-    end
-
-    def exclude!(pat)
-      reject! { |fn| fn =~ pat }
-    end
-
-    def sub(pat, rep)
-      collect { |fn| fn.sub(pat,rep) }
-    end
-
-    def gsub(pat, rep)
-      collect { |fn| fn.gsub(pat,rep) }
-    end
-
-    def sub!(pat, rep)
-      each_with_index { |fn, i| self[i] = fn.sub(pat,rep) }
-    end
-
-    def gsub!(pat, rep)
-      each_with_index { |fn, i| self[i] = fn.gsub(pat,rep) }
-    end
-
-    def to_s
-      self.join(' ')
-    end
 
     class << self
       def [](*args)

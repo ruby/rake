@@ -75,13 +75,15 @@ Some quick examples ...
 A simple task to delete backup files ...
 
    task :clean do
-     Dir['*~'].each {|fn| File.delete(fn) rescue nil }
+     Dir['*~'].each {|fn| rm fn rescue nil}
    end
 
-Note that task names are symbols (they are slightly easier to type than
-quoted strings ... but you may use quoted string if you would rather). 
-Note also the use of "rescue nil" to trap and ignore errors in the
-File.delete command.
+Note that task names are symbols (they are slightly easier to type
+than quoted strings ... but you may use quoted string if you would
+rather). Rake makes the methods of the FileUtils module directly
+available, so we take advantage of the <tt>rm</tt> command.  Also note
+the use of "rescue nil" to trap and ignore errors in the <tt>rm</tt>
+command.
 
 To run it, just type "rake clean".  Rake will automatically find a
 Rakefile in the current directory (or above!) and will invoke the
@@ -91,12 +93,11 @@ named, rake will invoke the task "default".
 Here's another task with dependencies ...
 
    task :clobber => [:clean] do
-     sys %{rm -r tempdir}
+     rm_r "tempdir"
    end
 
 Task :clobber depends upon task :clean, so :clean will be run before
-:clobber is executed.  "sys" is short for the "system" command (with an
-echo to standard out).
+:clobber is executed. 
 
 Files are specified by using the "file" command.  It is similar to the
 task command, except that the task name represents a file, and the task
@@ -109,14 +110,12 @@ Here is a file based dependency that will compile "hello.cc" to
    file "hello.cc"
    file "hello.o" => ["hello.cc"] do |t|
      srcfile = t.name.sub(/\.o$/, ".cc")
-     sys %{g++ #{srcfile} -c -o #{t.name}}
+     sh %{g++ #{srcfile} -c -o #{t.name}}
    end
 
 I normally specify file tasks with string (rather than symbols).  Some
 file names can't be represented by symbols.  Plus it makes the
-distinction between them more clear to the casual reader.  And yes,
-currently the "hello.cc" task with no prerequisites and no actions is
-required.
+distinction between them more clear to the casual reader.  
 
 Currently writing a task for each and every file in the project would be
 tedious at best.  I envision a set of libraries to make this job
@@ -136,7 +135,7 @@ message).  Does this sound interesting to anyone?  If so, I'll continue
 to clean it up and write it up and publish it on RAA.  Otherwise, I'll
 leave it as an interesting excerise and a tribute to the power of Ruby.
 
-Why /might/ rake be intersting to Ruby programmers.  I don't know,
+Why /might/ rake be interesting to Ruby programmers.  I don't know,
 perhaps ...
 
 * No weird make syntax (only weird Ruby syntax :-)
@@ -150,4 +149,3 @@ perhaps ...
 
 So ... Sorry for the long rambling message.  Like I said, I never
 intended to write this code at all.
-

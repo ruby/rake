@@ -57,6 +57,7 @@ end
 Rake::RDocTask.new { |rdoc|
   rdoc.rdoc_dir = 'html'
   rdoc.template = 'kilmer'
+#  rdoc.template = 'css2'
   rdoc.options << '--line-numbers'
   rdoc.rdoc_files.add('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
   rdoc.rdoc_files.add('lib/**/*.rb', 'doc/**/*.rdoc', 'test/*.rb')
@@ -85,13 +86,17 @@ spec = Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.autorequire = 'rake'
   s.files = PKG_FILES
+  s.description = <<EOF
+Rake is a Make-like program implemented in Ruby. Tasks
+and dependencies are specified in standard Ruby syntax. 
+EOF
 end
 
-Rake::PackageTask.new { |pkg|
+Rake::PackageTask.new do |pkg|
   pkg.gem_spec = spec
   pkg.need_zip = true
   pkg.need_tar = true
-}
+end
 
 # Misc tasks =========================================================
 

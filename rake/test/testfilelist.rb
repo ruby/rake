@@ -112,6 +112,7 @@ class TestFileList < Test::Unit::TestCase
     create_test_data
     fl = FileList["testdata/*.c"]
     f2 = fl.sub(/\.c$/, ".o")
+    assert_equal FileList, f2.class
     assert_equal ["testdata/abc.o", "testdata/x.o", "testdata/xyz.o"].sort,
       f2.sort
   end
@@ -120,9 +121,10 @@ class TestFileList < Test::Unit::TestCase
     create_test_data
     f = "x/a.c"
     fl = FileList[f, "x/b.c"]
-    fl.sub!(/\.c$/, ".o")
+    res = fl.sub!(/\.c$/, ".o")
     assert_equal ["x/a.o", "x/b.o"].sort, fl.sort
     assert_equal "x/a.c", f
+    assert_equal f.id, res.id
   end
 
   def test_sub_with_block

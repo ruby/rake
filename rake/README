@@ -150,7 +150,7 @@ Options are:
 [<tt>--require</tt> _name_ (-r)]
     Require _name_ before executing the Rakefile.
 
-[<tt>--tasks</tt> (-h)]
+[<tt>--tasks</tt> (-T)]
     Display a list of the major tasks and their comments.  Comments
     are defined using the "desc" command.
 

@@ -1,9 +1,33 @@
 #!/usr/bin/env ruby
 
 module Rake
-  class TestTask
-    attr_accessor :name, :libs, :pattern, :verbose
 
+  # Create a task that runs a set of tests.
+  #
+  # Example:
+  #  
+  #   Rake::TestTask.new do |t|
+  #     t.libs << "test"
+  #     t.pattern = '*test.rb'
+  #     t.verbose = true
+  #   end
+  #
+  class TestTask
+
+    # Name of test task. (default is :test)
+    attr_accessor :name
+
+    # List of directories to added to $LOAD_PATH before running the
+    # tests. (default is 'lib')
+    attr_accessor :libs
+
+    # Glob pattern to match test files. (default is 'test/test*.rb')
+    attr_accessor :pattern
+
+    # True if verbose test output desired. (default is false)
+    attr_accessor :verbose
+
+    # Create a testing task.
     def initialize(name=:test)
       @name = name
       @libs = ["lib"]
@@ -12,6 +36,8 @@ module Rake
       yield self if block_given?
       define
     end
+
+    private
 
     def define
       lib_path = @libs.join(':')
