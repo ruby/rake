@@ -29,11 +29,26 @@ Documentation can be found at
 
 == Installation
 
+=== Normal Installation
+
 You can install rake with the following command.
 
   % ruby install.rb
 
 from its distribution directory.
+
+=== GEM Installation
+
+Download the GEM file and install it with ..
+
+   gem -i rake-0.3.1.gem
+
+You may need root privileges to install.  After the gem is installed,
+you still need to copy the rake command to the an appropriate location
+in your path.  First find the location of you gem directory by running:
+
+  ruby -rrubygems -e 'puts Gem.dir'
+
 
 
 == Roadmap
