@@ -1,5 +1,11 @@
 = Rake Changelog
 
+== Version 0.4.7
+
+* Fixed problem in FileList that caused Ruby 1.9 to go into infinite
+  recursion.  Since to_a was removed from Object, it does not need to
+  added back into the list of methods to rewrite in FileList.
+
 == Version 0.4.6
 * Removed test version of ln in FileUtils that prevented safe_ln from
   using ln.
