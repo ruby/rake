@@ -17,7 +17,7 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 
 CLEAN.include('**/*.o')
-CLOBBER.include('doc/example/main')
+CLOBBER.include('doc/example/main', 'testdata')
 
 # Determine the current version of the software
 
@@ -42,17 +42,14 @@ Rake::TestTask.new(:testall) do |t|
     'test/contrib/test*.rb',
     'test/fun*.rb'
   ]
-  t.verbose = true
 end
 
 Rake::TestTask.new(:test) do |t|
   t.test_files = FileList['test/test*.rb']
-  t.verbose = true
 end
 
 Rake::TestTask.new(:testfun) do |t|
   t.pattern = 'test/fun*.rb'
-  t.verbose = true
 end
 
 Rake::TestTask.new(:testcontrib) do |t|
