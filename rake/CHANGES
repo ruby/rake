@@ -9,6 +9,7 @@
 * Added warning option for the Test Task (requested by Eric Hodel).
 * The jamis rdoc template is only used if it exists.
 * Added fix for Ruby 1.8.2 test/unit and rails problem.
+* Added contributed rake man file.
 
 == Version 0.4.15
 
