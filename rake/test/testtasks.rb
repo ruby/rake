@@ -1,11 +1,12 @@
 #!/usr/bin/env ruby
 
 require 'test/unit'
+require 'fileutils'
 require 'rake'
 require 'test/filecreation'
 
 ######################################################################
-class TestTestTask < Test::Unit::TestCase
+class TestTask < Test::Unit::TestCase
   def setup
     Task.clear
   end
@@ -78,6 +79,8 @@ class TestFileTask < Test::Unit::TestCase
   def setup
     Task.clear
     @runs = Array.new
+    FileUtils.rm_f NEWFILE
+    FileUtils.rm_f OLDFILE
   end
 
   def test_file_need
@@ -127,6 +130,23 @@ class TestFileTask < Test::Unit::TestCase
     Task[:obj].invoke
     Task[NEWFILE].invoke
     assert ! @runs.include?(NEWFILE)
+  end
+
+  # I have currently disabled this test.  I'm not convinced that
+  # deleting the file target on failure is always the proper thing to
+  # do.  I'm willing to hear input on this topic.
+  def xtest_file_deletes_on_failure
+    task :obj 
+    file NEWFILE => [:obj] do |t|
+      FileUtils.touch NEWFILE
+      fail "Ooops"
+    end
+    assert Task[NEWFILE]
+    begin
+      Task[NEWFILE].invoke
+    rescue Exception
+    end
+    assert( ! File.exist?(NEWFILE), "NEWFILE should be deleted")
   end
 
 end
