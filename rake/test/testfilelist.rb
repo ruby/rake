@@ -48,10 +48,10 @@ class TestFileList < Test::Unit::TestCase
   end
 
   def test_multiple_patterns
-    touch "testdata/x.c"
-    touch "testdata/xyz.c"
-    touch "testdata/abc.c"
-    touch "testdata/existing"
+    touch "testdata/x.c", :verbose=>false
+    touch "testdata/xyz.c", :verbose=>false
+    touch "testdata/abc.c", :verbose=>false
+    touch "testdata/existing", :verbose=>false
     fl = Rake::FileList.new
     fl.add('*.c', '*xist*')
     assert_equal [], fl
