@@ -190,7 +190,6 @@ class TestFileList < Test::Unit::TestCase
   end
 
   def test_string_ext
-    require 'rake/ext'
     assert_equal "one.net", "one.two".ext("net")
     assert_equal "one.net", "one.two".ext(".net")
     assert_equal "one.net", "one".ext("net")
@@ -212,14 +211,7 @@ class TestFileList < Test::Unit::TestCase
     assert_equal "..", "..".ext("c")
   end
 
-  def test_array_ext
-    require 'rake/ext'
-    assert_equal ['one.c', '.one.c'],
-      ['one.net', '.one'].ext('c')
-  end
-
   def test_filelist_ext
-    require 'rake/ext'
     assert_equal FileList['one.c', '.one.c'],
       FileList['one.net', '.one'].ext('c')
   end
