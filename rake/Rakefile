@@ -32,11 +32,20 @@ SRC_RB = FileList['lib/**/*.rb']
 # The default task is run if rake is given no explicit arguments.
 
 desc "Default Task"
-task :default => :test
+task :default => :testall
 
 # Test Tasks ---------------------------------------------------------
 
-Rake::TestTask.new do |t|
+Rake::TestTask.new(:testall) do |t|
+  t.test_files = FileList[
+    'test/test*.rb',
+    'test/contrib/test*.rb',
+    'test/fun*.rb'
+  ]
+  t.verbose = true
+end
+
+Rake::TestTask.new(:test) do |t|
   t.test_files = FileList['test/test*.rb']
   t.verbose = true
 end
@@ -54,8 +63,6 @@ end
 directory 'testdata'
 task :test => ['testdata']
 
-desc "Run all test targets"
-task :testall => [:test, :testcontrib, :testfun]
 
 # Abbreviations
 
