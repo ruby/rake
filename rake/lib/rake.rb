@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.4.7'
+RAKEVERSION = '0.4.7.1'
 
 require 'rbconfig'
 require 'ftools'
@@ -775,7 +775,7 @@ FileList = Rake::FileList
 # line, a RakeApp object is created and run.
 #
 class RakeApp
-  RAKEFILES = ['rakefile', 'Rakefile']
+  RAKEFILES = ['rakefile', 'Rakefile', 'rakefile.rb', 'Rakefile.rb']
 
   OPTIONS = [
     ['--dry-run',  '-n', GetoptLong::NO_ARGUMENT,
