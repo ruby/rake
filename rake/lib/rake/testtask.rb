@@ -36,8 +36,6 @@ module Rake
   #
   class TestTask < TaskLib
 
-    SEP = ''
-
     # Name of test task. (default is :test)
     attr_accessor :name
 
@@ -80,20 +78,15 @@ module Rake
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
 	RakeFileUtils.verbose(@verbose) do
-	  workaround = %{$0="#{@name}"}
-	  ruby %{-I#{lib_path} -e'#{workaround}' #{SEP}#{required_files}#{option_list}}
+	  ruby %{-I#{lib_path} -S testrb #{file_list.join(' ')} #{option_list}}
 	end
       end
       self
     end
 
-    def required_files # :nodoc:
-      file_list.gsub(/^(.*)\.rb$/, ' -r\1').join(" #{SEP}")
-    end
-    
     def option_list # :nodoc:
       if get_options
-	testoptions = " #{SEP} -- #{get_options}"
+	testoptions = " -- #{get_options}"
       else
 	testoptions = ''
       end
