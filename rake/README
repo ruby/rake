@@ -143,6 +143,11 @@ Rake is invoked from the command line using:
 
 Options are:
 
+[<tt><em>name</em>=<em>value</em></tt>]
+    Set the environment variable <em>name</em> to <em>value</em>
+    during the execution of the <b>rake</b> command.  You can access
+    the value by using ENV['<em>name</em>'].
+
 [<tt>--dry-run</tt> (-n)]
     Do a dry run.  Print the tasks invoked and executed, but do not
     actually execute any of the actions.
