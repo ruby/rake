@@ -1,10 +1,18 @@
 # Rakefile for rake        -*- ruby -*-
 
+# Copyright 2003 by Jim Weirich (jweirich@one.net)
+# All rights reserved.
+
+# This file is may be distributed under an MIT style license.  See
+# MIT-LICENSE for details.
+
 require 'rake/testtask'
 require 'rake/packagetask'
 require 'rake/rdoctask'
 require 'rake/contrib/sshpublisher'
 require 'rake/contrib/rubyforgepublisher'
+
+# Determine the current version of the software
 
 if `ruby -Ilib ./bin/rake --version` =~ /\S+$/
   PKG_VERSION = $&
@@ -12,34 +20,17 @@ else
   PKG_VERSION = "0.0.0"
 end
 
+# The default task is run if rake is given no explicit arguments.
+
 desc "Default Task"
 task :default => :test
 
-Rake::RDocTask.new { |rdoc|
-  rdoc.rdoc_dir = 'html'
-  rdoc.template = 'kilmer'
-  rdoc.options << '--line-numbers'
-  rdoc.rdoc_files.add('README', 'LICENSE', 'TODO', 'CHANGES')
-  rdoc.rdoc_files.add('lib/**/*.rb', 'doc/**/*.rdoc', 'test/*.rb')
-}.define
-
-pkg = Rake::PackageTask.new("rake", PKG_VERSION)
-pkg.package_files << 'install.rb'
-pkg.package_files.add(
-  '[A-Z]*',
-  'bin/**/*', 
-  'lib/**/*.rb', 
-  'test/**/*.rb',
-  'doc/**/*',
-  'build/rubyapp.rb',
-  '*.blurb')
-pkg.package_files.reject! { |fn| fn =~ /\bCVS\b|~$/ }
-pkg.define
+# Define a test task.
 
 Rake::TestTask.new { |t|
   t.libs << "test"
   t.verbose = true
-}.define
+}
 
 directory 'testdata'
 task :test => ['testdata']
@@ -47,16 +38,48 @@ task :test => ['testdata']
 Rake::TestTask.new(:contrib_test) { |ctest|
   ctest.pattern = 'test/contrib/test*.rb'
   ctest.verbose = true
-}.define
+}
+
+# Define a test that will run all the test targets.
+
+desc "Run all test targets"
+task :testall => [:test, :contrib_test]
+
+# Install rake using the standard install.rb script.
 
 desc "Install the application"
 task :install do
   ruby "install.rb"
 end
 
-desc "Run all test targets"
-task :testall => [:test, :contrib_test]
+# Create a task to build the RDOC documentation tree.
 
-# optional publish target
+Rake::RDocTask.new { |rdoc|
+  rdoc.rdoc_dir = 'html'
+  rdoc.template = 'kilmer'
+  rdoc.options << '--line-numbers'
+  rdoc.rdoc_files.add('README', 'LICENSE', 'TODO', 'CHANGES')
+  rdoc.rdoc_files.add('lib/**/*.rb', 'doc/**/*.rdoc', 'test/*.rb')
+}
+
+# Create a task that will package the Rake software into distributable
+# tar and zip files.
+
+Rake::PackageTask.new("rake", PKG_VERSION) { |pkg|
+  pkg.package_files << 'install.rb'
+  pkg.need_zip = false
+  pkg.package_files.add(
+    '[A-Z]*',
+    'bin/**/*', 
+    'lib/**/*.rb', 
+    'test/**/*.rb',
+    'doc/**/*',
+    '*.blurb')
+  pkg.package_files.reject! { |fn| fn =~ /\bCVS\b|~$/ }
+}
+
+# Define an optional publish target in an external file.  If the
+# publish.rf file is not found, the publish targets won't be defined.
+
 load "publish.rf" if File.exist? "publish.rf"
 
