@@ -56,7 +56,7 @@ class TestFileUtils < Test::Unit::TestCase
     verbose(false) { sh %{test/shellcommand.rb} }
     assert true, "should not fail"
   end
-  
+
   def test_sh_multiple_arguments
     ENV['RAKE_TEST_SH'] = 'someval'
     # This one gets expanded by the shell
@@ -94,16 +94,23 @@ class TestFileUtils < Test::Unit::TestCase
   def test_ruby
     verbose(false) do
       ENV['RAKE_TEST_RUBY'] = "123"
+      block_run = false
       # This one gets expanded by the shell
       ruby %{-e "exit $RAKE_TEST_RUBY"} do |ok, status|
         assert(!ok)
         assert_equal 123, status.exitstatus
+	block_run = true
       end
+      assert block_run, "The block must be run"
+
       # This one does not get expanded
+      block_run = false
       ruby '-e', 'exit "$RAKE_TEST_RUBY".length' do |ok, status|
         assert(!ok)
         assert_equal 15, status.exitstatus
+	block_run = true
       end
+      assert block_run, "The block must be run"
     end
   end
 
