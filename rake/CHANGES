@@ -1,5 +1,9 @@
 = Rake Changelog
 
+== Version 0.4.12.2
+
+* Fixed the dry-run flag so it is operating again.
+
 == Version 0.4.12.1
 
 * Multiple arguments to sh and ruby commands will not be interpreted
