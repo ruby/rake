@@ -102,10 +102,6 @@ module Rake
       "#{rdoc_dir}/index.html"
     end
 
-    def paste(a,b)
-      (a.to_s + b.to_s).intern
-    end
-
   end
 end
 
