@@ -54,7 +54,7 @@ end
 
 # Create a task to build the RDOC documentation tree.
 
-Rake::RDocTask.new { |rdoc|
+Rake::RDocTask.new("rdoc") { |rdoc|
   rdoc.rdoc_dir = 'html'
   rdoc.template = 'kilmer'
 #  rdoc.template = 'css2'

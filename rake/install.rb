@@ -1,7 +1,6 @@
 require 'rbconfig'
 require 'find'
 require 'ftools'
-require 'lib/rake/indir'
 
 include Config
 
@@ -73,7 +72,7 @@ File::chmod(0755, rake_dest)
 
 # The library files
 
-files = Dir.indir('lib') { Dir['**/*.rb'] }
+files = Dir.chdir('lib') { Dir['**/*.rb'] }
 
 for fn in files
   fn_dir = File.dirname(fn)
