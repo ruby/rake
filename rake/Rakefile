@@ -159,7 +159,7 @@ else
 
     s.author = "Jim Weirich"
     s.email = "jim@weirichhouse.org"
-    s.homepage = "http://onestepback.org"
+    s.homepage = "http://rake.rubyforge.org"
     s.rubyforge_project = "rake"
   end
 
