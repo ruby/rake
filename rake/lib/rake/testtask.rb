@@ -113,14 +113,10 @@ module Rake
     def fix
       case RUBY_VERSION
       when '1.8.2'
-	fix_for_ruby182
+	find_fix_file 'rake/ruby182_test_unit_fix'
       else
 	nil
       end || ''
-    end
-
-    def fix_for_ruby182
-      find_fix_file 'rake/ruby182_test_unit_fix'
     end
 
     def find_fix_file(fn)
@@ -130,7 +126,6 @@ module Rake
       end
       nil
     end
-
 
   end
 end
