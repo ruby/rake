@@ -1,7 +1,17 @@
 #!/usr/bin/env ruby
 
-# The package task will package up a project into a distributable
-# format.
+# Define a package task libarary to aid in the definition of
+# redistributable package files.
+
+require 'rake'
+require 'rake/tasklib'
+
+begin
+  require 'rubygems'
+rescue Exception
+  puts "Unable to find RubyGEMS"
+  fail "The Package Task Lib requires RubyGEMS"
+end
 
 module Rake
 
@@ -37,7 +47,7 @@ module Rake
   #
   #   PackageTask.new("rake", "1.2.3") do |p|
   #     p.need_tar = true
-  #     p.package_files.add("lib/**/*.rb")
+  #     p.package_files.include("lib/**/*.rb")
   #   end
   #
   # Example using a Ruby GEM spec:
@@ -57,17 +67,17 @@ module Rake
   #   EOF
   #   end
   #   
-  #   Rake::PackageTask.new do |pkg|
+  #   Rake::PackageTask.new(spec) do |pkg|
   #     pkg.gem_spec = spec
   #     pkg.need_zip = true
   #     pkg.need_tar = true
   #   end
   #
-  class PackageTask
-    # Name of the package.
-    attr_accessor :name
+  class SimplePackageTask < TaskLib
+    # Name of the package (from the GEM Spec).
+    attr_reader :name
 
-    # Version of the package (e.g. '1.3.2').
+    # Version of the package (e.g. '1.3.2', from the GEM Spec).
     attr_accessor :version
 
     # Directory used to store the package files (default is 'pkg').
@@ -92,27 +102,27 @@ module Rake
     # Create a Package Task with the given name and version.  Omit
     # name and version if a gemspec is supplied.
     def initialize(name=nil, version=nil)
+      init(name, version)
+      yield self if block_given?
+      define if block_given?
+    end
+
+    def init(name, version)
       @name = name
       @version = version
       @package_files = Rake::FileList.new
       @package_dir = 'pkg'
       @need_tar = false
       @need_zip = false
-      @gem_spec = nil
-      yield self if block_given?
-      define
     end
 
-    private
     def define
-      copy_from_gem if gem_spec
+      fail "Version required (or :noversion)" if @version.nil?
+      @version = nil if @version == :noversion
 
-      desc "Build the package"
+      desc "Build all the packages"
       task :package
       
-      desc "Create a RubyGem for #{name}"
-      task :gem
-
       desc "Force a rebuild of the package files"
       task :repackage => [:clobber_package, :package]
       
@@ -141,19 +151,6 @@ module Rake
 	end
       end
 
-      if gem_spec
-	task :package => [:gem]
-	task :gem => ["#{package_dir}/#{gem_file}"]
-	file "#{package_dir}/#{gem_file}" => [package_dir] + package_files do
-	  when_writing("Creating GEM") {
-	    Gem::Builder.new(gem_spec).build
-	    verbose(false) {
-	      mv gem_file, "#{package_dir}/#{gem_file}"
-	    }
-	  }
-	end
-      end
-
       directory package_dir
 
       file package_dir_path => @package_files do
@@ -175,22 +172,12 @@ module Rake
 
     private
 
-    def copy_from_gem
-      @name = gem_spec.name
-      @version = gem_spec.version
-      @package_files += gem_spec.files if gem_spec.files
-    end
-
     def package_name
-      "#{@name}-#{@version}"
+      @version ? "#{@name}-#{@version}" : @name
     end
       
     def package_dir_path
       "#{package_dir}/#{package_name}"
-    end
-
-    def gem_file
-      "#{package_name}.gem"
     end
 
     def tgz_file
@@ -200,6 +187,41 @@ module Rake
     def zip_file
       "#{package_name}.zip"
     end
+  end
+
+  class GemPackageTask < SimplePackageTask
+    def initialize(gem)
+      init(gem)
+      yield self if block_given?
+      define if block_given?
+    end
+
+    def init(gem)
+      super(gem.name, gem.version)
+      @gem_spec = gem
+      @package_files += gem_spec.files if gem_spec.files
+    end
+
+    def define
+      super
+      task :package => [:gem]
+      task :gem => ["#{package_dir}/#{gem_file}"]
+      file "#{package_dir}/#{gem_file}" => [package_dir] + @gem_spec.files do
+	when_writing("Creating GEM") {
+	  Gem::Builder.new(gem_spec).build
+	  verbose(false) {
+	    mv gem_file, "#{package_dir}/#{gem_file}"
+	  }
+	}
+      end
+    end
+    
+    private
+    
+    def gem_file
+      "#{package_name}.gem"
+    end
+    
   end
 end
 
