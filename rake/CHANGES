@@ -1,5 +1,13 @@
 = Rake Changelog
 
+== Version 0.3.2.x
+
+* Removed some hidden dependencies on rubygems.  Tests now will test
+  gems only if they are installed.
+* Removed Sys from some example files.  I believe that is that last
+  reference to Sys outside of the contrib area.
+* Updated all copyright notices to include 2004.
+
 == Version 0.3.2
 
 * GEM Installation now works with the application stub.
