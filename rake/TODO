@@ -13,5 +13,7 @@ the rake-devel@rubyforge.org mailing list.
 * Autogenerate Dependencies
 * Rules should apply to existing tasks if no actions are defined.
 * How to create multiple package tasks without task name collision?
+* Trap "ln -s" commands that fail and use "cp" instead (SMB mounted
+  drives have problems with "ln -s".
 
 (moved DONE list to CHANGES file)
