@@ -1,10 +1,13 @@
 #!/usr/bin/env ruby
 
 require 'test/unit'
-require 'rake/filelist'
 
 class TestFileList < Test::Unit::TestCase
   FileList = Rake::FileList
+
+  def setup
+    create_test_data
+  end
 
   def test_create
     fl = FileList.new
@@ -12,14 +15,17 @@ class TestFileList < Test::Unit::TestCase
   end
 
   def test_create_with_args
-    create_test_data
     fl = FileList.new("testdata/*.c", "x")
     assert_equal ["testdata/abc.c", "testdata/x.c", "testdata/xyz.c", "x"].sort,
       fl.sort
   end
 
+  def test_create_with_block
+    fl = FileList.new { |f| f.include("x") }
+    assert_equal ["x"], fl
+  end
+
   def test_create_with_brackets
-    create_test_data
     fl = FileList["testdata/*.c", "x"]
     assert_equal ["testdata/abc.c", "testdata/x.c", "testdata/xyz.c", "x"].sort,
       fl.sort
@@ -33,8 +39,8 @@ class TestFileList < Test::Unit::TestCase
 
   def test_add_many
     fl = FileList.new
-    fl.add %w(a d c )
-    fl.add('x', 'y')
+    fl.include %w(a d c )
+    fl.include('x', 'y')
     assert_equal ['a', 'd', 'c', 'x', 'y'], fl
   end
 
@@ -42,13 +48,13 @@ class TestFileList < Test::Unit::TestCase
     f = FileList.new
     g = f << "x"
     assert_equal f.id, g.id
-    h = f.add("y")
+    h = f.include("y")
     assert_equal f.id, h.id
   end
   
   def test_match
     fl = FileList.new
-    fl.add('test/test*.rb')
+    fl.include('test/test*.rb')
     assert fl.include?("test/testfilelist.rb")
     assert fl.size > 3
     fl.each { |fn| assert_match /\.rb$/, fn }
@@ -57,7 +63,7 @@ class TestFileList < Test::Unit::TestCase
   def test_add_matching
     fl = FileList.new
     fl << "a.java"
-    fl.add("test/*.rb")
+    fl.include("test/*.rb")
     assert_equal "a.java", fl[0]
     assert fl.size > 2
     assert fl.include?("test/testfilelist.rb")
@@ -66,9 +72,9 @@ class TestFileList < Test::Unit::TestCase
   def test_multiple_patterns
     create_test_data
     fl = FileList.new
-    fl.add('*.c', '*xist*')
+    fl.include('*.c', '*xist*')
     assert_equal [], fl
-    fl.add('testdata/*.c', 'testdata/*xist*')
+    fl.include('testdata/*.c', 'testdata/*xist*')
     assert_equal [
       'testdata/x.c', 'testdata/xyz.c', 'testdata/abc.c', 'testdata/existing'
     ].sort, fl.sort
@@ -76,7 +82,7 @@ class TestFileList < Test::Unit::TestCase
 
   def test_reject
     fl = FileList.new
-    fl.add %w(testdata/x.c testdata/abc.c testdata/xyz.c testdata/existing)
+    fl.include %w(testdata/x.c testdata/abc.c testdata/xyz.c testdata/existing)
     fl.reject! { |fn| fn =~ %r{/x} }
     assert_equal [
       'testdata/abc.c', 'testdata/existing'
@@ -85,12 +91,16 @@ class TestFileList < Test::Unit::TestCase
 
   def test_exclude
     fl = FileList['testdata/x.c', 'testdata/abc.c', 'testdata/xyz.c', 'testdata/existing']
-    fl.exclude(%r{/x.+\.})
-    assert_equal 4, fl.size
-    fl.exclude!(%r{/x.+\.})
+    fl.each { |fn| touch fn, :verbose => false }
+    x = fl.exclude(%r{/x.+\.})
     assert_equal [
       'testdata/x.c', 'testdata/abc.c', 'testdata/existing'
     ], fl
+    assert_equal fl.id, x.id
+    fl.exclude('testdata/*.c')
+    assert_equal ['testdata/existing'], fl
+    fl.exclude('testdata/existing')
+    assert_equal [], fl
   end
 
   def test_unique
@@ -109,26 +119,27 @@ class TestFileList < Test::Unit::TestCase
   end
 
   def test_sub
-    create_test_data
     fl = FileList["testdata/*.c"]
     f2 = fl.sub(/\.c$/, ".o")
     assert_equal FileList, f2.class
     assert_equal ["testdata/abc.o", "testdata/x.o", "testdata/xyz.o"].sort,
       f2.sort
+    f3 = fl.gsub(/\.c$/, ".o")
+    assert_equal FileList, f3.class
+    assert_equal ["testdata/abc.o", "testdata/x.o", "testdata/xyz.o"].sort,
+      f3.sort
   end
 
   def test_sub!
-    create_test_data
     f = "x/a.c"
     fl = FileList[f, "x/b.c"]
     res = fl.sub!(/\.c$/, ".o")
     assert_equal ["x/a.o", "x/b.o"].sort, fl.sort
     assert_equal "x/a.c", f
-    assert_equal f.id, res.id
+    assert_equal fl.id, res.id
   end
 
   def test_sub_with_block
-    create_test_data
     fl = FileList["src/org/onestepback/a.java", "src/org/onestepback/b.java"]
 # The block version doesn't work the way I want it to ...
 #    f2 = fl.sub(%r{^src/(.*)\.java$}) { |x|  "classes/" + $1 + ".class" }
