@@ -11,8 +11,6 @@ Send suggestions for this list to mailto:jweirich@one.net.
 * Autogenerate Dependencies
 * Rules should apply to existing tasks if no actions are defined.
 
-* The '--main' option shouldn't be given to RDoc by default, and
-  RDocTask#main certainly shouldn't default to README.
 * It's unclear how to use RDocTask#options.  The way it's rendered into the
   rdoc command is buggy; items should be space-separated.
 * When executing the 'rdoc' task repeatedly, RDoc complains that the output
@@ -66,6 +64,9 @@ General:
 
 === Done
 
+==== Version 0.2.10
+* The '--main' option shouldn't be given to RDoc by default, and
+  RDocTask#main certainly shouldn't default to README.
 ==== Version 0.2.7
 
 <b>jw - 19/Oct/03</b> :: Display dependencies
