@@ -260,10 +260,10 @@ end
 # demand.
 def directory(dir)
   path = []
-  Sys.split_all(dir).each do |p| 
+  split_all(dir).each do |p| 
     path << p
-    FileTask.define_task(File.join(path)) do |t|
-      mkdir_p t.name
+    file File.join(path) do |t|
+      mkdir_p t.name if ! File.exist?(t.name)
     end
   end
 end
