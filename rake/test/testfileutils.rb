@@ -56,6 +56,17 @@ class TestFileUtils < Test::Unit::TestCase
     verbose(false) { sh %{test/shellcommand.rb} }
     assert true, "should not fail"
   end
+  
+  def test_sh_multiple_arguments
+    ENV['RAKE_TEST_SH'] = 'someval'
+    # This one gets expanded by the shell
+    verbose(false) { sh %{test $RAKE_TEST_SH = someval} }
+    assert true, "should not fail"
+    assert_raises(RuntimeError) {
+      # This one does not get expanded
+      verbose(false) { sh 'test','$RAKE_TEST_SH', '=', 'someval' }
+    }
+  end
 
   def test_sh_failure
     assert_raises(RuntimeError) { 
@@ -78,6 +89,22 @@ class TestFileUtils < Test::Unit::TestCase
       end
     }
     assert_equal 2, count, "Block count should be 2"
-end
+  end
+
+  def test_ruby
+    verbose(false) do
+      ENV['RAKE_TEST_RUBY'] = "123"
+      # This one gets expanded by the shell
+      ruby %{-e "exit $RAKE_TEST_RUBY"} do |ok, status|
+        assert(!ok)
+        assert_equal 123, status.exitstatus
+      end
+      # This one does not get expanded
+      ruby '-e', 'exit "$RAKE_TEST_RUBY".length' do |ok, status|
+        assert(!ok)
+        assert_equal 15, status.exitstatus
+      end
+    end
+  end
 
 end
