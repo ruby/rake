@@ -46,7 +46,9 @@ module Rake
     # True if verbose test output desired. (default is false)
     attr_accessor :verbose
 
-    # Test options passed to the test suite. (default is NONE)
+    # Test options passed to the test suite.  An explicit
+    # TESTOPTS=opts on the command line will override this. (default
+    # is NONE)
     attr_accessor :options
 
     # Glob pattern to match test files. (default is 'test/test*.rb')
@@ -85,15 +87,7 @@ module Rake
     end
 
     def option_list # :nodoc:
-      if get_options
-	testoptions = " -- #{get_options}"
-      else
-	testoptions = ''
-      end
-    end
-
-    def get_options # :nodoc:
-      ENV['TESTOPTS'] || @options
+      ENV['TESTOPTS'] || @options || ""
     end
 
     def file_list # :nodoc:
