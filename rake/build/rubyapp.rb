@@ -130,20 +130,25 @@ class AppBuilder
   end
     
   def create_tasks
+    desc "Default Task"
     task :default => [:test]
     
+    desc "Print the Application Revision"
     task :rev do
       puts revision
     end
 
+    desc "Run all tests, both unit and acceptance"
     task :alltests => [		# Run the unit and acceptance tests (default)
       :test, :acceptance
     ]
     
+    desc "Run unit tests"
     task :test do			# Run the Unit Tests
       runtests('test')
     end
     
+    desc "Run acceptance tests"
     task :acceptance do	# Run acceptance tests
       runtests('acceptance')
     end
@@ -152,10 +157,12 @@ class AppBuilder
     
     task :repackage => [:clean_package, :package]
     
+    desc "Remove package products" 
     task :clean_package do
       Sys.delete_all "pkg"
     end
     
+    desc "Build the distribution package" 
     task :package => [		# Create a distribution package
       "pkg/#{tgz_file}",
       "pkg/#{zip_file}",
@@ -184,6 +191,7 @@ class AppBuilder
       Sys.delete_all "html"
     end
     
+    desc "Build the web page"
     task :web => [		# Create all the files for a web installation 
       "Rakefile", :rdoc
     ]
@@ -196,14 +204,17 @@ class AppBuilder
     end
     
     
+    desc "Publish the web and package files"
     task :publish => [		# Publish the Application
       :publish_web, :publish_package
     ]
     
+    desc "Publish the web documentation"
     task :publish_web => [:web] do
       @publisher.upload_web(@name)
     end
     
+    desc "Publish the package files"
     task :publish_package => [:package] do
       @publisher.upload_package(@name, tgz_file, zip_file)
     end
@@ -219,6 +230,7 @@ class AppBuilder
 
     # == Installation
     
+    desc "Install the application"
     task :install do		# Install the application
       Sys.ruby "install.rb"
     end
