@@ -131,7 +131,7 @@ new feature to be submitted in the form of new unit tests.
 
 For other information, feel free to ask on the ruby-talk mailing list
 (which is mirrored to comp.lang.ruby) or contact
-mailto:jweirich@one.net.
+mailto:jim@weirichhouse.org.
 
 ----
 
@@ -200,9 +200,9 @@ for details on the Rakefile format.
 
 = Other stuff
 
-Author::   Jim Weirich <jweirich@one.net>
-Requires:: Ruby 1.6.7 or later
-License::  Copyright 2003 by Jim Weirich.
+Author::   Jim Weirich <jim@weirichhouse.org>
+Requires:: Ruby 1.8.0 or later
+License::  Copyright 2003, 2004 by Jim Weirich.
            Released under an MIT-style license.  See the LICENSE file
            included in the distribution.
 
