@@ -67,6 +67,7 @@ module Rake
       @name = name
       @libs = ["lib"]
       @pattern = nil
+      @options = nil
       @test_files = nil
       @verbose = false
       yield self if block_given?
