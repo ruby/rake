@@ -15,7 +15,8 @@ class TestTask < Test::Unit::TestCase
     arg = nil
     t = Task.lookup(:name).enhance { |task| arg = task; 1234 }
     assert_equal "name", t.name
-    assert [], t.prerequisites
+    assert_equal [], t.prerequisites
+    assert t.prerequisites.is_a?(FileList)
     assert t.needed?
     t.execute
     assert_equal t, arg
@@ -211,7 +212,7 @@ class TestDefinitions < Test::Unit::TestCase
     assert_equal [n2.to_s], t.prerequisites.collect{|n| n.to_s}
     t.invoke
     t2 = Task[n2]
-    assert_equal [], t2.prerequisites
+    assert_equal FileList[], t2.prerequisites
     t3 = Task[n3]
     assert_equal [n1.to_s, n2.to_s], t3.prerequisites.collect{|n|n.to_s}
   end
