@@ -34,30 +34,36 @@ SRC_RB = FileList['lib/**/*.rb']
 desc "Default Task"
 task :default => :test
 
-# Define a test task.
+# Test Tasks ---------------------------------------------------------
 
-desc "Run the unit tests"
-task :test do
-  ruby %{-Ilib:test -e 'Dir["test/test*.rb"].each { |f| load f; puts f }' }
+Rake::TestTask.new do |t|
+  t.pattern = 'test/test*.rb'
+  t.verbose = true
 end
 
-desc "Run the Functional Tests"
-task :test_fun do
-  ruby %{-Ilib:test -e 'Dir["test/fun*.rb"].each { |f| load f; puts f }' }
+Rake::TestTask.new(:testfun) do |t|
+  t.pattern = 'test/fun*.rb'
+  t.verbose = true
+end
+
+Rake::TestTask.new(:testcontrib) do |t|
+  t.pattern = 'test/contrib/test*.rb'
+  t.verbose = true
 end
 
 directory 'testdata'
 task :test => ['testdata']
 
-Rake::TestTask.new(:test_contrib) { |ctest|
-  ctest.pattern = 'test/contrib/test*.rb'
-  ctest.verbose = true
-}
-
-# Define a test that will run all the test targets.
-
 desc "Run all test targets"
-task :testall => [:test, :test_contrib, :test_fun]
+task :testall => [:test, :testcontrib, :testfun]
+
+# Abbreviations
+
+task :ta => [:testall]
+task :tf => [:testfun]
+task :tc => [:testcontrib]
+
+# CVS Tasks ----------------------------------------------------------
 
 desc "Tag all the CVS files with the latest release number (TAG=x)"
 task :tag do
