@@ -3,6 +3,7 @@
 == Version 0.4.16 prerelease
 
 * Fixed documentation that was lacking the Rake module name.
+* Added tar.gz and tar.bz2 support to package task.
 
 == Version 0.4.15
 
