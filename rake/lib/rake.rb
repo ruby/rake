@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.4.12.1'
+RAKEVERSION = '0.4.12.2'
 
 require 'rbconfig'
 require 'ftools'
@@ -111,7 +111,13 @@ class Task
 
   # Execute the actions associated with this task.
   def execute
-    puts "** Execute #{name}" if $trace
+    if $dryrun
+      puts "** Execute (dry run) #{name}"
+      return
+    end
+    if $trace
+      puts "** Execute #{name}"
+    end
     self.class.enhance_with_matching_rule(name) if @actions.empty?
     @actions.each { |act| result = act.call(self) }
   end
