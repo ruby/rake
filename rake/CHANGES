@@ -1,5 +1,15 @@
 = Rake Changelog
 
+== Version 0.2.7
+
+* Added "desc" for task descriptions.
+* -T will now display tasks with descriptions.
+* -P will display tasks and prerequisites.
+
+== Version 0.2.6
+
+* Moved to RubyForge
+
 == Version 0.2.5
 
 * Switched to standard ruby app builder.
