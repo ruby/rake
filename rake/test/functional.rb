@@ -16,30 +16,30 @@ class FunctionalTest < Test::Unit::TestCase
     @rake_path = File.expand_path("bin/rake")
     lib_path = File.expand_path("lib")
     @ruby_options = "-I#{lib_path} -I."
-    @verbose = true if ENV['VERBOSE']
+    @verbose = ! ENV['VERBOSE'].nil?
   end
 
   def test_rake_default
     Dir.chdir("test/data/default") do rake end
-    assert_match /^DEFAULT$/, @out
+    assert_match(/^DEFAULT$/, @out)
     assert_status
   end
 
   def test_rake_error_on_bad_task
     Dir.chdir("test/data/default") do rake "xyz" end
-    assert_match /rake aborted/, @out
+    assert_match(/rake aborted/, @out)
     assert_status(1)
   end
 
   def test_env_availabe_at_top_scope
     Dir.chdir("test/data/default") do rake "TESTTOPSCOPE=1" end
-    assert_match /^TOPSCOPE$/, @out
+    assert_match(/^TOPSCOPE$/, @out)
     assert_status
   end
 
   def test_env_availabe_at_task_scope
     Dir.chdir("test/data/default") do rake "TESTTASKSCOPE=1 task_scope" end
-    assert_match /^TASKSCOPE$/, @out
+    assert_match(/^TASKSCOPE$/, @out)
     assert_status
   end
 
