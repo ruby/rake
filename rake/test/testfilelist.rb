@@ -138,13 +138,13 @@ class TestFileList < Test::Unit::TestCase
   end
 
   def test_to_s_pending
-    fl = FileList['testdata/*.f']
-    assert_equal  %{testdata/abc.f}, fl.to_s
+    fl = FileList['testdata/abc.*']
+    assert_equal  %{testdata/abc.c}, fl.to_s
   end
 
   def test_inspect_pending
-    fl = FileList['testdata/*.f']
-    assert_equal  %{["testdata/abc.f"]}, fl.inspect
+    fl = FileList['testdata/abc.*']
+    assert_equal  %{["testdata/abc.c"]}, fl.inspect
   end
 
   def test_sub
