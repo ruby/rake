@@ -45,12 +45,20 @@ module Rake
     # Create the tasks defined by this task lib.
     def define
       lib_path = @libs.join(':')
+      setup_code = running_as_gem ?
+        %{-e 'require "rubygems"; require_gem "rake"' } :
+	""
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
-	ruby %{-I#{lib_path} -rrake/runtest } +
+	ruby %{-I#{lib_path} } + setup_code +
+	  %{-e 'require "rake/runtest"' } +	  
 	  %{-e 'Rake.run_tests("#{@pattern}", #{@verbose||verbose})'}
       end
       self
+    end
+
+    def running_as_gem
+      $LOAD_PATH.find { |fn| fn =~ %r{gems/.*/rake} } != nil
     end
 
   end
