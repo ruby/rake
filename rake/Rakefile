@@ -3,7 +3,7 @@
 require 'build/rubyapp'
 
 builder = AppBuilder.new('rake')
-builder.revision_command "ruby ./bin/rake --version"
+builder.revision_command "ruby -Ilib ./bin/rake --version"
 
 builder.package_files << 'install.rb'
 builder.package_files.no_match(/\bCVS\b/, /~$/)
@@ -33,12 +33,29 @@ local_info = HostInfo.new(
   'working/projects/source2html/dummy/software',
   'working/projects/source2html/dummy/packages')
 
-builder.publisher = SshPublisher.new(umlcoop_info)
+class RubyForgePublisher
+  attr_reader :project, :proj_id, :user
 
-desc "Publish the documentation to RubyForge"
-task :publish_rubyforge_doc => [:web] do
-  Sys.run %{scp -rqp html/* jimweirich@rubyforge.org:/var/www/gforge-projects/rake}
+  def initialize(projname, proj_id, user)
+    @project = projname
+    @proj_id = proj_id
+    @user = user
+  end
+
+  def upload_web(app, localdir='html')
+    Sys.run %{scp -rq html/* #{user}@rubyforge.org:/var/www/gforge-projects/#{project}}
+  end
+
+  def upload_package(app, *files)
+    puts "Use the following link ..."
+    puts "  http://rubyforge.org/project/showfiles.php?group_id=#{proj_id}"
+    puts "to update the following release files."
+    files.each { |f| puts "  #{f}" }
+  end
 end
+
+#builder.publisher = SshPublisher.new(umlcoop_info)
+builder.publisher = RubyForgePublisher.new('rake', 50, 'jimweirich')
 
 # Additional dependencies beyond the standard
 
