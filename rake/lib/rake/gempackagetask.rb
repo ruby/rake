@@ -81,7 +81,7 @@ module Rake
       file "#{package_dir}/#{gem_file}" => [package_dir] + @gem_spec.files do
 	when_writing("Creating GEM") {
 	  Gem::Builder.new(gem_spec).build
-	  verbose(false) {
+	  verbose(true) {
 	    mv gem_file, "#{package_dir}/#{gem_file}"
 	  }
 	}
@@ -96,5 +96,3 @@ module Rake
     
   end
 end
-
-    
