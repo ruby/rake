@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.4.14.1'
+RAKEVERSION = '0.4.15'
 
 require 'rbconfig'
 require 'ftools'
@@ -833,7 +833,7 @@ class RakeApp
     ['--tasks',    '-T', GetoptLong::NO_ARGUMENT,
       "Display the tasks and dependencies, then exit."],
     ['--trace',    '-t', GetoptLong::NO_ARGUMENT,
-      "Turn on invoke/execute tracing."],
+      "Turn on invoke/execute tracing, enable full backtrace."],
     ['--usage',    '-h', GetoptLong::NO_ARGUMENT,
       "Display usage."],
     ['--verbose',  '-v', GetoptLong::NO_ARGUMENT,
