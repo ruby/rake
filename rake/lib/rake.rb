@@ -436,9 +436,9 @@ module RakeFileUtils
   # to standard output.
   #
   # Examples:
-  #    verbose              # return the current value of the verbose flag
-  #    verbose(v)           # set the verbose flag to _v_.
-  #    verbose(v) { code }  # Execute code with the verbose flag set temporarily to _v_.
+  #    nowrite              # return the current value of the nowrite flag
+  #    nowrite(v)           # set the nowrite flag to _v_.
+  #    nowrite(v) { code }  # Execute code with the nowrite flag set temporarily to _v_.
   #                         # Return to the original value when code is done.
   def nowrite(value=nil)
     oldvalue = $fileutils_nowrite
