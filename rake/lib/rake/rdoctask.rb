@@ -100,15 +100,24 @@ module Rake
       task name => [rdoc_target]
       file rdoc_target => @rdoc_files + ["Rakefile"] do
 	rm_r @rdoc_dir rescue nil
-	opts = @options.join(' ')
-	opts << " --main '#{main}'" if main
-	opts << " --title '#{title}'" if title
-	opts << " -T '#{template}'" if template
+	opts = option_list.join(' ')
 	sh %{rdoc -o #{@rdoc_dir} #{opts} #{@rdoc_files}}
       end
       self
     end
-    
+
+    def option_list
+      result = @options.dup
+      result << "--main" << "'#{main}'" if main
+      result << "--title" << "'#{title}'" if title
+      result << "-T" << "'#{template}'" if template
+      result
+    end
+
+    def option_string
+      option_list.join(' ')
+    end
+
     private
 
     def rdoc_target
@@ -117,5 +126,3 @@ module Rake
 
   end
 end
-
-    
