@@ -47,6 +47,12 @@ class TestTestTask < Test::Unit::TestCase
     assert_equal "Don't know how to rake leaves", ex.message
   end
 
+  def test_defined
+    assert ! Task.defined?(:a)
+    task :a
+    assert Task.defined?(:a)
+  end
+
   def test_multi_invocations
     runs = []
     p = proc do |t| runs << t.name end
