@@ -41,25 +41,9 @@ from its distribution directory.
 
 === GEM Installation
 
-Download the GEM file and install it with ..
+Download and install  rake with the following.
 
-   gem -i rake-VERSION.gem
-
-Use the correct version number for VERSION (e.g. 0.3.2).  You may need
-root privileges to install.  After the gem is installed, you still
-need to copy the rake command to the an appropriate location in your
-path.  First find the location of you gem directory by running:
-
-  ruby -rrubygems -e 'puts Gem.dir'
-
-Now run the gem_install_bin.rb script in the rake gem.  Something like
-this ...
-
-  cd GEMDIR/rake-VERSION
-  ruby gem_install_bin.rb
-
-Where GEMDIR is the directory defined by Gem.dir (see command above)
-and VERSION is the appropriate version.
+   gem install --remote rake
 
 == Roadmap
 
