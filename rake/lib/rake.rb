@@ -298,7 +298,7 @@ end
 module FileUtils
   RUBY = Config::CONFIG['ruby_install_name']
 
-  OPT_TABLE['run']  = %w(noop verbose)
+  OPT_TABLE['sh']  = %w(noop verbose)
   OPT_TABLE['ruby'] = %w(noop verbose)
 
   # Run the system command +cmd+.
@@ -345,8 +345,6 @@ module RakeFileUtils
     next unless opts.include?('verbose')
     module_eval(<<-EOS, __FILE__, __LINE__ + 1)
     def #{name}( *args )
-#      $fileutils_verbose = true unless defined?($fileutils_verbose)
- #     $fileutils_nowrite = false unless defined?($fileutils_nowrite)
       super(*fu_merge_option(args,
 	  :verbose => $fileutils_verbose,
 	  :noop => $fileutils_nowrite))
