@@ -385,6 +385,25 @@ module FileUtils
     sh "#{RUBY} #{args.join(' ')}", options
   end
   
+  #  Attempt to do a normal file link, but fall back to a copy if the
+  #  link fails.
+  def safe_ln(*args)
+    if @link_not_supported
+      cp(*args)
+    else
+      begin
+	ln(*args)
+      rescue Errno::EOPNOTSUPP
+	@link_not_supported = true
+	cp(*args)
+      end
+    end
+  end
+
+  def ln(*args)
+    fail Errno::EOPNOTSUPP, "TESTING"
+  end
+
   # Split a file path into individual directory names.
   #
   # Example:
