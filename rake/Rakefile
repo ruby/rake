@@ -6,6 +6,7 @@
 # This file is may be distributed under an MIT style license.  See
 # MIT-LICENSE for details.
 
+require 'rake/clean'
 require 'rake/testtask'
 require 'rake/packagetask'
 require 'rake/rdoctask'
