@@ -154,14 +154,18 @@ end
 ######################################################################
 class TestDirectoryTask < Test::Unit::TestCase
   def setup
-    rm_r "testdata", :verbose=>false
+    rm_rf "testdata", :verbose=>false
   end
 
-  def test_create
+  def test_directory
+    desc "DESC"
     directory "testdata/a/b/c"
-    assert FileTask, Task["testdata"].class
-    assert FileTask, Task["testdata/a"].class
-    assert FileTask, Task["testdata/a/b/c"].class
+    assert_equal FileTask, Task["testdata"].class
+    assert_equal FileTask, Task["testdata/a"].class
+    assert_equal FileTask, Task["testdata/a/b/c"].class
+    assert_nil             Task["testdata"].comment
+    assert_equal "DESC",   Task["testdata/a/b/c"].comment
+    assert_nil             Task["testdata/a/b"].comment
     verbose(false) {
       Task['testdata/a/b'].invoke
     }
