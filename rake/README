@@ -53,7 +53,8 @@ path.  First find the location of you gem directory by running:
 Now run the gem_install_bin.rb script in the rake gem.  Something like
 this ...
 
-  ruby GEMDIR/rake-VERSION/gem_install_bin.rb
+  cd GEMDIR/rake-VERSION
+  ruby gem_install_bin.rb
 
 Where GEMDIR is the directory defined by Gem.dir (see command above)
 and VERSION is the appropriate version.
