@@ -13,7 +13,9 @@ module FileCreation
   end
 
   def create_file(name)
-    open(name, "w") {|f| f.puts "HI" } if ! File.exist?(name)
+    dirname = File.dirname(name)
+    FileUtils.mkdir_p(dirname) unless File.exist?(dirname)
+    open(name, "w") {|f| f.puts "HI" } unless File.exist?(name)
     File.new(name).mtime
   end
 
