@@ -5,7 +5,7 @@ require 'rake/packagetask'
 
 class TestPackageTask < Test::Unit::TestCase
   def test_create
-    pkg = Rake::SimplePackageTask.new("pkgr", "1.2.3") { |p|
+    pkg = Rake::PackageTask.new("pkgr", "1.2.3") { |p|
       p.package_files << "install.rb"
       p.package_files.include(
 	'[A-Z]*',
@@ -35,33 +35,46 @@ class TestPackageTask < Test::Unit::TestCase
 
   def test_missing_version
     assert_raises(RuntimeError) {
-      pkg = Rake::SimplePackageTask.new("pkgr") { |p| }
+      pkg = Rake::PackageTask.new("pkgr") { |p| }
     }
   end
 
   def test_no_version
-    pkg = Rake::SimplePackageTask.new("pkgr", :noversion) { |p| }
+    pkg = Rake::PackageTask.new("pkgr", :noversion) { |p| }
     assert "pkgr", pkg.send(:package_name)
   end
 
   def test_clone
-    pkg = Rake::SimplePackageTask.new("x")
+    pkg = Rake::PackageTask.new("x")
     p2 = pkg.clone
     pkg.package_files << "y"
     p2.package_files << "x"
     assert_equal ["y"], pkg.package_files
     assert_equal ["x"], p2.package_files
   end
+end
 
-  def test_gem_package
-    gem = Gem::Specification.new do |g|
-      g.name = "pkgr"
-      g.version = "1.2.3"
-      g.files = FileList["x"]
+
+begin
+  require 'rubygems'
+rescue Exception
+  puts "WARNING: RubyGems not installed"
+end
+
+if ! defined?(Gem)
+  puts "WARNING: Unable to test GemPackaging ... requires RubyGems"
+else
+  class TestGemPackageTask < Test::Unit::TestCase
+    def test_gem_package
+      gem = Gem::Specification.new do |g|
+	g.name = "pkgr"
+	g.version = "1.2.3"
+	g.files = FileList["x"]
+      end
+      pkg = Rake::GemPackageTask.new(gem)  do |p|
+	p.package_files << "y"
+      end
+      assert_equal ["x", "y"], pkg.package_files
     end
-    pkg = Rake::GemPackageTask.new(gem)  do |p|
-      p.package_files << "y"
-    end
-    assert_equal ["x", "y"], pkg.package_files
   end
 end
