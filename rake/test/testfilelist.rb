@@ -138,6 +138,14 @@ class TestFileList < Test::Unit::TestCase
     assert_equal  "a.java b.java", "#{fl}"
   end
 
+  def test_to_array
+    fl = FileList['a.java', 'b.java']
+    assert_equal  ['a.java', 'b.java'], fl.to_a
+    assert_equal  Array, fl.to_a.class
+    assert_equal  ['a.java', 'b.java'], fl.to_ary
+    assert_equal  Array, fl.to_ary.class
+  end
+
   def test_to_s_pending
     fl = FileList['testdata/abc.*']
     assert_equal  %{testdata/abc.c}, fl.to_s

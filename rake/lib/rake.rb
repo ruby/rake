@@ -678,7 +678,7 @@ module Rake
 
     # List of methods that should not be delegated here (we define
     # special versions of them explicitly below).
-    MUST_NOT_DEFINE = %w[to_ary partition *]
+    MUST_NOT_DEFINE = %w[to_a to_ary partition *]
 
     # List of delegated methods that return new array values which
     # need wrapping.
@@ -787,6 +787,12 @@ module Rake
     # Define equality.
     def ==(array)
       to_ary == array
+    end
+
+    # Return the internal array object.
+    def to_a
+      resolve
+      @items
     end
 
     # Return the internal array object.
