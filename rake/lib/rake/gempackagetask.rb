@@ -4,9 +4,14 @@
 # packages.
 
 require 'rubygems'
-Gem.manage_gems
 require 'rake'
 require 'rake/packagetask'
+
+begin
+  Gem.manage_gems
+rescue NoMethodError => ex
+  # Using rubygems prior to 0.6.1
+end
 
 module Rake
 
