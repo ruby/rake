@@ -79,7 +79,7 @@ class AppBuilder
   def revision_command(cmd)
     begin
       str = `#{cmd}`
-      unless md = /(\d+\.\d+\.\d+)/.match(str)
+      unless md = /(\d+\.\d+\.\d+[a-z]*)/.match(str)
 	fail "No revision in (#{str})"
       end
       @revision = md[1]
@@ -155,6 +155,7 @@ class AppBuilder
     
     # == Package Creation
     
+    desc "Force a rebuild of the package files"
     task :repackage => [:clean_package, :package]
     
     desc "Remove package products" 
@@ -186,6 +187,7 @@ class AppBuilder
     
     # == Publishing
 
+    desc "Force a rebuild of the web documents"
     task :reweb => [:clear_web, :web]
     task :clear_web do
       Sys.delete_all "html"
