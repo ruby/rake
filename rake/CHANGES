@@ -1,6 +1,7 @@
 = Rake Changelog
 
 == Version next
+* Fixed Comment leakage.
 
 == Version 0.4.2
 * Added safe_ln that falls back to a copy if a file link is not supported.
