@@ -20,6 +20,7 @@ module Rake
 	ruby %{-I#{lib_path} -rrake/runtest } +
 	  %{-e 'Rake.run_tests("#{@pattern}", #{@verbose||verbose})'}
       end
+      self
     end
 
   end

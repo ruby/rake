@@ -63,7 +63,7 @@ module Rake
 	  end
 	end
       end
-
+      self
     end
 
     private

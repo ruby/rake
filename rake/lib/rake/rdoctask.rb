@@ -39,6 +39,7 @@ module Rake
 	rm_r @rdoc_dir rescue nil
 	sh %{rdoc -o #{@rdoc_dir} #{@options} --main #{main} -T #{template} #{@rdoc_files}}
       end
+      self
     end
     
     private
