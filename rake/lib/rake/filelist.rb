@@ -17,6 +17,7 @@ module Rake
 	  self << fn
 	end
       end
+      self
     end
 
     def add_matching(*patterns)
