@@ -87,14 +87,6 @@ task :tc => [:testcontrib]
 
 # CVS Tasks ----------------------------------------------------------
 
-desc "Tag all the CVS files with the latest release number (TAG=x)"
-task :tag do
-  rel = "REL_" + PKG_VERSION.gsub(/\./, '_')
-  rel << ENV['TAG'] if ENV['TAG']
-  puts rel
-  sh %{cvs commit -m 'pre-tag commit'}
-  sh %{cvs tag #{rel}}
-end
 
 # Install rake using the standard install.rb script.
 
@@ -346,6 +338,7 @@ task :update_version => [:prerelease] do
   end
 end
 
+desc "Tag all the CVS files with the latest release number (REL=x.y.z)"
 task :tag => [:prerelease] do
   reltag = "REL_#{PKG_VERSION.gsub(/\./, '_')}"
   reltag << ENV['REUSE'].gsub(/\./, '_') if ENV['REUSE']
