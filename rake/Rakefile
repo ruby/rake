@@ -333,7 +333,7 @@ task :update_version => [:prerelease] do
     if ENV['RELTEST']
       announce "Release Task Testing, skipping commiting of new version"
     else
-      sh %{cvs commit -m "Updated to version #{PKG_VERSION}" lib/rubygems/rubygems_version.rb}
+      sh %{cvs commit -m "Updated to version #{PKG_VERSION}" lib/rake.rb}
     end
   end
 end
