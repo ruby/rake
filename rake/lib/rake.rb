@@ -29,11 +29,18 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION='0.2.7b'
+RAKEVERSION='0.2.7c'
 
 require 'rbconfig'
 require 'ftools'
 require 'getoptlong'
+require 'fileutils'
+
+$last_comment = nil
+$show_tasks = nil
+$show_prereqs = nil
+$trace = nil
+$dryrun = nil
 
 ######################################################################
 # A Task is the basic unit of work in a Rakefile.  Tasks have
@@ -67,6 +74,7 @@ class Task
     $last_comment = nil
     @prerequisites = []
     @actions = []
+    @already_invoked = false
   end
 
   # Enhance a task with prerequisites or actions.  Returns self.
@@ -83,7 +91,7 @@ class Task
 
   # Invoke the task if it is needed.  Prerequites are invoked first.
   def invoke
-    puts "Invoke #{name} (already=[#{@already_invoked}], needed=[#{needed?}])" if $trace
+    puts "Invoke #{name} (first_time=#{!@already_invoked}, needed=#{needed?})" if $trace
     return if @already_invoked
     @already_invoked = true
     @prerequisites.each { |n| Task[n].invoke }
@@ -255,7 +263,7 @@ def directory(dir)
   Sys.split_all(dir).each do |p| 
     path << p
     FileTask.define_task(File.join(path)) do |t|
-      Sys.makedirs(t.name)
+      mkdir_p t.name
     end
   end
 end
@@ -265,145 +273,19 @@ def rule(args, &block)
   Task.create_rule(args, &block)
 end
 
-# Run a system command (alias for Sys.run ... we are keeping it for
-# compatibility).
-def sys(cmd)
-  Sys.run(cmd)
-end
-
+# Describe the next rake task.
 def desc(comment)
   $last_comment = comment
 end
 
 ######################################################################
-# RakeTools is a mixin module that provides a number of file
-# manipulation tools for the convenience of writing Rakefiles.  All
-# commands in this module will announce their activity on standard
-# output if the $verbose flag is set ($verbose = true is the default).
-# You can control this by globally setting $verbose or by using the
-# +verbose+ and +quiet+ methods.
+# Sys provides a number of file manipulation tools for the convenience
+# of writing Rakefiles.  All commands in this module will announce
+# their activity on standard output if the $verbose flag is set
+# ($verbose = true is the default).  You can control this by globally
+# setting $verbose or by using the +verbose+ and +quiet+ methods.
 #
-module RakeTools
-  RUBY = Config::CONFIG['ruby_install_name']
-
-  # Install all the files matching +wildcard+ into the +dest_dir+
-  # directory.  The permission mode is set to +mode+.
-  def install(wildcard, dest_dir, mode)
-    Dir[wildcard].each do |fn|
-      File.install(fn, dest_dir, mode, $verbose)
-    end
-  end
-
-  # Run the system command +cmd+.
-  def run(cmd)
-    log cmd
-    system(cmd) or fail "Command Failed: [#{cmd}]"
-  end
-
-  # Run a Ruby interpreter with the given arguments.
-  def ruby(*args)
-    run "#{RUBY} #{args.join(' ')}"
-  end
-  
-  # Copy a single file from +file_name+ to +dest_file+.
-  def copy(file_name, dest_file)
-    log "Copying file #{file_name} to #{dest_file}"
-    File.copy(file_name, dest_file)
-  end
-
-  # Copy all files matching +wildcard+ into the directory +dest_dir+.
-  def copy_files(wildcard, dest_dir)
-    for_matching_files(wildcard, dest_dir) { |from, to| copy(from, to) }
-  end
-
-  # Link +file_name+ to +dest_file+.
-  def link(file_name, dest_file)
-    log "Linking file #{file_name} to #{dest_file}"
-    File.link(file_name, dest_file)
-  end
-
-  # Link all files matching +wildcard+ into the directory +dest_dir+.
-  def link_files(wildcard, dest_dir)
-    for_matching_files(wildcard, dest_dir) { |from, to| link(from, to) }
-  end
-
-  # Symlink +file_name+ to +dest_file+.
-  def symlink(file_name, dest_file)
-    log "Symlinking file #{file_name} to #{dest_file}"
-    File.symlink(file_name, dest_file)
-  end
-
-  # Symlink all files matching +wildcard+ into the directory +dest_dir+.
-  def symlink_files(wildcard, dest_dir)
-    for_matching_files(wildcard, dest_dir) { |from, to| link(from, to) }
-  end
-
-  # Remove all files matching +wildcard+.  If a matching file is a
-  # directory, it must be empty to be removed.  used +delete_all+ to
-  # recursively delete directories.
-  def delete(*wildcards)
-    wildcards.each do |wildcard|
-      Dir[wildcard].each do |fn|
-	if File.directory?(fn)
-	  log "Deleting directory #{fn}"
-	  Dir.delete(fn)
-	else
-	  log "Deleting file #{fn}"
-	  File.delete(fn)
-	end
-      end
-    end
-  end
-
-  # Recursively delete all files and directories matching +wildcard+.
-  def delete_all(*wildcards)
-    wildcards.each do |wildcard|
-      Dir[wildcard].each do |fn|
-	next if ! File.exist?(fn)
-	if File.directory?(fn)
-	  Dir["#{fn}/*"].each do |subfn|
-	    next if subfn=='.' || subfn=='..'
-	    delete_all(subfn)
-	  end
-	  log "Deleting directory #{fn}"
-	  Dir.delete(fn)
-	else
-	  log "Deleting file #{fn}"
-	  File.delete(fn)
-	end
-      end
-    end
-  end
-
-  # Make the directories given in +dirs+.
-  def makedirs(*dirs)
-    dirs.each do |fn|
-      log "Making directory #{fn}"
-      File.makedirs(fn)
-    end
-  end
-
-  # Make +dir+ the current working directory for the duration of
-  # executing the given block.
-  def indir(dir)
-    olddir = Dir.pwd
-    Dir.chdir(dir)
-    yield
-  ensure
-    Dir.chdir(olddir)
-  end
-
-  # Split a file path into individual directory names.
-  #
-  # For example:
-  #   split_all("a/b/c") =>  ['a', 'b', 'c']
-  def split_all(path)
-    head, tail = File.split(path)
-    return [tail] if head == '.'
-    return [head, tail] if head == '/'
-    return split_all(head) + [tail]
-  end
-
+module Sys
   # Write a message to standard out if $verbose is enabled.
   def log(msg)
     print "  " if $trace && $verbose
@@ -429,16 +311,15 @@ module RakeTools
     end
   end
 
-  private # ----------------------------------------------------------
-
-  def for_matching_files(wildcard, dest_dir)
-    Dir[wildcard].each do |fn|
-      dest_file = File.join(dest_dir, fn)
-      parent = File.dirname(dest_file)
-      makedirs(parent) if ! File.directory?(parent)
-      yield(fn, dest_file)
+  class << self
+    def method_missing(sym, *args)
+      fail "Module Sys has been deprecated ... Use FileUtils instead"
     end
   end
+
+  self.extend(self)
+
+  private # ----------------------------------------------------------
 
   def with_verbose(v)
     oldverbose = $verbose
@@ -450,17 +331,90 @@ module RakeTools
 
 end
 
-######################################################################
-# Provide the file manipulation tools available in RakeTools as module
-# level methods.  This allows rakefile users to type commands like:
-#
-#   Sys.copy("file1", "file2")
-#
-module Sys
-  class << self
-    include RakeTools
+
+module FileUtils
+  RUBY = Config::CONFIG['ruby_install_name']
+
+  OPT_TABLE['run']  = %w(noop verbose)
+  OPT_TABLE['ruby'] = %w(noop verbose)
+
+  # Run the system command +cmd+.
+  def sh(cmd, options={})
+    fu_check_options options, :noop, :verbose
+    fu_output_message cmd if options[:verbose]
+    unless options[:noop]
+      system(cmd) or fail "Command Failed: [#{cmd}]"
+    end
+  end
+
+  # Run a Ruby interpreter with the given arguments.
+  def ruby(*args)
+    if Hash === args.last
+      options = args.pop
+    else
+      options = {}
+    end
+    sh "#{RUBY} #{args.join(' ')}", options
+  end
+  
+  # Split a file path into individual directory names.
+  #
+  # For example:
+  #   split_all("a/b/c") =>  ['a', 'b', 'c']
+  def split_all(path)
+    head, tail = File.split(path)
+    return [tail] if head == '.' || tail == '/'
+    return [head, tail] if head == '/'
+    return split_all(head) + [tail]
   end
 end
+
+
+module RakeFileUtils
+  include FileUtils
+  
+  @fileutils_output  = $stderr
+  @fileutils_label   = ''
+  @fileutils_verbose = false
+  @fileutils_nowrite = false
+  
+  FileUtils::OPT_TABLE.each do |name, opts|
+    next unless opts.include?('verbose')
+    module_eval(<<-EOS, __FILE__, __LINE__ + 1)
+    def #{name}( *args )
+      @fileutils_verbose = false unless defined?(@fileutils_verbose)
+      @fileutils_nowrite = false unless defined?(@fileutils_nowrite)
+      super(*fu_merge_option(args,
+	  :verbose => @fileutils_verbose,
+	  :noop => @fileutils_nowrite))
+    end
+    EOS
+  end
+
+  def verbose(value=true)
+    @fileutils_verbose = value
+  end
+
+  def nowrite(value=true)
+    @fileutils_nowrite = value
+  end
+
+  def fu_merge_option(args, defaults)
+    if Hash === args.last
+      defaults.update(args.last)
+      args.pop
+    end
+    args.push defaults
+    args
+  end
+  private :fu_merge_option
+
+  extend self
+  
+end
+
+include RakeFileUtils
+
 
 ######################################################################
 # Rake main application object.  When invoking +rake+ from the command
