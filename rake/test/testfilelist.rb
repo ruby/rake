@@ -108,6 +108,14 @@ class TestFileList < Test::Unit::TestCase
     assert_equal [], fl
   end
 
+  def test_default_exclude
+    fl = FileList.new
+    fl.clear_exclude
+    fl.include("**/*~", "**/*.bak", "**/core")
+    assert fl.member?("testdata/core"), "Should include core"
+    assert fl.member?("testdata/x.bak"), "Should include .bak files"
+  end
+
   def test_unique
     fl = FileList.new
     fl << "x.c" << "a.c" << "b.rb" << "a.c"
@@ -173,16 +181,9 @@ class TestFileList < Test::Unit::TestCase
     assert ! f.include?("testdata/core"), "Should not contain core files"
   end
 
-  def test_adding_ignore_patterns
-    FileList.add_ignore_pattern(/\.c$/)
-    f = FileList['testdata/*', 'testdata/xyz.c']
-    assert ! f.include?("testdata/abc.c")
-    assert f.include?("testdata/xyz.c")
-  end
-
   def test_clear_ignore_patterns
-    FileList.clear_ignore_patterns
     f = FileList['testdata/*']
+    f.clear_exclude
     assert f.include?("testdata/abc.c")
     assert f.include?("testdata/xyz.c")
     assert f.include?("testdata/CVS")
@@ -190,11 +191,22 @@ class TestFileList < Test::Unit::TestCase
     assert f.include?("testdata/x~")
   end
 
-  def test_ignore_with_alternate_file_seps
-    assert FileList.ignore?("x/CVS/y")
-    assert FileList.ignore?("x\\CVS\\y")
-    assert FileList.ignore?("x/core")
-    assert FileList.ignore?("x\\core")
+  def test_exclude_with_alternate_file_seps
+    fl = FileList.new
+    assert fl.exclude?("x/CVS/y")
+    assert fl.exclude?("x\\CVS\\y")
+    assert fl.exclude?("x/core")
+    assert fl.exclude?("x\\core")
+  end
+
+  def test_add_default_exclude_list
+    FileList.add_default_exclude(/~\d+$/)
+    fl = FileList.new
+    assert fl.exclude?("x/CVS/y")
+    assert fl.exclude?("x\\CVS\\y")
+    assert fl.exclude?("x/core")
+    assert fl.exclude?("x\\core")
+    assert fl.exclude?("x/abc~1")
   end
 
   def test_basic_array_functions
