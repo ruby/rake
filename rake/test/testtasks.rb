@@ -178,8 +178,6 @@ class TestDirectoryTask < Test::Unit::TestCase
   end
 end
 
-__END__
-
 ######################################################################
 class TestDefinitions < Test::Unit::TestCase
   EXISTINGFILE = "testdata/existing"
@@ -265,6 +263,10 @@ class TestRules < Test::Unit::TestCase
   def setup
     Task.clear
     @runs = []
+  end
+
+  def teardown
+    FileList['testdata/*'].each do |f| rm_r(f, :verbose=>false) end
   end
 
   def test_multiple_rules1
@@ -368,4 +370,29 @@ class TestRules < Test::Unit::TestCase
   ensure
     rm_r("testdata/src", :verbose=>false) rescue nil
   end
+
+  def test_recursive_rules
+    actions = []
+    create_file("testdata/abc.xml")
+    rule '.y' => '.xml' do actions << 'y' end
+    rule '.c' => '.y' do actions << 'c'end
+    rule '.o' => '.c' do actions << 'o'end
+    rule '.exe' => '.o' do actions << 'exe'end
+    Task["testdata/abc.exe"].invoke
+    assert_equal ['y', 'c', 'o', 'exe'], actions
+  end
+
+  def test_recursive_overflow
+    create_file("testdata/a.a")
+    prev = 'a'
+    ('b'..'z').each do |letter|
+      rule ".#{letter}" => ".#{prev}" do |t| puts "#{t.name}" end
+      prev = letter
+    end
+    ex = assert_raises(Rake::RuleRecursionOverflowError) {
+      Task["testdata/a.z"].invoke
+    }
+    assert_match(/a\.z => testdata\/a.y/, ex.message)
+  end
+
 end
