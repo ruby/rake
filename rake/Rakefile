@@ -6,12 +6,12 @@
 # This file is may be distributed under an MIT style license.  See
 # MIT-LICENSE for details.
 
+require 'rubygems'
 require 'rake/clean'
 require 'rake/testtask'
 require 'rake/packagetask'
 require 'rake/rdoctask'
-require 'rake/contrib/sshpublisher'
-require 'rake/contrib/rubyforgepublisher'
+require 'rake/filelist'
 
 # Determine the current version of the software
 
@@ -59,27 +59,65 @@ Rake::RDocTask.new { |rdoc|
   rdoc.rdoc_dir = 'html'
   rdoc.template = 'kilmer'
   rdoc.options << '--line-numbers'
-  rdoc.rdoc_files.add('README', 'LICENSE', 'TODO', 'CHANGES')
+  rdoc.rdoc_files.add('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
   rdoc.rdoc_files.add('lib/**/*.rb', 'doc/**/*.rdoc', 'test/*.rb')
 }
 
+# ====================================================================
 # Create a task that will package the Rake software into distributable
-# tar and zip files.
+# tar, zip and gem files.
 
-Rake::PackageTask.new("rake", PKG_VERSION) { |pkg|
-  pkg.package_files << 'install.rb'
-  pkg.package_files.add(
-    '[A-Z]*',
-    'bin/**/*', 
-    'lib/**/*.rb', 
-    'test/**/*.rb',
-    'doc/**/*',
-    '*.blurb')
-  pkg.package_files.reject! { |fn| fn =~ /\bCVS\b|~$/ }
+PKG_FILES = FileList[
+  'install.rb',
+  '[A-Z]*',
+  'bin/**/*', 
+  'lib/**/*.rb', 
+  'test/**/*.rb',
+  'doc/**/*'
+]
+PKG_FILES.reject! { |fn| fn =~ /\bCVS\b|~$/ }
+
+spec = Gem::Specification.new do |s|
+  s.platform = Gem::Platform::RUBY
+  s.summary = "Ruby based make-like utility."
+  s.name = 'rake'
+  s.version = PKG_VERSION
+  s.requirements << 'none'
+  s.require_path = 'lib'
+  s.autorequire = 'rake'
+  s.files = PKG_FILES
+end
+
+Rake::PackageTask.new { |pkg|
+  pkg.gem_spec = spec
+  pkg.need_zip = true
+  pkg.need_tar = true
 }
+
+# Misc tasks =========================================================
+
+desc "Count lines in the main rake file"
+task :lines do
+  lines = 0
+  codelines = 0
+  open("lib/rake.rb") { |f|
+    while line = f.gets
+      lines += 1
+      next if line =~ /^\s*$/
+      next if line =~ /^\s*#/
+      codelines += 1
+    end
+  }
+  puts "Lines #{lines}, LOC #{codelines}"
+end
+
+ARCHIVEDIR = '/mnt/usb'
+
+task :archive => [:package] do
+  cp FileList["pkg/*.tgz", "pkg/*.zip", "pkg/*.gem"], ARCHIVEDIR
+end
 
 # Define an optional publish target in an external file.  If the
 # publish.rf file is not found, the publish targets won't be defined.
 
 load "publish.rf" if File.exist? "publish.rf"
-
