@@ -36,16 +36,17 @@ module Rake
     def initialize(name=:test)
       @name = name
       @libs = ["lib"]
-      @pattern = 'test/test*.rb'
+      @pattern = nil
+      @test_files = nil
       @verbose = false
       yield self if block_given?
+      @pattern = 'test/test*.rb' if @pattern.nil? && @test_files.nil?
       define
     end
 
     # Create the tasks defined by this task lib.
     def define
       lib_path = @libs.join(':')
-      testfiles = FileList[ ENV['TEST'] || @pattern ]
       if ENV['TESTOPTS']
 	testoptions = " \\\n -- #{ENV['TESTOPTS']}"
       else
@@ -53,14 +54,27 @@ module Rake
       end
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
-	testreqs = testfiles.gsub(/^(.*)\.rb$/, ' -r\1').join(" \\\n")
-	ruby %{-I#{lib_path} -e0 \\\n#{testreqs}#{testoptions}}
+	testreqs = test_file_list.gsub(/^(.*)\.rb$/, ' -r\1').join(" \\\n")
+	RakeFileUtils.verbose(@verbose) do
+	  ruby %{-I#{lib_path} -e0 \\\n#{testreqs}#{testoptions}}
+	end
       end
       self
     end
 
-    def running_as_gem
-      $LOAD_PATH.find { |fn| fn =~ %r{gems/.*/rake} } != nil
+    def test_files=(list)
+      @test_files = list
+    end
+
+    def test_file_list
+      if ENV['TEST']
+	FileList[ ENV['TEST'] ]
+      else
+	result = []
+	result += @test_files.to_a if @test_files
+	result += FileList[ @pattern ].to_a if @pattern
+	FileList[result]
+      end
     end
 
   end
