@@ -76,6 +76,11 @@ File::chmod(0755, rake_dest)
 files = Dir.indir('lib') { Dir['**/*.rb'] }
 
 for fn in files
+  fn_dir = File.dirname(fn)
+  target_dir = File.join($sitedir, fn_dir)
+  if ! File.exist?(target_dir)
+    File.makedirs(target_dir)
+  end
   File::install(File.join('lib', fn), File.join($sitedir, fn), 0644, true)
 end
 
