@@ -1,17 +1,17 @@
 #!/usr/bin/env ruby
 
 require 'rake'
-require 'rake/filematcher'
+require 'rake/filelist'
 
 CLEAN = Rake::FileList.new
-CLEAN.add_matching("**/*~", "**/*.bak", "**/core")
+CLEAN.add("**/*~", "**/*.bak", "**/core")
 
 task :clean do
-  CLEAN.each { |fn| Sys.delete_all fn rescue nil }
+  CLEAN.each { |fn| rm_r fn rescue nil }
 end
 
 CLOBBER = Rake::FileList.new
 
 task :clobber => [:clean] do
-  CLOBBER.each { |fn| Sys.delete_all fn rescue nil }
+  CLOBBER.each { |fn| rm_r fn rescue nil }
 end
