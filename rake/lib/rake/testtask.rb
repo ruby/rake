@@ -80,8 +80,8 @@ module Rake
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
 	RakeFileUtils.verbose(@verbose) do
-	  name_hack = %{$0="#{@name}"}
-	  ruby %{-I#{lib_path} -e'#{name_hack}' #{SEP}#{required_files}#{option_list}}
+	  workaround = %{$0="#{@name}"}
+	  ruby %{-I#{lib_path} -e'#{workaround}' #{SEP}#{required_files}#{option_list}}
 	end
       end
       self
