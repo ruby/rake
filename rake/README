@@ -43,7 +43,7 @@ Download the GEM file and install it with ..
 
    gem -i rake-VERSION.gem
 
-Use the correct version number for VERSION (e.g. 0.3.1).  You may need
+Use the correct version number for VERSION (e.g. 0.3.2).  You may need
 root privileges to install.  After the gem is installed, you still
 need to copy the rake command to the an appropriate location in your
 path.  First find the location of you gem directory by running:
