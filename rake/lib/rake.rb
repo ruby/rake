@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.4.12'
+RAKEVERSION = '0.4.12.1'
 
 require 'rbconfig'
 require 'ftools'
@@ -360,10 +360,14 @@ module FileUtils
   OPT_TABLE['sh']  = %w(noop verbose)
   OPT_TABLE['ruby'] = %w(noop verbose)
 
-  # Run the system command +cmd+.
+  # Run the system command +cmd+. If multiple arguments are given
+  # the command is not run with the shell (same semantics as
+  # Kernel::exec and Kernel::system).
   #
   # Example:
   #   sh %{ls -ltr}
+  #
+  #   sh 'ls', 'file with spaces'
   #
   #   # check exit status after command runs
   #   sh %{grep pattern file} do |ok, res|
@@ -372,16 +376,21 @@ module FileUtils
   #     end
   #   end
   #
-  def sh(cmd, options={}, &block)
+  def sh(*cmd, &block)
+    if Hash === cmd.last then
+      options = cmd.pop
+    else
+      options = {}
+    end
     unless block_given?
       block = lambda { |ok, status|
-	ok or fail "Command failed with status (#{status.exitstatus}): [#{cmd}]"
+	ok or fail "Command failed with status (#{status.exitstatus}): [#{cmd.join(" ")}]"
       }
     end
     fu_check_options options, :noop, :verbose
-    fu_output_message cmd if options[:verbose]
+    fu_output_message cmd.join(" ") if options[:verbose]
     unless options[:noop]
-      res = system(cmd)      
+      res = system(*cmd)      
       block.call(res, $?)
     end
   end
@@ -391,13 +400,17 @@ module FileUtils
   # Example:
   #   ruby %{-pe '$_.upcase!' <README}
   #
-  def ruby(*args)
+  def ruby(*args,&block)
     if Hash === args.last
       options = args.pop
     else
       options = {}
     end
-    sh "#{RUBY} #{args.join(' ')}", options
+    if args.length > 1 then
+      sh *([RUBY] + args + [options]), &block
+    else
+      sh "#{RUBY} #{args}", options, &block
+    end
   end
   
   LN_SUPPORTED = [true]
