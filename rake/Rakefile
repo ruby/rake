@@ -6,7 +6,11 @@
 # This file is may be distributed under an MIT style license.  See
 # MIT-LICENSE for details.
 
-require 'rubygems'
+begin
+  require 'rubygems'
+rescue Exception
+  nil
+end
 require 'rake/clean'
 require 'rake/testtask'
 require 'rake/packagetask'
@@ -85,27 +89,30 @@ PKG_FILES = FileList[
 ]
 PKG_FILES.reject! { |fn| fn =~ /\bCVS\b|~$/ }
 
-spec = Gem::Specification.new do |s|
-  s.platform = Gem::Platform::RUBY
-  s.summary = "Ruby based make-like utility."
-  s.name = 'rake'
-  s.version = PKG_VERSION
-  s.requirements << 'none'
-  s.require_path = 'lib'
-  s.autorequire = 'rake'
-  s.files = PKG_FILES
-  s.description = <<EOF
+if ! defined?(Gem)
+  puts "Package Target requires RubyGEMs"
+else
+  spec = Gem::Specification.new do |s|
+    s.platform = Gem::Platform::RUBY
+    s.summary = "Ruby based make-like utility."
+    s.name = 'rake'
+    s.version = PKG_VERSION
+    s.requirements << 'none'
+    s.require_path = 'lib'
+    s.autorequire = 'rake'
+    s.files = PKG_FILES
+    s.description = <<EOF
 Rake is a Make-like program implemented in Ruby. Tasks
 and dependencies are specified in standard Ruby syntax. 
 EOF
-end
-
-Rake::PackageTask.new do |pkg|
+  end
+  
+  Rake::PackageTask.new do |pkg|
   pkg.gem_spec = spec
-  pkg.need_zip = true
-  pkg.need_tar = true
+    pkg.need_zip = true
+    pkg.need_tar = true
+  end
 end
-
 # Misc tasks =========================================================
 
 desc "Count lines in the main rake file"
