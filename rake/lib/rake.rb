@@ -705,7 +705,11 @@ class RakeApp
 
   # Display the tasks and dependencies.
   def display_tasks_and_comments
-    width = Task.tasks.collect { |t| t.name.length }.max
+    width = Task.tasks.select { |t|
+      t.comment
+    }.collect { |t|
+      t.name.length
+    }.max
     Task.tasks.each do |t|
       if t.comment
 	printf "rake %-#{width}s  # %s\n", t.name, t.comment
