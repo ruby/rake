@@ -16,6 +16,7 @@ module Rake
       @template = 'html'
       @options = []
       yield self if block_given?
+      define
     end
     
     def define
