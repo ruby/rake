@@ -60,7 +60,7 @@ class Task
   attr_reader :prerequisites
 
   # Comment for this task.
-  attr_reader :comment
+  attr_accessor :comment
 
   # Source dependency for rule synthesized tasks.  Nil if task was not
   # sythesized from a rule.
@@ -70,8 +70,6 @@ class Task
   # use +enhance+ to add actions and prerequisites.
   def initialize(task_name)
     @name = task_name
-    @comment = $last_comment
-    $last_comment = nil
     @prerequisites = []
     @actions = []
     @already_invoked = false
@@ -127,6 +125,18 @@ class Task
     @prerequisites.collect { |p| Task[p].timestamp }.max || Time.now
   end
 
+  # Add a comment to the task.  If a comment alread exists, separate
+  # the new comment with " / ".
+  def add_comment(comment)
+    return if ! $last_comment
+    if @comment 
+      @comment << " / "
+    else
+      @comment = ''
+    end
+    @comment << $last_comment
+  end
+
   # Class Methods ----------------------------------------------------
 
   class << self
@@ -170,12 +180,14 @@ class Task
 
     # Define a task given +args+ and an option block.  If a rule with
     # the given name already exists, the prerequisites and actions are
-    # added to the existing task.
+    # added to the existing task.  Returns the defined task.
     def define_task(args, &block)
       task_name, deps = resolve_args(args)
       deps = [deps] if (Symbol === deps) || (String === deps)
       deps = deps.collect {|d| d.to_s }
-      lookup(task_name).enhance(deps, &block)
+      t = lookup(task_name)
+      t.add_comment($last_comment)
+      t.enhance(deps, &block)
     end
 
     # Define a rule for synthesizing tasks.  

@@ -1,5 +1,8 @@
 = Rake Changelog
 
+== Version next
+* Task comments are now additive, combined with "/".
+
 == Version 0.4.0
 * FileList now uses deferred loading.  The file system is not searched
   until the first call that needs the file names.

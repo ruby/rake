@@ -43,6 +43,12 @@ class FunctionalTest < Test::Unit::TestCase
     assert_status
   end
 
+  def test_multi_desc
+    Dir.chdir("test/data/multidesc") do rake "-T" end
+    assert_match %r{^rake a *# A / A2 *$}, @out
+    assert_match %r{^rake b *# B *$}, @out
+  end
+
   private
 
   def rake(options="")

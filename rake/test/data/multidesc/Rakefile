@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+desc "A"
+task :a
+
+desc "B"
+task :b
+
+desc "A2"
+task :a
