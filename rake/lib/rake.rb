@@ -135,6 +135,7 @@ class Task
       @comment = ''
     end
     @comment << $last_comment
+    $last_comment = nil
   end
 
   # Class Methods ----------------------------------------------------
@@ -203,7 +204,7 @@ class Task
     # create a task of the current type.
     def lookup(task_name)
       name = task_name.to_s
-      TASKS[name] ||= self.new(name)
+      TASKS[name] ||= self.new(task_name)
     end
 
     # If a rule can be found that matches the task name, enhance the
