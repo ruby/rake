@@ -1,5 +1,12 @@
 = Rake Changelog
 
+== Version 0.4.15
+
+* Fixed a bug that prevented the TESTOPTS flag from working with the
+  revised for 1.8.2 test task.
+* Updated the docs on --trace to indicate that it also enables a full
+  backtrace on errors. 
+
 == Version 0.4.14
 
 * Modified the TestTask to workaround the Ruby 1.8.2 change in
