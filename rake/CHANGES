@@ -1,6 +1,10 @@
 = Rake Changelog
 
-== pre Version 0.4.11
+== Version 0.4.12
+
+* Added --silent (-s) to suppress the (in directory) rake message.
+
+== Version 0.4.11
 
 * Changed the "don't know how to rake" message (finally)
 * Changes references to a literal "Rakefile" to reference the global
