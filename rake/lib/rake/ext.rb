@@ -23,6 +23,10 @@ class Array
     # Return a new array with <tt>String#ext</tt> method applied to
     # each member of the array.
     #
+    # This method is a shortcut for:
+    #
+    #    array.collect { |item| item.ext(newext) }
+    #
     # +ext+ is a user added method for the Array class.
     def ext(newext='')
       collect { |fn| fn.ext(newext) }

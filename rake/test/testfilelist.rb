@@ -340,6 +340,7 @@ class TestFileList < Test::Unit::TestCase
 
     b = a.partition { |it| it == 'b' }
     assert_equal [['b'], ['a']], b
+    assert_equal Array, b.class
     assert_equal FileList,  b[0].class
     assert_equal FileList,  b[1].class
 
@@ -348,6 +349,72 @@ class TestFileList < Test::Unit::TestCase
     assert_equal Array, b.class
     assert_equal Array, b[0].class
     assert_equal Array, b[1].class
+  end
+
+  def test_array_operators
+    a = ['a', 'b']
+    b = ['c', 'd']
+    f = FileList['x', 'y']
+    g = FileList['w', 'z']
+
+    r = f + g
+    assert_equal ['x', 'y', 'w', 'z'], r
+    assert_equal FileList, r.class
+
+    r = a + g
+    assert_equal ['a', 'b', 'w', 'z'], r
+    assert_equal Array, r.class
+
+    r = f + b
+    assert_equal ['x', 'y', 'c', 'd'], r
+    assert_equal FileList, r.class
+
+    r = FileList['w', 'x', 'y', 'z'] - f
+    assert_equal ['w', 'z'], r
+    assert_equal FileList, r.class
+
+    r = FileList['w', 'x', 'y', 'z'] & f
+    assert_equal ['x', 'y'], r
+    assert_equal FileList, r.class
+
+    r = f * 2
+    assert_equal ['x', 'y', 'x', 'y'], r
+    assert_equal FileList, r.class
+
+    r = f * ','
+    assert_equal 'x,y', r
+    assert_equal String, r.class
+
+    r = f | ['a', 'x']
+    assert_equal ['a', 'x', 'y'].sort, r.sort
+    assert_equal FileList, r.class
+  end
+
+  def test_other_array_returning_methods
+    f = FileList['a', nil, 'b']
+    r = f.compact
+    assert_equal ['a', 'b'], r
+    assert_equal FileList, r.class
+
+    f = FileList['a', 'b']
+    r = f.concat(['x', 'y'])
+    assert_equal ['a', 'b', 'x', 'y'], r
+    assert_equal FileList, r.class
+
+    f = FileList['a', ['b', 'c'], FileList['d', 'e']]
+    r = f.flatten
+    assert_equal ['a', 'b', 'c', 'd', 'e'], r
+    assert_equal FileList, r.class
+
+    f = FileList['a', 'b', 'a']
+    r = f.uniq
+    assert_equal ['a', 'b'], r
+    assert_equal FileList, r.class
+
+    f = FileList['a', 'b', 'c', 'd']
+    r = f.values_at(1,3)
+    assert_equal ['b', 'd'], r
+    assert_equal FileList, r.class
   end
 
   def create_test_data

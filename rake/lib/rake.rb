@@ -48,10 +48,19 @@ $silent = false
 # that are not dupable.
 
 module Kernel
-  def rake_dup() dup end        # :nodoc:
+  # Duplicate an object if it can be duplicated.  If it can not be
+  # cloned or duplicated, then just return the original object.
+  def rake_dup()
+    dup
+  end
 end
+
 [NilClass, FalseClass, TrueClass, Fixnum, Symbol].each do |clazz|
-  clazz.class_eval { def rake_dup() self end }
+  clazz.class_eval {
+    # Duplicate an object if it can be duplicated.  If it can not be
+    # cloned or duplicated, then just return the original object.
+    def rake_dup() self end
+  }
 end
 
 module Rake
@@ -626,21 +635,63 @@ module Rake
   # A FileList is essentially an array with a few helper methods
   # defined to make file manipulation a bit easier.
   #
+  # FileLists are lazy.  When given a list of glob patterns for
+  # possible files to be included in the file list, instead of
+  # searching the file structures to find the files, a FileList holds
+  # the pattern for latter use.
+  #
+  # This allows us to define a number of FileList to match any number of
+  # files, but only search out the actual files when then FileList
+  # itself is actually used.  The key is that the first time an
+  # element of the FileList/Array is requested, the pending patterns
+  # are resolved into a real list of file names.
+  #
   class FileList 
 
     include Cloneable
 
-    # Rewrite all array methods (and to_s/inspect) to resolve the list
-    # and forward to the delegate.
+    # == Method Delegation
+    #
+    # The lazy evaluation magic of FileLists happens by implementing
+    # all the array specific methods to call +resolve+ before
+    # delegating the heavy lifting to an embedded array object
+    # (@items).
+    #
+    # In addition, there are two kinds of delegation calls.  The
+    # regular kind delegates to the @items array and returns the
+    # result directly.  Well, almost directly.  It checks if the
+    # returned value is the @items object itself, and if so will
+    # return the FileList object instead.
+    #
+    # The second kind of delegation call is used in methods that
+    # normally return a new Array object.  We want to capture the
+    # return value of these methods and wrap them in a new FileList
+    # object.  We enumerate these methods in the +SPECIAL_RETURN+ list
+    # below.
 
-    MUST_DEFINE = %w[to_a inspect]
-    MUST_NOT_DEFINE = %w[to_ary partition]
+    # List of array methods (that are not in +Object+) that need to be
+    # delegated.
     ARRAY_METHODS = Array.instance_methods - Object.instance_methods
-    SPECIAL_RETURN = %w[map collect sort sort_by select find_all reject grep]
+
+    # List of additional methods that must be delegated.
+    MUST_DEFINE = %w[to_a inspect]
+
+    # List of methods that should not be delegated here (we define
+    # special versions of them explicitly below).
+    MUST_NOT_DEFINE = %w[to_ary partition *]
+
+    # List of delegated methods that return new array values which
+    # need wrapping.
+    SPECIAL_RETURN = %w[
+      map collect sort sort_by select find_all reject grep
+      compact flatten uniq values_at
+      + - & |
+    ]
     
-    method_list = (ARRAY_METHODS + MUST_DEFINE - MUST_NOT_DEFINE).sort.uniq
+    DELEGATING_METHODS = (ARRAY_METHODS + MUST_DEFINE - MUST_NOT_DEFINE).sort.uniq
     
-    method_list.each_with_index do |sym, i|
+    # Now do the delegation.
+    DELEGATING_METHODS.each_with_index do |sym, i|
       if SPECIAL_RETURN.include?(sym)
         ln = __LINE__+1
         class_eval %{
@@ -727,18 +778,32 @@ module Rake
     end
 
     
+    # Clear all the exclude patterns so that we exclude nothing.
     def clear_exclude
       @exclude_patterns = []
       calculate_exclude_regexp if ! @pending
     end
 
+    # Define equality.
     def ==(array)
       to_ary == array
     end
 
+    # Return the internal array object.
     def to_ary
       resolve
       @items
+    end
+
+    # Redefine * to return either a string or a new file list.
+    def *(other)
+      result = @items * other
+      case result
+      when Array
+	FileList.new.import(result)
+      else
+	result
+      end
     end
 
     # Resolve all the pending adds now.
