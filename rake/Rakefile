@@ -13,7 +13,7 @@ rescue Exception
 end
 require 'rake/clean'
 require 'rake/testtask'
-require 'rake/packagetask'
+require 'rake/gempackagetask'
 require 'rake/rdoctask'
 
 # Determine the current version of the software
@@ -95,14 +95,18 @@ else
     s.require_path = 'lib'
     s.autorequire = 'rake'
     s.files = PKG_FILES
+    s.author = 'Jim Weirich'
+    s.email = 'jweirich@one.net'
+    s.homepage = 'http://onestepback.org'
+    s.has_rdoc = true
+    s.rubyforge_project = 'rake'
     s.description = <<EOF
 Rake is a Make-like program implemented in Ruby. Tasks
 and dependencies are specified in standard Ruby syntax. 
 EOF
   end
   
-  Rake::PackageTask.new do |pkg|
-  pkg.gem_spec = spec
+  Rake::GemPackageTask.new(spec) do |pkg|
     pkg.need_zip = true
     pkg.need_tar = true
   end
