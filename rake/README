@@ -21,11 +21,11 @@ Rake has the following features:
 
 The latest version of rake can be found at
 
-* http://onestepback.org/packages/rake
+* http://rubyforge.org/project/showfiles.php?group_id=50
 
 Documentation can be found at 
 
-* http://onestepback.org/software/rake
+* http://rake.rubyforge.org
 
 == Installation
 
@@ -95,8 +95,8 @@ Rake is available under an MIT-style license.
 
 == Support
 
-The Rake homepage is http://w3.one.net/~jweirich/tools/rake (this will
-probably change in the near future).
+The Rake homepage is http://rake.rubyforge.org.  You can find the Rake
+RubyForge page at http://rubyforge.org/projects/rake.
 
 Feel free to submit commits or feature requests.  If you send a patch,
 remember to update the corresponding unit tests.  If fact, I prefer
