@@ -50,9 +50,10 @@ module Rake
 	""
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
+	testname = ENV['TESTNAME'] || @pattern
 	ruby %{-I#{lib_path} } + setup_code +
 	  %{-e 'require "rake/runtest"' } +	  
-	  %{-e 'Rake.run_tests("#{@pattern}", #{@verbose||verbose})'}
+	  %{-e 'Rake.run_tests("#{testname}", #{@verbose||verbose})'}
       end
       self
     end
