@@ -212,10 +212,16 @@ class TestFileList < Test::Unit::TestCase
     assert_equal "..", "..".ext("c")
   end
 
-  def test_filelist_ext
+  def test_array_ext
     require 'rake/ext'
     assert_equal ['one.c', '.one.c'],
       ['one.net', '.one'].ext('c')
+  end
+
+  def test_filelist_ext
+    require 'rake/ext'
+    assert_equal FileList['one.c', '.one.c'],
+      FileList['one.net', '.one'].ext('c')
   end
 
   def test_gsub
