@@ -8,17 +8,17 @@ module Rake
   # Create a documentation task that will generate the RDoc files for
   # a project.
   #
-  # The PackageTask will create the following targets:
+  # The RDocTask will create the following targets:
   #
   # [<b><em>rdoc</em></b>]
   #   Main task for this RDOC task.  
   #
   # [<b>:clobber_<em>rdoc</em></b>]
-  #   Delete all the package files.  This target is automatically
+  #   Delete all the rdoc files.  This target is automatically
   #   added to the main clobber target.
   #
   # [<b>:re<em>rdoc</em></b>]
-  #   Rebuild the package files from scratch, even if they are not out
+  #   Rebuild the rdoc files from scratch, even if they are not out
   #   of date.
   #
   # Simple Example:
