@@ -46,6 +46,9 @@ module Rake
     # True if verbose test output desired. (default is false)
     attr_accessor :verbose
 
+    # Test options passed to the test suite. (default is NONE)
+    attr_accessor :options
+
     # Glob pattern to match test files. (default is 'test/test*.rb')
     attr_accessor :pattern
 
@@ -72,22 +75,32 @@ module Rake
     # Create the tasks defined by this task lib.
     def define
       lib_path = @libs.join(':')
-      if ENV['TESTOPTS']
-	testoptions = " \\\n -- #{ENV['TESTOPTS']}"
-      else
-	testoptions = ''
-      end
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
-	testreqs = test_file_list.gsub(/^(.*)\.rb$/, ' -r\1').join(" \\\n")
 	RakeFileUtils.verbose(@verbose) do
-	  ruby %{-I#{lib_path} -e0 \\\n#{testreqs}#{testoptions}}
+	  ruby %{-I#{lib_path} -e0 \\\n#{required_files}#{option_list}}
 	end
       end
       self
     end
 
-    def test_file_list
+    def required_files # :nodoc:
+      file_list.gsub(/^(.*)\.rb$/, ' -r\1').join(" \\\n")
+    end
+    
+    def option_list # :nodoc:
+      if get_options
+	testoptions = " \\\n -- #{get_options}"
+      else
+	testoptions = ''
+      end
+    end
+
+    def get_options # :nodoc:
+      ENV['TESTOPTS'] || @options
+    end
+
+    def file_list # :nodoc:
       if ENV['TEST']
 	FileList[ ENV['TEST'] ]
       else
