@@ -54,15 +54,22 @@ end
 
 # Create a task to build the RDOC documentation tree.
 
-Rake::RDocTask.new("rdoc") { |rdoc|
+rd = Rake::RDocTask.new("rdoc") { |rdoc|
   rdoc.rdoc_dir = 'html'
-  rdoc.template = 'kilmer'
-#  rdoc.template = 'css2'
+#  rdoc.template = 'kilmer'
+  rdoc.template = 'css2'
+  rdoc.title    = '"Rake -- Ruby Make"'
   rdoc.options << '--line-numbers'
-  rdoc.rdoc_files.add('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
-  rdoc.rdoc_files.add('lib/**/*.rb', 'doc/**/*.rdoc')
-  rdoc.rdoc_files.exclude!(/\bcontrib\b/)
+  rdoc.rdoc_files.include('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
+  rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
+  rdoc.rdoc_files.exclude(/\bcontrib\b/)
 }
+
+nl = rd.clone
+nl.name='nolines'
+nl.rdoc_dir = 'html2'
+nl.options.clear
+nl.define
 
 # ====================================================================
 # Create a task that will package the Rake software into distributable
