@@ -91,20 +91,30 @@ class Task
 
   # Invoke the task if it is needed.  Prerequites are invoked first.
   def invoke
-    puts "Invoke #{name} (first_time=#{!@already_invoked}, needed=#{needed?})" if $trace
+    if $trace
+      puts "** Invoke #{name} #{trace_flags}"
+    end
     return if @already_invoked
     @already_invoked = true
     @prerequisites.each { |n| Task[n].invoke }
     execute if needed?
   end
 
+  def trace_flags
+    flags = []
+    flags << "first_time" unless @already_invoked
+    flags << "not_needed" unless needed?
+    flags.empty? ? "" : "(" + flags.join(", ") + ")"
+  end
+  private :trace_flags
+
   # Execute the actions associated with this task.
   def execute
-    puts "Execute #{name}" if $trace
+    puts "** Execute #{name}" if $trace
     self.class.enhance_with_matching_rule(name) if @actions.empty?
-    unless $dryrun
-      @actions.each { |act| result = act.call(self) }
-    end
+#    unless $dryrun
+    @actions.each { |act| result = act.call(self) }
+#    end
   end
 
   # Is this task needed?
@@ -154,7 +164,7 @@ class Task
     end
 
     # TRUE if the task name is already defined.
-    def defined?(task_name)
+    def task_defined?(task_name)
       task_name = task_name.to_s
       TASKS[task_name]
     end
@@ -284,59 +294,6 @@ def desc(comment)
   $last_comment = comment
 end
 
-######################################################################
-# Sys provides a number of file manipulation tools for the convenience
-# of writing Rakefiles.  All commands in this module will announce
-# their activity on standard output if the $verbose flag is set
-# ($verbose = true is the default).  You can control this by globally
-# setting $verbose or by using the +verbose+ and +quiet+ methods.
-#
-module Sys
-  # Write a message to standard out if $verbose is enabled.
-  def log(msg)
-    print "  " if $trace && $verbose
-    puts msg if $verbose
-  end
-
-  # Perform a block with $verbose disabled.
-  def quiet(&block)
-    with_verbose(false, &block)
-  end
-
-  # Perform a block with $verbose enabled.
-  def verbose(&block)
-    with_verbose(true, &block)
-  end
-
-  # Perform a block with each file matching a set of wildcards.
-  def for_files(*wildcards)
-    wildcards.each do |wildcard|
-      Dir[wildcard].each do |fn|
-	yield(fn)
-      end
-    end
-  end
-
-  class << self
-    def method_missing(sym, *args)
-      fail "Module Sys has been deprecated ... Use FileUtils instead"
-    end
-  end
-
-  self.extend(self)
-
-  private # ----------------------------------------------------------
-
-  def with_verbose(v)
-    oldverbose = $verbose
-    $verbose = v
-    yield
-  ensure
-    $verbose = oldverbose
-  end
-
-end
-
 
 module FileUtils
   RUBY = Config::CONFIG['ruby_install_name']
@@ -379,30 +336,48 @@ end
 module RakeFileUtils
   include FileUtils
   
-  @fileutils_output  = $stderr
-  @fileutils_label   = ''
-  @fileutils_verbose = false
-  @fileutils_nowrite = false
+  $fileutils_output  = $stderr
+  $fileutils_label   = ''
+  $fileutils_verbose = false
+  $fileutils_nowrite = false
   
   FileUtils::OPT_TABLE.each do |name, opts|
     next unless opts.include?('verbose')
     module_eval(<<-EOS, __FILE__, __LINE__ + 1)
     def #{name}( *args )
-      @fileutils_verbose = false unless defined?(@fileutils_verbose)
-      @fileutils_nowrite = false unless defined?(@fileutils_nowrite)
+#      $fileutils_verbose = true unless defined?($fileutils_verbose)
+ #     $fileutils_nowrite = false unless defined?($fileutils_nowrite)
       super(*fu_merge_option(args,
-	  :verbose => @fileutils_verbose,
-	  :noop => @fileutils_nowrite))
+	  :verbose => $fileutils_verbose,
+	  :noop => $fileutils_nowrite))
     end
     EOS
   end
 
-  def verbose(value=true)
-    @fileutils_verbose = value
+  def verbose(value=nil)
+    oldvalue = $fileutils_verbose
+    $fileutils_verbose = value unless value.nil?
+    if block_given?
+      begin
+	yield
+      ensure
+	$fileutils_verbose = oldvalue
+      end
+    end
+    $fileutils_verbose
   end
 
-  def nowrite(value=true)
-    @fileutils_nowrite = value
+  def nowrite(value=nil)
+    oldvalue = $fileutils_nowrite
+    $fileutils_nowrite = value unless value.nil?
+    if block_given?
+      begin
+	yield
+      ensure
+	$fileutils_nowrite = oldvalue
+      end
+    end
+    oldvalue
   end
 
   def fu_merge_option(args, defaults)
@@ -526,6 +501,8 @@ class RakeApp
   def do_option(opt, value)
     case opt
     when '--dry-run'
+      verbose(true)
+      nowrite(true)
       $dryrun = true
       $trace = true
     when '--help'
@@ -538,7 +515,7 @@ class RakeApp
     when '--prereqs'
       $show_prereqs = true
     when '--quiet'
-      $verbose = false
+      verbose(false)
     when '--rakefile'
       RAKEFILES.clear
       RAKEFILES << value
@@ -548,11 +525,12 @@ class RakeApp
       $show_tasks = true
     when '--trace'
       $trace = true
+      verbose(true)
     when '--usage'
       usage
       exit
     when '--verbose'
-      $verbose = true
+      verbose(true)
     when '--version'
       puts "rake, version #{RAKEVERSION}"
       exit
