@@ -1,5 +1,9 @@
 = Rake Changelog
 
+== pre Version 0.4.11
+
+* Changed the "don't know how to rake" message (finally)
+
 == Version 0.4.10
 
 * Added block support to the "sh" command, allowing users to take

@@ -45,7 +45,7 @@ class TestTask < Test::Unit::TestCase
     task :tfind
     assert_equal "tfind", Task[:tfind].name
     ex = assert_raises(RuntimeError) { Task[:leaves] }
-    assert_equal "Don't know how to rake leaves", ex.message
+    assert_equal "Don't know how to build task 'leaves'", ex.message
   end
 
   def test_defined
