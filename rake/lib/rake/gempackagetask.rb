@@ -9,7 +9,40 @@ require 'rake/packagetask'
 
 module Rake
 
+  # [<b>"<em>package_dir</em>/<em>name</em>-<em>version</em>.gem"</b>]
+  #   Create a Ruby GEM package.
+  #
+  # Example using a Ruby GEM spec:
+  #
+  #   spec = Gem::Specification.new do |s|
+  #     s.platform = Gem::Platform::RUBY
+  #     s.summary = "Ruby based make-like utility."
+  #     s.name = 'rake'
+  #     s.version = PKG_VERSION
+  #     s.requirements << 'none'
+  #     s.require_path = 'lib'
+  #     s.autorequire = 'rake'
+  #     s.files = PKG_FILES
+  #     s.description = <<EOF
+  #   Rake is a Make-like program implemented in Ruby. Tasks
+  #   and dependencies are specified in standard Ruby syntax. 
+  #   EOF
+  #   end
+  #   
+  #   Rake::PackageTask.new(spec) do |pkg|
+  #     pkg.gem_spec = spec
+  #     pkg.need_zip = true
+  #     pkg.need_tar = true
+  #   end
+  #
   class GemPackageTask < PackageTask
+    # Ruby GEM spec containing the metadata for this package.  If a
+    # GEM spec is provided, then name, version and package_files are
+    # automatically determined and don't need to be explicitly
+    # provided.  A GEM file will be produced if and only if a GEM spec
+    # is supplied.
+    attr_accessor :gem_spec
+
     def initialize(gem)
       init(gem)
       yield self if block_given?
