@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.4.11'
+RAKEVERSION = '0.4.12'
 
 require 'rbconfig'
 require 'ftools'
@@ -41,6 +41,7 @@ $show_tasks = nil
 $show_prereqs = nil
 $trace = nil
 $dryrun = nil
+$silent = false
 
 ######################################################################
 # A Task is the basic unit of work in a Rakefile.  Tasks have
@@ -808,6 +809,8 @@ class RakeApp
       "Use FILE as the rakefile."],
     ['--require',  '-r', GetoptLong::REQUIRED_ARGUMENT,
       "Require MODULE before executing rakefile."],
+    ['--silent',   '-s', GetoptLong::NO_ARGUMENT,
+      "Like --quiet, but also suppresses the 'in directory' announcement."],
     ['--tasks',    '-T', GetoptLong::NO_ARGUMENT,
       "Display the tasks and dependencies, then exit."],
     ['--trace',    '-t', GetoptLong::NO_ARGUMENT,
@@ -912,6 +915,9 @@ class RakeApp
       RAKEFILES << value
     when '--require'
       require value
+    when '--silent'
+      verbose(false)
+      $silent = true
     when '--tasks'
       $show_tasks = true
     when '--trace'
@@ -945,7 +951,7 @@ class RakeApp
       end
       here = Dir.pwd
     end
-    puts "(in #{Dir.pwd})"
+    puts "(in #{Dir.pwd})" unless $silent
     $rakefile = @rakefile
     load @rakefile
   end
