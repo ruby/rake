@@ -23,9 +23,11 @@ The latest version of rake can be found at
 
 * http://rubyforge.org/project/showfiles.php?group_id=50
 
-Documentation can be found at 
+Online Resources can be found at ...
 
-* http://rake.rubyforge.org
+* Online Rake Documentation: http://rake.rubyforge.org
+* Rake Project Page: http://rubyforge.org/projects/rake
+* Rake Project Wiki: http://rake.rubyforge.org/wiki/wiki.pl
 
 == Installation
 
@@ -74,7 +76,7 @@ and VERSION is the appropriate version.
 
 Once installed, you can run rake as follows ...
 
-  % rake [options]  [tasks...]
+  % rake [options ...]  [VAR=VALUE ...]  [tasks...]
 
 Type "rake --help" for an up-to-date option summary.
 
@@ -102,7 +104,7 @@ package.
 Rake is a late entry in the make replacement field.  Here are links to
 other projects with similar (and not so similar) goals.
 
-* http://www.a-a-p.org/ -- Make in Python
+* http://www.a-a-p.org -- Make in Python
 * http://www.aromatic.com/tools/jam.txt -- JAM, Java Automated Make
 * http://ant.apache.org -- The Ant project
 * http://www.perl.com/language/ppt/src/make/index.html -- Make from
@@ -139,7 +141,7 @@ mailto:jim@weirichhouse.org.
 
 Rake is invoked from the command line using:
 
-   % rake <options> [targets...]
+   % rake [<em>options</em> ...]  [<em>VAR</em>=<em>VALUE</em>]  [<em>targets</em> ...]
 
 Options are:
 
@@ -193,6 +195,10 @@ Options are:
 
 [<tt>--version</tt> (-V)]
     Display the program version and exit.
+
+In addition, any command line option of the form
+<em>VAR</em>=<em>VALUE</em> will be added to the environment hash
+<tt>ENV</tt> and may be tested in the Rakefile.
 
 ---
 
