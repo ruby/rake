@@ -16,7 +16,9 @@
 require 'rake'
 
 CLEAN = Rake::FileList.new
+FileList.clear_ignore_patterns
 CLEAN.include("**/*~", "**/*.bak", "**/core")
+FileList.select_default_ignore_patterns
 
 desc "Remove any temporary products."
 task :clean do
