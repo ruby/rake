@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.4.6'
+RAKEVERSION = '0.4.7'
 
 require 'rbconfig'
 require 'ftools'
@@ -533,7 +533,9 @@ module Rake
     # Rewrite all array methods (and to_s/inspect) to resolve the list
     # before running.
     method_list = Array.instance_methods - Object.instance_methods
-    method_list << "to_a" << "inspect"
+    %w[to_a inspect]. each do |meth|
+      method_list << meth unless method_list.include? meth
+    end
     method_list.each_with_index do |sym, i|
       if sym =~ /^[A-Za-z_]+$/
 	name = sym
