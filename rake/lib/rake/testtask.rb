@@ -51,6 +51,10 @@ module Rake
     # is NONE)
     attr_accessor :options
 
+    # Request that the tests be run with the warning flag set.
+    # E.g. warning=true implies "ruby -w" used to run the tests.
+    attr_accessor :warning
+
     # Glob pattern to match test files. (default is 'test/test*.rb')
     attr_accessor :pattern
 
@@ -70,6 +74,7 @@ module Rake
       @options = nil
       @test_files = nil
       @verbose = false
+      @warning = false
       yield self if block_given?
       @pattern = 'test/test*.rb' if @pattern.nil? && @test_files.nil?
       define
@@ -78,10 +83,11 @@ module Rake
     # Create the tasks defined by this task lib.
     def define
       lib_path = @libs.join(File::PATH_SEPARATOR)
+      warning_flag = (@warning ? "-w " : "")
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
 	RakeFileUtils.verbose(@verbose) do
-	  ruby %{-I#{lib_path} -S testrb #{file_list.join(' ')} #{option_list}}
+	  ruby %{-I#{lib_path} #{warning_flag}-S testrb #{file_list.join(' ')} #{option_list}}
 	end
       end
       self
