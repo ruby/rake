@@ -87,6 +87,7 @@ rd = Rake::RDocTask.new("rdoc") { |rdoc|
   rdoc.rdoc_dir = 'html'
 #  rdoc.template = 'kilmer'
 #  rdoc.template = 'css2'
+  rdoc.template = 'jamis'
   rdoc.title    = "Rake -- Ruby Make"
   rdoc.options << '--line-numbers' << '--inline-source' << '--main' << 'README'
   rdoc.rdoc_files.include('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
