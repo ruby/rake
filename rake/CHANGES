@@ -1,5 +1,32 @@
 = Rake Changelog
 
+== Version 0.3.0
+
+Promoted 0.2.10.
+
+== Version 0.2.10
+General
+
+* Added title to Rake's rdocs
+* Contrib packages are no longer included in the documentation.
+
+RDoc Issues
+
+* Removed default for the '--main' option
+* Fixed rendering of the rdoc options
+* Fixed clean/clobber confusion with rerdoc
+* 'title' attribute added
+
+Package Task Library Issues
+
+* Version (or explicit :noversion) is required.
+* +package_file+ attribute is now writable
+
+FileList Issues
+
+* Dropped bang version of exclude.  Now using ant-like include/exclude semantics.
+* Enabled the "yield self" idiom in FileList#initialize.
+
 == Version 0.2.9
 
 This version contains numerous changes as the RubyConf.new(2003)
