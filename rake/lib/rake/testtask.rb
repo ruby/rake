@@ -36,6 +36,8 @@ module Rake
   #
   class TestTask < TaskLib
 
+    SEP = ''
+
     # Name of test task. (default is :test)
     attr_accessor :name
 
@@ -74,23 +76,23 @@ module Rake
 
     # Create the tasks defined by this task lib.
     def define
-      lib_path = @libs.join(':')
+      lib_path = @libs.join(File::PATH_SEPARATOR)
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
 	RakeFileUtils.verbose(@verbose) do
-	  ruby %{-I#{lib_path} -e0 \\\n#{required_files}#{option_list}}
+	  ruby %{-I#{lib_path} -e0 #{SEP}#{required_files}#{option_list}}
 	end
       end
       self
     end
 
     def required_files # :nodoc:
-      file_list.gsub(/^(.*)\.rb$/, ' -r\1').join(" \\\n")
+      file_list.gsub(/^(.*)\.rb$/, ' -r\1').join(" #{SEP}")
     end
     
     def option_list # :nodoc:
       if get_options
-	testoptions = " \\\n -- #{get_options}"
+	testoptions = " #{SEP} -- #{get_options}"
       else
 	testoptions = ''
       end

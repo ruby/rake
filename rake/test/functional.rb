@@ -50,6 +50,16 @@ class FunctionalTest < Test::Unit::TestCase
     assert_no_match %r{^rake c}, @out
   end
 
+  def test_rbext
+    Dir.chdir("test/data/rbext") do rake "-N" end
+    assert_match %r{^OK$}, @out
+  end
+
+  def test_nosearch
+    Dir.chdir("test/data/nosearch") do rake "-N" end
+    assert_match %r{^No Rakefile found}, @out
+  end
+
   private
 
   def rake(options="")
