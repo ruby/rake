@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.5.0'
+RAKEVERSION = '0.4.99'
 
 require 'rbconfig'
 require 'ftools'
@@ -286,6 +286,9 @@ class FileTask < Task
     latest_prereq = @prerequisites.collect{|n| Task[n].timestamp}.max
     return false if latest_prereq.nil?
     timestamp < latest_prereq
+  rescue Errno::ENOENT => ex # one of the prereqs does not exist
+    raise unless $dryrun or $trace
+    true
   end
 
   # Time stamp for file task.
