@@ -24,7 +24,7 @@ class TestPackageTask < Test::Unit::TestCase
     assert Task["pkg/pkgr-1.2.3"]
     assert Task['pkg/pkgr-1.2.3.tgz']
     assert Task['pkg/pkgr-1.2.3.zip']
-    assert Task[:clean_package]
+    assert Task[:clobber_package]
     assert Task[:repackage]
   end
 end
