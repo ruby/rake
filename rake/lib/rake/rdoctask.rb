@@ -10,14 +10,14 @@ module Rake
   #
   # The PackageTask will create the following targets:
   #
-  # [<b><em>name</em></b>]
+  # [<b><em>rdoc</em></b>]
   #   Main task for this RDOC task.  
   #
-  # [<b>:clobber_<em>name</em></b>]
+  # [<b>:clobber_<em>rdoc</em></b>]
   #   Delete all the package files.  This target is automatically
   #   added to the main clobber target.
   #
-  # [<b>:re<em>name</em></b>]
+  # [<b>:re<em>rdoc</em></b>]
   #   Rebuild the package files from scratch, even if they are not out
   #   of date.
   #
@@ -25,8 +25,21 @@ module Rake
   #
   #   RDocTask.new do |rd|
   #     rd.main = "README.rdoc"
-  #     rd.package_files.include("lib/**/*.rb")
+  #     rd.rdoc_files.include("README.rdoc", "lib/**/*.rb")
   #   end
+  #
+  # You may wish to give the task a different name, such as if you are
+  # generating two sets of documentation.  For instance, if you want to have a
+  # development set of documentation including private methods:
+  #
+  #   RDocTask.new(:rdoc_dev) do |rd|
+  #     rd.main = "README.doc"
+  #     rd.rdoc_files.include("README.rdoc", "lib/**/*.rb")
+  #     rd.options << "--all"
+  #   end
+  #
+  # The tasks would then be named :<em>rdoc_dev</em>, :clobber_<em>rdoc_dev</em>, and
+  # :re<em>rdoc_dev</em>.
   #
   class RDocTask < TaskLib
     # Name of the main, top level task.  (default is :rdoc)
@@ -51,8 +64,8 @@ module Rake
     # List of options to be passed rdoc.  (default is [])
     attr_accessor :options
 
-    # Create an RDoc task named <em>name</em>.  
-    def initialize(name=:rdoc)
+    # Create an RDoc task named <em>rdoc</em>.  Default task name is +rdoc+.
+    def initialize(name=:rdoc)	# :yield: self
       @name = name
       @rdoc_files = Rake::FileList.new
       @rdoc_dir = 'html'

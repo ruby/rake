@@ -76,7 +76,7 @@ module Rake
     # Create the tasks defined by this task library.
     def define
       fail "Version required (or :noversion)" if @version.nil?
-      @version = nil if @version == :noversion
+      @version = nil if :noversion == @version
 
       desc "Build all the packages"
       task :package
