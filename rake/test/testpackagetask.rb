@@ -45,7 +45,7 @@ class TestPackageTask < Test::Unit::TestCase
   end
 
   def test_clone
-    pkg = Rake::PackageTask.new("x")
+    pkg = Rake::PackageTask.new("x", :noversion)
     p2 = pkg.clone
     pkg.package_files << "y"
     p2.package_files << "x"
