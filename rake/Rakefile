@@ -11,7 +11,6 @@ require 'rake/clean'
 require 'rake/testtask'
 require 'rake/packagetask'
 require 'rake/rdoctask'
-require 'rake/filelist'
 
 # Determine the current version of the software
 

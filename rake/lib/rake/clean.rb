@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'rake'
-require 'rake/filelist'
 
 CLEAN = Rake::FileList.new
 CLEAN.add("**/*~", "**/*.bak", "**/core")
