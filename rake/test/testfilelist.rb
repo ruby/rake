@@ -98,6 +98,7 @@ class TestFileList < Test::Unit::TestCase
     fl = FileList['testdata/x.c', 'testdata/abc.c', 'testdata/xyz.c', 'testdata/existing']
     fl.each { |fn| touch fn, :verbose => false }
     x = fl.exclude(%r{/x.+\.})
+    assert_equal FileList, x.class
     assert_equal [
       'testdata/x.c', 'testdata/abc.c', 'testdata/existing'
     ], fl
@@ -106,6 +107,11 @@ class TestFileList < Test::Unit::TestCase
     assert_equal ['testdata/existing'], fl
     fl.exclude('testdata/existing')
     assert_equal [], fl
+  end
+
+  def test_exclude_return_on_create
+    fl = FileList['testdata/*'].exclude(/.*\.c$/)
+    assert_equal FileList, fl.class
   end
 
   def test_default_exclude
@@ -129,6 +135,16 @@ class TestFileList < Test::Unit::TestCase
     fl << "a.java" << "b.java"
     assert_equal  "a.java b.java", fl.to_s
     assert_equal  "a.java b.java", "#{fl}"
+  end
+
+  def test_to_s_pending
+    fl = FileList['testdata/*.f']
+    assert_equal  %{testdata/abc.f}, fl.to_s
+  end
+
+  def test_inspect_pending
+    fl = FileList['testdata/*.f']
+    assert_equal  %{["testdata/abc.f"]}, fl.inspect
   end
 
   def test_sub
