@@ -56,9 +56,10 @@ Rake::TestTask.new(:test_contrib) { |ctest|
 desc "Run all test targets"
 task :testall => [:test, :test_contrib, :test_fun]
 
-desc "Tag all the CVS files with the latest release number"
+desc "Tag all the CVS files with the latest release number (TAG=x)"
 task :tag do
   rel = "REL_" + PKG_VERSION.gsub(/\./, '_')
+  rel << ENV['TAG'] if ENV['TAG']
   puts rel
   sh %{cvs commit -m 'pre-tag commit'}
   sh %{cvs tag #{rel}}

@@ -1,5 +1,13 @@
 = Rake Changelog
 
+== Version 0.4.0
+* FileList now uses deferred loading.  The file system is not searched
+  until the first call that needs the file names.
+* VAR=VALUE options are now accepted on the command line and are
+  treated like environment variables.  The values may be tested in a
+  Rakefile by referencing ENV['VAR'].
+* File.mtime is now used (instead of File.new().mtime).
+
 == Version 0.3.2.x
 
 * Removed some hidden dependencies on rubygems.  Tests now will test
