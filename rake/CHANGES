@@ -1,7 +1,10 @@
 = Rake Changelog
 
 == Version next
+
+== Version 0.4.1
 * Task comments are now additive, combined with "/".
+* Works with (soon to be released) rubygems 0.6.2 (or 0.7.0)
 
 == Version 0.4.0
 * FileList now uses deferred loading.  The file system is not searched
