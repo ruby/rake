@@ -68,7 +68,6 @@ Rake::RDocTask.new { |rdoc|
 
 Rake::PackageTask.new("rake", PKG_VERSION) { |pkg|
   pkg.package_files << 'install.rb'
-  pkg.need_zip = false
   pkg.package_files.add(
     '[A-Z]*',
     'bin/**/*', 
