@@ -81,6 +81,24 @@ class FunctionalTest < Test::Unit::TestCase
     assert_no_match %r{OTHER}, @out
   end
 
+  # Test for the trace/dry_run bug found by Brian Chandler
+  def test_dry_run_bug
+    Dir.chdir("test/data/dryrun") do rake end
+    FileUtils.rm_f "test/data/dryrun/temp_one"
+    Dir.chdir("test/data/dryrun") do rake "--dry-run" end
+    assert_no_match(/No such file/, @out)
+    assert_status
+  end
+
+  # Test for the trace/dry_run bug found by Brian Chandler
+  def test_trace_bug
+    Dir.chdir("test/data/dryrun") do rake end
+    FileUtils.rm_f "test/data/dryrun/temp_one"
+    Dir.chdir("test/data/dryrun") do rake "--trace" end
+    assert_no_match(/No such file/, @out)
+    assert_status
+  end
+
   private
 
   def rake(*option_list)
