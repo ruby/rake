@@ -98,7 +98,7 @@ module Rake
       
       directory @rdoc_dir
       task name => [rdoc_target]
-      file rdoc_target => @rdoc_files + ["Rakefile"] do
+      file rdoc_target => @rdoc_files + [$rakefile] do
 	rm_r @rdoc_dir rescue nil
 	opts = option_list.join(' ')
 	sh %{rdoc -o #{@rdoc_dir} #{opts} #{@rdoc_files}}
