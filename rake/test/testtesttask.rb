@@ -128,7 +128,7 @@ end
 ######################################################################
 class TestDirectoryTask < Test::Unit::TestCase
   def setup
-    teardown
+    rm_r "testdata"
   end
 
   def test_create
