@@ -3,14 +3,14 @@
 require 'rake'
 require 'rake/filematcher'
 
-CLEAN = Rake::FileMatcher.new
-CLEAN.glob("**/*~", "**/*.bak", "**/core")
+CLEAN = Rake::FileList.new
+CLEAN.add_matching("**/*~", "**/*.bak", "**/core")
 
 task :clean do
   CLEAN.each { |fn| Sys.delete_all fn rescue nil }
 end
 
-CLOBBER = Rake::FileMatcher.new
+CLOBBER = Rake::FileList.new
 
 task :clobber => [:clean] do
   CLOBBER.each { |fn| Sys.delete_all fn rescue nil }
