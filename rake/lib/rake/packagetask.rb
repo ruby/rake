@@ -39,7 +39,7 @@ module Rake
   #
   class PackageTask < TaskLib
     # Name of the package (from the GEM Spec).
-    attr_reader :name
+    attr_accessor :name
 
     # Version of the package (e.g. '1.3.2').
     attr_accessor :version
@@ -54,7 +54,7 @@ module Rake
     attr_accessor :need_zip
 
     # List of files to be included in the package.
-    attr_reader :package_files
+    attr_accessor :package_files
 
     # Create a Package Task with the given name and version. 
     def initialize(name=nil, version=nil)
