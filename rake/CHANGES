@@ -1,6 +1,6 @@
 = Rake Changelog
 
-== Pre-Version 0.5.1
+== Version 0.5.1
 
 * Make FileUtils methods private at the top level module to avoid
   accidental method leaking into other objects.
