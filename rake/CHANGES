@@ -1,5 +1,11 @@
 = Rake Changelog
 
+== Version 0.4.8
+
+* Added support for .rb versions of Rakefile.
+* Removed \\\n's from test task.
+* Fixed Ruby 1.9 compatibility issue with FileList.
+
 == Version 0.4.7
 
 * Fixed problem in FileList that caused Ruby 1.9 to go into infinite
