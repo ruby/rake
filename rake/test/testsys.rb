@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'test/unit'
+require 'test/filecreation'
 
 class TestSys < Test::Unit::TestCase
   include FileCreation
