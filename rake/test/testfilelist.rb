@@ -222,16 +222,18 @@ class TestFileList < Test::Unit::TestCase
   end
 
   def create_test_data
-    mkdir "testdata" unless File.exist? "testdata"
-    mkdir "testdata/CVS", :verbose=>false rescue nil
-    touch "testdata/.dummy", :verbose=>false
-    touch "testdata/x.bak", :verbose=>false
-    touch "testdata/x~", :verbose=>false
-    touch "testdata/core", :verbose=>false
-    touch "testdata/x.c", :verbose=>false
-    touch "testdata/xyz.c", :verbose=>false
-    touch "testdata/abc.c", :verbose=>false
-    touch "testdata/existing", :verbose=>false
+    verbose(false) do
+      mkdir "testdata" unless File.exist? "testdata"
+      mkdir "testdata/CVS" rescue nil
+      touch "testdata/.dummy"
+      touch "testdata/x.bak"
+      touch "testdata/x~"
+      touch "testdata/core"
+      touch "testdata/x.c"
+      touch "testdata/xyz.c"
+      touch "testdata/abc.c"
+      touch "testdata/existing"
+    end
   end
   
 end
