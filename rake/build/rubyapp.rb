@@ -8,70 +8,6 @@ require 'rake/help'
 
 # == Classes
 
-# Configuration information about an upload host system.
-# * name   :: Name of host system.
-# * webdir :: Base directory for the web information for the
-#             application.  The application name (APP) is appended to
-#             this directory before using.
-# * pkgdir :: Directory on the host system where packages can be
-#             placed. 
-HostInfo = Struct.new(:name, :webdir, :pkgdir)
-
-class CompositePublisher
-  def initialize
-    @publishers = []
-  end
-
-  def add(pub)
-    @publishers << pub
-  end
-
-  def upload
-    @publishers.each { |p| p.upload }
-  end
-end
-
-# Publish an entire directory to an existing remote directory using
-# SSH.
-class SshDirPublisher
-  def initialize(host, remote_dir, local_dir)
-    @host = host
-    @remote_dir = remote_dir
-    @local_dir = local_dir
-  end
-
-  def upload
-    run %{scp -rq #{@local_dir}/* #{@host}:#{@remote_dir}}
-  end
-end
-
-# Publish an entire directory to a fresh remote directory using SSH.
-class SshFreshDirPublisher < SshDirPublisher
-  def upload
-    run %{ssh #{@host} rm -rf #{@remote_dir}} rescue nil
-    run %{ssh #{@host} mkdir #{@remote_dir}}
-    super
-  end
-end
-
-# Publish a list of files to an existing remote directory.
-class SshFilePublisher
-  # Create a publisher using the give host information.
-  def initialize(host, remote_dir, local_dir, *files)
-    @host = host
-    @remote_dir = remote_dir
-    @local_dir = local_dir
-    @files = files
-  end
-
-  # Upload the local directory to the remote directory.
-  def upload
-    @files.each do |fn|
-      run %{scp -q #{@local_dir}/#{fn} #{@host}:#{@remote_dir}}
-    end
-  end
-end
-
 ######################################################################
 class AppBuilder
   attr_reader :name
@@ -89,8 +25,8 @@ class AppBuilder
     @clobber_files = CLOBBER
     @clean_files   = CLEAN
     @revision = '0.0.0'
-    @web_publisher = CompositePublisher.new
-    @pkg_publisher = CompositePublisher.new
+#    @web_publisher = CompositePublisher.new
+#    @pkg_publisher = CompositePublisher.new
     @rdoc_dir = 'html'
   end
 
@@ -142,8 +78,6 @@ class AppBuilder
   end
     
   def create_tasks
-    desc "Default Task"
-    
     desc "Print the Application Revision"
     task :rev do
       puts revision
@@ -172,13 +106,6 @@ class AppBuilder
       "Rakefile", :rdoc
     ]
 
-    directory @rdoc_dir
-    task :rdoc => [rdoc_target]
-    file rdoc_target => @rdoc_files.to_a + ["Rakefile"] do
-      rm_r @rdoc_dir rescue nil
-      run %{rdoc -o #{@rdoc_dir} --line-numbers --main README -T kilmer #{@rdoc_files}}
-    end
-    
     desc "Publish the web and package files"
     task :publish => [		# Publish the Application
       :publish_web, :publish_package
@@ -196,10 +123,6 @@ class AppBuilder
     
     # == Installation
     
-    desc "Install the application"
-    task :install do		# Install the application
-      ruby "install.rb"
-    end
   end
 
 end
