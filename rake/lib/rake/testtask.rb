@@ -58,6 +58,15 @@ module Rake
     # Glob pattern to match test files. (default is 'test/test*.rb')
     attr_accessor :pattern
 
+    # Style of test loader to use.  Options are:
+    #
+    # * :rake -- Rake provided test loading script (default).
+    # * :testrb -- Ruby provided test loading script.
+    # * :direct -- Load tests using command line loader.
+    #
+    # 
+    attr_accessor :loader
+
     # Explicitly define the list of test files to be included in a
     # test.  +list+ is expected to be an array of file names (a
     # FileList is acceptable).  If both +pattern+ and +test_files+ are
@@ -75,6 +84,7 @@ module Rake
       @test_files = nil
       @verbose = false
       @warning = false
+      @loader = :rake
       yield self if block_given?
       @pattern = 'test/test*.rb' if @pattern.nil? && @test_files.nil?
       define
@@ -86,9 +96,21 @@ module Rake
       warning_flag = (@warning ? "-w " : "")
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
+	run_code = ''
 	RakeFileUtils.verbose(@verbose) do
-	  ruby %{-I#{lib_path} #{warning_flag}-S testrb #{fix} #{file_list.join(' ')} #{option_list}}
+	  run_code =
+	    case @loader
+	    when :direct
+	      "-e 'ARGV.each{|f| load f}'"
+	    when :testrb
+	      "-S testrb #{fix}"
+	    when :rake
+	      rake_loader
+	    end
 	end
+	ruby "-I#{lib_path} #{warning_flag}#{run_code} " +
+	  file_list.join(' ') +
+	  " #{option_list}"
       end
       self
     end
@@ -108,16 +130,21 @@ module Rake
       end
     end
 
-    def fix
+    def fix # :nodoc:
       case RUBY_VERSION
       when '1.8.2'
-	find_fix_file 'rake/ruby182_test_unit_fix'
+	find_file 'rake/ruby182_test_unit_fix'
       else
 	nil
       end || ''
     end
 
-    def find_fix_file(fn)
+    def rake_loader # :nodoc:
+      find_file('rake/rake_test_loader') or
+	fail "unable to find rake test loader"
+    end
+
+    def find_file(fn) # :nodoc:
       $LOAD_PATH.each do |path|
 	file_path = File.join(path, "#{fn}.rb")
 	return file_path if File.exist? file_path
