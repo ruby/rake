@@ -169,7 +169,7 @@ Options are:
     are defined using the "desc" command.
 
 [<tt>--trace</tt> (-t)]
-    Turn on invoke/execute tracing.
+    Turn on invoke/execute tracing.  Also enable full backtrace on errors.
 
 [<tt>--usage</tt> (-h)]
     Display a usage message and exit.
