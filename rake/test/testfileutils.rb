@@ -52,4 +52,32 @@ class TestFileUtils < Test::Unit::TestCase
     assert_equal false, nowrite
   end
 
+  def test_sh
+    verbose(false) { sh %{test/shellcommand.rb} }
+    assert true, "should not fail"
+  end
+
+  def test_sh_failure
+    assert_raises(RuntimeError) { 
+      verbose(false) { sh %{test/shellcommand.rb 1} }
+    }
+  end
+
+  def test_sh_special_handling
+    count = 0
+    verbose(false) {
+      sh(%{test/shellcommand.rb}) do |ok, res|
+	assert(ok)
+	assert_equal 0, res.exitstatus
+	count += 1
+      end
+      sh(%{test/shellcommand.rb 1}) do |ok, res|
+	assert(!ok)
+	assert_equal 1, res.exitstatus
+	count += 1
+      end
+    }
+    assert_equal 2, count, "Block count should be 2"
+end
+
 end

@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.4.9.1'
+RAKEVERSION = '0.4.10'
 
 require 'rbconfig'
 require 'ftools'
@@ -364,11 +364,24 @@ module FileUtils
   # Example:
   #   sh %{ls -ltr}
   #
-  def sh(cmd, options={})
+  #   # check exit status after command runs
+  #   sh %{grep pattern file} do |ok, res|
+  #     if ! ok
+  #       puts "pattern not found (status = #{res.exitstatus})"
+  #     end
+  #   end
+  #
+  def sh(cmd, options={}, &block)
+    unless block_given?
+      block = lambda { |ok, status|
+	ok or fail "Command failed with status (#{status.exitstatus}): [#{cmd}]"
+      }
+    end
     fu_check_options options, :noop, :verbose
     fu_output_message cmd if options[:verbose]
     unless options[:noop]
-      system(cmd) or fail "Command Failed: [#{cmd}]"
+      res = system(cmd)      
+      block.call(res, $?)
     end
   end
 
@@ -431,10 +444,11 @@ module RakeFileUtils
   FileUtils::OPT_TABLE.each do |name, opts|
     next unless opts.include?('verbose')
     module_eval(<<-EOS, __FILE__, __LINE__ + 1)
-    def #{name}( *args )
+    def #{name}( *args, &block )
       super(*fu_merge_option(args,
 	  :verbose => $fileutils_verbose,
-	  :noop => $fileutils_nowrite))
+	  :noop => $fileutils_nowrite),
+	&block)
     end
     EOS
   end

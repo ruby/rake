@@ -1,5 +1,14 @@
 = Rake Changelog
 
+== Version 0.4.10
+
+* Added block support to the "sh" command, allowing users to take
+  special actions on the result of the system call.  E.g.
+
+    sh "shell_command" do |ok, res|
+      puts "Program returned #{res.exitstatus}" if ! ok
+    end
+
 == Version 0.4.9
 
 * Switched to Jamis Buck's RDoc template.
