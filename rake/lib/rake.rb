@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION='0.3.0'
+RAKEVERSION='0.3.1'
 
 require 'rbconfig'
 require 'ftools'
@@ -618,10 +618,21 @@ module Rake
     # Add matching glob patterns.
     def add_matching(*patterns)
       patterns.each do |pattern|
-	Dir[pattern].each { |fn| self << fn } if pattern
+	Dir[pattern].each { |fn|
+	  self << fn unless self.class.ignore?(fn)
+	}
       end
     end
     private :add_matching
+
+    DEFAULT_IGNORE_PATTERNS = [
+      /(^|[\/\\])CVS([\/\\]|$)/,
+      /\.bak$/,
+      /~$/,
+      /(^|[\/\\])core$/
+    ]
+    @ignore_patterns = DEFAULT_IGNORE_PATTERNS.dup
+    @ignore_re = nil
 
     class << self
       # Create a new file list including the files listed. Similar to:
@@ -630,6 +641,43 @@ module Rake
       def [](*args)
 	new(*args)
       end
+
+      # Should this filename be ignored?
+      def ignore?(fn)
+	@ignore_re ||= Regexp.new(@ignore_patterns.collect{|re| re.to_s}.join("|"))
+	fn =~ @ignore_re
+      end
+
+      # Add the regular expression +regex+ to the list of filename
+      # patterns to ignore.  FileList will only ignore patterns on
+      # this list when they are specified with a glob pattern in
+      # include.  Files explicitly
+      def add_ignore_pattern(regex)
+	@ignore_patterns << regex
+	@ignore_re = nil
+      end
+
+      # Set the ignore patterns back to the default value.  The
+      # default patterns will ignore files 
+      # * containing "CVS" in the file path
+      # * ending with ".bak"
+      # * ending with "~"
+      # * named "core"
+      #
+      # Note that file names beginning with "." are automatically
+      # ignored by Ruby's glob patterns are are not specifically
+      # listed in the ignore patterns.
+      def select_default_ignore_patterns
+	@ignore_patterns = DEFAULT_IGNORE_PATTERNS.dup
+	@ignore_re = nil
+      end
+
+      # Clear the ignore patterns.  
+      def clear_ignore_patterns
+	@ignore_patterns = [ /^$/ ]
+	@ignore_re = nil
+      end
+
     end
 
   end
