@@ -10,3 +10,5 @@ task :b
 
 desc "A2"
 task :a
+
+task :c
