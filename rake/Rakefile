@@ -75,13 +75,13 @@ rd = Rake::RDocTask.new("rdoc") { |rdoc|
 
 PKG_FILES = FileList[
   'install.rb',
+  'gem_install_bin.rb',
   '[A-Z]*',
   'bin/**/*', 
   'lib/**/*.rb', 
   'test/**/*.rb',
   'doc/**/*'
 ]
-PKG_FILES.reject! { |fn| fn =~ /\bCVS\b|~$/ }
 
 if ! defined?(Gem)
   puts "Package Target requires RubyGEMs"
