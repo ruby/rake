@@ -16,43 +16,58 @@ require 'rake/help'
 #             placed. 
 HostInfo = Struct.new(:name, :webdir, :pkgdir)
 
-# Publisher that uses SSH to move the files onto the web for publishing.
-class SshPublisher
-  attr_reader :host
-
-  # Create a publisher using the give host information.
-  def initialize(host_info)
-    @host = host_info
+class CompositePublisher
+  def initialize
+    @publishers = []
   end
 
-  # Upload the web material to the publish host.
-  def upload_web(app, localdir='html')
-    appdir = "#{@host.webdir}/#{app}"
-    Sys.run %{ssh #{@host.name} rm -rf #{appdir}} rescue nil
-    Sys.run %{ssh #{@host.name} mkdir -p #{appdir}}
-    Sys.run %{scp -rq html/* #{@host.name}:#{appdir}}
+  def add(pub)
+    @publishers << pub
   end
-  
-  # Upload the package files to the publish host.
-  def upload_package(app, *files)
-    Sys.run %{ssh #{@host.name} mkdir -p #{@host.pkgdir}/#{app}}
-    files.each do |fn|
-      if File.exist?("pkg/#{fn}")
-	Sys.run %{scp -q pkg/#{fn} #{@host.name}:#{@host.pkgdir}/#{app}/#{fn}}
-      end
-    end
+
+  def upload
+    @publishers.each { |p| p.upload }
   end
 end
 
-######################################################################
-# A publisher object that does nothing.  This is occasionally useful
-# for testing.
-class NullPublisher
-  def upload_web(app, localdir=nil)
-    puts "No publisher defined"
+# Publish an entire directory to an existing remote directory using
+# SSH.
+class SshDirPublisher
+  def initialize(host, remote_dir, local_dir)
+    @host = host
+    @remote_dir = remote_dir
+    @local_dir = local_dir
   end
-  def upload_package(app, *files)
-    puts "No publisher defined"
+
+  def upload
+    Sys.run %{scp -rq #{@local_dir}/* #{@host}:#{@remote_dir}}
+  end
+end
+
+# Publish an entire directory to a fresh remote directory using SSH.
+class SshFreshDirPublisher < SshDirPublisher
+  def upload
+    Sys.run %{ssh #{@host} rm -rf #{@remote_dir}} rescue nil
+    Sys.run %{ssh #{@host} mkdir #{@remote_dir}}
+    super
+  end
+end
+
+# Publish a list of files to an existing remote directory.
+class SshFilePublisher
+  # Create a publisher using the give host information.
+  def initialize(host, remote_dir, local_dir, *files)
+    @host = host
+    @remote_dir = remote_dir
+    @local_dir = local_dir
+    @files = files
+  end
+
+  # Upload the local directory to the remote directory.
+  def upload
+    @files.each do |fn|
+      Sys.run %{scp -q #{@local_dir}/#{fn} #{@host}:#{@remote_dir}}
+    end
   end
 end
 
@@ -63,7 +78,8 @@ class AppBuilder
   attr_accessor :rdoc_dir
   attr_reader :clean_files, :clobber_files
   attr_accessor :revision
-  attr_accessor :publisher
+  attr_accessor :web_publisher
+  attr_accessor :pkg_publisher
 
   def initialize(app_name)
     @name = app_name
@@ -72,7 +88,8 @@ class AppBuilder
     @clobber_files = CLOBBER
     @clean_files   = CLEAN
     @revision = '0.0.0'
-    @publisher = NullPublisher.new
+    @web_publisher = CompositePublisher.new
+    @pkg_publisher = CompositePublisher.new
     @rdoc_dir = 'html'
   end
 
@@ -205,7 +222,6 @@ class AppBuilder
       Sys.run %{rdoc -o #{@rdoc_dir} --line-numbers --main README -T kilmer #{@rdoc_files}}
     end
     
-    
     desc "Publish the web and package files"
     task :publish => [		# Publish the Application
       :publish_web, :publish_package
@@ -213,23 +229,14 @@ class AppBuilder
     
     desc "Publish the web documentation"
     task :publish_web => [:web] do
-      @publisher.upload_web(@name)
+      @web_publisher.upload
     end
     
     desc "Publish the package files"
     task :publish_package => [:package] do
-      @publisher.upload_package(@name, tgz_file, zip_file)
+      @pkg_publisher.upload
     end
     
-    blurb_file = "#{@name}.blurb"
-    if File.exist?(blurb_file)
-      blurb_target = File.join("html", blurb_file)
-      file blurb_target do
-	Sys.copy blurb_file, blurb_target
-      end
-      task :web => [blurb_target]
-    end
-
     # == Installation
     
     desc "Install the application"
