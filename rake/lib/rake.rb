@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION='0.4.3'
+RAKEVERSION='0.4.3.1'
 
 require 'rbconfig'
 require 'ftools'
@@ -316,12 +316,11 @@ end
 #   directory "testdata/doc"
 #
 def directory(dir)
-  path = []
-  split_all(dir).each do |p| 
-    path << p
-    file File.join(path) do |t|
+  while dir != '.' && dir != '/'
+    file dir do |t|
       mkdir_p t.name if ! File.exist?(t.name)
     end
+    dir = File.dirname(dir)
   end
 end
 
