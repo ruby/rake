@@ -5,6 +5,8 @@
 * Added "desc" for task descriptions.
 * -T will now display tasks with descriptions.
 * -P will display tasks and prerequisites.
+* Dropped the Sys module in favor of the 1.8.x FileUtils module.  Sys
+  is still supported in the contrib area.
 
 == Version 0.2.6
 
