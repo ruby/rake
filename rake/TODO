@@ -1,8 +1,10 @@
 = Rake Project -- To Do List
 
-Send suggestions for this list to mailto:jim@weirichhouse.org
+Send suggestions for this list to mailto:jim@weirichhouse.org or on
+the rake-devel@rubyforge.org mailing list.
 
 === To Do
+* Fix ARG=VALUE parameters to be available at the top level
 * Define a set of default rules that work in the absense of any Rakefile
 * What about cyclic dependencies?
 * Java support utilities
