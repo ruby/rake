@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION='0.2.6'
+RAKEVERSION='0.2.7'
 
 require 'rbconfig'
 require 'ftools'
@@ -52,6 +52,9 @@ class Task
   # List of prerequisites for a task.
   attr_reader :prerequisites
 
+  # Comment for this task.
+  attr_reader :comment
+
   # Source dependency for rule synthesized tasks.  Nil if task was not
   # sythesized from a rule.
   attr_accessor :source
@@ -60,6 +63,8 @@ class Task
   # use +enhance+ to add actions and prerequisites.
   def initialize(task_name)
     @name = task_name
+    @comment = $last_comment
+    $last_comment = nil
     @prerequisites = []
     @actions = []
   end
@@ -266,6 +271,10 @@ def sys(cmd)
   Sys.run(cmd)
 end
 
+def desc(comment)
+  $last_comment = comment
+end
+
 ######################################################################
 # RakeTools is a mixin module that provides a number of file
 # manipulation tools for the convenience of writing Rakefiles.  All
@@ -469,6 +478,8 @@ class RakeApp
       "Include LIBDIR in the search path for required modules."],
     ['--nosearch', '-N', GetoptLong::NO_ARGUMENT,
       "Do not search parent directories for the Rakefile."],
+    ['--prereqs',  '-P', GetoptLong::NO_ARGUMENT,
+      "Display the tasks and dependencies, then exit."],
     ['--quiet',    '-q', GetoptLong::NO_ARGUMENT,
       "Do not log messages to standard output."],
     ['--rakefile', '-f', GetoptLong::REQUIRED_ARGUMENT,
@@ -528,9 +539,19 @@ class RakeApp
   end
 
   # Display the tasks and dependencies.
-  def display_tasks
+  def display_tasks_and_comments
+    width = Task.tasks.collect { |t| t.name.length }.max
     Task.tasks.each do |t|
-      puts "#{t.class} #{t.name}"
+      if t.comment
+	printf "rake %-#{width}s  # %s\n", t.name, t.comment
+      end
+    end
+  end
+
+  # Display the tasks and prerequisites
+  def display_prerequisites
+    Task.tasks.each do |t|
+      puts "rake #{t.name}"
       t.prerequisites.each { |pre| puts "    #{pre}" }
     end
   end
@@ -554,6 +575,8 @@ class RakeApp
       $:.push(value)
     when '--nosearch'
       @nosearch = true
+    when '--prereqs'
+      $show_prereqs = true
     when '--quiet'
       $verbose = false
     when '--rakefile'
@@ -601,7 +624,9 @@ class RakeApp
       $rakefile = @rakefile
       load @rakefile
       if $show_tasks
-	display_tasks
+	display_tasks_and_comments
+      elsif $show_prereqs
+	display_prerequisites
       else
 	ARGV.push("default") if ARGV.size == 0
 	ARGV.each { |task_name| Task[task_name].invoke }
