@@ -33,14 +33,20 @@ task :default => :test
 
 # Define a test task.
 
+desc "Run the unit tests"
 task :test do
   ruby %{-Ilib:test -e 'Dir["test/test*.rb"].each { |f| load f; puts f }' }
+end
+
+desc "Run the Functional Tests"
+task :test_fun do
+  ruby %{-Ilib:test -e 'Dir["test/fun*.rb"].each { |f| load f; puts f }' }
 end
 
 directory 'testdata'
 task :test => ['testdata']
 
-Rake::TestTask.new(:contrib_test) { |ctest|
+Rake::TestTask.new(:test_contrib) { |ctest|
   ctest.pattern = 'test/contrib/test*.rb'
   ctest.verbose = true
 }
@@ -48,7 +54,7 @@ Rake::TestTask.new(:contrib_test) { |ctest|
 # Define a test that will run all the test targets.
 
 desc "Run all test targets"
-task :testall => [:test, :contrib_test]
+task :testall => [:test, :test_contrib, :test_fun]
 
 # Install rake using the standard install.rb script.
 
@@ -64,7 +70,7 @@ rd = Rake::RDocTask.new("rdoc") { |rdoc|
 #  rdoc.template = 'kilmer'
 #  rdoc.template = 'css2'
   rdoc.title    = "Rake -- Ruby Make"
-  rdoc.options << '--line-numbers' << '--inline-source'
+  rdoc.options << '--line-numbers' << '--inline-source' << '--main' << 'README'
   rdoc.rdoc_files.include('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
   rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
   rdoc.rdoc_files.exclude(/\bcontrib\b/)
