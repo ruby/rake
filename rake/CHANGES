@@ -1,5 +1,10 @@
 = Rake Changelog
 
+== Version 0.4.12.1
+
+* Multiple arguments to sh and ruby commands will not be interpreted
+  by the shell.
+
 == Version 0.4.12
 
 * Added --silent (-s) to suppress the (in directory) rake message.
