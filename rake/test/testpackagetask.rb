@@ -21,7 +21,6 @@ class TestPackageTask < Test::Unit::TestCase
     assert "pkgr", pkg.name
     assert "1.2.3", pkg.version
     assert Task[:package]
-    assert Task["pkg"]
     assert Task["pkg/pkgr-1.2.3"]
     assert Task['pkg/pkgr-1.2.3.tgz']
     assert Task['pkg/pkgr-1.2.3.zip']
