@@ -18,6 +18,7 @@ require 'rake/rdoctask'
 
 CLEAN.include('**/*.o')
 CLOBBER.include('doc/example/main', 'testdata')
+CLOBBER.include('test/data/**/temp_*')
 
 
 def announce(msg='')
