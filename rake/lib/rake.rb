@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION='0.3.2.2'
+RAKEVERSION='0.3.2.3'
 
 require 'rbconfig'
 require 'ftools'
@@ -500,6 +500,8 @@ module Rake
   #
   class FileList < Array
 
+    # Rewrite all array methods (and to_s) to resolve the list before
+    # running.
     methods = Array.instance_methods - Object.instance_methods
     methods << "to_a"
     methods.each_with_index do |sym, i|
@@ -526,7 +528,9 @@ module Rake
     def initialize(*patterns)
       @pending_add = []
       @pending = false
-      patterns.each { |pattern| add(pattern) }
+      @exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
+      @exclude_re = nil
+      patterns.each { |pattern| include(pattern) }
       yield self if block_given?
     end
 
@@ -538,17 +542,74 @@ module Rake
     #   file_list.include %w( math.c lib.h *.o )
     #
     def include(*filenames)
+      # TODO: check for pending
       filenames.each do |fn| @pending_add << fn end
       @pending = true
       self
     end
     alias :add :include 
     
+    # Register a list of file name patterns that should be excluded
+    # from the list.  Patterns may be regular expressions, glob
+    # patterns or regular strings.
+    #
+    # Note that glob patterns are expanded against the file system.
+    # If a file is explicitly added to a file list, but does not exist
+    # in the file system, then an glob pattern in the exclude list
+    # will not exclude the file.
+    #
+    # Examples:
+    #   FileList['a.c', 'b.c'].exclude("a.c") => ['b.c']
+    #   FileList['a.c', 'b.c'].exclude(/^a/)  => ['b.c']
+    #
+    # If "a.c" is a file, then ...
+    #   FileList['a.c', 'b.c'].exclude("a.*") => ['b.c']
+    #
+    # If "a.c" is not a file, then ...
+    #   FileList['a.c', 'b.c'].exclude("a.*") => ['a.c', 'b.c']
+    #
+    def exclude(*patterns)
+      # TODO: check for pending
+      patterns.each do |pat| @exclude_patterns << pat end
+      if ! @pending
+	calculate_exclude_regexp
+	reject! { |fn| fn =~ @exclude_re }
+      end
+    end
+
+    
+    def clear_exclude
+      @exclude_patterns = []
+      calculate_exclude_regexp if ! @pending
+    end
+
+    # Resolve all the pending adds now.
     def resolve
       @pending = false
       @pending_add.each do |fn| resolve_add(fn) end
       @pending_add = []
+      resolve_exclude
       self
+    end
+
+    def calculate_exclude_regexp
+      ignores = []
+      @exclude_patterns.each do |pat|
+	case pat
+	when Regexp
+	  ignores << pat
+	when /[*.]/
+	  Dir[pat].each do |p| ignores << p end
+	else
+	  ignores << Regexp.quote(pat)
+	end
+      end
+      if ignores.empty?
+	@exclude_re = /^$/
+      else
+	re_str = ignores.collect { |p| "(" + p.to_s + ")" }.join("|")
+	@exclude_re = Regexp.new(re_str)
+      end
     end
 
     def resolve_add(fn)
@@ -562,32 +623,8 @@ module Rake
       end
     end
 
-    # Modify a file list by removing anything that matches any of the
-    # patterns.  If a pattern is a Regexp, then matching is performed
-    # according to the regular expression matching rules.  If a
-    # pattern is a glob pattern, the a glob list is constructed and
-    # any matching files are excluded.  If a pattern is a normal
-    # string (without glob characters) then any equal file names are
-    # excluded.
-    #
-    # Note that glob patterns are first expanded against the
-    # filesystem, and the resulting file names are used to exclude
-    # elements of the file list.  Thi implies that a glob pattern can
-    # only exclude a file if that file is found in the file system
-    # (otherwise the glob pattern will not expand to a matching name).
-    #
-    # Examples:
-    #   FileList['a.c', 'b.c'].exclude("a.c") => ['b.c']
-    #   FileList['a.c', 'b.c'].exclude(/^a/)  => ['b.c']
-    #
-    # If "a.c" is a file, then ...
-    #   FileList['a.c', 'b.c'].exclude("a.*") => ['b.c']
-    #
-    # If "a.c" is not a file, then ...
-    #   FileList['a.c', 'b.c'].exclude("a.*") => ['a.c', 'b.c']
-    #
-    def exclude(*patterns)
-      patterns.each do |pat|
+    def resolve_exclude
+      @exclude_patterns.each do |pat|
 	case pat
 	when Regexp
 	  reject! { |fn| fn =~ pat }
@@ -640,14 +677,18 @@ module Rake
     end
 
     # Add matching glob patterns.
-    def add_matching(*patterns)
-      patterns.each do |pattern|
-	Dir[pattern].each { |fn|
-	  self << fn unless self.class.ignore?(fn)
-	}
+    def add_matching(pattern)
+      Dir[pattern].each do |fn|
+	self << fn unless exclude?(fn)
       end
     end
     private :add_matching
+
+    # Should the given file name be excluded?
+    def exclude?(fn)
+      calculate_exclude_regexp unless @exclude_re
+      fn =~ @exclude_re
+    end
 
     DEFAULT_IGNORE_PATTERNS = [
       /(^|[\/\\])CVS([\/\\]|$)/,
@@ -655,8 +696,7 @@ module Rake
       /~$/,
       /(^|[\/\\])core$/
     ]
-    @ignore_patterns = DEFAULT_IGNORE_PATTERNS.dup
-    @ignore_re = nil
+    @exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
 
     class << self
       # Create a new file list including the files listed. Similar to:
@@ -664,21 +704,6 @@ module Rake
       #   FileList.new(*args)
       def [](*args)
 	new(*args)
-      end
-
-      # Should this filename be ignored?
-      def ignore?(fn)
-	@ignore_re ||= Regexp.new(@ignore_patterns.collect{|re| re.to_s}.join("|"))
-	fn =~ @ignore_re
-      end
-
-      # Add the regular expression +regex+ to the list of filename
-      # patterns to ignore.  FileList will only ignore patterns on
-      # this list when they are specified with a glob pattern in
-      # include.  Files explicitly
-      def add_ignore_pattern(regex)
-	@ignore_patterns << regex
-	@ignore_re = nil
       end
 
       # Set the ignore patterns back to the default value.  The
@@ -689,21 +714,17 @@ module Rake
       # * named "core"
       #
       # Note that file names beginning with "." are automatically
-      # ignored by Ruby's glob patterns are are not specifically
+      # ignored by Ruby's glob patterns and are not specifically
       # listed in the ignore patterns.
       def select_default_ignore_patterns
-	@ignore_patterns = DEFAULT_IGNORE_PATTERNS.dup
-	@ignore_re = nil
+	@exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
       end
 
       # Clear the ignore patterns.  
       def clear_ignore_patterns
-	@ignore_patterns = [ /^$/ ]
-	@ignore_re = nil
+	@exclude_patterns = [ /^$/ ]
       end
-
     end
-
   end
 end
 
