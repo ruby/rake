@@ -85,7 +85,7 @@ For example, given a simple rakefile like this ...
   task :default => [:test]
 
   task :test do
-    Sys.run %{ruby test/unittest.rb}
+    ruby "test/unittest.rb"
   end
 
 The command 
@@ -159,7 +159,7 @@ Options are:
     Display a list of all tasks and their immediate prerequisites.
 
 [<tt>--quiet</tt> (-q)]
-    Do not echo Sys commands.
+    Do not echo commands from FileUtils.
 
 [<tt>--rakefile</tt> _filename_ (-f)]
     Use _filename_ as the name of the rakefile.  The default rakefile
