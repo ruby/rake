@@ -24,6 +24,8 @@ else
   PKG_VERSION = "0.0.0"
 end
 
+SRC_RB = FileList['lib/**/*.rb']
+
 # The default task is run if rake is given no explicit arguments.
 
 desc "Default Task"
@@ -61,9 +63,9 @@ end
 rd = Rake::RDocTask.new("rdoc") { |rdoc|
   rdoc.rdoc_dir = 'html'
 #  rdoc.template = 'kilmer'
-  rdoc.template = 'css2'
+#  rdoc.template = 'css2'
   rdoc.title    = "Rake -- Ruby Make"
-  rdoc.options << '--line-numbers'
+  rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
   rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
   rdoc.rdoc_files.exclude(/\bcontrib\b/)
@@ -99,6 +101,8 @@ else
     s.email = 'jweirich@one.net'
     s.homepage = 'http://onestepback.org'
     s.has_rdoc = true
+#    s.rdoc_files = rd.rdoc_files
+#    s.rdoc_options = rd.option_list
     s.rubyforge_project = 'rake'
     s.description = <<EOF
 Rake is a Make-like program implemented in Ruby. Tasks
@@ -114,19 +118,36 @@ end
 
 # Misc tasks =========================================================
 
-desc "Count lines in the main rake file"
-task :lines do
+def count_lines(filename)
   lines = 0
   codelines = 0
-  open("lib/rake.rb") { |f|
-    while line = f.gets
+  open(filename) { |f|
+    f.each do |line|
       lines += 1
       next if line =~ /^\s*$/
       next if line =~ /^\s*#/
       codelines += 1
     end
   }
-  puts "Lines #{lines}, LOC #{codelines}"
+  [lines, codelines]
+end
+
+def show_line(msg, lines, loc)
+  printf "%6s %6s   %s\n", lines.to_s, loc.to_s, msg
+end
+
+desc "Count lines in the main rake file"
+task :lines do
+  total_lines = 0
+  total_code = 0
+  show_line("File Name", "LINES", "LOC")
+  SRC_RB.each do |fn|
+    lines, codelines = count_lines(fn)
+    show_line(fn, lines, codelines)
+    total_lines += lines
+    total_code  += codelines
+  end
+  show_line("TOTAL", total_lines, total_code)
 end
 
 ARCHIVEDIR = '/mnt/usb'
