@@ -1,6 +1,8 @@
 = Rake Changelog
 
 == Version next
+
+== Version 0.4.3
 * Fixed Comment leakage.
 
 == Version 0.4.2
