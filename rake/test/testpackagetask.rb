@@ -19,6 +19,8 @@ class TestPackageTask < Test::Unit::TestCase
       p.package_files.exclude(/~$/)
       p.package_dir = 'pkg'
       p.need_tar = true
+      p.need_tar_gz = true
+      p.need_tar_bz2 = true
       p.need_zip = true
     }
     assert_equal "pkg", pkg.package_dir
@@ -27,6 +29,8 @@ class TestPackageTask < Test::Unit::TestCase
     assert "1.2.3", pkg.version
     assert Task[:package]
     assert Task['pkg/pkgr-1.2.3.tgz']
+    assert Task['pkg/pkgr-1.2.3.tar.gz']
+    assert Task['pkg/pkgr-1.2.3.tar.bz2']
     assert Task['pkg/pkgr-1.2.3.zip']
     assert Task["pkg/pkgr-1.2.3"]
     assert Task[:clobber_package]
