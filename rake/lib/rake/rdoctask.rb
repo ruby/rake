@@ -23,7 +23,7 @@ module Rake
   #
   # Simple Example:
   #
-  #   RDocTask.new do |rd|
+  #   Rake::RDocTask.new do |rd|
   #     rd.main = "README.rdoc"
   #     rd.rdoc_files.include("README.rdoc", "lib/**/*.rb")
   #   end
@@ -32,7 +32,7 @@ module Rake
   # generating two sets of documentation.  For instance, if you want to have a
   # development set of documentation including private methods:
   #
-  #   RDocTask.new(:rdoc_dev) do |rd|
+  #   Rake::RDocTask.new(:rdoc_dev) do |rd|
   #     rd.main = "README.doc"
   #     rd.rdoc_files.include("README.rdoc", "lib/**/*.rb")
   #     rd.options << "--all"
