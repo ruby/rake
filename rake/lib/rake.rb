@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION='0.2.7a'
+RAKEVERSION='0.2.7b'
 
 require 'rbconfig'
 require 'ftools'
