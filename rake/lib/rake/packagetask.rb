@@ -25,10 +25,10 @@ module Rake
   #   of date.
   #
   # [<b>"<em>package_dir</em>/<em>name</em>-<em>version</em>.tgz"</b>]
-  #   Create a gzipped tar package.  
+  #   Create a gzipped tar package (if <em>need_tar</em> is true).  
   #
   # [<b>"<em>package_dir</em>/<em>name</em>-<em>version</em>.zip"</b>]
-  #   Create a zip package archive.
+  #   Create a zip package archive (if <em>need_zip</em> is true).
   #
   # Example:
   #
