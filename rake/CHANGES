@@ -1,5 +1,9 @@
 = Rake Changelog
 
+== Version 0.4.16 prerelease
+
+* Fixed documentation that was lacking the Rake module name.
+
 == Version 0.4.15
 
 * Fixed a bug that prevented the TESTOPTS flag from working with the
