@@ -153,6 +153,12 @@ class Task
       fail "Don't know how to rake #{task_name}"
     end
 
+    # TRUE if the task name is already defined.
+    def defined?(task_name)
+      task_name = task_name.to_s
+      TASKS[task_name]
+    end
+
     # Define a task given +args+ and an option block.  If a rule with
     # the given name already exists, the prerequisites and actions are
     # added to the existing task.
