@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.4.14'
+RAKEVERSION = '0.4.14.1'
 
 require 'rbconfig'
 require 'ftools'
@@ -413,9 +413,9 @@ module FileUtils
       options = {}
     end
     if args.length > 1 then
-      sh *([RUBY] + args + [options]), &block
+      sh(*([RUBY] + args + [options]), &block)
     else
-      sh "#{RUBY} #{args}", options, &block
+      sh("#{RUBY} #{args}", options, &block)
     end
   end
   
@@ -567,7 +567,7 @@ module Rake
     # Rewrite all array methods (and to_s/inspect) to resolve the list
     # before running.
     method_list = Array.instance_methods - Object.instance_methods
-    %w[to_a to_s inspect].each do |meth|
+    %w[to_a inspect].each do |meth|
       method_list << meth unless method_list.include? meth
     end
     method_list.each_with_index do |sym, i|
