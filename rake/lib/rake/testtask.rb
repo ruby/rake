@@ -1,5 +1,10 @@
 #!/usr/bin/env ruby
 
+# Define a task library for running unit tests.
+
+require 'rake'
+require 'rake/tasklib'
+
 module Rake
 
   # Create a task that runs a set of tests.
@@ -12,7 +17,7 @@ module Rake
   #     t.verbose = true
   #   end
   #
-  class TestTask
+  class TestTask < TaskLib
 
     # Name of test task. (default is :test)
     attr_accessor :name
@@ -37,8 +42,7 @@ module Rake
       define
     end
 
-    private
-
+    # Create the tasks defined by this task lib.
     def define
       lib_path = @libs.join(':')
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
