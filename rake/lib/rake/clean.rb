@@ -16,7 +16,7 @@
 require 'rake'
 
 CLEAN = Rake::FileList.new
-CLEAN.add("**/*~", "**/*.bak", "**/core")
+CLEAN.include("**/*~", "**/*.bak", "**/core")
 
 desc "Remove any temporary products."
 task :clean do
