@@ -33,29 +33,23 @@ local_info = HostInfo.new(
   'working/projects/source2html/dummy/software',
   'working/projects/source2html/dummy/packages')
 
-class RubyForgePublisher
+class RubyForgePublisher < SshDirPublisher
   attr_reader :project, :proj_id, :user
 
-  def initialize(projname, proj_id, user)
-    @project = projname
-    @proj_id = proj_id
-    @user = user
-  end
-
-  def upload_web(app, localdir='html')
-    Sys.run %{scp -rq html/* #{user}@rubyforge.org:/var/www/gforge-projects/#{project}}
-  end
-
-  def upload_package(app, *files)
-    puts "Use the following link ..."
-    puts "  http://rubyforge.org/project/showfiles.php?group_id=#{proj_id}"
-    puts "to update the following release files."
-    files.each { |f| puts "  #{f}" }
+  def initialize(projname, user)
+    super(
+      "#{user}@rubyforge.org",
+      "/var/www/gforge-projects/#{projname}",
+      "html")
   end
 end
 
-#builder.publisher = SshPublisher.new(umlcoop_info)
-builder.publisher = RubyForgePublisher.new('rake', 50, 'jimweirich')
+builder.web_publisher.add RubyForgePublisher.new('rake', 'jimweirich')
+builder.web_publisher.add SshFilePublisher.new(
+  'umlcoop',
+  'htdocs/software/rake',
+  '.',
+  'rake.blurb')
 
 # Additional dependencies beyond the standard
 
