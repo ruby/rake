@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.4.10'
+RAKEVERSION = '0.4.10.1'
 
 require 'rbconfig'
 require 'ftools'
@@ -171,7 +171,7 @@ class Task
       if File.exist?(task_name)
 	return FileTask.define_task(task_name)
       end
-      fail "Don't know how to rake #{task_name}"
+      fail "Don't know how to build task '#{task_name}'"
     end
 
     # TRUE if the task name is already defined.
