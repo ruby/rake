@@ -200,8 +200,8 @@ class TestFileList < Test::Unit::TestCase
   end
 
   def test_add_default_exclude_list
-    FileList.add_default_exclude(/~\d+$/)
     fl = FileList.new
+    fl.exclude(/~\d+$/)
     assert fl.exclude?("x/CVS/y")
     assert fl.exclude?("x\\CVS\\y")
     assert fl.exclude?("x/core")
