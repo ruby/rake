@@ -69,12 +69,6 @@ rd = Rake::RDocTask.new("rdoc") { |rdoc|
   rdoc.rdoc_files.exclude(/\bcontrib\b/)
 }
 
-nl = rd.clone
-nl.name='nolines'
-nl.rdoc_dir = 'html2'
-nl.options.clear
-nl.define
-
 # ====================================================================
 # Create a task that will package the Rake software into distributable
 # tar, zip and gem files.
