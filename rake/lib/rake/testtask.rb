@@ -5,8 +5,6 @@
 require 'rake'
 require 'rake/tasklib'
 
-require 'rake/ruby182_test_unit_fix' if RUBY_VERSION == '1.8.2'
-
 module Rake
 
   # Create a task that runs a set of tests.
@@ -89,7 +87,7 @@ module Rake
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
 	RakeFileUtils.verbose(@verbose) do
-	  ruby %{-I#{lib_path} #{warning_flag}-S #{fix} testrb #{file_list.join(' ')} #{option_list}}
+	  ruby %{-I#{lib_path} #{warning_flag}-S testrb #{fix} #{file_list.join(' ')} #{option_list}}
 	end
       end
       self
