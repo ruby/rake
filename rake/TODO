@@ -1,6 +1,6 @@
 = Rake Project -- To Do List
 
-Send suggestions for this list to mailto:jweirich@one.net.
+Send suggestions for this list to mailto:jim@weirichhouse.org
 
 === To Do
 * Define a set of default rules that work in the absense of any Rakefile
