@@ -44,8 +44,9 @@ class TestFileList < Test::Unit::TestCase
 
   def test_add_many
     fl = FileList.new
-    fl.include %w(a d c )
+    fl.include %w(a d c)
     fl.include('x', 'y')
+    assert_equal ['a', 'd', 'c', 'x', 'y'], fl
     assert_equal ['a', 'd', 'c', 'x', 'y'], fl.resolve
   end
 
@@ -180,6 +181,35 @@ class TestFileList < Test::Unit::TestCase
       f2.sort
   end
 
+  def test_string_ext
+    require 'rake/ext'
+    assert_equal "one.net", "one.two".ext("net")
+    assert_equal "one.net", "one.two".ext(".net")
+    assert_equal "one.net", "one".ext("net")
+    assert_equal "one.net", "one".ext(".net")
+    assert_equal "one.two.net", "one.two.c".ext(".net")
+    assert_equal "one/two.net", "one/two.c".ext(".net")
+    assert_equal "one.x/two.net", "one.x/two.c".ext(".net")
+    assert_equal "one.x\\two.net", "one.x\\two.c".ext(".net")
+    assert_equal "one.x/two.net", "one.x/two".ext(".net")
+    assert_equal "one.x\\two.net", "one.x\\two".ext(".net")
+    assert_equal ".onerc.net", ".onerc.dot".ext("net")
+    assert_equal ".onerc.net", ".onerc".ext("net")
+    assert_equal ".a/.onerc.net", ".a/.onerc".ext("net")
+    assert_equal "one", "one.two".ext('')
+    assert_equal "one", "one.two".ext
+    assert_equal ".one", ".one.two".ext
+    assert_equal ".one", ".one".ext
+    assert_equal ".", ".".ext("c")
+    assert_equal "..", "..".ext("c")
+  end
+
+  def test_filelist_ext
+    require 'rake/ext'
+    assert_equal ['one.c', '.one.c'],
+      ['one.net', '.one'].ext('c')
+  end
+
   def test_gsub
     create_test_data
     fl = FileList["testdata/*.c"]
@@ -235,6 +265,89 @@ class TestFileList < Test::Unit::TestCase
     assert_equal ['a', 'b', 'c'], f.sort
     f.sort!
     assert_equal ['a', 'b', 'c'], f
+  end
+
+  def test_flatten
+    assert_equal ['a', 'testdata/x.c', 'testdata/xyz.c', 'testdata/abc.c'].sort,
+      ['a', FileList['testdata/*.c']].flatten.sort
+  end
+
+  def test_clone
+    a = FileList['a', 'b', 'c']
+    b = a.clone
+    a << 'd'
+    assert_equal ['a', 'b', 'c', 'd'], a
+    assert_equal ['a', 'b', 'c'], b
+  end
+
+  def test_array_comparisons
+    fl = FileList['b', 'b']
+    a = ['b', 'a']
+    b = ['b', 'b']
+    c = ['b', 'c']
+    assert_equal( 1,  fl <=> a )
+    assert_equal( 0,  fl <=> b )
+    assert_equal( -1, fl <=> c )
+    assert_equal( -1, a <=> fl )
+    assert_equal( 0,  b <=> fl )
+    assert_equal( 1,  c <=> fl )
+  end
+
+  def test_array_equality
+    a = FileList['a', 'b']
+    b = ['a', 'b']
+    assert a == b
+    assert b == a
+#    assert a.eql?(b)
+#    assert b.eql?(a)
+    assert ! a.equal?(b)
+    assert ! b.equal?(a)
+  end
+
+  def test_enumeration_methods
+    a = FileList['a', 'b']
+    b = a.collect { |it| it.upcase }
+    assert_equal ['A', 'B'], b
+    assert_equal FileList,  b.class
+
+    b = a.map { |it| it.upcase }
+    assert_equal ['A', 'B'], b
+    assert_equal FileList,  b.class
+
+    b = a.sort
+    assert_equal ['a', 'b'], b
+    assert_equal FileList,  b.class
+
+    b = a.sort_by { |it| it }
+    assert_equal ['a', 'b'], b
+    assert_equal FileList,  b.class
+
+    b = a.find_all { |it| it == 'b'}
+    assert_equal ['b'], b
+    assert_equal FileList,  b.class
+
+    b = a.select { |it| it.size == 1 }
+    assert_equal ['a', 'b'], b
+    assert_equal FileList,  b.class
+
+    b = a.reject { |it| it == 'b' }
+    assert_equal ['a'], b
+    assert_equal FileList,  b.class
+
+    b = a.grep(/./)
+    assert_equal ['a', 'b'], b
+    assert_equal FileList,  b.class
+
+    b = a.partition { |it| it == 'b' }
+    assert_equal [['b'], ['a']], b
+    assert_equal FileList,  b[0].class
+    assert_equal FileList,  b[1].class
+
+    b = a.zip(['x', 'y'])
+    assert_equal [['a', 'x'], ['b', 'y']], b
+    assert_equal Array, b.class
+    assert_equal Array, b[0].class
+    assert_equal Array, b[1].class
   end
 
   def create_test_data
