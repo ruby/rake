@@ -70,7 +70,7 @@ else
       gem = Gem::Specification.new do |g|
 	g.name = "pkgr"
 	g.version = "1.2.3"
-	g.files = FileList["x"]
+	g.files = FileList["x"].resolve
       end
       pkg = Rake::GemPackageTask.new(gem)  do |p|
 	p.package_files << "y"
