@@ -3,6 +3,8 @@
 == pre Version 0.4.11
 
 * Changed the "don't know how to rake" message (finally)
+* Changes references to a literal "Rakefile" to reference the global
+  variable $rakefile (which contains the actual name of the rakefile).
 
 == Version 0.4.10
 
