@@ -4,6 +4,7 @@
 # packages.
 
 require 'rubygems'
+Gem.manage_gems
 require 'rake'
 require 'rake/packagetask'
 
