@@ -245,9 +245,10 @@ class TestDefinitions < Test::Unit::TestCase
   private # ----------------------------------------------------------
 
   def create_existing_file
-    if ! File.exist?(EXISTINGFILE)
-      open(EXISTINGFILE, "w") do |f| f.puts "HI" end
-    end
+    Dir.mkdir File.dirname(EXISTINGFILE) unless
+      File.exist?(File.dirname(EXISTINGFILE))
+    open(EXISTINGFILE, "w") do |f| f.puts "HI" end unless
+      File.exist?(EXISTINGFILE)
   end
 
 end
