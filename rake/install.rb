@@ -31,7 +31,7 @@ def installBIN(from, opfile)
   File.open(from) do |ip|
     File.open(tmp_file, "w") do |op|
       ruby = File.join($realbindir, $ruby)
-      op.puts "#!#{ruby}"
+      op.puts "#!#{ruby} -w"
       op.write ip.read
     end
   end
