@@ -1,5 +1,10 @@
 = Rake Changelog
 
+== Version 0.3.1
+
+* FileLists now automatically ignore CVS, .bak, !
+* GEM Installation now works.
+
 == Version 0.3.0
 
 Promoted 0.2.10.
