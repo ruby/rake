@@ -8,6 +8,10 @@ task :default do
   puts "DEFAULT"
 end
 
+task :other => [:default] do
+  puts "OTHER"
+end
+
 task :task_scope do
   if ENV['TESTTASKSCOPE']
     puts "TASKSCOPE"
