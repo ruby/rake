@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'test/unit'
+require 'rake'
 
 class TestFileList < Test::Unit::TestCase
   FileList = Rake::FileList
