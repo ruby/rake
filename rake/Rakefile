@@ -33,10 +33,9 @@ task :default => :test
 
 # Define a test task.
 
-Rake::TestTask.new { |t|
-  t.libs << "test"
-  t.verbose = true
-}
+task :test do
+  ruby %{-Ilib:test -e 'Dir["test/test*.rb"].each { |f| load f; puts f }' }
+end
 
 directory 'testdata'
 task :test => ['testdata']
@@ -77,7 +76,6 @@ rd = Rake::RDocTask.new("rdoc") { |rdoc|
 
 PKG_FILES = FileList[
   'install.rb',
-  'gem_install_bin.rb',
   '[A-Z]*',
   'bin/**/*', 
   'lib/**/*.rb', 
