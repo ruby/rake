@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'rake/contrib/sshpublisher'
+
 module Rake
 
   class RubyForgePublisher < SshDirPublisher
