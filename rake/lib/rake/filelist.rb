@@ -10,7 +10,9 @@ module Rake
       filenames.each do |fn|
 	case fn
 	when Array
-	  fn.each { |f| self << f }
+	  fn.each { |f| self.add(f) }
+	when %r{[*?]}
+	  add_matching(fn)
 	else
 	  self << fn
 	end
@@ -22,6 +24,7 @@ module Rake
 	Dir[pattern].each { |fn| self << fn } if pattern
       end
     end
+    private :add_matching
 
     def to_s
       self.join(' ')
