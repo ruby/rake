@@ -533,7 +533,7 @@ module Rake
     # Rewrite all array methods (and to_s/inspect) to resolve the list
     # before running.
     method_list = Array.instance_methods - Object.instance_methods
-    %w[to_a inspect]. each do |meth|
+    %w[to_a to_s inspect].each do |meth|
       method_list << meth unless method_list.include? meth
     end
     method_list.each_with_index do |sym, i|
