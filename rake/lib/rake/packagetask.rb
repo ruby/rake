@@ -121,7 +121,7 @@ module Rake
 	    mkdir_p(f)
 	  else
 	    rm_f f
-	    ln(fn, f)
+	    safe_ln(fn, f)
 	  end
 	end
       end
