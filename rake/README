@@ -120,18 +120,21 @@ Rake is invoked from the command line using:
 
 Options are:
 
-[<tt>--help</tt>  (-H)]
-    Display some help text and exit.
-
 [<tt>--dry-run</tt> (-n)]
     Do a dry run.  Print the tasks invoked and executed, but do not
     actually execute any of the actions.
+
+[<tt>--help</tt>  (-H)]
+    Display some help text and exit.
 
 [<tt>--libdir</tt> _directory_  (-I)]
     Add _directory_ to the list of directories searched for require.
 
 [<tt>--nosearch</tt>  (-N)]
     Do not search for a Rakefile in parent directories.
+
+[<tt>--prereqs</tt>  (-P)]
+    Display a list of all tasks and their immediate prerequisites.
 
 [<tt>--quiet</tt> (-q)]
     Do not echo Sys commands.
@@ -146,6 +149,13 @@ Options are:
 
 [<tt>--require</tt> _name_ (-r)]
     Require _name_ before executing the Rakefile.
+
+[<tt>--tasks</tt> (-h)]
+    Display a list of the major tasks and their comments.  Comments
+    are defined using the "desc" command.
+
+[<tt>--trace</tt> (-t)]
+    Turn on invoke/execute tracing.
 
 [<tt>--usage</tt> (-h)]
     Display a usage message and exit.
