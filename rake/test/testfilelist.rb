@@ -9,6 +9,10 @@ class TestFileList < Test::Unit::TestCase
     create_test_data
   end
 
+  def teardown
+    FileList.select_default_ignore_patterns
+  end
+
   def test_create
     fl = FileList.new
     assert_equal 0, fl.size
@@ -159,8 +163,46 @@ class TestFileList < Test::Unit::TestCase
       f2.sort
   end
 
+  def test_ignore_special
+    f = FileList['testdata/*']
+    assert ! f.include?("testdata/CVS"), "Should not contain CVS"
+    assert ! f.include?("testdata/.dummy"), "Should not contain dot files"
+    assert ! f.include?("testdata/x.bak"), "Should not contain .bak files"
+    assert ! f.include?("testdata/x~"), "Should not contain ~ files"
+    assert ! f.include?("testdata/core"), "Should not contain core files"
+  end
+
+  def test_adding_ignore_patterns
+    FileList.add_ignore_pattern(/\.c$/)
+    f = FileList['testdata/*', 'testdata/xyz.c']
+    assert ! f.include?("testdata/abc.c")
+    assert f.include?("testdata/xyz.c")
+  end
+
+  def test_clear_ignore_patterns
+    FileList.clear_ignore_patterns
+    f = FileList['testdata/*']
+    assert f.include?("testdata/abc.c")
+    assert f.include?("testdata/xyz.c")
+    assert f.include?("testdata/CVS")
+    assert f.include?("testdata/x.bak")
+    assert f.include?("testdata/x~")
+  end
+
+  def test_ignore_with_alternate_file_seps
+    assert FileList.ignore?("x/CVS/y")
+    assert FileList.ignore?("x\\CVS\\y")
+    assert FileList.ignore?("x/core")
+    assert FileList.ignore?("x\\core")
+  end
+
   def create_test_data
     mkdir "testdata" unless File.exist? "testdata"
+    mkdir "testdata/CVS", :verbose=>false rescue nil
+    touch "testdata/.dummy", :verbose=>false
+    touch "testdata/x.bak", :verbose=>false
+    touch "testdata/x~", :verbose=>false
+    touch "testdata/core", :verbose=>false
     touch "testdata/x.c", :verbose=>false
     touch "testdata/xyz.c", :verbose=>false
     touch "testdata/abc.c", :verbose=>false
