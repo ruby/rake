@@ -24,64 +24,28 @@ module Rake
   #   Rebuild the package files from scratch, even if they are not out
   #   of date.
   #
-  # [<b>:gem</b>]
-  #   Create the Ruby GEM file.
-  #
   # [<b>"<em>package_dir</em>/<em>name</em>-<em>version</em>.tgz"</b>]
   #   Create a gzipped tar package.  
   #
   # [<b>"<em>package_dir</em>/<em>name</em>-<em>version</em>.zip"</b>]
   #   Create a zip package archive.
   #
-  # [<b>"<em>package_dir</em>/<em>name</em>-<em>version</em>.gem"</b>]
-  #   Create a Ruby GEM package.
-  #
-  # Simple Example:
+  # Example:
   #
   #   PackageTask.new("rake", "1.2.3") do |p|
   #     p.need_tar = true
   #     p.package_files.include("lib/**/*.rb")
   #   end
   #
-  # Example using a Ruby GEM spec:
-  #
-  #   spec = Gem::Specification.new do |s|
-  #     s.platform = Gem::Platform::RUBY
-  #     s.summary = "Ruby based make-like utility."
-  #     s.name = 'rake'
-  #     s.version = PKG_VERSION
-  #     s.requirements << 'none'
-  #     s.require_path = 'lib'
-  #     s.autorequire = 'rake'
-  #     s.files = PKG_FILES
-  #     s.description = <<EOF
-  #   Rake is a Make-like program implemented in Ruby. Tasks
-  #   and dependencies are specified in standard Ruby syntax. 
-  #   EOF
-  #   end
-  #   
-  #   Rake::PackageTask.new(spec) do |pkg|
-  #     pkg.gem_spec = spec
-  #     pkg.need_zip = true
-  #     pkg.need_tar = true
-  #   end
-  #
   class PackageTask < TaskLib
     # Name of the package (from the GEM Spec).
     attr_reader :name
 
-    # Version of the package (e.g. '1.3.2', from the GEM Spec).
+    # Version of the package (e.g. '1.3.2').
     attr_accessor :version
 
     # Directory used to store the package files (default is 'pkg').
     attr_accessor :package_dir
-
-    # Ruby GEM spec containing the metadata for this package.  If a
-    # GEM spec is provided, then name, version and package_files are
-    # automatically determined and don't need to be explicitly
-    # provided.  A GEM file will be produced if and only if a GEM spec
-    # is supplied.
-    attr_accessor :gem_spec
 
     # True if a gzipped tar file should be produced (default is false).
     attr_accessor :need_tar
@@ -92,14 +56,14 @@ module Rake
     # List of files to be included in the package.
     attr_reader :package_files
 
-    # Create a Package Task with the given name and version.  Omit
-    # name and version if a gemspec is supplied.
+    # Create a Package Task with the given name and version. 
     def initialize(name=nil, version=nil)
       init(name, version)
       yield self if block_given?
-      define if block_given?
+      define unless name.nil?
     end
 
+    # Initialization that bypasses the "yield self" and "define" step.
     def init(name, version)
       @name = name
       @version = version
@@ -109,6 +73,7 @@ module Rake
       @need_zip = false
     end
 
+    # Create the tasks defined by this task library.
     def define
       fail "Version required (or :noversion)" if @version.nil?
       @version = nil if @version == :noversion
@@ -182,40 +147,6 @@ module Rake
     end
   end
 
-  class GemPackageTask < PackageTask
-    def initialize(gem)
-      init(gem)
-      yield self if block_given?
-      define if block_given?
-    end
-
-    def init(gem)
-      super(gem.name, gem.version)
-      @gem_spec = gem
-      @package_files += gem_spec.files if gem_spec.files
-    end
-
-    def define
-      super
-      task :package => [:gem]
-      task :gem => ["#{package_dir}/#{gem_file}"]
-      file "#{package_dir}/#{gem_file}" => [package_dir] + @gem_spec.files do
-	when_writing("Creating GEM") {
-	  Gem::Builder.new(gem_spec).build
-	  verbose(false) {
-	    mv gem_file, "#{package_dir}/#{gem_file}"
-	  }
-	}
-      end
-    end
-    
-    private
-    
-    def gem_file
-      "#{package_name}.gem"
-    end
-    
-  end
 end
 
     
