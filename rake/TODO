@@ -9,11 +9,14 @@ Send suggestions for this list to mailto:jweirich@one.net.
 * Installation support utilities
   * Check out installpkg.rb
 * Autogenerate Dependencies
-* Display dependencies
-* Display tasks (with optional comments)
 * Rules should apply to existing tasks if no actions are defined.
 
 === Done
+
+==== Version 0.2.7
+
+<b>jw - 19/Oct/03</b> :: Display dependencies
+<b>jw - 19/Oct/03</b> :: Display tasks (with optional comments)
 
 ==== Version 0.2.1
 
