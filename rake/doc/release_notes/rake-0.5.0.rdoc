@@ -6,7 +6,7 @@ of Rake available.
 == Changes
 
 * Fixed bug where missing intermediate file dependencies could cause
-  an abort with --trace or --dry-run.  (Brian Chandler)
+  an abort with --trace or --dry-run.  (Brian Candler)
 
 * Recursive rules are now supported (Tilman Sauerbeck).
 
@@ -46,7 +46,7 @@ Download::  http://rubyforge.org/project/showfiles.php?group_id=50
 Lots of people provided input to this release.  Thanks to Tilman
 Sauerbeck for numerous patches, documentation fixes and suggestions.
 And for also pushing me to get this release out.  Also, thanks to
-Brian Chandler for the finding and fixing --trace/dry-run fix.  That
+Brian Candler for the finding and fixing --trace/dry-run fix.  That
 was an obscure bug.  Also to Eric Hodel for some good suggestions.
 
 -- Jim Weirich
