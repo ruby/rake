@@ -9,7 +9,7 @@ class TestFileList < Test::Unit::TestCase
     assert_equal 0, fl.size
   end
 
-  def test_add
+  def test_append
     fl = Rake::FileList.new
     fl << "a.rb" << "b.rb"
     assert_equal ['a.rb', 'b.rb'], fl
@@ -22,6 +22,14 @@ class TestFileList < Test::Unit::TestCase
     assert_equal ['a', 'd', 'c', 'x', 'y'], fl
   end
 
+  def test_add_return
+    f = Rake::FileList.new
+    g = f << "x"
+    assert_equal f.id, g.id
+    h = f.add("y")
+    assert_equal f.id, h.id
+  end
+  
   def test_match
     fl = Rake::FileList.new
     fl.add('test/test*.rb')
@@ -40,6 +48,10 @@ class TestFileList < Test::Unit::TestCase
   end
 
   def test_multiple_patterns
+    touch "testdata/x.c"
+    touch "testdata/xyz.c"
+    touch "testdata/abc.c"
+    touch "testdata/existing"
     fl = Rake::FileList.new
     fl.add('*.c', '*xist*')
     assert_equal [], fl
