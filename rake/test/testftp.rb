@@ -2,9 +2,20 @@
 
 require 'date'
 require 'test/unit'
-require 'rake/ftptools'
+require 'rake/contrib/ftptools'
+
+class FakeDate
+  def self.today
+    Date.new(2003,10,3)
+  end
+end
+
 
 class TestFtpFile < Test::Unit::TestCase
+
+  def setup
+    Rake::FtpFile.class_eval { @date_class = FakeDate }
+  end
 
   def test_general
     file = Rake::FtpFile.new("here", "-rw-r--r--   1 a279376  develop   121770 Mar  6 14:50 wiki.pl")
