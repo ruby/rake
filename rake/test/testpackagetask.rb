@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'test/unit'
-require 'rake/packagetask'
+require 'rake/gempackagetask'
 
 class TestPackageTask < Test::Unit::TestCase
   def test_create
