@@ -10,7 +10,7 @@
 * The jamis rdoc template is only used if it exists.
 * Added fix for Ruby 1.8.2 test/unit and rails problem.
 * Added contributed rake man file (Jani Monoses).
-* Added Brian Chandler's fix for problems in --trace and --dry-run
+* Added Brian Candler's fix for problems in --trace and --dry-run
   mode.
 
 == Version 0.4.15
