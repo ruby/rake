@@ -11,6 +11,7 @@ publisher.add Rake::SshFilePublisher.new(
   '.',
   'rake.blurb')
 
+desc "Publish the Documentation to RubyForge.
 task :publish => [:rdoc] do
   publisher.upload
 end
