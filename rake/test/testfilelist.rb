@@ -197,6 +197,18 @@ class TestFileList < Test::Unit::TestCase
     assert FileList.ignore?("x\\core")
   end
 
+  def test_basic_array_functions
+    f = FileList['b', 'c', 'a']
+    assert_equal 'b', f.first
+    assert_equal 'b', f[0]
+    assert_equal 'a', f.last
+    assert_equal 'a', f[2]
+    assert_equal 'a', f[-1]
+    assert_equal ['a', 'b', 'c'], f.sort
+    f.sort!
+    assert_equal ['a', 'b', 'c'], f
+  end
+
   def create_test_data
     mkdir "testdata" unless File.exist? "testdata"
     mkdir "testdata/CVS", :verbose=>false rescue nil
