@@ -18,12 +18,14 @@ module Rake
       task :package
 
       desc "Force a rebuild of the package files"
-      task :repackage => [:clean_package, :package]
+      task :repackage => [:clobber_package, :package]
       
       desc "Remove package products" 
-      task :clean_package do
+      task :clobber_package do
 	rm_r package_dir rescue nil
       end
+
+      task :clobber => [:clobber_package]
       
       task :package => ["#{package_dir}/#{tgz_file}"]
       file "#{package_dir}/#{tgz_file}" => [package_dir_path] do
@@ -71,40 +73,6 @@ module Rake
 
     def zip_file
       "#{package_name}.zip"
-    end
-
-    def xdefine
-      # == Package Creation
-      
-      desc "Force a rebuild of the package files"
-      task :repackage => [:clean_package, :package]
-      
-      desc "Remove package products" 
-      task :clean_package do
-	rm_r package_dir rescue nil
-      end
-      
-      desc "Build the distribution package" 
-      task :package => [		# Create a distribution package
-	"#{package_dir}/#{tgz_file}",
-	"#{package_dir}/#{zip_file}",
-      ]
-      
-      file "#{package_dir}/#{tgz_file}" => [package_dir] do
-	chdir(package_dir) do
-	  Sys.run %{tar zcvf #{tgz_file} #{package_name}}
-	end
-      end
-      
-      file "#{package_dir}/#{zip_file}" => [package_dir] do
-	chdir(package_dir) do
-	  Sys.run %{zip -r #{zip_file} #{package_name}}
-	end
-      end
-      
-      file package_dir do
-	create_package_directory(package_files)
-      end
     end
   end
 end
