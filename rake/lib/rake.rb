@@ -503,24 +503,25 @@ module Rake
     # Create a file list from the globbable patterns given.
     #
     # Example:
-    #   file_list = FileList['lib/**/*.rb', 'test/test*.rb']
+    #   file_list = FileList.new['lib/**/*.rb', 'test/test*.rb']
     #
     def initialize(*patterns)
       patterns.each { |pattern| add(pattern) }
+      yield self if block_given?
     end
 
     # Add file names defined by glob patterns to the file list.  If an
     # array is given, add each element of the array.
     #
     # Example:
-    #   file_list.add("*.java", "*.cfg")
-    #   file_list.add %w( math.c lib.h *.o )
+    #   file_list.include("*.java", "*.cfg")
+    #   file_list.include %w( math.c lib.h *.o )
     #
-    def add(*filenames)
+    def include(*filenames)
       filenames.each do |fn|
 	case fn
 	when Array
-	  fn.each { |f| self.add(f) }
+	  fn.each { |f| self.include(f) }
 	when %r{[*?]}
 	  add_matching(fn)
 	else
@@ -529,20 +530,42 @@ module Rake
       end
       self
     end
+    alias :add :include 
 
-    # Create a new file list rejecting file that match the regular
-    # expression +pat+.
+    # Modify a file list by removing anything that matches any of the
+    # patterns.  If a pattern is a Regexp, then matching is performed
+    # according to the regular expression matching rules.  If a
+    # pattern is a glob pattern, the a glob list is constructed and
+    # any matching files are excluded.  If a pattern is a normal
+    # string (without glob characters) then any equal file names are
+    # excluded.
     #
-    # Example:
-    #   FileList['a.c', 'b.c'].reject(/^a/) => ['b.c']
+    # Note that glob patterns can only exclude a file if that file is
+    # found in the file system (otherwise the glob pattern will not
+    # expand to a matching name).
     #
-    def exclude(pat)
-      reject { |fn| fn =~ pat }
-    end
-
-    # Same as exclude, but the original file list is modified.
-    def exclude!(pat)
-      reject! { |fn| fn =~ pat }
+    # Examples:
+    #   FileList['a.c', 'b.c'].reject("a.c") => ['b.c']
+    #   FileList['a.c', 'b.c'].reject(/^a/)  => ['b.c']
+    #
+    # If "a.c" is a local file, then ...
+    #   FileList['a.c', 'b.c'].reject("a.*") => ['b.c']
+    #
+    # If "a.c" is not a local file, then ...
+    #   FileList['a.c', 'b.c'].reject("a.*") => ['a.c', 'b.c']
+    #
+    def exclude(*patterns)
+      patterns.each do |pat|
+	case pat
+	when Regexp
+	  reject! { |fn| fn =~ pat }
+	when /[*.]/
+	  reject_list = Dir[pat]
+	  reject! { |fn| reject_list.include?(fn) }
+	else
+	  reject! { |fn| fn == pat }
+	end
+      end
       self
     end
 
@@ -553,7 +576,7 @@ module Rake
     #   FileList['a.c', 'b.c'].sub(/\.c$/, '.o')  => ['a.o', 'b.o']
     #
     def sub(pat, rep)
-      collect { |fn| fn.sub(pat,rep) }
+      inject(FileList.new) { |res, fn| res << fn.sub(pat,rep) }
     end
 
     # Return a new FileList with the results of running +gsub+ against
@@ -564,7 +587,7 @@ module Rake
     #      => ['lib\\test\\file', 'x\\y']
     #
     def gsub(pat, rep)
-      collect { |fn| fn.gsub(pat,rep) }
+      inject(FileList.new) { |res, fn| res << fn.gsub(pat,rep) }
     end
 
     # Same as +sub+ except that the oringal file list is modified.
