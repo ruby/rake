@@ -94,7 +94,7 @@ else
     s.requirements << 'none'
     s.require_path = 'lib'
     s.autorequire = 'rake'
-    s.files = PKG_FILES
+    s.files = PKG_FILES.to_a
     s.author = 'Jim Weirich'
     s.email = 'jweirich@one.net'
     s.homepage = 'http://onestepback.org'
