@@ -1,0 +1,197 @@
+= Rakefile Format
+
+First of all, there is no special format for a Rakefile.  A Rakefile
+contains executable Ruby code.  Anything legal in a ruby script is
+allowed in a Rakefile.
+
+Now that we understand there is no special syntax in a Rakefile, there
+are some conventions that are used in a Rakefile that a little unusual
+in a typical Ruby program.  Since a Rakefile is tailored to specifying
+tasks and actions, the idioms used in a Rakefile are designed to
+support that.
+
+So, what goes into a Rakefile?
+
+
+== Tasks
+
+Tasks are the main unit of work in a Rakefile.  Tasks have a name
+(usually given as a symbol or a string), a list of prerequisites (more
+symbols or strings) and a list of actions (given as a block).
+
+=== Simple Tasks
+
+A task is declared by using the +task+ method.  +task+ takes a single
+parameter that is the name of the task.
+
+  task :name
+
+=== Tasks with Prerequisites
+
+Any prerequisites are given as a list (inclosed in square brackets)
+following the name and an arrow (=>).
+
+  task :name => [:prereq1, :prereq2]
+
+<b>NOTE:</b> Although this syntax looks a little funky, it is legal
+Ruby.  We are constructing a hash where the key is :name and the value
+for that key is the list of prerequisites.  It is equivalent to the
+following ...
+
+  hash = Hash.new
+  hash[:name] = [:prereq1, :prereq2]
+  task(hash)
+
+=== Tasks with Actions
+
+Actions are defined by passing a block to the +task+ method.  Any Ruby
+code can be placed in the block.  The block may reference the task
+object via the block paramter..
+
+  task :name => [:prereq1, :prereq2] do |t|
+    # actions (may reference t)
+  end
+
+=== Multiple Definitions
+
+A task may be specified more than once.  Each specification adds its
+prerequisites and actions to the existing definition.  This allows one
+part of a rakefile to specify the actions and a different rakefile
+(perhaps separately generated) to specify the dependencies.
+
+For example, the following is equivalent to the single task
+specification given above.
+
+  task :name
+  task :name => [:prereq1]
+  task :name => [:prereq2]
+  task :name do |t|
+    # actions
+  end
+
+== File Tasks
+
+Some tasks are designed to create a file from one or more other files.
+Tasks that generate these files may be skipped if the file already
+exists.  File tasks are used to specify file creation tasks.
+
+File tasks are declared using the +file+ method (instead of the +task+
+method).  In addition, file tasks are usually named with a string
+rather than a symbol.
+
+The following file task creates a executable program (named +prog+)
+given two object files name <tt>a.o</tt> and <tt>b.o</tt>.  The tasks
+for creating <tt>a.o</tt> and <tt>b.o</tt> are not shown.
+
+  file "prog" => ["a.o", "b.o"] do |t|
+    Sys.run "cc -o #{t.name} #{t.prerequisites.join(' ')}"
+  end
+
+== Directory Tasks
+
+It is common to need to create directories upon demand.  The
++directory+ convenience method is a short-hand for creating a FileTask
+that creates the directory.  For example, the following declaration
+...
+
+  directory "testdata/examples/doc"
+
+is equivalent to ...
+
+  file "testdata"              do |t| Sys.makedirs(t.name) end
+  file "testdata/examples"     do |t| Sys.makedirs(t.name) end
+  file "testdata/examples/doc" do |t| Sys.makedirs(t.name) end
+
+The +directory+ method does not accept prerequisites or actions, but
+both prerequisites and actions can be added later.  For example ...
+
+  directory "testdata"
+  file "testdata" => ["otherdata"]
+  file "testdata" do
+    Sys.copy_files "standard_data/*.data", testdata
+  end
+
+== Rules
+
+When a file is named as a prerequisite, but does not have a file task
+defined for it, Rake will attempt to synthesize a task by looking at a
+list of rules supplied in the Rakefile.
+
+Suppose we were trying to invoke task "mycode.o", but no task is
+defined for it.  But the rakefile has a rule that look like this ...
+
+  rule '.o' => ['.c'] do |t|
+    Sys.run "cc #{t.source} -c -o #{t.name}"
+  end
+
+This rule will synthesize any task that ends in ".o".  It has a
+prerequisite a source file with an extension of ".c" must exist.  If
+Rake is able to find a file named "mycode.c", it will automatically
+create a task that builds "mycode.o" from "mycode.c".
+
+Notice that the source file "mycode.c" must exist.  Rake does not
+(currently) try to do multi-level task synthesis.
+
+When a task is synthesized from a rule, the +source+ attribute of the
+task is set to the matching source file.  This allows us to write
+rules with actions that reference the source file.
+
+=== Advanced Rules
+
+Any regular expression may be used as the rule pattern.  Additionally,
+a proc may be used to calculate the name of the source file.  This
+allows for complex patterns and sources.
+
+The following rule is equivalent to the example above.
+
+  rule /\.o$/ => [
+    proc {|task_name| task_name.sub(/\.[^.]+$/, '.c') }
+  ] do |t|
+    Sys.run "cc #{t.source} -c -o #{t.name}"
+  end    
+
+The following rule might be used for Java files ...
+
+  rule '.java' => [
+    proc { |tn| tn.sub(/\.class$/, '.java').sub(/^classes\//, 'src/') }
+  ] do |t|
+    java_compile(t.source, t.name)  
+  end
+
+<b>NOTE:</b> +java_compile+ is a hypothetical method that invokes the
+java compiler.
+
+== Odds and Ends
+
+=== do/end verses { }
+
+Blocks may be specified with either a +do+/+end+ pair, or with curly
+braces in Ruby.  We _strongly_ recommend using +do+/+end+ to specify the
+actions for tasks and rules.  Because the rakefile idiom tends to
+leave off parenthesis on the task/file/rule methods, unusual
+ambiguities can arise when using curly braces.
+
+For example, suppose that the method +object_files+ returns a list of
+object files in a project.  Now we use +object_files+ as the
+prerequistes in a rule specified with actions in curly braces.
+
+  # DON'T DO THIS!
+  file "prog" => object_files {
+    # Actions are expected here (but it doesn't work)!
+  }
+
+Because curly braces have a higher precedence than +do+/+end+, the
+block is associated with the +object_files+ method rather than the
++file+ method.
+
+This is the proper way to specify the task ...
+
+  # THIS IS FINE
+  file "prog" => object_files do
+    # Actions go here
+  end
+
+----
+== See
+
+* README -- Main documentation for Rake.

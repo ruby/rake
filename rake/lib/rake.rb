@@ -1,0 +1,623 @@
+#!/usr/bin/env ruby
+
+#--
+# Copyright (c) 2003 Jim Weirich
+#
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#++
+#
+# = Rake -- Ruby Make
+# 
+# This is the main file for the Rake application.  Normally it is
+# referenced as a library via a require statement, but it can be
+# distributed independently as an application.
+
+RAKEVERSION='0.2.6'
+
+require 'rbconfig'
+require 'ftools'
+require 'getoptlong'
+
+######################################################################
+# A Task is the basic unit of work in a Rakefile.  Tasks have
+# associated actions (possibly more than one) and a list of
+# prerequisites.  When invoked, a task will first ensure that all of
+# its prerequisites have an opportunity to run and then it will
+# execute its own actions.
+#
+# Tasks are not usually created directly in a Rakefile, but rather use
+# the +file+ and +task+ global methods.
+#
+class Task
+  TASKS = Hash.new
+  RULES = Array.new
+
+  # List of prerequisites for a task.
+  attr_reader :prerequisites
+
+  # Source dependency for rule synthesized tasks.  Nil if task was not
+  # sythesized from a rule.
+  attr_accessor :source
+
+  # Create a task named +task_name+ with no actions or prerequisites..
+  # use +enhance+ to add actions and prerequisites.
+  def initialize(task_name)
+    @name = task_name
+    @prerequisites = []
+    @actions = []
+  end
+
+  # Enhance a task with prerequisites or actions.  Returns self.
+  def enhance(deps=nil, &block)
+    @prerequisites |= deps if deps
+    @actions << block if block_given?
+    self
+  end
+
+  # Name of the task.
+  def name
+    @name.to_s
+  end
+
+  # Invoke the task if it is needed.  Prerequites are invoked first.
+  def invoke
+    puts "Invoke #{name} (already=[#{@already_invoked}], needed=[#{needed?}])" if $trace
+    return if @already_invoked
+    @already_invoked = true
+    @prerequisites.each { |n| Task[n].invoke }
+    execute if needed?
+  end
+
+  # Execute the actions associated with this task.
+  def execute
+    puts "Execute #{name}" if $trace
+    self.class.enhance_with_matching_rule(name) if @actions.empty?
+    unless $dryrun
+      @actions.each { |act| result = act.call(self) }
+    end
+  end
+
+  # Is this task needed?
+  def needed?
+    true
+  end
+
+  # Timestamp for this task.  Basic tasks return the current time for
+  # their time stamp.  Other tasks can be more sophisticated.
+  def timestamp
+    @prerequisites.collect { |p| Task[p].timestamp }.max || Time.now
+  end
+
+  # Class Methods ----------------------------------------------------
+
+  class << self
+
+    # Clear the task list.  This cause rake to immediately forget all
+    # the tasks that have been assigned.  (Normally used in the unit
+    # tests.)
+    def clear
+      TASKS.clear
+      RULES.clear
+    end
+
+    # List of all defined tasks.
+    def tasks
+      TASKS.keys.sort.collect { |tn| Task[tn] }
+    end
+
+    # Return a task with the given name.  If the task is not currently
+    # known, try to synthesize one from the defined rules.  If no
+    # rules are found, but an existing file matches the task name,
+    # assume it is a file task with no dependencies or actions.
+    def [](task_name)
+      task_name = task_name.to_s
+      if task = TASKS[task_name]
+	return task
+      end
+      if task = enhance_with_matching_rule(task_name)
+	return task
+      end
+      if File.exist?(task_name)
+	return FileTask.define_task(task_name)
+      end
+      fail "Don't know how to rake #{task_name}"
+    end
+
+    # Define a task given +args+ and an option block.  If a rule with
+    # the given name already exists, the prerequisites and actions are
+    # added to the existing task.
+    def define_task(args, &block)
+      task_name, deps = resolve_args(args)
+      deps = [deps] if (Symbol === deps) || (String === deps)
+      deps = deps.collect {|d| d.to_s }
+      lookup(task_name).enhance(deps, &block)
+    end
+
+    # Define a rule for synthesizing tasks.  
+    def create_rule(args, &block)
+      pattern, deps = resolve_args(args)
+      fail "Too many dependents specified in rule #{pattern}: #{deps.inspect}" if deps.size > 1
+      pattern = Regexp.new(Regexp.quote(pattern) + '$') if String === pattern
+      RULES << [pattern, deps, block]
+    end
+
+    
+    # Lookup a task.  Return an existing task if found, otherwise
+    # create a task of the current type.
+    def lookup(task_name)
+      name = task_name.to_s
+      TASKS[name] ||= self.new(name)
+    end
+
+    # If a rule can be found that matches the task name, enhance the
+    # task with the prerequisites and actions from the rule.  Set the
+    # source attribute of the task appropriately for the rule.  Return
+    # the enhanced task or nil of no rule was found.
+    def enhance_with_matching_rule(task_name)
+      RULES.each do |pattern, extensions, block|
+	if md = pattern.match(task_name)
+	  ext = extensions.first
+	  case ext
+	  when String
+	    source = task_name.sub(/\.[^.]*$/, ext)
+	  when Proc
+	    source = ext.call(task_name)
+	  else
+	    fail "Don't know how to handle rule dependent: #{ext.inspect}"
+	  end
+	  if File.exist?(source)
+	    task = FileTask.define_task({task_name => [source]}, &block)
+	    task.source = source
+	    return task
+	  end
+	end
+      end
+      nil
+    end
+    
+    private 
+
+    # Resolve the arguments for a task/rule.
+    def resolve_args(args)
+      case args
+      when Hash
+	fail "Too Many Task Names: #{args.keys.join(' ')}" if args.size > 1
+	fail "No Task Name Given" if args.size < 1
+	task_name = args.keys[0]
+	deps = args[task_name]
+	deps = [deps] if (String===deps) || (Regexp===deps) || (Proc===deps)
+      else
+	task_name = args
+	deps = []
+      end
+      [task_name, deps]
+    end
+  end
+end
+
+
+######################################################################
+class FileTask < Task
+  # Is this file task needed?  Yes if it doesn't exist, or if its time
+  # stamp is out of date.
+  def needed?
+    return true unless File.exist?(name)
+    latest_prereq = @prerequisites.collect{|n| Task[n].timestamp}.max
+    return false if latest_prereq.nil?
+    timestamp < latest_prereq
+  end
+
+  # Time stamp for file task.
+  def timestamp
+    File.new(name.to_s).mtime
+  end
+end
+
+######################################################################
+# Task Definition Functions ...
+
+# Declare a basic task.
+def task(args, &block)
+  Task.define_task(args, &block)
+end
+
+# Declare a file task.
+def file(args, &block)
+  FileTask.define_task(args, &block)
+end
+
+# Declare a set of files tasks to create the given directories on
+# demand.
+def directory(dir)
+  path = []
+  Sys.split_all(dir).each do |p| 
+    path << p
+    FileTask.define_task(File.join(path)) do |t|
+      Sys.makedirs(t.name)
+    end
+  end
+end
+
+# Declare a rule for auto-tasks.
+def rule(args, &block)
+  Task.create_rule(args, &block)
+end
+
+# Run a system command (alias for Sys.run ... we are keeping it for
+# compatibility).
+def sys(cmd)
+  Sys.run(cmd)
+end
+
+######################################################################
+# RakeTools is a mixin module that provides a number of file
+# manipulation tools for the convenience of writing Rakefiles.  All
+# commands in this module will announce their activity on standard
+# output if the $verbose flag is set ($verbose = true is the default).
+# You can control this by globally setting $verbose or by using the
+# +verbose+ and +quiet+ methods.
+#
+module RakeTools
+  RUBY = Config::CONFIG['ruby_install_name']
+
+  # Install all the files matching +wildcard+ into the +dest_dir+
+  # directory.  The permission mode is set to +mode+.
+  def install(wildcard, dest_dir, mode)
+    Dir[wildcard].each do |fn|
+      File.install(fn, dest_dir, mode, $verbose)
+    end
+  end
+
+  # Run the system command +cmd+.
+  def run(cmd)
+    log cmd
+    system(cmd) or fail "Command Failed: [#{cmd}]"
+  end
+
+  # Run a Ruby interpreter with the given arguments.
+  def ruby(*args)
+    run "#{RUBY} #{args.join(' ')}"
+  end
+  
+  # Copy a single file from +file_name+ to +dest_file+.
+  def copy(file_name, dest_file)
+    log "Copying file #{file_name} to #{dest_file}"
+    File.copy(file_name, dest_file)
+  end
+
+  # Copy all files matching +wildcard+ into the directory +dest_dir+.
+  def copy_files(wildcard, dest_dir)
+    for_matching_files(wildcard, dest_dir) { |from, to| copy(from, to) }
+  end
+
+  # Link +file_name+ to +dest_file+.
+  def link(file_name, dest_file)
+    log "Linking file #{file_name} to #{dest_file}"
+    File.link(file_name, dest_file)
+  end
+
+  # Link all files matching +wildcard+ into the directory +dest_dir+.
+  def link_files(wildcard, dest_dir)
+    for_matching_files(wildcard, dest_dir) { |from, to| link(from, to) }
+  end
+
+  # Symlink +file_name+ to +dest_file+.
+  def symlink(file_name, dest_file)
+    log "Symlinking file #{file_name} to #{dest_file}"
+    File.symlink(file_name, dest_file)
+  end
+
+  # Symlink all files matching +wildcard+ into the directory +dest_dir+.
+  def symlink_files(wildcard, dest_dir)
+    for_matching_files(wildcard, dest_dir) { |from, to| link(from, to) }
+  end
+
+  # Remove all files matching +wildcard+.  If a matching file is a
+  # directory, it must be empty to be removed.  used +delete_all+ to
+  # recursively delete directories.
+  def delete(*wildcards)
+    wildcards.each do |wildcard|
+      Dir[wildcard].each do |fn|
+	if File.directory?(fn)
+	  log "Deleting directory #{fn}"
+	  Dir.delete(fn)
+	else
+	  log "Deleting file #{fn}"
+	  File.delete(fn)
+	end
+      end
+    end
+  end
+
+  # Recursively delete all files and directories matching +wildcard+.
+  def delete_all(*wildcards)
+    wildcards.each do |wildcard|
+      Dir[wildcard].each do |fn|
+	next if ! File.exist?(fn)
+	if File.directory?(fn)
+	  Dir["#{fn}/*"].each do |subfn|
+	    next if subfn=='.' || subfn=='..'
+	    delete_all(subfn)
+	  end
+	  log "Deleting directory #{fn}"
+	  Dir.delete(fn)
+	else
+	  log "Deleting file #{fn}"
+	  File.delete(fn)
+	end
+      end
+    end
+  end
+
+  # Make the directories given in +dirs+.
+  def makedirs(*dirs)
+    dirs.each do |fn|
+      log "Making directory #{fn}"
+      File.makedirs(fn)
+    end
+  end
+
+  # Make +dir+ the current working directory for the duration of
+  # executing the given block.
+  def indir(dir)
+    olddir = Dir.pwd
+    Dir.chdir(dir)
+    yield
+  ensure
+    Dir.chdir(olddir)
+  end
+
+  # Split a file path into individual directory names.
+  #
+  # For example:
+  #   split_all("a/b/c") =>  ['a', 'b', 'c']
+  def split_all(path)
+    head, tail = File.split(path)
+    return [tail] if head == '.'
+    return [head, tail] if head == '/'
+    return split_all(head) + [tail]
+  end
+
+  # Write a message to standard out if $verbose is enabled.
+  def log(msg)
+    print "  " if $trace && $verbose
+    puts msg if $verbose
+  end
+
+  # Perform a block with $verbose disabled.
+  def quiet(&block)
+    with_verbose(false, &block)
+  end
+
+  # Perform a block with $verbose enabled.
+  def verbose(&block)
+    with_verbose(true, &block)
+  end
+
+  # Perform a block with each file matching a set of wildcards.
+  def for_files(*wildcards)
+    wildcards.each do |wildcard|
+      Dir[wildcard].each do |fn|
+	yield(fn)
+      end
+    end
+  end
+
+  private # ----------------------------------------------------------
+
+  def for_matching_files(wildcard, dest_dir)
+    Dir[wildcard].each do |fn|
+      dest_file = File.join(dest_dir, fn)
+      parent = File.dirname(dest_file)
+      makedirs(parent) if ! File.directory?(parent)
+      yield(fn, dest_file)
+    end
+  end
+
+  def with_verbose(v)
+    oldverbose = $verbose
+    $verbose = v
+    yield
+  ensure
+    $verbose = oldverbose
+  end
+
+end
+
+######################################################################
+# Provide the file manipulation tools available in RakeTools as module
+# level methods.  This allows rakefile users to type commands like:
+#
+#   Sys.copy("file1", "file2")
+#
+module Sys
+  class << self
+    include RakeTools
+  end
+end
+
+######################################################################
+# Rake main application object.  When invoking +rake+ from the command
+# line, a RakeApp object is created and run.
+#
+class RakeApp
+  RAKEFILES = ['rakefile', 'Rakefile']
+
+  OPTIONS = [
+    ['--dry-run',  '-n', GetoptLong::NO_ARGUMENT,
+      "Do a dry run without executing actions."],
+    ['--help',     '-H', GetoptLong::NO_ARGUMENT,
+      "Display this help message."],
+    ['--libdir',   '-I', GetoptLong::REQUIRED_ARGUMENT,
+      "Include LIBDIR in the search path for required modules."],
+    ['--nosearch', '-N', GetoptLong::NO_ARGUMENT,
+      "Do not search parent directories for the Rakefile."],
+    ['--quiet',    '-q', GetoptLong::NO_ARGUMENT,
+      "Do not log messages to standard output."],
+    ['--rakefile', '-f', GetoptLong::REQUIRED_ARGUMENT,
+      "Use FILE as the rakefile."],
+    ['--require',  '-r', GetoptLong::REQUIRED_ARGUMENT,
+      "Require MODULE before executing rakefile."],
+    ['--tasks',    '-T', GetoptLong::NO_ARGUMENT,
+      "Display the tasks and dependencies, then exit."],
+    ['--trace',    '-t', GetoptLong::NO_ARGUMENT,
+      "Turn on invoke/execute tracing."],
+    ['--usage',    '-h', GetoptLong::NO_ARGUMENT,
+      "Display usage."],
+    ['--verbose',  '-v', GetoptLong::NO_ARGUMENT,
+      "Log message to standard output (default)."],
+    ['--version',  '-V', GetoptLong::NO_ARGUMENT,
+      "Display the program version."],
+  ]
+
+  # Create a RakeApp object.
+  def initialize
+    @rakefile = nil
+    @nosearch = false
+  end
+
+  # True if one of the files in RAKEFILES is in the current directory.
+  # If a match is found, it is copied into @rakefile.
+  def have_rakefile
+    RAKEFILES.each do |fn|
+      if File.exist?(fn)
+	@rakefile = fn
+	return true
+      end
+    end
+    return false
+  end
+
+  # Display the program usage line.
+  def usage
+      puts "rake [-f rakefile] {options} targets..."
+  end
+
+  # Display the rake command line help.
+  def help
+    usage
+    puts
+    puts "Options are ..."
+    puts
+    OPTIONS.sort.each do |long, short, mode, desc|
+      if mode == GetoptLong::REQUIRED_ARGUMENT
+	if desc =~ /\b([A-Z]{2,})\b/
+	  long = long + "=#{$1}"
+	end
+      end
+      printf "  %-20s (%s)\n", long, short
+      printf "      %s\n", desc
+    end
+  end
+
+  # Display the tasks and dependencies.
+  def display_tasks
+    Task.tasks.each do |t|
+      puts "#{t.class} #{t.name}"
+      t.prerequisites.each { |pre| puts "    #{pre}" }
+    end
+  end
+
+  # Return a list of the command line options supported by the
+  # program.
+  def command_line_options
+    OPTIONS.collect { |lst| lst[0..-2] }
+  end
+
+  # Do the option defined by +opt+ and +value+.
+  def do_option(opt, value)
+    case opt
+    when '--dry-run'
+      $dryrun = true
+      $trace = true
+    when '--help'
+      help
+      exit
+    when '--libdir'
+      $:.push(value)
+    when '--nosearch'
+      @nosearch = true
+    when '--quiet'
+      $verbose = false
+    when '--rakefile'
+      RAKEFILES.clear
+      RAKEFILES << value
+    when '--require'
+      require value
+    when '--tasks'
+      $show_tasks = true
+    when '--trace'
+      $trace = true
+    when '--usage'
+      usage
+      exit
+    when '--verbose'
+      $verbose = true
+    when '--version'
+      puts "rake, version #{RAKEVERSION}"
+      exit
+    else
+      fail "Unknown option: #{opt}"
+    end
+  end
+  
+  # Read and handle the command line options.
+  def handle_options
+    $verbose = true
+    opts = GetoptLong.new(*command_line_options)
+    opts.each { |opt, value| do_option(opt, value) }
+  end
+
+  # Run the +rake+ application.
+  def run
+    handle_options
+    begin
+      here = Dir.pwd
+      while ! have_rakefile
+	Dir.chdir("..")
+	if Dir.pwd == here || @nosearch
+	  fail "No Rakefile found (looking for: #{RAKEFILES.join(', ')})"
+	end
+	here = Dir.pwd
+      end
+      puts "(in #{Dir.pwd})"
+      $rakefile = @rakefile
+      load @rakefile
+      if $show_tasks
+	display_tasks
+      else
+	ARGV.push("default") if ARGV.size == 0
+	ARGV.each { |task_name| Task[task_name].invoke }
+      end
+    rescue Exception => ex
+      puts "rake aborted!"
+      puts ex.message
+      if $trace
+	puts ex.backtrace.join("\n")
+      else
+	puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
+      end
+    end    
+  end
+end
+
+if __FILE__ == $0 then
+  RakeApp.new.run
+end

@@ -1,0 +1,27 @@
+= Rake Project -- To Do List
+
+Send suggestions for this list to mailto:jweirich@one.net.
+
+=== To Do
+* Define a set of default rules that work in the absense of any Rakefile
+* What about cyclic dependencies?
+* Java support utilities
+* Installation support utilities
+  * Check out installpkg.rb
+* Autogenerate Dependencies
+* Display dependencies
+* Rules should apply to existing tasks if no actions are defined.
+
+=== Done
+
+==== Version 0.2.1
+
+<b>jw - 21/Mar/03</b> :: Add an option to dump the dependencies.
+<b>jw - 21/Mar/03</b> :: Fine tuned Task timestamps so they mix with FileTask better.
+
+==== Version 0.2.0
+
+<b>jw - 19/Mar/03</b> :: Provide a rake version of some file tools (for verbose control)
+<b>jw - 19/Mar/03</b> :: Handle rakefile and -f options
+<b>jw - 17/Mar/03</b> :: Support implicit file tasks
+<b>jw - 17/Mar/03</b> :: Add rule based targets

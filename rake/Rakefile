@@ -1,0 +1,42 @@
+# Rakefile for rake        -*- ruby -*-
+
+require 'build/rubyapp'
+
+builder = AppBuilder.new('rake')
+builder.revision_command "ruby ./bin/rake --version"
+
+builder.package_files << 'install.rb'
+builder.package_files.no_match(/\bCVS\b/, /~$/)
+builder.package_files.glob(
+  '[A-Z]*',
+  'bin/**/*', 
+  'lib/**/*.rb', 
+  'test/**/*.rb',
+  'doc/**/*',
+  'build/rubyapp.rb',
+  '*.blurb')
+
+builder.rdoc_files << ['README', 'LICENSE', 'TODO', 'CHANGES']
+builder.rdoc_files.glob('lib/**/*.rb', 'doc/**/*.rdoc', 'test/*.rb')
+
+builder.clobber_files << %w(html pkg testdata)
+
+builder.create_tasks
+
+umlcoop_info = HostInfo.new(
+  'umlcoop',
+  'htdocs/software',
+  'htdocs/packages')
+
+local_info = HostInfo.new(
+  'localhost',
+  'working/projects/source2html/dummy/software',
+  'working/projects/source2html/dummy/packages')
+
+builder.publisher = SshPublisher.new(umlcoop_info)
+
+# Additional dependencies beyond the standard
+
+directory 'testdata'
+task :test => ['testdata']
+

@@ -1,0 +1,176 @@
+= RAKE -- Ruby Make 
+
+This package contains Rake, a simple ruby build program with
+capabilities similar to make.
+
+Rake has the following features:
+
+* Rakefiles (rake's version of Makefiles) are completely defined in
+  standard Ruby syntax.  No XML files to edit.  No quirky Makefile
+  syntax to worry about (is that a tab or a space?)
+
+* Users can specify tasks with prerequisites.
+
+* Rake supports rule patterns to sythesize implicit tasks.
+
+* Rake is lightweight.  It can be distributed with other projects as a
+  single file.  Projects that depend upon rake do not require that
+  rake be installed on target systems.
+
+== Download
+
+The latest version of rake can be found at
+
+* http://onestepback.org/packages/rake
+
+Documentation can be found at 
+
+* http://onestepback.org/software/rake
+
+== Installation
+
+You can install rake with the following command.
+
+  % ruby install.rb
+
+from its distribution directory.
+
+
+== Roadmap
+
+* If you want to see how to invoke rake to build your projects, read on.
+* If you want to see the format of a Rakefile, see doc/rakefile.rdoc.
+* If you want to see the original announcement of rake, see doc/rational.rdoc.
+* If you want to see a glossary of terms, see doc/glossary.rdoc.
+
+== Simple Example
+
+Once installed, you can run rake as follows ...
+
+  % rake [options]  [tasks...]
+
+Type "rake --help" for an up-to-date option summary.
+
+Invoking <tt>rake</tt> without any options or targets causes rake to
+look for a rakefile and invoke the default task in that rakefile.
+
+For example, given a simple rakefile like this ...
+
+  task :default => [:test]
+
+  task :test do
+    Sys.run %{ruby test/unittest.rb}
+  end
+
+The command 
+
+  $ rake
+
+will invoke the +default+ task.  As +default+ satisfies its
+prerequisites, the +test+ task will run the unit tests for the
+package.
+
+== Other Make Reinvisionings ...
+
+Rake is a late entry in the make replacement field.  Here are links to
+other projects with similar (and not so similar) goals.
+
+* http://www.a-a-p.org/ -- Make in Python
+* http://www.aromatic.com/tools/jam.txt -- JAM, Java Automated Make
+* http://ant.apache.org -- The Ant project
+* http://www.perl.com/language/ppt/src/make/index.html -- Make from
+  the Perl Power Tools implementation.
+
+== Credits
+
+[<b>Ryan Dlugosz</b>] For the initial conversation that sparked Rake.
+
+[<b>nobu.nokada@softhome.net</b>] For the initial patch for rule support.
+
+== License
+
+Rake is available under an MIT-style license.
+
+:include: LICENSE
+
+== Support
+
+The Rake homepage is http://w3.one.net/~jweirich/tools/rake (this will
+probably change in the near future).
+
+Feel free to submit commits or feature requests.  If you send a patch,
+remember to update the corresponding unit tests.  If fact, I prefer
+new feature to be submitted in the form of new unit tests.
+
+For other information, feel free to ask on the ruby-talk mailing list
+(which is mirrored to comp.lang.ruby) or contact
+mailto:jweirich@one.net.
+
+----
+
+= Usage
+
+Rake is invoked from the command line using:
+
+   % rake <options> [targets...]
+
+Options are:
+
+[<tt>--help</tt>  (-H)]
+    Display some help text and exit.
+
+[<tt>--dry-run</tt> (-n)]
+    Do a dry run.  Print the tasks invoked and executed, but do not
+    actually execute any of the actions.
+
+[<tt>--libdir</tt> _directory_  (-I)]
+    Add _directory_ to the list of directories searched for require.
+
+[<tt>--nosearch</tt>  (-N)]
+    Do not search for a Rakefile in parent directories.
+
+[<tt>--quiet</tt> (-q)]
+    Do not echo Sys commands.
+
+[<tt>--rakefile</tt> _filename_ (-f)]
+    Use _filename_ as the name of the rakefile.  The default rakefile
+    names are +rakefile+ and +Rakefile+ (with +rakefile+ taking
+    precedence).  If the rakefile is not found in the current
+    directory, +rake+ will search parent directories for a match.  The
+    directory where the Rakefile is found will become the current
+    directory for the actions executed in the Rakefile.
+
+[<tt>--require</tt> _name_ (-r)]
+    Require _name_ before executing the Rakefile.
+
+[<tt>--usage</tt> (-h)]
+    Display a usage message and exit.
+
+[<tt>--verbose</tt> (-v)]
+    Echo the Sys commands to standard output.
+
+[<tt>--version</tt> (-V)]
+    Display the program version and exit.
+
+---
+
+= Rakefile Format
+
+See doc/rakefile.rdoc for details on the Rakefile format.
+
+---
+
+= Other stuff
+
+Author::   Jim Weirich <jweirich@one.net>
+Requires:: Ruby 1.6.7 or later
+License::  Copyright 2003 by Jim Weirich.
+           Released under an MIT-style license.  See the LICENSE file
+           included in the distribution.
+
+== Warranty
+
+This software is provided "as is" and without any express or
+implied warranties, including, without limitation, the implied
+warranties of merchantibility and fitness for a particular
+purpose.

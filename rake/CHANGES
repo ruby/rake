@@ -1,0 +1,17 @@
+= Rake Changelog
+
+== Version 0.2.5
+
+* Switched to standard ruby app builder.
+* Added no_match option to file matcher.
+
+== Version 0.2.4
+
+* Fixed indir, which neglected to actually change directories.
+
+== Version 0.2.3
+
+* Added rake module for a help target
+* Added 'for_files' to Sys
+* Added a $rakefile constant
+* Added test for selecting proper rule with multiple targets.
