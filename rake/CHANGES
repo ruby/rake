@@ -1,7 +1,13 @@
 = Rake Changelog
 
-== Version next
+== Version 0.4.6
+* Removed test version of ln in FileUtils that prevented safe_ln from
+  using ln.
+
+== Version 0.4.5
 * Upgraded comments in TestTask.
+* FileList to_s and inspect now automatically resolve pending changes.
+* FileList#exclude properly returns the FileList.
 
 == Version 0.4.4
 * Fixed initialization problem with @comment.
