@@ -4,6 +4,7 @@ module Rake
 
   class PackageTask
     attr_accessor :name, :version, :package_dir
+    attr_accessor :need_tar, :need_zip
     attr_reader :package_files
 
     def initialize(name, version)
@@ -11,6 +12,10 @@ module Rake
       @version = version
       @package_files = Rake::FileList.new
       @package_dir = 'pkg'
+      @need_tar = true
+      @need_zip = true
+      yield self if block_given?
+      define
     end
 
     def define
@@ -27,17 +32,21 @@ module Rake
 
       task :clobber => [:clobber_package]
       
-      task :package => ["#{package_dir}/#{tgz_file}"]
-      file "#{package_dir}/#{tgz_file}" => [package_dir_path] do
-	chdir(package_dir) do
-	  sh %{tar zcvf #{tgz_file} #{package_name}}
+      if need_tar
+	task :package => ["#{package_dir}/#{tgz_file}"]
+	file "#{package_dir}/#{tgz_file}" => [package_dir_path] do
+	  chdir(package_dir) do
+	    sh %{tar zcvf #{tgz_file} #{package_name}}
+	  end
 	end
       end
 
-      task :package => ["#{package_dir}/#{zip_file}"]
-      file "#{package_dir}/#{zip_file}" => [package_dir_path] do
-	chdir(package_dir) do
-	  sh %{zip -r #{zip_file} #{package_name}}
+      if need_zip
+	task :package => ["#{package_dir}/#{zip_file}"]
+	file "#{package_dir}/#{zip_file}" => [package_dir_path] do
+	  chdir(package_dir) do
+	    sh %{zip -r #{zip_file} #{package_name}}
+	  end
 	end
       end
 
