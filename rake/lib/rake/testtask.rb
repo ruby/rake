@@ -26,11 +26,19 @@ module Rake
     # tests. (default is 'lib')
     attr_accessor :libs
 
+    # True if verbose test output desired. (default is false)
+    attr_accessor :verbose
+
     # Glob pattern to match test files. (default is 'test/test*.rb')
     attr_accessor :pattern
 
-    # True if verbose test output desired. (default is false)
-    attr_accessor :verbose
+    # Explicitly define the list of test files to be included in a
+    # test.  +list+ is expected to be an array of file names (a
+    # FileList is acceptable).  If both +pattern+ and +test_files+ are
+    # used, then the list of test files is the union of the two.
+    def test_files=(list)
+      @test_files = list
+    end
 
     # Create a testing task.
     def initialize(name=:test)
@@ -60,10 +68,6 @@ module Rake
 	end
       end
       self
-    end
-
-    def test_files=(list)
-      @test_files = list
     end
 
     def test_file_list
