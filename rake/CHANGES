@@ -2,8 +2,12 @@
 
 == Version 0.4.16 prerelease
 
-* Fixed documentation that was lacking the Rake module name.
-* Added tar.gz and tar.bz2 support to package task.
+* Fixed documentation that was lacking the Rake module name (Tilman
+  Sauerbeck).
+* Added tar.gz and tar.bz2 support to package task (Tilman Sauerbeck).
+* Recursive rules are now supported (Tilman Sauerbeck).
+* Added warning option for the Test Task (requested by Eric Hodel).
+* The jamis rdoc template is only used if it exists.
 
 == Version 0.4.15
 
