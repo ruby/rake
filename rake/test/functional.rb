@@ -47,6 +47,7 @@ class FunctionalTest < Test::Unit::TestCase
     Dir.chdir("test/data/multidesc") do rake "-T" end
     assert_match %r{^rake a *# A / A2 *$}, @out
     assert_match %r{^rake b *# B *$}, @out
+    assert_no_match %r{^rake c}, @out
   end
 
   private
