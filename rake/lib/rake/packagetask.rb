@@ -6,13 +6,6 @@
 require 'rake'
 require 'rake/tasklib'
 
-begin
-  require 'rubygems'
-rescue Exception
-  puts "Unable to find RubyGEMS"
-  fail "The Package Task Lib requires RubyGEMS"
-end
-
 module Rake
 
   # Create a packaging task that will package the project into
@@ -73,7 +66,7 @@ module Rake
   #     pkg.need_tar = true
   #   end
   #
-  class SimplePackageTask < TaskLib
+  class PackageTask < TaskLib
     # Name of the package (from the GEM Spec).
     attr_reader :name
 
@@ -189,7 +182,7 @@ module Rake
     end
   end
 
-  class GemPackageTask < SimplePackageTask
+  class GemPackageTask < PackageTask
     def initialize(gem)
       init(gem)
       yield self if block_given?
