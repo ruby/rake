@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'test/unit'
-require 'rake/gempackagetask'
+require 'rake/packagetask'
 
 class TestPackageTask < Test::Unit::TestCase
   def test_create
@@ -57,6 +57,7 @@ end
 
 begin
   require 'rubygems'
+  require 'rake/gempackagetask'
 rescue Exception
   puts "WARNING: RubyGems not installed"
 end
