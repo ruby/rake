@@ -1,6 +1,5 @@
 # Rakefile for rake        -*- ruby -*-
 
-require 'build/rubyapp'
 require 'rake/testtask'
 require 'rake/packagetask'
 require 'rake/rdoctask'
@@ -15,9 +14,6 @@ end
 
 desc "Default Task"
 task :default => :test
-
-builder = AppBuilder.new('rake')
-builder.revision_command "ruby -Ilib ./bin/rake --version"
 
 Rake::RDocTask.new { |rdoc|
   rdoc.rdoc_dir = 'html'
