@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION='0.2.9'
+RAKEVERSION='0.2.10'
 
 require 'rbconfig'
 require 'ftools'
@@ -546,19 +546,21 @@ module Rake
     # string (without glob characters) then any equal file names are
     # excluded.
     #
-    # Note that glob patterns can only exclude a file if that file is
-    # found in the file system (otherwise the glob pattern will not
-    # expand to a matching name).
+    # Note that glob patterns are first expanded against the
+    # filesystem, and the resulting file names are used to exclude
+    # elements of the file list.  Thi implies that a glob pattern can
+    # only exclude a file if that file is found in the file system
+    # (otherwise the glob pattern will not expand to a matching name).
     #
     # Examples:
-    #   FileList['a.c', 'b.c'].reject("a.c") => ['b.c']
-    #   FileList['a.c', 'b.c'].reject(/^a/)  => ['b.c']
+    #   FileList['a.c', 'b.c'].exclude("a.c") => ['b.c']
+    #   FileList['a.c', 'b.c'].exclude(/^a/)  => ['b.c']
     #
-    # If "a.c" is a local file, then ...
-    #   FileList['a.c', 'b.c'].reject("a.*") => ['b.c']
+    # If "a.c" is a file, then ...
+    #   FileList['a.c', 'b.c'].exclude("a.*") => ['b.c']
     #
-    # If "a.c" is not a local file, then ...
-    #   FileList['a.c', 'b.c'].reject("a.*") => ['a.c', 'b.c']
+    # If "a.c" is not a file, then ...
+    #   FileList['a.c', 'b.c'].exclude("a.*") => ['a.c', 'b.c']
     #
     def exclude(*patterns)
       patterns.each do |pat|
@@ -622,7 +624,7 @@ module Rake
     private :add_matching
 
     class << self
-      # Create a new file list including the files listed. Similar to
+      # Create a new file list including the files listed. Similar to:
       #
       #   FileList.new(*args)
       def [](*args)
