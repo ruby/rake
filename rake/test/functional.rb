@@ -11,6 +11,19 @@ end
 require 'test/unit'
 require 'fileutils'
 
+# Version 2.1.9 of session has a bug where the @debug instance
+# variable is not initialized, causing warning messages.  This snippet
+# of code fixes that problem.
+module Session
+  class AbstractSession
+    alias old_initialize initialize
+    def initialize(*args)
+      @debug = nil
+      old_initialize(*args)
+    end
+  end
+end
+
 class FunctionalTest < Test::Unit::TestCase
   def setup
     @rake_path = File.expand_path("bin/rake")
