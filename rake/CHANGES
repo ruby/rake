@@ -1,5 +1,8 @@
 = Rake Changelog
 
+== Version next
+* Upgraded comments in TestTask.
+
 == Version 0.4.4
 * Fixed initialization problem with @comment.
 * Now using multi -r technique in TestTask.  Switch Rakefile back to
