@@ -39,9 +39,13 @@ from its distribution directory.
 == Roadmap
 
 * If you want to see how to invoke rake to build your projects, read on.
-* If you want to see the format of a Rakefile, see doc/rakefile.rdoc.
-* If you want to see the original announcement of rake, see doc/rational.rdoc.
-* If you want to see a glossary of terms, see doc/glossary.rdoc.
+* If you want to see the format of a Rakefile, see
+  doc/rakefile.rdoc[http://rake.rubyforge.org/files/doc/rakefile_rdoc.html].
+* If you want to see the original announcement of rake, see
+  doc/rational.rdoc[http://rake.rubyforge.org/files/doc/rational_rdoc.html].
+* If you want to see a glossary of terms, see
+  doc/glossary.rdoc[http://rake.rubyforge.org/files/doc/glossary_rdoc.html].
+
 
 == Simple Example
 
@@ -156,7 +160,8 @@ Options are:
 
 = Rakefile Format
 
-See doc/rakefile.rdoc for details on the Rakefile format.
+See doc/rakefile.rdoc[http://rake.rubyforge.org/files/doc/rakefile_rdoc.html]
+for details on the Rakefile format.
 
 ---
 
