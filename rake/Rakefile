@@ -1,13 +1,18 @@
 # Rakefile for rake        -*- ruby -*-
 
 require 'build/rubyapp'
+require 'rake/testtask'
+require 'rake/packagetask'
+
+task :default => :test
 
 builder = AppBuilder.new('rake')
 builder.revision_command "ruby -Ilib ./bin/rake --version"
 
-builder.package_files << 'install.rb'
-builder.package_files.no_match(/\bCVS\b/, /~$/)
-builder.package_files.glob(
+
+pkg = Rake::PackageTask.new("rake", "0.2.7c")
+pkg.package_files << 'install.rb'
+pkg.package_files.add(
   '[A-Z]*',
   'bin/**/*', 
   'lib/**/*.rb', 
@@ -15,13 +20,21 @@ builder.package_files.glob(
   'doc/**/*',
   'build/rubyapp.rb',
   '*.blurb')
+pkg.package_files.reject! { |fn| fn =~ /\bCVS\b|~$/ }
+pkg.define
+
 
 builder.rdoc_files << ['README', 'LICENSE', 'TODO', 'CHANGES']
-builder.rdoc_files.glob('lib/**/*.rb', 'doc/**/*.rdoc', 'test/*.rb')
+#builder.rdoc_files.glob('lib/**/*.rb', 'doc/**/*.rdoc', 'test/*.rb')
 
 builder.clobber_files << %w(html pkg testdata)
 
 builder.create_tasks
+
+t = Rake::TestTask.new
+t.libs << "test"
+t.verbose = true
+t.define
 
 umlcoop_info = HostInfo.new(
   'umlcoop',
@@ -56,3 +69,9 @@ builder.web_publisher.add SshFilePublisher.new(
 directory 'testdata'
 task :test => ['testdata']
 
+ctest = Rake::TestTask.new(:contrib_test)
+ctest.pattern = 'test/contrib/test*.rb'
+ctest.verbose = true
+ctest.define
+
+task :testall => [:test, :contrib_test]
