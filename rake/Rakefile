@@ -1,6 +1,6 @@
 # Rakefile for rake        -*- ruby -*-
 
-# Copyright 2003 by Jim Weirich (jweirich@one.net)
+# Copyright 2003, 2004 by Jim Weirich (jim@weirichhouse.org)
 # All rights reserved.
 
 # This file is may be distributed under an MIT style license.  See
@@ -8,12 +8,12 @@
 
 begin
   require 'rubygems'
+  require 'rake/gempackagetask'
 rescue Exception
   nil
 end
 require 'rake/clean'
 require 'rake/testtask'
-require 'rake/gempackagetask'
 require 'rake/rdoctask'
 
 # Determine the current version of the software
