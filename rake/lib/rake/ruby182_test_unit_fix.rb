@@ -2,7 +2,7 @@ module Test
   module Unit
     module Collector
       class Dir
-	undef collect_file if defined? collect_file
+	undef collect_file
         def collect_file(name, suites, already_gathered)
 	  # loadpath = $:.dup
           dir = File.dirname(File.expand_path(name))
