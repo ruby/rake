@@ -42,7 +42,7 @@ class TestTestTask < Test::Unit::TestCase
     tt = Rake::TestTask.new do |t|
       t.pattern = '*.rb'
     end
-    assert_equal ['install.rb'], tt.test_file_list.to_a
+    assert_equal ['install.rb'], tt.file_list.to_a
   end
 
   def test_env_test
@@ -50,14 +50,14 @@ class TestTestTask < Test::Unit::TestCase
     tt = Rake::TestTask.new do |t|
       t.pattern = '*'
     end
-    assert_equal ["testfile.rb"], tt.test_file_list.to_a
+    assert_equal ["testfile.rb"], tt.file_list.to_a
   end
 
   def test_test_files
     tt = Rake::TestTask.new do |t|
       t.test_files = FileList['a.rb', 'b.rb']
     end
-    assert_equal ["a.rb", 'b.rb'], tt.test_file_list.to_a
+    assert_equal ["a.rb", 'b.rb'], tt.file_list.to_a
   end
 
   def test_both_pattern_and_test_files
@@ -65,7 +65,7 @@ class TestTestTask < Test::Unit::TestCase
       t.test_files = FileList['a.rb', 'b.rb']
       t.pattern = '*.rb'
     end
-    assert_equal ['a.rb', 'b.rb', 'install.rb'], tt.test_file_list.to_a
+    assert_equal ['a.rb', 'b.rb', 'install.rb'], tt.file_list.to_a
   end
 
 end
