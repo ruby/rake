@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION='0.2.7c'
+RAKEVERSION='0.2.9'
 
 require 'rbconfig'
 require 'ftools'
@@ -338,7 +338,7 @@ module RakeFileUtils
   
   $fileutils_output  = $stderr
   $fileutils_label   = ''
-  $fileutils_verbose = false
+  $fileutils_verbose = true
   $fileutils_nowrite = false
   
   FileUtils::OPT_TABLE.each do |name, opts|
@@ -378,6 +378,14 @@ module RakeFileUtils
     oldvalue
   end
 
+  def when_writing(msg=nil)
+    if $fileutils_nowrite
+      puts "DRYRUN: #{msg}" if msg
+    else
+      yield
+    end
+  end
+
   def fu_merge_option(args, defaults)
     if Hash === args.last
       defaults.update(args.last)
@@ -394,6 +402,72 @@ end
 
 include RakeFileUtils
 
+module Rake
+  class FileList < Array
+    def initialize(*patterns)
+      patterns.each { |pattern| add(pattern) }
+    end
+
+    def add(*filenames)
+      filenames.each do |fn|
+	case fn
+	when Array
+	  fn.each { |f| self.add(f) }
+	when %r{[*?]}
+	  add_matching(fn)
+	else
+	  self << fn
+	end
+      end
+      self
+    end
+
+    def add_matching(*patterns)
+      patterns.each do |pattern|
+	Dir[pattern].each { |fn| self << fn } if pattern
+      end
+    end
+    private :add_matching
+
+    def exclude(pat)
+      reject { |fn| fn =~ pat }
+    end
+
+    def exclude!(pat)
+      reject! { |fn| fn =~ pat }
+    end
+
+    def sub(pat, rep)
+      collect { |fn| fn.sub(pat,rep) }
+    end
+
+    def gsub(pat, rep)
+      collect { |fn| fn.gsub(pat,rep) }
+    end
+
+    def sub!(pat, rep)
+      each_with_index { |fn, i| self[i] = fn.sub(pat,rep) }
+    end
+
+    def gsub!(pat, rep)
+      each_with_index { |fn, i| self[i] = fn.gsub(pat,rep) }
+    end
+
+    def to_s
+      self.join(' ')
+    end
+
+    class << self
+      def [](*args)
+	new(*args)
+      end
+    end
+
+  end
+end
+
+# Alias FileList to be available at the top level.
+FileList = Rake::FileList
 
 ######################################################################
 # Rake main application object.  When invoking +rake+ from the command
@@ -451,7 +525,7 @@ class RakeApp
 
   # Display the program usage line.
   def usage
-      puts "rake [-f rakefile] {options} targets..."
+    puts "rake [-f rakefile] {options} targets..."
   end
 
   # Display the rake command line help.
@@ -539,7 +613,6 @@ class RakeApp
   
   # Read and handle the command line options.
   def handle_options
-    $verbose = true
     opts = GetoptLong.new(*command_line_options)
     opts.each { |opt, value| do_option(opt, value) }
   end
