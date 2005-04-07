@@ -99,6 +99,15 @@ class FunctionalTest < Test::Unit::TestCase
     assert_status
   end
 
+  def test_imports
+    FileUtils.rm_f "test/data/imports/deps"
+    Dir.chdir("test/data/imports") do rake end
+    assert File.exist?("test/data/imports/dynamic_deps"),
+      "'dynamic_deps' file should exist"
+    assert_match(/^FIRST$\s+^DYNAMIC$\s+^STATIC$\s+^OTHER$/, @out)
+    assert_status
+  end
+
   private
 
   def rake(*option_list)
