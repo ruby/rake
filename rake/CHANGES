@@ -1,5 +1,9 @@
 = Rake Changelog
 
+== Pre-Version 0.5.2
+
+* Added support for importing Rakefile and other dependencies.
+
 == Version 0.5.1
 
 * Make FileUtils methods private at the top level module to avoid

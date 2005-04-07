@@ -6,7 +6,6 @@ require 'rake/loaders/makefile'
 
 class TestMakefileLoader < Test::Unit::TestCase
   def test_create
-    RakeApp.new
     Task.clear
     loader = Rake::MakefileLoader.new
     loader.load("test/data/sample.mf")

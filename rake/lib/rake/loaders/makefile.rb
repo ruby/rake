@@ -35,8 +35,7 @@ module Rake
     end
   end
 
-  # Install the handler if the Rake application exists.
-  Rake.application &&
-    Rake.application.add_loader('mf', MakefileLoader.new)
+  # Install the handler
+  Rake.application.add_loader('mf', MakefileLoader.new)
 
 end
