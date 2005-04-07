@@ -87,6 +87,12 @@ end
 
 ######################################################################
 module Rake
+
+  class << self
+    # Current Rake Application
+    attr_accessor :application
+  end
+
   module Cloneable
     def clone
       sibling = self.class.new
@@ -203,7 +209,7 @@ class Task
     $last_comment = nil
   end
 
-  # Class Methods ----------------------------------------------------
+  # Rake Module Methods ----------------------------------------------
 
   class << self
 
@@ -424,6 +430,14 @@ def desc(comment)
   $last_comment = comment
 end
 
+# Import the partial Rakekfile +fn+.
+#
+# Example:
+#   import ".depend"
+#
+def import(fn)
+  Rake.application.add_import(fn)
+end
 
 ######################################################################
 # This a FileUtils extension that defines several additional commands
@@ -1016,6 +1030,17 @@ end
 FileList = Rake::FileList
 
 ######################################################################
+module Rake
+
+  # Default Rakefile loader used by +import+.
+  class DefaultLoader
+    def load(fn)
+      Kernel.load fn
+    end
+  end
+end
+
+######################################################################
 # Rake main application object.  When invoking +rake+ from the command
 # line, a RakeApp object is created and run.
 #
@@ -1056,7 +1081,12 @@ class RakeApp
   # Create a RakeApp object.
   def initialize
     @rakefile = nil
+    @pending_imports = []
+    @imported = []
     @nosearch = false
+    @loaders = {}
+    @default_loader = Rake::DefaultLoader.new
+    Rake.application = self
   end
 
   # True if one of the files in RAKEFILES is in the current directory.
@@ -1184,6 +1214,7 @@ class RakeApp
     puts "(in #{Dir.pwd})" unless $silent
     $rakefile = @rakefile
     load @rakefile
+    load_imports
   end
 
   # Collect the list of tasks on the command line.  If no tasks are
@@ -1200,6 +1231,30 @@ class RakeApp
     end
     tasks.push("default") if tasks.size == 0
     tasks
+  end
+
+  # Add a file to the list of files to be imported.
+  def add_import(fn)
+    @pending_imports << fn
+  end
+
+  # Load the pending list of imported files.
+  def load_imports
+    while fn = @pending_imports.shift
+      next if @imported.member?(fn)
+      Task[fn].invoke if Task.task_defined?(fn)
+      ext = File.extname(fn)
+      loader = @loaders[ext] || @default_loader
+      loader.load(fn)
+      @imported << fn
+    end
+  end
+
+  # Add a loader to handle imported files ending in the extension
+  # +ext+.
+  def add_loader(ext, loader)
+    ext = ".#{ext}" unless ext =~ /^\./
+    @loaders[ext] = loader
   end
 
   # Run the +rake+ application.
