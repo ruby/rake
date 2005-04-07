@@ -49,6 +49,11 @@ task :default => :alltests
 
 # Test Tasks ---------------------------------------------------------
 
+task :a => :alltests
+task :f => :funtests
+task :u => :unittests
+task :c => :contribtests
+
 Rake::TestTask.new(:alltests) do |t|
   t.test_files = FileList[
     'test/test*.rb',
