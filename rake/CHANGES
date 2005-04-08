@@ -3,6 +3,8 @@
 == Pre-Version 0.5.2
 
 * Added support for importing Rakefile and other dependencies.
+* Fixed bug so that now rules can chain off of existing tasks as well
+  as existing files.
 
 == Version 0.5.1
 

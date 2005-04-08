@@ -303,7 +303,7 @@ class Task
           else
             fail "Don't know how to handle rule dependent: #{ext.inspect}"
           end
-          if File.exist?(source) || TASKS.has_key?(source)
+          if File.exist?(source) || Task.task_defined?(source)
             task = FileTask.define_task({task_name => [source]}, &block)
             task.source = source
             return task
