@@ -100,11 +100,21 @@ class FunctionalTest < Test::Unit::TestCase
   end
 
   def test_imports
-    FileUtils.rm_f "test/data/imports/deps"
+    FileUtils.rm_f "test/data/imports/dynamic_deps"
     Dir.chdir("test/data/imports") do rake end
     assert File.exist?("test/data/imports/dynamic_deps"),
       "'dynamic_deps' file should exist"
     assert_match(/^FIRST$\s+^DYNAMIC$\s+^STATIC$\s+^OTHER$/, @out)
+    assert_status
+  end
+
+  def test_rules_chaining_to_file_task
+    %w(play.scpt play.app).each do |fn|
+      FileUtils.rm_f File.join("test/data/chains", fn)
+    end
+    Dir.chdir("test/data/chains") do rake end
+    assert File.exist?("test/data/chains/play.app"),
+      "'play.app' file should exist"
     assert_status
   end
 
