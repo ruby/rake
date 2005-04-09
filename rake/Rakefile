@@ -61,25 +61,26 @@ Rake::TestTask.new(:alltests) do |t|
     'test/contrib/test*.rb',
     'test/fun*.rb'
   ]
-  t.warning = true if t.respond_to? :warning
-  t.verbose = true
+  t.warning = true
+  t.verbose = false
 end
 
 Rake::TestTask.new(:unittests) do |t|
   t.test_files = FileList['test/test*.rb']
-  t.warning = true if t.respond_to? :warning
-  t.verbose = true
+  t.warning = true
+  t.verbose = false
 end
 
 Rake::TestTask.new(:funtests) do |t|
-  t.pattern = 'test/fun*.rb'
-  t.warning = true if t.respond_to? :warning
+  t.test_files = FileList['test/fun*.rb']
+  t.warning = true
+  t.warning = true
 end
 
 Rake::TestTask.new(:contribtests) do |t|
-  t.pattern = 'test/contrib/test*.rb'
-  t.verbose = true
-  t.warning = true if t.respond_to? :warning
+  t.test_files = FileList['test/contrib/test*.rb']
+  t.verbose = false
+  t.warning = true
 end
 
 directory 'testdata'
