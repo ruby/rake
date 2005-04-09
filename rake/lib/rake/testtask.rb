@@ -63,7 +63,6 @@ module Rake
     # * :rake -- Rake provided test loading script (default).
     # * :testrb -- Ruby provided test loading script.
     # * :direct -- Load tests using command line loader.
-    #
     # 
     attr_accessor :loader
 
@@ -107,10 +106,10 @@ module Rake
 	    when :rake
 	      rake_loader
 	    end
+	  ruby "-I#{lib_path} #{warning_flag}#{run_code} " +
+	    file_list.join(' ') +
+	    " #{option_list}"
 	end
-	ruby "-I#{lib_path} #{warning_flag}#{run_code} " +
-	  file_list.join(' ') +
-	  " #{option_list}"
       end
       self
     end
