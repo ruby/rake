@@ -163,6 +163,39 @@ The following rule might be used for Java files ...
 <b>NOTE:</b> +java_compile+ is a hypothetical method that invokes the
 java compiler.
 
+== Importing Dependencies
+
+Any ruby file (including other rakefiles) can be included with a
+standard Ruby +require+ command.  The rules and declarations in the
+required file are just added to the definitions already accumulated.
+
+Because the files are loaded _before_ the rake targets are evaluated,
+the loaded files must be "ready to go" when the rake command is
+invoked.  This make generated dependency files difficult to use.  By
+the time rake gets around to updating the dependencies file, it is too
+late to load it.
+
+The +import+ command addresses this by specifying a file to be loaded
+_after_ the main rakefile is loaded, but _before_ any targets on the
+command line are specified.  In addition, if the file name matches an
+explicit task, that task is invoked before loading the file.  This
+allows dependency files to be generated and used in a single rake
+command invocation.
+
+=== Example:
+
+  require 'rake/loaders/makefile'
+
+  file ".depends.mf" => [SRC_LIST] do |t|
+    sh "makedepend -f- -- #{CFLAGS} -- #{t.prerequisites} > #{t.name}"
+  end
+
+  import ".depends.mf"
+
+If ".depends" does not exist, or is out of date w.r.t. the source
+files, a new ".depends" file is generated using +makedepend+ before
+loading.
+
 == Comments
 
 Standard Ruby comments (beginning with "#") can be used anywhere it is
@@ -170,7 +203,7 @@ legal in Ruby source code, including comments for tasks and rules.
 However, if you wish a task to be described using the "-T" switch,
 then you need to use the +desc+ command to describe the task.
 
-Example:
+=== Example:
 
   desc "Create a distribution package"
   task :package => [ ... ] do ... end
