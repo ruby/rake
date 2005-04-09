@@ -479,8 +479,10 @@ module FileUtils
       options = {}
     end
     unless block_given?
+      show_command = cmd.join(" ")
+      show_command = show_command[0,42] + "..." if show_command.length > 45
       block = lambda { |ok, status|
-        ok or fail "Command failed with status (#{status.exitstatus}): [#{cmd.join(" ")}]"
+        ok or fail "Command failed with status (#{status.exitstatus}): [#{show_command}]"
       }
     end
     fu_check_options options, :noop, :verbose
