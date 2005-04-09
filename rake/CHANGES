@@ -1,13 +1,12 @@
 = Rake Changelog
 
-== Pre-Version 0.5.2
+== Version 0.5.3
 
 * Added support for importing Rakefile and other dependencies.
 * Fixed bug so that now rules can chain off of existing tasks as well
   as existing files.
-
-== Version 0.5.1
-
+* Fixed verbose flag bug in the testing task.  Shortened some failure
+  messages.
 * Make FileUtils methods private at the top level module to avoid
   accidental method leaking into other objects.
 * Added test loader option to test task.  "testrb" is no longer the
