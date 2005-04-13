@@ -106,8 +106,8 @@ module Rake
 	    when :rake
 	      rake_loader
 	    end
-	  ruby "-I#{lib_path} #{warning_flag}#{run_code} " +
-	    file_list.join(' ') +
+	  ruby "-I#{lib_path} #{warning_flag}\"#{run_code}\" " +
+	    file_list.collect { |fn| "\"#{fn}\"" }.join(' ') +
 	    " #{option_list}"
 	end
       end
