@@ -227,6 +227,7 @@ class TestFileList < Test::Unit::TestCase
   def test_ignore_special
     f = FileList['testdata/*']
     assert ! f.include?("testdata/CVS"), "Should not contain CVS"
+    assert ! f.include?("testdata/.svn"), "Should not contain .svn"
     assert ! f.include?("testdata/.dummy"), "Should not contain dot files"
     assert ! f.include?("testdata/x.bak"), "Should not contain .bak files"
     assert ! f.include?("testdata/x~"), "Should not contain ~ files"
@@ -234,11 +235,12 @@ class TestFileList < Test::Unit::TestCase
   end
 
   def test_clear_ignore_patterns
-    f = FileList['testdata/*']
+    f = FileList['testdata/*', 'testdata/.svn']
     f.clear_exclude
     assert f.include?("testdata/abc.c")
     assert f.include?("testdata/xyz.c")
     assert f.include?("testdata/CVS")
+    assert f.include?("testdata/.svn")
     assert f.include?("testdata/x.bak")
     assert f.include?("testdata/x~")
   end
@@ -247,6 +249,8 @@ class TestFileList < Test::Unit::TestCase
     fl = FileList.new
     assert fl.exclude?("x/CVS/y")
     assert fl.exclude?("x\\CVS\\y")
+    assert fl.exclude?("x/.svn/y")
+    assert fl.exclude?("x\\.svn\\y")
     assert fl.exclude?("x/core")
     assert fl.exclude?("x\\core")
   end
@@ -256,6 +260,8 @@ class TestFileList < Test::Unit::TestCase
     fl.exclude(/~\d+$/)
     assert fl.exclude?("x/CVS/y")
     assert fl.exclude?("x\\CVS\\y")
+    assert fl.exclude?("x/.svn/y")
+    assert fl.exclude?("x\\.svn\\y")
     assert fl.exclude?("x/core")
     assert fl.exclude?("x\\core")
     assert fl.exclude?("x/abc~1")
@@ -427,6 +433,7 @@ class TestFileList < Test::Unit::TestCase
     verbose(false) do
       mkdir "testdata" unless File.exist? "testdata"
       mkdir "testdata/CVS" rescue nil
+      mkdir "testdata/.svn" rescue nil
       touch "testdata/.dummy"
       touch "testdata/x.bak"
       touch "testdata/x~"
