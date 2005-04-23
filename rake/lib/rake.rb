@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.5.3.1'
+RAKEVERSION = '0.5.3.2'
 
 require 'rbconfig'
 require 'ftools'
@@ -651,13 +651,8 @@ end
 # module, but mark them private so that they don't unintentionally
 # define methods on other objects.
 
-file_utils_methods = (FileUtils.methods - Object.methods)
 include RakeFileUtils
-
-file_utils_methods.each do |name|
-  private name.to_sym
-end
-file_utils_methods = nil
+private(*FileUtils.instance_methods(false))
 
 ######################################################################
 module Rake
@@ -994,6 +989,7 @@ module Rake
 
     DEFAULT_IGNORE_PATTERNS = [
       /(^|[\/\\])CVS([\/\\]|$)/,
+      /(^|[\/\\])\.svn([\/\\]|$)/,
       /\.bak$/,
       /~$/,
       /(^|[\/\\])core$/
@@ -1016,6 +1012,7 @@ module Rake
       # Set the ignore patterns back to the default value.  The
       # default patterns will ignore files 
       # * containing "CVS" in the file path
+      # * containing ".svn" in the file path
       # * ending with ".bak"
       # * ending with "~"
       # * named "core"
