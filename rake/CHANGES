@@ -1,5 +1,10 @@
 = Rake Changelog
 
+== PreVersion 0.5.4
+
+* Added double quotes to the test runner.
+* Added .svn to default ignore list.
+
 == Version 0.5.3
 
 * Added support for importing Rakefile and other dependencies.
