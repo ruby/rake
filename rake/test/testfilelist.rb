@@ -36,6 +36,23 @@ class TestFileList < Test::Unit::TestCase
       fl.sort
   end
 
+  def test_create_with_brackets_and_filelist
+    fl = FileList[FileList["testdata/*.c", "x"]]
+    assert_equal ["testdata/abc.c", "testdata/x.c", "testdata/xyz.c", "x"].sort,
+      fl.sort
+  end
+
+  def test_include_with_another_array
+    fl = FileList.new.include(["x", "y", "z"])
+    assert_equal ["x", "y", "z"].sort, fl.sort
+  end
+
+  def test_include_with_another_filelist
+    fl = FileList.new.include(FileList["testdata/*.c", "x"])
+    assert_equal ["testdata/abc.c", "testdata/x.c", "testdata/xyz.c", "x"].sort,
+      fl.sort
+  end
+
   def test_append
     fl = FileList.new
     fl << "a.rb" << "b.rb"
