@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.5.3.2'
+RAKEVERSION = '0.5.3.3'
 
 require 'rbconfig'
 require 'ftools'
@@ -784,7 +784,13 @@ module Rake
     #
     def include(*filenames)
       # TODO: check for pending
-      filenames.each do |fn| @pending_add << fn end
+      filenames.each do |fn|
+	if fn.respond_to? :to_ary
+	  include(*fn.to_ary)
+	else
+	  @pending_add << fn
+	end
+      end
       @pending = true
       self
     end
