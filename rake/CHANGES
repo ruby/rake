@@ -4,6 +4,7 @@
 
 * Added double quotes to the test runner.
 * Added .svn to default ignore list.
+* Updated FileList#include to support nested arrays and filelists.
 
 == Version 0.5.3
 
