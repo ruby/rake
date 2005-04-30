@@ -1,6 +1,6 @@
 = Rake Changelog
 
-== PreVersion 0.5.4
+== Version 0.5.4
 
 * Added double quotes to the test runner.
 * Added .svn to default ignore list.
