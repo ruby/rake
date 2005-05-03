@@ -16,7 +16,7 @@ module FileCreation
     dirname = File.dirname(name)
     FileUtils.mkdir_p(dirname) unless File.exist?(dirname)
     open(name, "w") {|f| f.puts "HI" } unless File.exist?(name)
-    File.new(name).mtime
+    File.stat(name).mtime
   end
 
   def delete_file(name)
