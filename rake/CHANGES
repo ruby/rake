@@ -1,5 +1,12 @@
 = Rake Changelog
 
+== PreVersion 0.5.5
+
+* Fixed file creation bug in the unit tests (caused infinite loop on
+  windows).
+* Fixed bug where session based functional tests were run under
+  windows.
+
 == Version 0.5.4
 
 * Added double quotes to the test runner.
