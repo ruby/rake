@@ -79,7 +79,7 @@ class TestFileList < Test::Unit::TestCase
   def test_match
     fl = FileList.new
     fl.include('test/test*.rb')
-    assert fl.include?("test/testfilelist.rb")
+    assert fl.include?("test/test_filelist.rb")
     assert fl.size > 3
     fl.each { |fn| assert_match(/\.rb$/, fn) }
   end
@@ -90,7 +90,7 @@ class TestFileList < Test::Unit::TestCase
     fl.include("test/*.rb")
     assert_equal "a.java", fl[0]
     assert fl.size > 2
-    assert fl.include?("test/testfilelist.rb")
+    assert fl.include?("test/test_filelist.rb")
   end
 
   def test_multiple_patterns
