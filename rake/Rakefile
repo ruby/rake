@@ -54,6 +54,7 @@ task :a => :alltests
 task :f => :funtests
 task :u => :unittests
 task :c => :contribtests
+task :test => :unittests
 
 Rake::TestTask.new(:alltests) do |t|
   t.test_files = FileList[
@@ -62,7 +63,7 @@ Rake::TestTask.new(:alltests) do |t|
     'test/fun*.rb'
   ]
   t.warning = true
-  t.verbose = false
+  t.verbose = true
 end
 
 Rake::TestTask.new(:unittests) do |t|
@@ -128,6 +129,9 @@ PKG_FILES = FileList[
   'bin/**/*', 
   'lib/**/*.rb', 
   'test/**/*.rb',
+  'test/**/*.rf',
+  'test/**/*.mf',
+  'test/**/Rakefile',
   'doc/**/*'
 ]
 PKG_FILES.exclude('doc/example/*.o')
