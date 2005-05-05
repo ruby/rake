@@ -8,16 +8,24 @@ require 'fileutils'
 class TestFileUtils < Test::Unit::TestCase
   include FileCreation
 
+  def setup
+    File.chmod(0750,"test/shellcommand.rb")
+  end
+  
+  def teardown
+    FileUtils.rm_rf("testdata")
+  end
+  
   def test_rm_one_file
     create_file("testdata/a")
-    FileUtils.rm_r "testdata/a"
+    FileUtils.rm_rf "testdata/a"
     assert ! File.exist?("testdata/a")
   end
 
   def test_rm_two_files
     create_file("testdata/a")
     create_file("testdata/b")
-    FileUtils.rm_r ["testdata/a", "testdata/b"]
+    FileUtils.rm_rf ["testdata/a", "testdata/b"]
     assert ! File.exist?("testdata/a")
     assert ! File.exist?("testdata/b")
   end

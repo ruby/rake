@@ -12,6 +12,7 @@ class TestFileList < Test::Unit::TestCase
 
   def teardown
     FileList.select_default_ignore_patterns
+    FileUtils.rm_rf("testdata")
   end
 
   def test_create

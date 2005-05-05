@@ -9,6 +9,10 @@ class TestTestTask < Test::Unit::TestCase
     ENV['TEST'] = nil
   end
 
+  def teardown
+    FileUtils.rm_rf("testdata")
+  end
+
   def test_no_task
     assert ! Task.task_defined?(:test)
   end
