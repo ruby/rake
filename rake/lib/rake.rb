@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.5.4'
+RAKEVERSION = '0.5.4.2'
 
 require 'rbconfig'
 require 'ftools'
@@ -406,11 +406,10 @@ end
 #   directory "testdata/doc"
 #
 def directory(dir)
-  while dir != '.' && dir != '/'
-    file dir do |t|
+  Rake.each_dir_parent(dir) do |d|
+    file d do |t|
       mkdir_p t.name if ! File.exist?(t.name)
     end
-    dir = File.dirname(dir)
   end
 end
 
@@ -1033,6 +1032,21 @@ module Rake
       # Clear the ignore patterns.  
       def clear_ignore_patterns
         @exclude_patterns = [ /^$/ ]
+      end
+    end
+  end # FileList
+end
+
+module Rake
+  class << self
+
+    # Yield each file or directory component.
+    def each_dir_parent(dir)
+      old_length = nil
+      while dir != '.' && dir.length != old_length
+	yield(dir)
+	old_length = dir.length
+	dir = File.dirname(dir)
       end
     end
   end
