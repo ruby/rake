@@ -92,25 +92,35 @@ class FunctionalTest < Test::Unit::TestCase
   end
 
   def test_imports
+    open("test/data/imports/static_deps", "w") do |f|
+      f.puts 'puts "STATIC"'
+    end
     FileUtils.rm_f "test/data/imports/dynamic_deps"
     Dir.chdir("test/data/imports") do rake end
     assert File.exist?("test/data/imports/dynamic_deps"),
       "'dynamic_deps' file should exist"
     assert_match(/^FIRST$\s+^DYNAMIC$\s+^STATIC$\s+^OTHER$/, @out)
     assert_status
+    FileUtils.rm_f "test/data/imports/dynamic_deps"
+    FileUtils.rm_f "test/data/imports/static_deps"
   end
 
   def test_rules_chaining_to_file_task
-    %w(play.scpt play.app).each do |fn|
-      FileUtils.rm_f File.join("test/data/chains", fn)
-    end
+    remove_chaining_files
     Dir.chdir("test/data/chains") do rake end
     assert File.exist?("test/data/chains/play.app"),
       "'play.app' file should exist"
     assert_status
+    remove_chaining_files
   end
 
   private
+
+  def remove_chaining_files
+    %w(play.scpt play.app base).each do |fn|
+      FileUtils.rm_f File.join("test/data/chains", fn)
+    end
+  end
 
   def rake(*option_list)
     options = option_list.join(' ')
