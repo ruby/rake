@@ -10,4 +10,6 @@ rule ".app" => ".scpt" do |t|
   cp t.source, t.name
 end
 
-file 'base'
+file 'base' do
+  touch 'base'
+end
