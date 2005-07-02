@@ -29,12 +29,13 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.5.4.2'
+RAKEVERSION = '0.5.4.3'
 
 require 'rbconfig'
 require 'ftools'
 require 'getoptlong'
 require 'fileutils'
+require 'singleton'
 
 $last_comment = nil
 $show_tasks = nil
@@ -368,6 +369,24 @@ class FileTask < Task
 end
 
 ######################################################################
+# A FileCreationTask is a file task that when used as a dependency
+# will be needed if and only if the file has not been created.  Once
+# created, it is not re-triggered if any of its dependencies are
+# newer, nor does trigger any rebuilds of tasks that depend on it
+# whenever it is updated.
+class FileCreationTask < FileTask
+  # Is this file task needed?  Yes if it doesn't exist.
+  def needed?
+    ! File.exist?(name)
+  end
+
+  # Time stamp for file task.
+  def timestamp
+    Rake::EARLY
+  end
+end
+
+######################################################################
 # Task Definition Functions ...
 
 # Declare a basic task.
@@ -399,6 +418,10 @@ def file(args, &block)
   FileTask.define_task(args, &block)
 end
 
+def file_create(args, &block)
+  FileCreationTask.define_task(args, &block)
+end
+
 # Declare a set of files tasks to create the given directories on
 # demand.
 #
@@ -407,7 +430,7 @@ end
 #
 def directory(dir)
   Rake.each_dir_parent(dir) do |d|
-    file d do |t|
+    file_create d do |t|
       mkdir_p t.name if ! File.exist?(t.name)
     end
   end
@@ -1064,6 +1087,32 @@ module Rake
       Kernel.load fn
     end
   end
+
+  # EarlyTime is a fake timestamp that occurs _before_ any other time
+  # value.
+  class EarlyTime
+    include Comparable
+    include Singleton
+
+    def <=>(other)
+      -1
+    end
+  end
+
+  EARLY = EarlyTime.instance
+end
+
+######################################################################
+# Extensions to time to allow comparisons with an early time class.
+class Time
+  alias pre_early_time_compare :<=>
+  def <=>(other)
+    if Rake::EarlyTime === other
+      - other.<=>(self)
+    else
+      pre_early_time_compare(other)
+    end
+  end     
 end
 
 ######################################################################

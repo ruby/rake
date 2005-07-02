@@ -3,6 +3,9 @@
 require 'ftools'
 
 module FileCreation
+  OLDFILE = "testdata/old"
+  NEWFILE = "testdata/new"
+
   def create_timed_files(oldfile, newfile)
     return if File.exist?(oldfile) && File.exist?(newfile)
     old_time = create_file(oldfile)
@@ -12,10 +15,14 @@ module FileCreation
     end
   end
 
-  def create_file(name)
-    dirname = File.dirname(name)
+  def create_dir(dirname)
     FileUtils.mkdir_p(dirname) unless File.exist?(dirname)
-    open(name, "w") {|f| f.puts "HI" } unless File.exist?(name)
+    File.stat(dirname).mtime
+  end
+
+  def create_file(name)
+    create_dir(File.dirname(name))
+    FileUtils.touch(name) unless File.exist?(name)
     File.stat(name).mtime
   end
 

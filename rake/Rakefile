@@ -20,6 +20,8 @@ CLEAN.include('**/*.o')
 CLOBBER.include('doc/example/main', 'testdata')
 CLOBBER.include('test/data/**/temp_*')
 CLOBBER.include('test/data/chains/play.*')
+CLOBBER.include('test/data/file_creation_task/build')
+CLOBBER.include('test/data/file_creation_task/src')
 
 
 def announce(msg='')

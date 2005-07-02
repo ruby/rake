@@ -29,9 +29,6 @@ class TestFileTask < Test::Unit::TestCase
     File.delete(ftask.name) rescue nil
   end
 
-  OLDFILE = "testdata/old"
-  NEWFILE = "testdata/new"
-
   def test_file_times_new_depends_on_old
     create_timed_files(OLDFILE, NEWFILE)
 
@@ -97,9 +94,9 @@ class TestDirectoryTask < Test::Unit::TestCase
   def test_directory
     desc "DESC"
     directory "testdata/a/b/c"
-    assert_equal FileTask, Task["testdata"].class
-    assert_equal FileTask, Task["testdata/a"].class
-    assert_equal FileTask, Task["testdata/a/b/c"].class
+    assert_equal FileCreationTask, Task["testdata"].class
+    assert_equal FileCreationTask, Task["testdata/a"].class
+    assert_equal FileCreationTask, Task["testdata/a/b/c"].class
     assert_nil             Task["testdata"].comment
     assert_equal "DESC",   Task["testdata/a/b/c"].comment
     assert_nil             Task["testdata/a/b"].comment
@@ -115,9 +112,9 @@ class TestDirectoryTask < Test::Unit::TestCase
     FileUtils.mkdir_p("testdata")
     Dir.chdir("testdata") do
       directory 'c:/testdata/a/b/c'
-      assert_equal FileTask, Task['c:/testdata'].class
-      assert_equal FileTask, Task['c:/testdata/a'].class
-      assert_equal FileTask, Task['c:/testdata/a/b/c'].class
+      assert_equal FileCreationTask, Task['c:/testdata'].class
+      assert_equal FileCreationTask, Task['c:/testdata/a'].class
+      assert_equal FileCreationTask, Task['c:/testdata/a/b/c'].class
       assert_nil             Task['c:/testdata'].comment
       assert_equal "WIN32 DESC",   Task['c:/testdata/a/b/c'].comment
       assert_nil             Task['c:/testdata/a/b'].comment

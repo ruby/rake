@@ -22,6 +22,13 @@ class FunctionalTest < Test::Unit::TestCase
     lib_path = File.expand_path("lib")
     @ruby_options = "-I#{lib_path} -I."
     @verbose = ! ENV['VERBOSE'].nil?
+    if @verbose
+      puts
+      puts
+      puts "--------------------------------------------------------------------"
+      puts name
+      puts "--------------------------------------------------------------------"
+    end
   end
 
   def test_rake_default
@@ -112,6 +119,15 @@ class FunctionalTest < Test::Unit::TestCase
       "'play.app' file should exist"
     assert_status
     remove_chaining_files
+  end
+
+  def test_file_creation_task
+    Dir.chdir("test/data/file_creation_task") do
+      rake "prep"
+      rake "run"
+      rake "run"
+      assert(@err !~ /^cp src/, "Should not recopy data")
+    end
   end
 
   private
