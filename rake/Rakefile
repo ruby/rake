@@ -50,10 +50,10 @@ task :default => :alltests
 
 # Test Tasks ---------------------------------------------------------
 
-task :a => :alltests
-task :f => :funtests
-task :u => :unittests
-task :c => :contribtests
+task :ta => :alltests
+task :tf => :funtests
+task :tu => :unittests
+task :tc => :contribtests
 task :test => :unittests
 
 Rake::TestTask.new(:alltests) do |t|
