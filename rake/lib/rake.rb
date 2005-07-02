@@ -1096,11 +1096,7 @@ module Rake
     include Singleton
 
     def <=>(other)
-      if self.class === other
-	0
-      else
-	-1
-      end
+      -1
     end
   end
 
