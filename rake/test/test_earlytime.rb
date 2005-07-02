@@ -15,6 +15,11 @@ class TestEarlyTime < Test::Unit::TestCase
     assert Time.now != early
   end
 
+  def test_equality
+    early = Rake::EarlyTime.instance
+    assert_equal early, early, "two early times should be equal"
+  end
+
   def test_original_time_compare_is_not_messed_up
     t1 = Time.mktime(1920, 1, 1, 0, 0, 0)
     t2 = Time.now

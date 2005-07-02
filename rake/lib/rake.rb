@@ -380,7 +380,8 @@ class FileCreationTask < FileTask
     ! File.exist?(name)
   end
 
-  # Time stamp for file task.
+  # Time stamp for file creation task.  This time stamp is earlier
+  # than any other time stamp.
   def timestamp
     Rake::EARLY
   end
@@ -1095,7 +1096,11 @@ module Rake
     include Singleton
 
     def <=>(other)
-      -1
+      if self.class === other
+	0
+      else
+	-1
+      end
     end
   end
 
