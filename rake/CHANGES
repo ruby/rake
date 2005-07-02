@@ -6,6 +6,9 @@
   windows).
 * Fixed bug where session based functional tests were run under
   windows.
+* Fixed bug in directory tasks so that updating a directoy will not
+  retrigger file tasks depending on the directory (see
+  FileCreationTask and EarlyTime).
 
 == Version 0.5.4
 
