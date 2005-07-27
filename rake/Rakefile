@@ -190,6 +190,10 @@ else
     s.email = "jim@weirichhouse.org"
     s.homepage = "http://rake.rubyforge.org"
     s.rubyforge_project = "rake"
+    if ENV['CERT_DIR']
+      s.signing_key = File.join(ENV['CERT_DIR'], 'gem-private_key.pem')
+      s.cert_chain  = [File.join(ENV['CERT_DIR'], 'gem-public_cert.pem')]
+    end
   end
 
   Rake::GemPackageTask.new(spec) do |pkg|
