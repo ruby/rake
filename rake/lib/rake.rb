@@ -217,6 +217,26 @@ class Task
     $last_comment = nil
   end
 
+  # Return a string describing the internal state of a task.  Useful
+  # for debugging.
+  def investigation
+    result = "------------------------------\n"
+    result << "Investigating #{name}\n" 
+    result << "class: #{self.class}\n"
+    result <<  "task needed: #{needed?}\n"
+    result <<  "timestamp: #{timestamp}\n"
+    result << "pre-requisites: \n"
+    prereqs = @prerequisites.collect {|name| Task[name]}
+    prereqs.sort! {|a,b| a.timestamp <=> b.timestamp}
+    prereqs.each do |p|
+      result << "--#{p.name} (#{p.timestamp})\n"
+    end
+    latest_prereq = @prerequisites.collect{|n| Task[n].timestamp}.max
+    result <<  "latest-prerequisite time: #{latest_prereq}\n"
+    result << "................................\n\n"
+    return result
+  end
+
   # Rake Module Methods ----------------------------------------------
 
   class << self
@@ -474,7 +494,7 @@ end
 # to be added to the FileUtils utility functions.
 #
 module FileUtils
-  RUBY = Config::CONFIG['ruby_install_name']
+  RUBY = File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name'])
 
   OPT_TABLE['sh']  = %w(noop verbose)
   OPT_TABLE['ruby'] = %w(noop verbose)
@@ -985,6 +1005,29 @@ module Rake
     end
 
 
+    # Grep each of the files in the filelist using the given pattern.
+    # If a block is given, call the block on each matching line,
+    # passing the file name, line number, and the matching line of
+    # text.  If no block is given, a standard emac style
+    # file:linenumber:line message will be printed to standard out.
+    def egrep(pattern)
+      each do |fn|
+	open(fn) do |inf|
+	  count = 0
+	  inf.each do |line|
+	    count += 1
+	    if pattern.match(line)
+	      if block_given?
+		yield fn, count, line
+	      else
+		puts "#{fn}:#{count}:#{line}"
+	      end		
+	    end
+	  end
+	end
+      end
+    end
+
     # FileList version of partition.  Needed because the nested arrays
     # should be FileLists in this version.
     def partition(&block)	# :nodoc:
@@ -1097,6 +1140,10 @@ module Rake
 
     def <=>(other)
       -1
+    end
+
+    def to_s
+      "<EARLY TIME>"
     end
   end
 
