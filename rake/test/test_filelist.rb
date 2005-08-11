@@ -242,6 +242,20 @@ class TestFileList < Test::Unit::TestCase
       f2.sort
   end
 
+  def test_egrep
+    files = FileList['test/test*.rb']
+    found = false
+    the_line_number = __LINE__ + 1
+    files.egrep(/XYZZY/) do |fn, ln, line |
+      assert_equal 'test/test_filelist.rb', fn
+      assert_equal the_line_number, ln
+      assert_match(/files\.egrep/, line)
+      found = true
+    end
+    assert found, "should have foudn a matching line"
+  end
+
+
   def test_ignore_special
     f = FileList['testdata/*']
     assert ! f.include?("testdata/CVS"), "Should not contain CVS"
