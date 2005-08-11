@@ -9,6 +9,9 @@
 * Fixed bug in directory tasks so that updating a directoy will not
   retrigger file tasks depending on the directory (see
   FileCreationTask and EarlyTime).
+* Added egrep to FileList
+* ruby command now runs same ruby version as rake.
+* Added investigation to task object.
 
 == Version 0.5.4
 
