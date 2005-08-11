@@ -368,4 +368,3 @@ task :tag => [:prerelease] do
     sh %{cvs tag #{reltag}}
   end
 end
-
