@@ -66,6 +66,9 @@ module Rake
     # 
     attr_accessor :loader
 
+    # Array of commandline options to pass to ruby when running test loader.
+    attr_accessor :ruby_opts
+
     # Explicitly define the list of test files to be included in a
     # test.  +list+ is expected to be an array of file names (a
     # FileList is acceptable).  If both +pattern+ and +test_files+ are
@@ -84,6 +87,7 @@ module Rake
       @verbose = false
       @warning = false
       @loader = :rake
+      @ruby_opts = []
       yield self if block_given?
       @pattern = 'test/test*.rb' if @pattern.nil? && @test_files.nil?
       define
@@ -92,7 +96,6 @@ module Rake
     # Create the tasks defined by this task lib.
     def define
       lib_path = @libs.join(File::PATH_SEPARATOR)
-      warning_flag = (@warning ? "-w " : "")
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
 	run_code = ''
@@ -106,7 +109,10 @@ module Rake
 	    when :rake
 	      rake_loader
 	    end
-	  ruby "-I#{lib_path} #{warning_flag}\"#{run_code}\" " +
+          @ruby_opts.unshift( "-I#{lib_path}" )
+	  @ruby_opts.unshift( "-w" ) if @warning
+	  ruby @ruby_opts.join(" ") +
+            " \"#{run_code}\" " +
 	    file_list.collect { |fn| "\"#{fn}\"" }.join(' ') +
 	    " #{option_list}"
 	end
