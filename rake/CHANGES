@@ -12,6 +12,9 @@
 * Added egrep to FileList
 * ruby command now runs same ruby version as rake.
 * Added investigation to task object.
+* Added ruby_opts to the test task to allow arbitrary ruby options to
+  be passed to the test script.
+* Fixed the test loader to ignore options.
 
 == Version 0.5.4
 
