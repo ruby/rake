@@ -182,30 +182,39 @@ h3, h4, h5, h6 {
 
 CSS
 
-BODY = <<HTML
+XHTML_PREAMBLE = %{<?xml version="1.0" encoding="%charset%"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+}
+
+HEADER = XHTML_PREAMBLE + <<ENDHEADER
 <html>
   <head>
     <title>%title%</title>
     <meta http-equiv="Content-Type" content="text/html; charset=%charset%" />
     <link rel="stylesheet" href="%style_url%" type="text/css" media="screen" />
 
-    <script type="text/javascript" language="JavaScript">
-      <!--
+    <script language="JavaScript" type="text/javascript">
+    // <![CDATA[
+
         function toggleSource( id )
         {
           var elem
           var link
 
-          if( document.all )
+          if( document.getElementById )
+          {
+            elem = document.getElementById( id )
+            link = document.getElementById( "l_" + id )
+          }
+          else if ( document.all )
           {
             elem = eval( "document.all." + id )
             link = eval( "document.all.l_" + id )
           }
           else
-          {
-            elem = document.getElementById( id )
-            link = document.getElementById( "l_" + id )
-          }
+            return false;
 
           if( elem.style.display == "block" )
           {
@@ -223,89 +232,12 @@ BODY = <<HTML
         {
           window.open( url, "SOURCE_CODE", "width=400,height=400,scrollbars=yes" )
         }
-      //-->
+      // ]]>
     </script>
   </head>
 
   <body>
-!INCLUDE! <!-- banner header -->
-
-  <div id="content">
-IF:diagram
-  <table cellpadding='0' cellspacing='0' border='0' width="100%"><tr><td align="center">
-    %diagram%
-  </td></tr></table>
-ENDIF:diagram
-
-IF:description
-  <div class="description">%description%</div>
-ENDIF:description
-
-IF:requires
-  <div class="sectiontitle">Required Files</div>
-  <ul>
-START:requires
-  <li>HREF:aref:name:</li>
-END:requires
-  </ul>
-ENDIF:requires
-
-IF:methods
-  <div class="sectiontitle">Methods</div>
-  <ul>
-START:methods
-  <li>HREF:aref:name:</li>
-END:methods
-  </ul>
-ENDIF:methods
-
-IF:constants
-  <div class="sectiontitle">Constants</div>
-  <table border='0' cellpadding='5'>
-START:constants
-  <tr valign='top'>
-    <td class="attr-name">%name%</td>
-    <td>=</td>
-    <td class="attr-value">%value%</td>
-  </tr>
-IF:desc
-  <tr valign='top'>
-    <td>&nbsp;</td>
-    <td colspan="2" class="attr-desc">%desc%</td>
-  </tr>
-ENDIF:desc
-END:constants
-  </table>
-ENDIF:constants
-
-IF:attributes
-  <div class="sectiontitle">Attributes</div>
-  <table border='0' cellpadding='5'>
-START:attributes
-  <tr valign='top'>
-    <td class='attr-rw'>
-IF:rw
-[%rw%]
-ENDIF:rw
-    </td>
-    <td class='attr-name'>%name%</td>
-    <td class='attr-desc'>%a_desc%</td>
-  </tr>
-END:attributes
-  </table>
-ENDIF:attributes
-
-IF:classlist
-  <div class="sectiontitle">Classes and Modules</div>
-  %classlist%
-ENDIF:classlist
-
-!INCLUDE! <!-- method descriptions -->
-
-    </div>
-  </body>
-</html>
-HTML
+ENDHEADER
 
 FILE_PAGE = <<HTML
 <table border='0' cellpadding='0' cellspacing='0' width="100%" class='banner'>
@@ -374,6 +306,44 @@ HTML
 ###################################################################
 
 METHOD_LIST = <<HTML
+  <div id="content">
+IF:diagram
+  <table cellpadding='0' cellspacing='0' border='0' width="100%"><tr><td align="center">
+    %diagram%
+  </td></tr></table>
+ENDIF:diagram
+
+IF:description
+  <div class="description">%description%</div>
+ENDIF:description
+
+IF:requires
+  <div class="sectiontitle">Required Files</div>
+  <ul>
+START:requires
+  <li>HREF:aref:name:</li>
+END:requires
+  </ul>
+ENDIF:requires
+
+IF:toc
+  <div class="sectiontitle">Contents</div>
+  <ul>
+START:toc
+  <li><a href="#%href%">%secname%</a></li>
+END:toc
+  </ul>
+ENDIF:toc
+
+IF:methods
+  <div class="sectiontitle">Methods</div>
+  <ul>
+START:methods
+  <li>HREF:aref:name:</li>
+END:methods
+  </ul>
+ENDIF:methods
+
 IF:includes
 <div class="sectiontitle">Included Modules</div>
 <ul>
@@ -382,6 +352,57 @@ START:includes
 END:includes
 </ul>
 ENDIF:includes
+
+START:sections
+IF:sectitle
+<div class="sectiontitle"><a nem="%secsequence%">%sectitle%</a></div>
+IF:seccomment
+<div class="description">
+%seccomment%
+</div>
+ENDIF:seccomment
+ENDIF:sectitle
+
+IF:classlist
+  <div class="sectiontitle">Classes and Modules</div>
+  %classlist%
+ENDIF:classlist
+
+IF:constants
+  <div class="sectiontitle">Constants</div>
+  <table border='0' cellpadding='5'>
+START:constants
+  <tr valign='top'>
+    <td class="attr-name">%name%</td>
+    <td>=</td>
+    <td class="attr-value">%value%</td>
+  </tr>
+IF:desc
+  <tr valign='top'>
+    <td>&nbsp;</td>
+    <td colspan="2" class="attr-desc">%desc%</td>
+  </tr>
+ENDIF:desc
+END:constants
+  </table>
+ENDIF:constants
+
+IF:attributes
+  <div class="sectiontitle">Attributes</div>
+  <table border='0' cellpadding='5'>
+START:attributes
+  <tr valign='top'>
+    <td class='attr-rw'>
+IF:rw
+[%rw%]
+ENDIF:rw
+    </td>
+    <td class='attr-name'>%name%</td>
+    <td class='attr-desc'>%a_desc%</td>
+  </tr>
+END:attributes
+  </table>
+ENDIF:attributes
 
 IF:method_list
 START:method_list
@@ -415,8 +436,8 @@ END:aka
 ENDIF:aka
 IF:sourcecode
 <div class="sourcecode">
-  <p class="source-link">[ <a href="javascript:toggleSource('%aref%-source')" id="l_%aref%-source">show source</a> ]</p>
-  <div id="%aref%-source" class="dyn-source">
+  <p class="source-link">[ <a href="javascript:toggleSource('%aref%_source')" id="l_%aref%_source">show source</a> ]</p>
+  <div id="%aref%_source" class="dyn-source">
 <pre>
 %sourcecode%
 </pre>
@@ -428,14 +449,28 @@ END:methods
 ENDIF:methods
 END:method_list
 ENDIF:method_list
+END:sections
+</div>
 HTML
 
-=begin
-=end
+FOOTER = <<ENDFOOTER
+  </body>
+</html>
+ENDFOOTER
+
+BODY = HEADER + <<ENDBODY
+  !INCLUDE! <!-- banner header -->
+
+  <div id="bodyContent">
+    #{METHOD_LIST}
+  </div>
+
+  #{FOOTER}
+ENDBODY
 
 ########################## Source code ##########################
 
-SRC_PAGE = <<HTML
+SRC_PAGE = XHTML_PREAMBLE + <<HTML
 <html>
 <head><title>%title%</title>
 <meta http-equiv="Content-Type" content="text/html; charset=%charset%">
@@ -467,7 +502,7 @@ FR_INDEX_BODY = <<HTML
 !INCLUDE!
 HTML
 
-FILE_INDEX = <<HTML
+FILE_INDEX = XHTML_PREAMBLE + <<HTML
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=%charset%">
@@ -494,6 +529,7 @@ FILE_INDEX = <<HTML
   a {
     color: #00F;
     text-decoration: none;
+    white-space: nowrap;
   }
   a:hover {
     color: #77F;
@@ -516,8 +552,8 @@ HTML
 CLASS_INDEX = FILE_INDEX
 METHOD_INDEX = FILE_INDEX
 
-INDEX = <<HTML
-<html>
+INDEX = XHTML_PREAMBLE + <<HTML
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <title>%title%</title>
   <meta http-equiv="Content-Type" content="text/html; charset=%charset%">
@@ -549,16 +585,7 @@ ENDIF:inline_source
 </html>
 HTML
 
-# and a blank page to use as a target
-BLANK = %{
-<html><body bgcolor="white"></body></html>
-}
-
-def write_extra_pages
-  template = TemplatePage.new(BLANK)
-  File.open("blank.html", "w") { |f| template.write_html_on(f, {}) }
+end
 end
 
-end
-end
 
