@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.5.4.5'
+RAKEVERSION = '0.5.4.6'
 
 require 'rbconfig'
 require 'ftools'
@@ -114,296 +114,298 @@ module Rake
   end
 end
 
-######################################################################
-# A Task is the basic unit of work in a Rakefile.  Tasks have
-# associated actions (possibly more than one) and a list of
-# prerequisites.  When invoked, a task will first ensure that all of
-# its prerequisites have an opportunity to run and then it will
-# execute its own actions.
-#
-# Tasks are not usually created directly using the new method, but
-# rather use the +file+ and +task+ convenience methods.
-#
-class Task
-  TASKS = Hash.new
-  RULES = Array.new
-
-  # List of prerequisites for a task.
-  attr_reader :prerequisites
-
-  # Comment for this task.
-  attr_accessor :comment
-
-  # Source dependency for rule synthesized tasks.  Nil if task was not
-  # sythesized from a rule.
-  attr_accessor :source
-
-  # Create a task named +task_name+ with no actions or prerequisites..
-  # use +enhance+ to add actions and prerequisites.
-  def initialize(task_name)
-    @name = task_name
-    @prerequisites = FileList[]
-    @actions = []
-    @already_invoked = false
-    @comment = nil
-  end
-
-  # Enhance a task with prerequisites or actions.  Returns self.
-  def enhance(deps=nil, &block)
-    @prerequisites |= deps if deps
-    @actions << block if block_given?
-    self
-  end
-
-  # Name of the task.
-  def name
-    @name.to_s
-  end
-
-  # Invoke the task if it is needed.  Prerequites are invoked first.
-  def invoke
-    if $trace
-      puts "** Invoke #{name} #{format_trace_flags}"
-    end
-    return if @already_invoked
-    @already_invoked = true
-    @prerequisites.each { |n| Task[n].invoke }
-    execute if needed?
-  end
-
-  # Format the trace flags for display.
-  def format_trace_flags
-    flags = []
-    flags << "first_time" unless @already_invoked
-    flags << "not_needed" unless needed?
-    flags.empty? ? "" : "(" + flags.join(", ") + ")"
-  end
-  private :format_trace_flags
-
-  # Execute the actions associated with this task.
-  def execute
-    if $dryrun
-      puts "** Execute (dry run) #{name}"
-      return
-    end
-    if $trace
-      puts "** Execute #{name}"
-    end
-    self.class.enhance_with_matching_rule(name) if @actions.empty?
-    @actions.each { |act| result = act.call(self) }
-  end
-
-  # Is this task needed?
-  def needed?
-    true
-  end
-
-  # Timestamp for this task.  Basic tasks return the current time for
-  # their time stamp.  Other tasks can be more sophisticated.
-  def timestamp
-    @prerequisites.collect { |p| Task[p].timestamp }.max || Time.now
-  end
-
-  # Add a comment to the task.  If a comment alread exists, separate
-  # the new comment with " / ".
-  def add_comment(comment)
-    return if ! $last_comment
-    if @comment 
-      @comment << " / "
-    else
-      @comment = ''
-    end
-    @comment << $last_comment
-    $last_comment = nil
-  end
-
-  # Return a string describing the internal state of a task.  Useful
-  # for debugging.
-  def investigation
-    result = "------------------------------\n"
-    result << "Investigating #{name}\n" 
-    result << "class: #{self.class}\n"
-    result <<  "task needed: #{needed?}\n"
-    result <<  "timestamp: #{timestamp}\n"
-    result << "pre-requisites: \n"
-    prereqs = @prerequisites.collect {|name| Task[name]}
-    prereqs.sort! {|a,b| a.timestamp <=> b.timestamp}
-    prereqs.each do |p|
-      result << "--#{p.name} (#{p.timestamp})\n"
-    end
-    latest_prereq = @prerequisites.collect{|n| Task[n].timestamp}.max
-    result <<  "latest-prerequisite time: #{latest_prereq}\n"
-    result << "................................\n\n"
-    return result
-  end
-
-  # Rake Module Methods ----------------------------------------------
-
-  class << self
-
-    # Clear the task list.  This cause rake to immediately forget all
-    # the tasks that have been assigned.  (Normally used in the unit
-    # tests.)
-    def clear
-      TASKS.clear
-      RULES.clear
-    end
-
-    # List of all defined tasks.
-    def tasks
-      TASKS.keys.sort.collect { |tn| Task[tn] }
-    end
-
-    # Return a task with the given name.  If the task is not currently
-    # known, try to synthesize one from the defined rules.  If no
-    # rules are found, but an existing file matches the task name,
-    # assume it is a file task with no dependencies or actions.
-    def [](task_name)
-      task_name = task_name.to_s
-      if task = TASKS[task_name]
-        return task
-      end
-      if task = enhance_with_matching_rule(task_name)
-        return task
-      end
-      if File.exist?(task_name)
-        return FileTask.define_task(task_name)
-      end
-      fail "Don't know how to build task '#{task_name}'"
-    end
-
-    # TRUE if the task name is already defined.
-    def task_defined?(task_name)
-      task_name = task_name.to_s
-      TASKS[task_name]
-    end
-
-    # Define a task given +args+ and an option block.  If a rule with
-    # the given name already exists, the prerequisites and actions are
-    # added to the existing task.  Returns the defined task.
-    def define_task(args, &block)
-      task_name, deps = resolve_args(args)
-      deps = [deps] if (Symbol === deps) || (String === deps)
-      deps = deps.collect {|d| d.to_s }
-      t = lookup(task_name)
-      t.add_comment($last_comment)
-      t.enhance(deps, &block)
-    end
-
-    # Define a rule for synthesizing tasks.  
-    def create_rule(args, &block)
-      pattern, deps = resolve_args(args)
-      fail "Too many dependents specified in rule #{pattern}: #{deps.inspect}" if deps.size > 1
-      pattern = Regexp.new(Regexp.quote(pattern) + '$') if String === pattern
-      RULES << [pattern, deps, block]
-    end
-
+module Rake
+  ######################################################################
+  # A Task is the basic unit of work in a Rakefile.  Tasks have
+  # associated actions (possibly more than one) and a list of
+  # prerequisites.  When invoked, a task will first ensure that all of
+  # its prerequisites have an opportunity to run and then it will
+  # execute its own actions.
+  #
+  # Tasks are not usually created directly using the new method, but
+  # rather use the +file+ and +task+ convenience methods.
+  #
+  class Task
+    TASKS = Hash.new
+    RULES = Array.new
     
-    # Lookup a task.  Return an existing task if found, otherwise
-    # create a task of the current type.
-    def lookup(task_name)
-      name = task_name.to_s
-      TASKS[name] ||= self.new(task_name)
-    end
-
-    # If a rule can be found that matches the task name, enhance the
-    # task with the prerequisites and actions from the rule.  Set the
-    # source attribute of the task appropriately for the rule.  Return
-    # the enhanced task or nil of no rule was found.
-    def enhance_with_matching_rule(task_name, level=0)
-      fail Rake::RuleRecursionOverflowError,
-        "Rule Recursion Too Deep" if level >= 16
-      RULES.each do |pattern, extensions, block|
-        if md = pattern.match(task_name)
-          ext = extensions.first
-          case ext
-          when String
-            source = task_name.sub(/\.[^.]*$/, ext)
-          when Proc
-            source = ext.call(task_name)
-          else
-            fail "Don't know how to handle rule dependent: #{ext.inspect}"
-          end
-          if File.exist?(source) || Task.task_defined?(source)
-            task = FileTask.define_task({task_name => [source]}, &block)
-            task.source = source
-            return task
-          elsif parent = enhance_with_matching_rule(source, level+1)
-            task = FileTask.define_task({task_name => [parent.name]}, &block)
-            task.source = parent.name
-            return task
-          end
-        end
-      end
-      nil
-    rescue Rake::RuleRecursionOverflowError => ex
-      ex.add_target(task_name)
-      fail ex
+    # List of prerequisites for a task.
+    attr_reader :prerequisites
+    
+    # Comment for this task.
+    attr_accessor :comment
+    
+    # Source dependency for rule synthesized tasks.  Nil if task was not
+    # sythesized from a rule.
+    attr_accessor :source
+    
+    # Create a task named +task_name+ with no actions or prerequisites..
+    # use +enhance+ to add actions and prerequisites.
+    def initialize(task_name)
+      @name = task_name
+      @prerequisites = FileList[]
+      @actions = []
+      @already_invoked = false
+      @comment = nil
     end
     
-    private 
-
-    # Resolve the arguments for a task/rule.
-    def resolve_args(args)
-      case args
-      when Hash
-        fail "Too Many Task Names: #{args.keys.join(' ')}" if args.size > 1
-        fail "No Task Name Given" if args.size < 1
-        task_name = args.keys[0]
-        deps = args[task_name]
-        deps = [deps] if (String===deps) || (Regexp===deps) || (Proc===deps)
+    # Enhance a task with prerequisites or actions.  Returns self.
+    def enhance(deps=nil, &block)
+      @prerequisites |= deps if deps
+      @actions << block if block_given?
+      self
+    end
+    
+    # Name of the task.
+    def name
+      @name.to_s
+    end
+    
+    # Invoke the task if it is needed.  Prerequites are invoked first.
+    def invoke
+      if $trace
+	puts "** Invoke #{name} #{format_trace_flags}"
+      end
+      return if @already_invoked
+      @already_invoked = true
+      @prerequisites.each { |n| Rake::Task[n].invoke }
+      execute if needed?
+    end
+    
+    # Format the trace flags for display.
+    def format_trace_flags
+      flags = []
+      flags << "first_time" unless @already_invoked
+      flags << "not_needed" unless needed?
+      flags.empty? ? "" : "(" + flags.join(", ") + ")"
+    end
+    private :format_trace_flags
+    
+    # Execute the actions associated with this task.
+    def execute
+      if $dryrun
+	puts "** Execute (dry run) #{name}"
+	return
+      end
+      if $trace
+	puts "** Execute #{name}"
+      end
+      self.class.enhance_with_matching_rule(name) if @actions.empty?
+      @actions.each { |act| result = act.call(self) }
+    end
+    
+    # Is this task needed?
+    def needed?
+      true
+    end
+    
+    # Timestamp for this task.  Basic tasks return the current time for
+    # their time stamp.  Other tasks can be more sophisticated.
+    def timestamp
+      @prerequisites.collect { |p| Rake::Task[p].timestamp }.max || Time.now
+    end
+    
+    # Add a comment to the task.  If a comment alread exists, separate
+    # the new comment with " / ".
+    def add_comment(comment)
+      return if ! $last_comment
+      if @comment 
+	@comment << " / "
       else
-        task_name = args
-        deps = []
+	@comment = ''
       end
-      [task_name, deps]
+      @comment << $last_comment
+      $last_comment = nil
+    end
+    
+    # Return a string describing the internal state of a task.  Useful
+    # for debugging.
+    def investigation
+      result = "------------------------------\n"
+      result << "Investigating #{name}\n" 
+      result << "class: #{self.class}\n"
+      result <<  "task needed: #{needed?}\n"
+      result <<  "timestamp: #{timestamp}\n"
+      result << "pre-requisites: \n"
+      prereqs = @prerequisites.collect {|name| Rake::Task[name]}
+      prereqs.sort! {|a,b| a.timestamp <=> b.timestamp}
+      prereqs.each do |p|
+	result << "--#{p.name} (#{p.timestamp})\n"
+      end
+      latest_prereq = @prerequisites.collect{|n| Rake::Task[n].timestamp}.max
+      result <<  "latest-prerequisite time: #{latest_prereq}\n"
+      result << "................................\n\n"
+      return result
+    end
+    
+    # Rake Module Methods ----------------------------------------------
+    
+    class << self
+      
+      # Clear the task list.  This cause rake to immediately forget all
+      # the tasks that have been assigned.  (Normally used in the unit
+      # tests.)
+      def clear
+	TASKS.clear
+	RULES.clear
+      end
+      
+      # List of all defined tasks.
+      def tasks
+	TASKS.keys.sort.collect { |tn| Rake::Task[tn] }
+      end
+      
+      # Return a task with the given name.  If the task is not currently
+      # known, try to synthesize one from the defined rules.  If no
+      # rules are found, but an existing file matches the task name,
+      # assume it is a file task with no dependencies or actions.
+      def [](task_name)
+	task_name = task_name.to_s
+	if task = TASKS[task_name]
+	  return task
+	end
+	if task = enhance_with_matching_rule(task_name)
+	  return task
+	end
+	if File.exist?(task_name)
+	  return Rake::FileTask.define_task(task_name)
+	end
+	fail "Don't know how to build task '#{task_name}'"
+      end
+      
+      # TRUE if the task name is already defined.
+      def task_defined?(task_name)
+	task_name = task_name.to_s
+	TASKS[task_name]
+      end
+      
+      # Define a task given +args+ and an option block.  If a rule with
+      # the given name already exists, the prerequisites and actions are
+      # added to the existing task.  Returns the defined task.
+      def define_task(args, &block)
+	task_name, deps = resolve_args(args)
+	deps = [deps] if (Symbol === deps) || (String === deps)
+	deps = deps.collect {|d| d.to_s }
+	t = lookup(task_name)
+	t.add_comment($last_comment)
+	t.enhance(deps, &block)
+      end
+      
+      # Define a rule for synthesizing tasks.  
+      def create_rule(args, &block)
+	pattern, deps = resolve_args(args)
+	fail "Too many dependents specified in rule #{pattern}: #{deps.inspect}" if deps.size > 1
+	pattern = Regexp.new(Regexp.quote(pattern) + '$') if String === pattern
+	RULES << [pattern, deps, block]
+      end
+      
+      
+      # Lookup a task.  Return an existing task if found, otherwise
+      # create a task of the current type.
+      def lookup(task_name)
+	name = task_name.to_s
+	TASKS[name] ||= self.new(task_name)
+      end
+      
+      # If a rule can be found that matches the task name, enhance the
+      # task with the prerequisites and actions from the rule.  Set the
+      # source attribute of the task appropriately for the rule.  Return
+      # the enhanced task or nil of no rule was found.
+      def enhance_with_matching_rule(task_name, level=0)
+	fail Rake::RuleRecursionOverflowError,
+	  "Rule Recursion Too Deep" if level >= 16
+	RULES.each do |pattern, extensions, block|
+	  if md = pattern.match(task_name)
+	    ext = extensions.first
+	    case ext
+	    when String
+	      source = task_name.sub(/\.[^.]*$/, ext)
+	    when Proc
+	      source = ext.call(task_name)
+	    else
+	      fail "Don't know how to handle rule dependent: #{ext.inspect}"
+	    end
+	    if File.exist?(source) || Rake::Task.task_defined?(source)
+	      task = FileTask.define_task({task_name => [source]}, &block)
+	      task.source = source
+	      return task
+	    elsif parent = enhance_with_matching_rule(source, level+1)
+	      task = FileTask.define_task({task_name => [parent.name]}, &block)
+	      task.source = parent.name
+	      return task
+	    end
+	  end
+	end
+	nil
+      rescue Rake::RuleRecursionOverflowError => ex
+	ex.add_target(task_name)
+	fail ex
+      end
+      
+      private 
+      
+      # Resolve the arguments for a task/rule.
+      def resolve_args(args)
+	case args
+	when Hash
+	  fail "Too Many Task Names: #{args.keys.join(' ')}" if args.size > 1
+	  fail "No Task Name Given" if args.size < 1
+	  task_name = args.keys[0]
+	  deps = args[task_name]
+	  deps = [deps] if (String===deps) || (Regexp===deps) || (Proc===deps)
+	else
+	  task_name = args
+	  deps = []
+	end
+	[task_name, deps]
+      end
     end
   end
-end
-
-
-######################################################################
-# A FileTask is a task that includes time based dependencies.  If any
-# of a FileTask's prerequisites have a timestamp that is later than
-# the file represented by this task, then the file must be rebuilt
-# (using the supplied actions).
-#
-class FileTask < Task
-
-  # Is this file task needed?  Yes if it doesn't exist, or if its time
-  # stamp is out of date.
-  def needed?
-    return true unless File.exist?(name)
-    latest_prereq = @prerequisites.collect{|n| Task[n].timestamp}.max
-    return false if latest_prereq.nil?
-    timestamp < latest_prereq
-  rescue Errno::ENOENT => ex # one of the prereqs does not exist
-    raise unless $dryrun or $trace
-    true
+  
+  
+  ######################################################################
+  # A FileTask is a task that includes time based dependencies.  If
+  # any of a FileTask's prerequisites have a timestamp that is later
+  # than the file represented by this task, then the file must be
+  # rebuilt (using the supplied actions).
+  #
+  class FileTask < Task
+    
+    # Is this file task needed?  Yes if it doesn't exist, or if its time
+    # stamp is out of date.
+    def needed?
+      return true unless File.exist?(name)
+      latest_prereq = @prerequisites.collect{|n| Rake::Task[n].timestamp}.max
+      return false if latest_prereq.nil?
+      timestamp < latest_prereq
+    rescue Errno::ENOENT => ex # one of the prereqs does not exist
+      raise unless $dryrun or $trace
+      true
+    end
+    
+    # Time stamp for file task.
+    def timestamp
+      File.mtime(name.to_s)
+    end
   end
-
-  # Time stamp for file task.
-  def timestamp
-    File.mtime(name.to_s)
-  end
-end
-
-######################################################################
-# A FileCreationTask is a file task that when used as a dependency
-# will be needed if and only if the file has not been created.  Once
-# created, it is not re-triggered if any of its dependencies are
-# newer, nor does trigger any rebuilds of tasks that depend on it
-# whenever it is updated.
-class FileCreationTask < FileTask
-  # Is this file task needed?  Yes if it doesn't exist.
-  def needed?
-    ! File.exist?(name)
-  end
-
-  # Time stamp for file creation task.  This time stamp is earlier
-  # than any other time stamp.
-  def timestamp
-    Rake::EARLY
+  
+  ######################################################################
+  # A FileCreationTask is a file task that when used as a dependency
+  # will be needed if and only if the file has not been created.  Once
+  # created, it is not re-triggered if any of its dependencies are
+  # newer, nor does trigger any rebuilds of tasks that depend on it
+  # whenever it is updated.
+  class FileCreationTask < FileTask
+    # Is this file task needed?  Yes if it doesn't exist.
+    def needed?
+      ! File.exist?(name)
+    end
+    
+    # Time stamp for file creation task.  This time stamp is earlier
+    # than any other time stamp.
+    def timestamp
+      Rake::EARLY
+    end
   end
 end
 
@@ -418,7 +420,7 @@ end
 #   end
 #
 def task(args, &block)
-  Task.define_task(args, &block)
+  Rake::Task.define_task(args, &block)
 end
 
 
@@ -436,11 +438,13 @@ end
 #  end
 #
 def file(args, &block)
-  FileTask.define_task(args, &block)
+  Rake::FileTask.define_task(args, &block)
 end
 
+# Declare a file creation task.
+# (Mainly used for the directory command).
 def file_create(args, &block)
-  FileCreationTask.define_task(args, &block)
+  Rake::FileCreationTask.define_task(args, &block)
 end
 
 # Declare a set of files tasks to create the given directories on
@@ -465,7 +469,7 @@ end
 #  end
 #
 def rule(args, &block)
-  Task.create_rule(args, &block)
+  Rake::Task.create_rule(args, &block)
 end
 
 # Describe the next rake task.
@@ -1199,6 +1203,8 @@ class RakeApp
       "Log message to standard output (default)."],
     ['--version',  '-V', GetoptLong::NO_ARGUMENT,
       "Display the program version."],
+    ['--classic-namespace', '-C', GetoptLong::NO_ARGUMENT,
+      "Put Task and FileTask in the top level namespace"],
   ]
 
   # Create a RakeApp object.
@@ -1248,12 +1254,12 @@ class RakeApp
 
   # Display the tasks and dependencies.
   def display_tasks_and_comments
-    width = Task.tasks.select { |t|
+    width = Rake::Task.tasks.select { |t|
       t.comment
     }.collect { |t|
       t.name.length
     }.max
-    Task.tasks.each do |t|
+    Rake::Task.tasks.each do |t|
       if t.comment
         printf "rake %-#{width}s  # %s\n", t.name, t.comment
       end
@@ -1262,7 +1268,7 @@ class RakeApp
 
   # Display the tasks and prerequisites
   def display_prerequisites
-    Task.tasks.each do |t|
+    Rake::Task.tasks.each do |t|
       puts "rake #{t.name}"
       t.prerequisites.each { |pre| puts "    #{pre}" }
     end
@@ -1314,6 +1320,8 @@ class RakeApp
     when '--version'
       puts "rake, version #{RAKEVERSION}"
       exit
+    when '--classic-namespace'
+      require 'rake/classic_namespace'
     else
       fail "Unknown option: #{opt}"
     end
@@ -1365,7 +1373,7 @@ class RakeApp
   def load_imports
     while fn = @pending_imports.shift
       next if @imported.member?(fn)
-      Task[fn].invoke if Task.task_defined?(fn)
+      Rake::Task[fn].invoke if Rake::Task.task_defined?(fn)
       ext = File.extname(fn)
       loader = @loaders[ext] || @default_loader
       loader.load(fn)
@@ -1391,7 +1399,7 @@ class RakeApp
       elsif $show_prereqs
         display_prerequisites
       else
-        tasks.each { |task_name| Task[task_name].invoke }
+        tasks.each { |task_name| Rake::Task[task_name].invoke }
       end
     rescue Exception => ex
       puts "rake aborted!"
