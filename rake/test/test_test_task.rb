@@ -4,6 +4,7 @@ require 'test/unit'
 require 'rake/testtask'
 
 class TestTestTask < Test::Unit::TestCase
+  include Rake
   def setup
     Task.clear
     ENV['TEST'] = nil

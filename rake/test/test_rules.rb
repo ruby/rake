@@ -7,6 +7,7 @@ require 'test/filecreation'
 
 ######################################################################
 class TestRules < Test::Unit::TestCase
+  include Rake
   include FileCreation
 
   SRCFILE  = "testdata/abc.c"

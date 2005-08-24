@@ -7,6 +7,8 @@ require 'test/filecreation'
 
 ######################################################################
 class TestTask < Test::Unit::TestCase
+  include Rake
+
   def setup
     Task.clear
   end

@@ -5,6 +5,8 @@ require 'rake'
 require 'rake/loaders/makefile'
 
 class TestMakefileLoader < Test::Unit::TestCase
+  include Rake
+
   def test_create
     Task.clear
     loader = Rake::MakefileLoader.new

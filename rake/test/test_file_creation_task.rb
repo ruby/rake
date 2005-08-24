@@ -7,6 +7,7 @@ require 'test/filecreation'
 
 ######################################################################
 class TestFileCreationTask < Test::Unit::TestCase
+  include Rake
   include FileCreation
 
   DUMMY_DIR = 'testdata/dummy_dir'

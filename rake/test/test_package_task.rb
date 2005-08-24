@@ -4,6 +4,8 @@ require 'test/unit'
 require 'rake/packagetask'
 
 class TestPackageTask < Test::Unit::TestCase
+  include Rake
+
   def test_create
     pkg = Rake::PackageTask.new("pkgr", "1.2.3") { |p|
       p.package_files << "install.rb"

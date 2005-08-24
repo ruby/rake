@@ -7,6 +7,7 @@ require 'test/filecreation'
 
 ######################################################################
 class TestDefinitions < Test::Unit::TestCase
+  include Rake
   EXISTINGFILE = "testdata/existing"
 
   def setup
