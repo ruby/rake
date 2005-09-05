@@ -4,5 +4,5 @@ rescue LoadError
   require 'rubygems'
   require_gem 'rake'
 end
-RakeApp.new.run
+Rake::Application.new.run
 
