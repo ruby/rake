@@ -22,7 +22,7 @@ CLOBBER.include('test/data/**/temp_*')
 CLOBBER.include('test/data/chains/play.*')
 CLOBBER.include('test/data/file_creation_task/build')
 CLOBBER.include('test/data/file_creation_task/src')
-
+CLOBBER.include('TAGS')
 
 def announce(msg='')
   STDERR.puts msg
@@ -196,7 +196,7 @@ else
     end
   end
 
-  Rake::GemPackageTask.new(spec) do |pkg|
+  package_task = Rake::GemPackageTask.new(spec) do |pkg|
     pkg.need_zip = true
     pkg.need_tar = true
   end
@@ -368,3 +368,7 @@ task :tag => [:prerelease] do
     sh %{cvs tag #{reltag}}
   end
 end
+
+# Require experimental XForge/Metaproject support.
+
+load 'xforge.rf' if File.exist?('xforge.rf')
