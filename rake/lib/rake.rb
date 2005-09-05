@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.5.4.7'
+RAKEVERSION = '0.5.99'
 
 require 'rbconfig'
 require 'ftools'
@@ -92,13 +92,26 @@ module Rake
   class << self
     # Current Rake Application
     def application
-      @application ||= RakeApp.new
+      @application ||= Rake::Application.new
     end
 
+    # Set the current Rake application object.
     def application=(app)
-      fail "RakeApp already exists" if defined?(@application)
+      fail "Rake::Application already exists" if defined?(@application)
       @application = app
     end
+
+    # Warn about deprecated use of top level constant names.
+    def const_warning(const_name)
+      @const_warning ||= false
+      if ! @const_warning
+	puts %{WARNING: Deprecated reference to top-level constant '#{const_name}' found}
+	puts %{         Use --classic-namespace on rake command}
+	puts %{         or 'require "rake/classic_namespace"' in Rakefile}
+      end
+      @const_warning = true
+    end
+
   end
 
   module Cloneable
@@ -1195,253 +1208,290 @@ class Time
   end     
 end
 
-######################################################################
-# Rake main application object.  When invoking +rake+ from the command
-# line, a RakeApp object is created and run.
-#
-class RakeApp
-  RAKEFILES = ['rakefile', 'Rakefile', 'rakefile.rb', 'Rakefile.rb']
+module Rake
 
-  OPTIONS = [
-    ['--dry-run',  '-n', GetoptLong::NO_ARGUMENT,
-      "Do a dry run without executing actions."],
-    ['--help',     '-H', GetoptLong::NO_ARGUMENT,
-      "Display this help message."],
-    ['--libdir',   '-I', GetoptLong::REQUIRED_ARGUMENT,
-      "Include LIBDIR in the search path for required modules."],
-    ['--nosearch', '-N', GetoptLong::NO_ARGUMENT,
-      "Do not search parent directories for the Rakefile."],
-    ['--prereqs',  '-P', GetoptLong::NO_ARGUMENT,
-      "Display the tasks and dependencies, then exit."],
-    ['--quiet',    '-q', GetoptLong::NO_ARGUMENT,
-      "Do not log messages to standard output."],
-    ['--rakefile', '-f', GetoptLong::REQUIRED_ARGUMENT,
-      "Use FILE as the rakefile."],
-    ['--require',  '-r', GetoptLong::REQUIRED_ARGUMENT,
-      "Require MODULE before executing rakefile."],
-    ['--silent',   '-s', GetoptLong::NO_ARGUMENT,
-      "Like --quiet, but also suppresses the 'in directory' announcement."],
-    ['--tasks',    '-T', GetoptLong::NO_ARGUMENT,
-      "Display the tasks and dependencies, then exit."],
-    ['--trace',    '-t', GetoptLong::NO_ARGUMENT,
-      "Turn on invoke/execute tracing, enable full backtrace."],
-    ['--usage',    '-h', GetoptLong::NO_ARGUMENT,
-      "Display usage."],
-    ['--verbose',  '-v', GetoptLong::NO_ARGUMENT,
-      "Log message to standard output (default)."],
-    ['--version',  '-V', GetoptLong::NO_ARGUMENT,
-      "Display the program version."],
-    ['--classic-namespace', '-C', GetoptLong::NO_ARGUMENT,
-      "Put Task and FileTask in the top level namespace"],
-  ]
-
-  # Create a RakeApp object.
-  def initialize
-    @rakefile = nil
-    @pending_imports = []
-    @imported = []
-    @nosearch = false
-    @loaders = {}
-    @default_loader = Rake::DefaultLoader.new
-    Rake.application = self
-  end
-
-  # True if one of the files in RAKEFILES is in the current directory.
-  # If a match is found, it is copied into @rakefile.
-  def have_rakefile
-    RAKEFILES.each do |fn|
-      if File.exist?(fn)
-        @rakefile = fn
-        return true
+  ######################################################################
+  # Rake main application object.  When invoking +rake+ from the
+  # command line, a Rake::Application object is created and run.
+  #
+  class Application
+    RAKEFILES = ['rakefile', 'Rakefile', 'rakefile.rb', 'Rakefile.rb']
+    
+    OPTIONS = [
+      ['--dry-run',  '-n', GetoptLong::NO_ARGUMENT,
+	"Do a dry run without executing actions."],
+      ['--help',     '-H', GetoptLong::NO_ARGUMENT,
+	"Display this help message."],
+      ['--libdir',   '-I', GetoptLong::REQUIRED_ARGUMENT,
+	"Include LIBDIR in the search path for required modules."],
+      ['--nosearch', '-N', GetoptLong::NO_ARGUMENT,
+	"Do not search parent directories for the Rakefile."],
+      ['--prereqs',  '-P', GetoptLong::NO_ARGUMENT,
+	"Display the tasks and dependencies, then exit."],
+      ['--quiet',    '-q', GetoptLong::NO_ARGUMENT,
+	"Do not log messages to standard output."],
+      ['--rakefile', '-f', GetoptLong::REQUIRED_ARGUMENT,
+	"Use FILE as the rakefile."],
+      ['--require',  '-r', GetoptLong::REQUIRED_ARGUMENT,
+	"Require MODULE before executing rakefile."],
+      ['--silent',   '-s', GetoptLong::NO_ARGUMENT,
+	"Like --quiet, but also suppresses the 'in directory' announcement."],
+      ['--tasks',    '-T', GetoptLong::NO_ARGUMENT,
+	"Display the tasks and dependencies, then exit."],
+      ['--trace',    '-t', GetoptLong::NO_ARGUMENT,
+	"Turn on invoke/execute tracing, enable full backtrace."],
+      ['--usage',    '-h', GetoptLong::NO_ARGUMENT,
+	"Display usage."],
+      ['--verbose',  '-v', GetoptLong::NO_ARGUMENT,
+	"Log message to standard output (default)."],
+      ['--version',  '-V', GetoptLong::NO_ARGUMENT,
+	"Display the program version."],
+      ['--classic-namespace', '-C', GetoptLong::NO_ARGUMENT,
+	"Put Task and FileTask in the top level namespace"],
+    ]
+    
+    # Create a Rake::Application object.
+    def initialize
+      @rakefile = nil
+      @pending_imports = []
+      @imported = []
+      @nosearch = false
+      @loaders = {}
+      @default_loader = Rake::DefaultLoader.new
+      Rake.application = self
+    end
+    
+    # True if one of the files in RAKEFILES is in the current directory.
+    # If a match is found, it is copied into @rakefile.
+    def have_rakefile
+      RAKEFILES.each do |fn|
+	if File.exist?(fn)
+	  @rakefile = fn
+	  return true
+	end
       end
+      return false
     end
-    return false
-  end
-
-  # Display the program usage line.
-  def usage
-    puts "rake [-f rakefile] {options} targets..."
-  end
-
-  # Display the rake command line help.
-  def help
-    usage
-    puts
-    puts "Options are ..."
-    puts
-    OPTIONS.sort.each do |long, short, mode, desc|
-      if mode == GetoptLong::REQUIRED_ARGUMENT
-        if desc =~ /\b([A-Z]{2,})\b/
-          long = long + "=#{$1}"
-        end
-      end
-      printf "  %-20s (%s)\n", long, short
-      printf "      %s\n", desc
+    
+    # Display the program usage line.
+    def usage
+      puts "rake [-f rakefile] {options} targets..."
     end
-  end
-
-  # Display the tasks and dependencies.
-  def display_tasks_and_comments
-    width = Rake::Task.tasks.select { |t|
-      t.comment
-    }.collect { |t|
-      t.name.length
-    }.max
-    Rake::Task.tasks.each do |t|
-      if t.comment
-        printf "rake %-#{width}s  # %s\n", t.name, t.comment
-      end
-    end
-  end
-
-  # Display the tasks and prerequisites
-  def display_prerequisites
-    Rake::Task.tasks.each do |t|
-      puts "rake #{t.name}"
-      t.prerequisites.each { |pre| puts "    #{pre}" }
-    end
-  end
-
-  # Return a list of the command line options supported by the
-  # program.
-  def command_line_options
-    OPTIONS.collect { |lst| lst[0..-2] }
-  end
-
-  # Do the option defined by +opt+ and +value+.
-  def do_option(opt, value)
-    case opt
-    when '--dry-run'
-      verbose(true)
-      nowrite(true)
-      $dryrun = true
-      $trace = true
-    when '--help'
-      help
-      exit
-    when '--libdir'
-      $:.push(value)
-    when '--nosearch'
-      @nosearch = true
-    when '--prereqs'
-      $show_prereqs = true
-    when '--quiet'
-      verbose(false)
-    when '--rakefile'
-      RAKEFILES.clear
-      RAKEFILES << value
-    when '--require'
-      require value
-    when '--silent'
-      verbose(false)
-      $silent = true
-    when '--tasks'
-      $show_tasks = true
-    when '--trace'
-      $trace = true
-      verbose(true)
-    when '--usage'
+    
+    # Display the rake command line help.
+    def help
       usage
-      exit
-    when '--verbose'
-      verbose(true)
-    when '--version'
-      puts "rake, version #{RAKEVERSION}"
-      exit
-    when '--classic-namespace'
-      require 'rake/classic_namespace'
-    else
-      fail "Unknown option: #{opt}"
-    end
-  end
-  
-  # Read and handle the command line options.
-  def handle_options
-    opts = GetoptLong.new(*command_line_options)
-    opts.each { |opt, value| do_option(opt, value) }
-  end
-
-  def load_rakefile
-    here = Dir.pwd
-    while ! have_rakefile
-      Dir.chdir("..")
-      if Dir.pwd == here || @nosearch
-        fail "No Rakefile found (looking for: #{RAKEFILES.join(', ')})"
+      puts
+      puts "Options are ..."
+      puts
+      OPTIONS.sort.each do |long, short, mode, desc|
+	if mode == GetoptLong::REQUIRED_ARGUMENT
+	  if desc =~ /\b([A-Z]{2,})\b/
+	    long = long + "=#{$1}"
+	  end
+	end
+	printf "  %-20s (%s)\n", long, short
+	printf "      %s\n", desc
       end
+    end
+    
+    # Display the tasks and dependencies.
+    def display_tasks_and_comments
+      width = Rake::Task.tasks.select { |t|
+	t.comment
+      }.collect { |t|
+	t.name.length
+      }.max
+      Rake::Task.tasks.each do |t|
+	if t.comment
+	  printf "rake %-#{width}s  # %s\n", t.name, t.comment
+	end
+      end
+    end
+    
+    # Display the tasks and prerequisites
+    def display_prerequisites
+      Rake::Task.tasks.each do |t|
+	puts "rake #{t.name}"
+	t.prerequisites.each { |pre| puts "    #{pre}" }
+      end
+    end
+    
+    # Return a list of the command line options supported by the
+    # program.
+    def command_line_options
+      OPTIONS.collect { |lst| lst[0..-2] }
+    end
+    
+    # Do the option defined by +opt+ and +value+.
+    def do_option(opt, value)
+      case opt
+      when '--dry-run'
+	verbose(true)
+	nowrite(true)
+	$dryrun = true
+	$trace = true
+      when '--help'
+	help
+	exit
+      when '--libdir'
+	$:.push(value)
+      when '--nosearch'
+	@nosearch = true
+      when '--prereqs'
+	$show_prereqs = true
+      when '--quiet'
+	verbose(false)
+      when '--rakefile'
+	RAKEFILES.clear
+	RAKEFILES << value
+      when '--require'
+	require value
+      when '--silent'
+	verbose(false)
+	$silent = true
+      when '--tasks'
+	$show_tasks = true
+      when '--trace'
+	$trace = true
+	verbose(true)
+      when '--usage'
+	usage
+	exit
+      when '--verbose'
+	verbose(true)
+      when '--version'
+	puts "rake, version #{RAKEVERSION}"
+	exit
+      when '--classic-namespace'
+	require 'rake/classic_namespace'
+      else
+	fail "Unknown option: #{opt}"
+      end
+    end
+    
+    # Read and handle the command line options.
+    def handle_options
+      opts = GetoptLong.new(*command_line_options)
+      opts.each { |opt, value| do_option(opt, value) }
+    end
+    
+    def load_rakefile
       here = Dir.pwd
+      while ! have_rakefile
+	Dir.chdir("..")
+	if Dir.pwd == here || @nosearch
+	  fail "No Rakefile found (looking for: #{RAKEFILES.join(', ')})"
+	end
+	here = Dir.pwd
+      end
+      puts "(in #{Dir.pwd})" unless $silent
+      $rakefile = @rakefile
+      load @rakefile
+      load_imports
     end
-    puts "(in #{Dir.pwd})" unless $silent
-    $rakefile = @rakefile
-    load @rakefile
-    load_imports
-  end
-
-  # Collect the list of tasks on the command line.  If no tasks are
-  # give, return a list containing only the default task.
-  # Environmental assignments are processed at this time as well.
-  def collect_tasks
-    tasks = []
-    ARGV.each do |arg|
-      if arg =~ /^(\w+)=(.*)$/
-        ENV[$1] = $2
-      else
-        tasks << arg
+    
+    # Collect the list of tasks on the command line.  If no tasks are
+    # give, return a list containing only the default task.
+    # Environmental assignments are processed at this time as well.
+    def collect_tasks
+      tasks = []
+      ARGV.each do |arg|
+	if arg =~ /^(\w+)=(.*)$/
+	  ENV[$1] = $2
+	else
+	  tasks << arg
+	end
+      end
+      tasks.push("default") if tasks.size == 0
+      tasks
+    end
+    
+    # Add a file to the list of files to be imported.
+    def add_import(fn)
+      @pending_imports << fn
+    end
+    
+    # Load the pending list of imported files.
+    def load_imports
+      while fn = @pending_imports.shift
+	next if @imported.member?(fn)
+	Rake::Task[fn].invoke if Rake::Task.task_defined?(fn)
+	ext = File.extname(fn)
+	loader = @loaders[ext] || @default_loader
+	loader.load(fn)
+	@imported << fn
       end
     end
-    tasks.push("default") if tasks.size == 0
-    tasks
-  end
-
-  # Add a file to the list of files to be imported.
-  def add_import(fn)
-    @pending_imports << fn
-  end
-
-  # Load the pending list of imported files.
-  def load_imports
-    while fn = @pending_imports.shift
-      next if @imported.member?(fn)
-      Rake::Task[fn].invoke if Rake::Task.task_defined?(fn)
-      ext = File.extname(fn)
-      loader = @loaders[ext] || @default_loader
-      loader.load(fn)
-      @imported << fn
+    
+    # Add a loader to handle imported files ending in the extension
+    # +ext+.
+    def add_loader(ext, loader)
+      ext = ".#{ext}" unless ext =~ /^\./
+      @loaders[ext] = loader
+    end
+    
+    # Run the +rake+ application.
+    def run
+      handle_options
+      begin
+	tasks = collect_tasks
+	load_rakefile
+	if $show_tasks
+	  display_tasks_and_comments
+	elsif $show_prereqs
+	  display_prerequisites
+	else
+	  tasks.each { |task_name| Rake::Task[task_name].invoke }
+	end
+      rescue Exception => ex
+	puts "rake aborted!"
+	puts ex.message
+	if $trace
+	  puts ex.backtrace.join("\n")
+	else
+	  puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
+	end
+	exit(1)
+      end    
     end
   end
 
-  # Add a loader to handle imported files ending in the extension
-  # +ext+.
-  def add_loader(ext, loader)
-    ext = ".#{ext}" unless ext =~ /^\./
-    @loaders[ext] = loader
-  end
+end
 
-  # Run the +rake+ application.
-  def run
-    handle_options
-    begin
-      tasks = collect_tasks
-      load_rakefile
-      if $show_tasks
-        display_tasks_and_comments
-      elsif $show_prereqs
-        display_prerequisites
+
+class Object
+  class << self
+
+    # Rename the original handler to make it available.
+    alias :rake_original_const_missing :const_missing
+
+    # Check for deprecated uses of top level (i.e. in Object) uses of
+    # Rake class names.  If someone tries to reference the constant
+    # name, display a warning and return the proper object.  Using
+    # --class-namespace will define these constants in Object and
+    # avoid this handler.
+    def const_missing(const_name)
+      case const_name
+      when :Task
+	Rake.const_warning(const_name)
+	Rake::Task
+      when :FileTask
+	Rake.const_warning(const_name)
+	Rake::FileTask
+      when :FileCreationTask
+	Rake.const_warning(const_name)
+	Rake::FileCreationTask
+      when :RakeApp
+	Rake.const_warning(const_name)
+	Rake::Application
       else
-        tasks.each { |task_name| Rake::Task[task_name].invoke }
+	rake_original_const_missing(const_name)
       end
-    rescue Exception => ex
-      puts "rake aborted!"
-      puts ex.message
-      if $trace
-        puts ex.backtrace.join("\n")
-      else
-        puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
-      end
-      exit(1)
-    end    
+    end
   end
 end
 
 if __FILE__ == $0 then
-  RakeApp.new.run
+  Rake::Application.new.run
 end
