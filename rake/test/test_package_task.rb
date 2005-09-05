@@ -82,6 +82,49 @@ else
 	p.package_files << "y"
       end
       assert_equal ["x", "y"], pkg.package_files
+      assert_equal "pkgr-1.2.3.gem", pkg.gem_file
+    end
+
+    def test_gem_package_with_specific_platform
+      gem = Gem::Specification.new do |g|
+	g.name = "pkgr"
+	g.version = "1.2.3"
+	g.files = FileList["x"].resolve
+	g.platform = Gem::Platform::WIN32
+      end
+      pkg = Rake::GemPackageTask.new(gem)  do |p|
+	p.package_files << "y"
+      end
+      assert_equal ["x", "y"], pkg.package_files
+      assert_equal "pkgr-1.2.3-mswin32.gem", pkg.gem_file
+    end
+
+    def test_gem_package_with_current_platform
+      gem = Gem::Specification.new do |g|
+	g.name = "pkgr"
+	g.version = "1.2.3"
+	g.files = FileList["x"].resolve
+	g.platform = Gem::Platform::CURRENT
+      end
+      pkg = Rake::GemPackageTask.new(gem)  do |p|
+	p.package_files << "y"
+      end
+      assert_equal ["x", "y"], pkg.package_files
+      assert_match /^pkgr-1\.2\.3-(\S+)\.gem$/, pkg.gem_file
+    end
+
+    def test_gem_package_with_ruby_platform
+      gem = Gem::Specification.new do |g|
+	g.name = "pkgr"
+	g.version = "1.2.3"
+	g.files = FileList["x"].resolve
+	g.platform = Gem::Platform::RUBY
+      end
+      pkg = Rake::GemPackageTask.new(gem)  do |p|
+	p.package_files << "y"
+      end
+      assert_equal ["x", "y"], pkg.package_files
+      assert_equal "pkgr-1.2.3.gem", pkg.gem_file
     end
   end
 end
