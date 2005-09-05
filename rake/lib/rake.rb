@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.5.4.6'
+RAKEVERSION = '0.5.4.7'
 
 require 'rbconfig'
 require 'ftools'
@@ -135,9 +135,15 @@ module Rake
     # Comment for this task.
     attr_accessor :comment
     
-    # Source dependency for rule synthesized tasks.  Nil if task was not
-    # sythesized from a rule.
-    attr_accessor :source
+    attr_writer :sources
+    def sources
+      @sources ||= []
+    end
+
+    # First source from a rule (nil if no sources)
+    def source
+      @sources.first if defined?(@sources)
+    end
     
     # Create a task named +task_name+ with no actions or prerequisites..
     # use +enhance+ to add actions and prerequisites.
@@ -294,11 +300,10 @@ module Rake
       # Define a rule for synthesizing tasks.  
       def create_rule(args, &block)
 	pattern, deps = resolve_args(args)
-	fail "Too many dependents specified in rule #{pattern}: #{deps.inspect}" if deps.size > 1
+#	fail "Too many dependents specified in rule #{pattern}: #{deps.inspect}" if deps.size > 1
 	pattern = Regexp.new(Regexp.quote(pattern) + '$') if String === pattern
 	RULES << [pattern, deps, block]
       end
-      
       
       # Lookup a task.  Return an existing task if found, otherwise
       # create a task of the current type.
@@ -316,24 +321,8 @@ module Rake
 	  "Rule Recursion Too Deep" if level >= 16
 	RULES.each do |pattern, extensions, block|
 	  if md = pattern.match(task_name)
-	    ext = extensions.first
-	    case ext
-	    when String
-	      source = task_name.sub(/\.[^.]*$/, ext)
-	    when Proc
-	      source = ext.call(task_name)
-	    else
-	      fail "Don't know how to handle rule dependent: #{ext.inspect}"
-	    end
-	    if File.exist?(source) || Rake::Task.task_defined?(source)
-	      task = FileTask.define_task({task_name => [source]}, &block)
-	      task.source = source
-	      return task
-	    elsif parent = enhance_with_matching_rule(source, level+1)
-	      task = FileTask.define_task({task_name => [parent.name]}, &block)
-	      task.source = parent.name
-	      return task
-	    end
+	    task = attempt_rule(task_name, extensions, block, level)
+	    return task if task
 	  end
 	end
 	nil
@@ -342,7 +331,39 @@ module Rake
 	fail ex
       end
       
-      private 
+      private
+
+      # Attempt to create a rule given the list of prerequisites.
+      def attempt_rule(task_name, extensions, block, level)
+	sources = make_sources(task_name, extensions)
+	prereqs = sources.collect { |source|
+	  if File.exist?(source) || Rake::Task.task_defined?(source)
+	    source
+	  elsif parent = enhance_with_matching_rule(sources.first, level+1)
+	    parent.name
+	  else
+	    return nil
+	  end
+	}
+	task = FileTask.define_task({task_name => prereqs}, &block)
+	task.sources = prereqs
+	task
+      end
+
+      # Make a list of sources from the list of file name extensions /
+      # translation procs.
+      def make_sources(task_name, extensions)
+	extensions.collect { |ext|
+	  case ext
+	  when String
+	    source = task_name.sub(/\.[^.]*$/, ext)
+	  when Proc
+	    source = ext.call(task_name)
+	  else
+	    fail "Don't know how to handle rule dependent: #{ext.inspect}"
+	  end
+	}
+      end
       
       # Resolve the arguments for a task/rule.
       def resolve_args(args)
