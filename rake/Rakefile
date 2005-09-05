@@ -249,34 +249,24 @@ load "publish.rf" if File.exist? "publish.rf"
 
 # Support Tasks ------------------------------------------------------
 
-def egrep(pattern)
-  Dir['**/*.rb'].each do |fn|
-    count = 0
-    open(fn) do |f|
-      while line = f.gets
-	count += 1
-	if line =~ pattern
-	  puts "#{fn}:#{count}:#{line}"
-	end
-      end
-    end
-  end
-end
-
 desc "Look for TODO and FIXME tags in the code"
 task :todo do
-  egrep /#.*(FIXME|TODO|TBD)/
+  FileList['**/*.rb'].egrep /#.*(FIXME|TODO|TBD)/
 end
 
 desc "Look for Debugging print lines"
 task :dbg do
-  egrep /\bDBG|\bbreakpoint\b/
+  FileList['**/*.rb'].egrep /\bDBG|\bbreakpoint\b/
 end
 
 desc "List all ruby files"
 task :rubyfiles do 
   puts Dir['**/*.rb'].reject { |fn| fn =~ /^pkg/ }
   puts Dir['bin/*'].reject { |fn| fn =~ /CVS|(~$)|(\.rb$)/ }
+end
+
+task :huh do
+  puts Rake::Task['huh'].investigation
 end
 
 # --------------------------------------------------------------------
