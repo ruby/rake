@@ -6,20 +6,24 @@
   windows).
 * Fixed bug where session based functional tests were run under
   windows.
-* Fixed bug in directory tasks so that updating a directoy will not
+* Fixed bug in directory tasks so that updating a directory will not
   retrigger file tasks depending on the directory (see
   FileCreationTask and EarlyTime).
 * Added egrep to FileList
 * ruby command now runs same ruby version as rake.
-* Added investigation to task object.
+* Added investigation to task object. (suggested by Martin Fowler)
 * Added ruby_opts to the test task to allow arbitrary ruby options to
-  be passed to the test script.
-* Fixed the test loader to ignore options.
-* Moved Task, FileTask and FileCreationTask into the Rake module
-  namespace.  Old style namespace behavior can be invoked via the
-  --classic-namespace option.
-* GemTask is now sensitive to the gem platform.
-* A non-existing file prerequisite will no longer cause an exception.
+  be passed to the test script. (Greg Fast)
+* Fixed the test loader to ignore options. (requested by Charles
+  F. I. Savage)
+* Moved Task, FileTask, FileCreationTask and RakeApp into the Rake
+  module namespace.  Old style namespace behavior can be invoked via
+  the --classic-namespace option. (requested by Kelly Felkins).
+* GemTask is now sensitive to the gem platform (Masao Mutoh).
+* A non-existing file prerequisite will no longer cause an exception
+  (Philipp Neubeck).
+* Multiple prerequisites on Rake rules now allowed (initial patch
+  supplied by Stuart Jansen).
 
 == Version 0.5.4
 
