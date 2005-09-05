@@ -88,10 +88,12 @@ module Rake
       end
     end
     
-    private
-    
     def gem_file
-      "#{package_name}.gem"
+      if @gem_spec.platform == Gem::Platform::RUBY
+	"#{package_name}.gem"
+      else
+	"#{package_name}-#{@gem_spec.platform}.gem"
+      end
     end
     
   end
