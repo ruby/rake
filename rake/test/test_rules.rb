@@ -105,8 +105,60 @@ class TestRules < Test::Unit::TestCase
     assert_equal [:RULE], @runs
   end
 
-  def test_too_many_dependents
-    assert_raises(RuntimeError) { rule '.o' => ['.c', '.cpp'] }
+  def test_rule_with_two_sources
+    create_timed_files(OBJFILE, SRCFILE, SRCFILE2)
+    rule OBJFILE => [lambda{SRCFILE}, lambda{SRCFILE2}] do
+      @runs << :RULE
+    end
+    Task[OBJFILE].invoke
+    assert_equal [:RULE], @runs
+  end
+
+  def test_rule_with_two_sources_but_one_missing
+    create_timed_files(OBJFILE, SRCFILE)
+    delete_file(SRCFILE2)
+    rule OBJFILE => [lambda{SRCFILE}, lambda{SRCFILE2}] do
+      @runs << :RULE
+    end
+    Task[OBJFILE].invoke
+    assert_equal [], @runs
+  end
+
+  def test_rule_ordering_finding_second_rule
+    create_timed_files(OBJFILE, SRCFILE)
+    delete_file(SRCFILE2)
+    rule OBJFILE => [lambda{SRCFILE}, lambda{SRCFILE2}] do
+      @runs << :RULE1
+    end
+    rule OBJFILE => [lambda{SRCFILE}] do
+      @runs << :RULE2
+    end
+    Task[OBJFILE].invoke
+    assert_equal [:RULE2], @runs
+  end
+
+  def test_rule_ordering_finding_first_rule
+    create_timed_files(OBJFILE, SRCFILE, SRCFILE2)
+    rule OBJFILE => [lambda{SRCFILE}, lambda{SRCFILE2}] do
+      @runs << :RULE1
+    end
+    rule OBJFILE => [lambda{SRCFILE}] do
+      @runs << :RULE2
+    end
+    Task[OBJFILE].invoke
+    assert_equal [:RULE1], @runs
+  end
+
+  def test_rule_ordering_not_finding_second_rule
+    create_timed_files(OBJFILE, SRCFILE, SRCFILE2)
+    rule OBJFILE => [lambda{SRCFILE}] do
+      @runs << :RULE1
+    end
+    rule OBJFILE => [lambda{SRCFILE}, lambda{SRCFILE2}] do
+      @runs << :RULE2
+    end
+    Task[OBJFILE].invoke
+    assert_equal [:RULE1], @runs
   end
 
   def test_proc_dependent
