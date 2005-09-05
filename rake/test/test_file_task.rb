@@ -63,6 +63,14 @@ class TestFileTask < Test::Unit::TestCase
     assert ! @runs.include?(NEWFILE)
   end
 
+  def test_existing_file_depends_on_non_existing_file
+    create_file(OLDFILE)
+    delete_file(NEWFILE)
+    file NEWFILE
+    file OLDFILE => NEWFILE
+    assert_nothing_raised do Task[OLDFILE].invoke end
+  end
+
   # I have currently disabled this test.  I'm not convinced that
   # deleting the file target on failure is always the proper thing to
   # do.  I'm willing to hear input on this topic.
