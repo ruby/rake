@@ -18,6 +18,7 @@
 * Moved Task, FileTask and FileCreationTask into the Rake module
   namespace.  Old style namespace behavior can be invoked via the
   --classic-namespace option.
+* GemTask is now sensitive to the gem platform.
 
 == Version 0.5.4
 
