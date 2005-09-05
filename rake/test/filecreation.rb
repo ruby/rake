@@ -6,12 +6,14 @@ module FileCreation
   OLDFILE = "testdata/old"
   NEWFILE = "testdata/new"
 
-  def create_timed_files(oldfile, newfile)
-    return if File.exist?(oldfile) && File.exist?(newfile)
+  def create_timed_files(oldfile, *newfiles)
+    return if File.exist?(oldfile) && newfiles.all? { |newfile| File.exist?(newfile) }
     old_time = create_file(oldfile)
-    while create_file(newfile) <= old_time
-      sleep(0.1)
-      File.delete(newfile) rescue nil
+    newfiles.each do |newfile|
+      while create_file(newfile) <= old_time
+	sleep(0.1)
+	File.delete(newfile) rescue nil
+      end
     end
   end
 
