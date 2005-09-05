@@ -375,17 +375,25 @@ module Rake
     # stamp is out of date.
     def needed?
       return true unless File.exist?(name)
-      latest_prereq = @prerequisites.collect{|n| Rake::Task[n].timestamp}.max
-      return false if latest_prereq.nil?
-      timestamp < latest_prereq
-    rescue Errno::ENOENT => ex # one of the prereqs does not exist
-      raise unless $dryrun or $trace
-      true
+      return true if out_of_date?(timestamp)
+      false
     end
     
     # Time stamp for file task.
     def timestamp
-      File.mtime(name.to_s)
+      if File.exist?(name)
+	File.mtime(name.to_s)
+      else
+	Rake::EARLY
+      end
+    end
+
+    private
+
+    # Are there any prerequisites with a later time than the given
+    # time stamp?
+    def out_of_date?(stamp)
+      @prerequisites.any? { |n| Rake::Task[n].timestamp > stamp}
     end
   end
   
