@@ -148,8 +148,6 @@ module Rake
       self
     end
 
-    private
-
     def package_name
       @version ? "#{@name}-#{@version}" : @name
     end
