@@ -300,7 +300,6 @@ module Rake
       # Define a rule for synthesizing tasks.  
       def create_rule(args, &block)
 	pattern, deps = resolve_args(args)
-#	fail "Too many dependents specified in rule #{pattern}: #{deps.inspect}" if deps.size > 1
 	pattern = Regexp.new(Regexp.quote(pattern) + '$') if String === pattern
 	RULES << [pattern, deps, block]
       end
