@@ -19,6 +19,7 @@
   namespace.  Old style namespace behavior can be invoked via the
   --classic-namespace option.
 * GemTask is now sensitive to the gem platform.
+* A non-existing file prerequisite will no longer cause an exception.
 
 == Version 0.5.4
 
