@@ -1,0 +1,92 @@
+= Rake 0.5.5 Released
+
+More bug fixes and minor enhancements.
+
+== Changes
+
+=== New Features
+
+* FileLists may now use the egrep command.  This popular enhancement
+  is now a core part of the FileList object.
+
+* The @investigation@ method was added to task object to dump out some
+  important values.  This makes it a bit easier to debug Rake tasks.
+
+* The Rake::TestTask class now supports a "ruby_opts" option to pass
+  arbitrary ruby options to a test subprocess.
+
+* Multiple prerequisites on Rake rules now allowed (initial patch
+  supplied by Stuart Jansen).
+
+=== Some Incompatibilities
+
+* When using the @ruby@ command to start a Ruby subprocess, the Ruby
+  interpreter that is currently running rake is used by default.  This
+  makes it easier to use rake in an environment with multiple ruby
+  installation.  (Previously, the first ruby command found in the PATH
+  was used).
+
+  If you wish to chose a different Ruby interpreter, you can
+  explicitly choose the interpreter via the @sh@ command.
+
+* The major rake classes (Task, FileTask and FileCreationTask) have
+  been moved out of the toplevel scope and are now accessible as
+  Rake::Task, Rake::FileTask and Rake::FileCreationTask.  If your
+  Rakefile directly references one of these tasks, you may:
+
+  1. Update your Rakefile to use the new classnames
+  2. Use the --classic-namespace option on the rake command to get the
+     old behavior,
+  3. Add <code>require 'rake/classic_namespace'</code> to the
+     Rakefile.
+
+=== Bug Fixes
+
+* Several unit tests and functional tests were fixed to run better
+  under windows.
+
+* Directory tasks are now a specialized version of a File task.  A
+  directory task will only be triggered if it doesn't exist.  It will
+  not be triggered if it is out of date w.r.t. any of its
+  prerequisites.
+
+* Fixed a bug in the Rake::GemPackageTask class so that the gem now
+  properly contains the platform name. (Masao Mutoh).
+
+* Fixed a bug where a prerequisite on a @file@ task would cause an
+  exception if the prerequisite did not exist (Philipp Neubeck).
+
+----------------------------------------------------------------------
+
+== What is Rake
+
+Rake is a build tool similar to the make program in many ways.  But
+instead of cryptic make recipes, Rake uses standard Ruby code to
+declare tasks and dependencies.  You have the full power of a modern
+scripting language built right into your build tool.
+
+== Availability
+
+The easiest way to get and install rake is via RubyGems ...
+
+  gem install rake    (you may need root/admin privileges)
+
+Otherwise, you can get it from the more traditional places:
+
+Home Page:: http://rake.rubyforge.org/
+Download::  http://rubyforge.org/project/showfiles.php?group_id=50
+
+== Thanks
+
+As usual, it was input from users that drove a alot of these changes.
+The following people either contributed patches, made suggestions or
+made otherwise helpful comments.  Thanks to ...
+
+* Greg Fast
+* Kelly Felkins
+* Martin Fowler
+* Stuart Jansen
+* Masao Mutch
+* Charles F. I. Savage
+
+-- Jim Weirich
