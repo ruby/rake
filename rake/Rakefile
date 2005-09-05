@@ -265,10 +265,6 @@ task :rubyfiles do
   puts Dir['bin/*'].reject { |fn| fn =~ /CVS|(~$)|(\.rb$)/ }
 end
 
-task :huh do
-  puts Rake::Task['huh'].investigation
-end
-
 # --------------------------------------------------------------------
 # Creating a release
 
