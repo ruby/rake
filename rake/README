@@ -43,6 +43,16 @@ Download and install  rake with the following.
 
    gem install --remote rake
 
+=== Running the Rake Test Suite
+
+If you wish to run the unit and functional tests that come with Rake:
+
+* CD into the top project directory of rake.
+* Type one of the following:
+
+     rake                  # If you have a version of rake installed
+     ruby -Ilib bin/rake   # If you do not have a version of rake installed.
+
 == Online Resources
 
 == Rake References
@@ -53,8 +63,8 @@ Download and install  rake with the following.
 
 == Presentations and Articles about Rake
 
-* Jim Weirich\u2019s 2003 RubyConf presentation: http://onestepback.org/articles/buildingwithrake/
-* Martin Fowler\u2019s article on Rake: http://martinfowler.com/articles/rake.html
+* Jim Weirich's 2003 RubyConf presentation: http://onestepback.org/articles/buildingwithrake/
+* Martin Fowler's article on Rake: http://martinfowler.com/articles/rake.html
 
 === Road Map
 
