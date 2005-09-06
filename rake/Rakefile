@@ -91,13 +91,6 @@ directory 'testdata'
   task t => ['testdata']
 end
 
-# Abbreviations
-
-task :a => [:alltests]
-task :u => [:unittests]
-task :f => [:funtests]
-task :c => [:contribtests]
-
 # CVS Tasks ----------------------------------------------------------
 
 # Install rake using the standard install.rb script.

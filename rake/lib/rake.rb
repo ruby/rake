@@ -101,17 +101,6 @@ module Rake
       @application = app
     end
 
-    # Warn about deprecated use of top level constant names.
-    def const_warning(const_name)
-      @const_warning ||= false
-      if ! @const_warning
-	puts %{WARNING: Deprecated reference to top-level constant '#{const_name}' found}
-	puts %{         Use --classic-namespace on rake command}
-	puts %{         or 'require "rake/classic_namespace"' in Rakefile}
-      end
-      @const_warning = true
-    end
-
   end
 
   module Cloneable
@@ -1431,6 +1420,26 @@ module Rake
       @loaders[ext] = loader
     end
     
+    # Warn about deprecated use of top level constant names.
+    def const_warning(const_name)
+      @const_warning ||= false
+      if ! @const_warning
+	puts %{WARNING: Deprecated reference to top-level constant '#{const_name}'} +
+	  %{found at: #{rakefile_location}}
+	puts %{    Use --classic-namespace on rake command}
+	puts %{    or 'require "rake/classic_namespace"' in Rakefile}
+      end
+      @const_warning = true
+    end
+
+    def rakefile_location
+      begin
+	fail
+      rescue RuntimeError => ex
+	ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
+      end
+    end
+
     # Run the +rake+ application.
     def run
       handle_options
@@ -1474,16 +1483,16 @@ class Object
     def const_missing(const_name)
       case const_name
       when :Task
-	Rake.const_warning(const_name)
+	Rake.application.const_warning(const_name)
 	Rake::Task
       when :FileTask
-	Rake.const_warning(const_name)
+	Rake.application.const_warning(const_name)
 	Rake::FileTask
       when :FileCreationTask
-	Rake.const_warning(const_name)
+	Rake.application.const_warning(const_name)
 	Rake::FileCreationTask
       when :RakeApp
-	Rake.const_warning(const_name)
+	Rake.application.const_warning(const_name)
 	Rake::Application
       else
 	rake_original_const_missing(const_name)

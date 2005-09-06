@@ -7,19 +7,22 @@ Its time for some long requested enhancements and lots of bug fixes
 
 The primary documentation for rake has moved from the RubyForge based
 wiki to its own Hieraki based web site.  Constant spam on the wiki
-made it a difficult to keep clean.  The new will be easier to update
-and organize.
+made it a difficult to keep clean.  The new site will be easier to
+update and organize.
 
 Check out the new documentation at: http://docs.rubyrake.org
 
-We will be adding new documetation to the site as time goes on.
+We will be adding new documentation to the site as time goes on.
+
+In addition to the new docs page, make sure you check out Martin
+Fowlers article on rake at http://martinfowler.com/articles/rake.html
 
 == Changes
 
 === New Features
 
-* Multiple prerequisites on Rake rules now allowed (initial patch
-  supplied by Stuart Jansen).  However, keep the following in mind:
+* Multiple prerequisites on Rake rules now allowed.  However, keep the
+  following in mind:
 
   1. All the prerequisites of a rule must be available before a rule
      is triggered, where "enabled" means (a) an existing file, (b) a
@@ -30,12 +33,12 @@ We will be adding new documetation to the site as time goes on.
      different rules, put the more specific rule first (otherwise the
      more general rule will trigger first and the specific one will
      never be triggered).
-  3. The @source@ method now returns the name of the first
-     prerequisite listed in the rule.  @sources@ returns the names of
-     all the rule prerequisites, ordered as they are defined in the
-     rule.  If the task has other prerequisites not defined in the
-     rule (but defined in an explicit task definition), then they will
-     _not_ be included in the sources list.
+  3. The <tt>source</tt> method now returns the name of the first
+     prerequisite listed in the rule.  <tt>sources</tt> returns the
+     names of all the rule prerequisites, ordered as they are defined
+     in the rule.  If the task has other prerequisites not defined in
+     the rule (but defined in an explicit task definition), then they
+     will _not_ be included in the sources list.
 
 * FileLists may now use the egrep command.  This popular enhancement
   is now a core part of the FileList object.  If you want to get a
@@ -47,8 +50,9 @@ We will be adding new documetation to the site as time goes on.
       FileList['**/*.rb'].egrep /#.*(FIXME|TODO|TBD)/
     end
 
-* The @investigation@ method was added to task object to dump out some
-  important values.  This makes it a bit easier to debug Rake tasks.
+* The <tt>investigation</tt> method was added to task object to dump
+  out some important values.  This makes it a bit easier to debug Rake
+  tasks.
 
   For example, if you are having problems with a particular task, just
   print it out:
@@ -62,26 +66,30 @@ We will be adding new documetation to the site as time goes on.
 
 === Some Incompatibilities
 
-* When using the @ruby@ command to start a Ruby subprocess, the Ruby
-  interpreter that is currently running rake is used by default.  This
-  makes it easier to use rake in an environment with multiple ruby
-  installation.  (Previously, the first ruby command found in the PATH
-  was used).
+* When using the <tt>ruby</tt> command to start a Ruby subprocess, the
+  Ruby interpreter that is currently running rake is used by default.
+  This makes it easier to use rake in an environment with multiple
+  ruby installation.  (Previously, the first ruby command found in the
+  PATH was used).
 
   If you wish to chose a different Ruby interpreter, you can
-  explicitly choose the interpreter via the @sh@ command.
+  explicitly choose the interpreter via the <tt>sh</tt> command.
 
 * The major rake classes (Task, FileTask, FileCreationTask, RakeApp)
   have been moved out of the toplevel scope and are now accessible as
   Rake::Task, Rake::FileTask, Rake::FileCreationTask and
-  Rake::Application.  If your Rakefile directly references any one of
-  these tasks, you may:
+  Rake::Application.  If your Rakefile
+  directly references any one of these tasks, you may:
 
   1. Update your Rakefile to use the new classnames
   2. Use the --classic-namespace option on the rake command to get the
      old behavior,
   3. Add <code>require 'rake/classic_namespace'</code> to the
      Rakefile to get the old behavior.
+
+  <tt>rake</tt> will print a rather annoying warning whenever a
+  deprecated class name is referenced without enabling classic
+  namespace.
 
 === Bug Fixes
 
@@ -94,12 +102,10 @@ We will be adding new documetation to the site as time goes on.
   prerequisites.
 
 * Fixed a bug in the Rake::GemPackageTask class so that the gem now
-  properly contains the platform name. (Masao Mutoh).
+  properly contains the platform name.
 
-* Fixed a bug where a prerequisite on a @file@ task would cause an
-  exception if the prerequisite did not exist (Philipp Neubeck).
-
-----------------------------------------------------------------------
+* Fixed a bug where a prerequisite on a <tt>file</tt> task would cause
+  an exception if the prerequisite did not exist.
 
 == What is Rake
 
@@ -125,11 +131,11 @@ As usual, it was input from users that drove a alot of these changes.
 The following people either contributed patches, made suggestions or
 made otherwise helpful comments.  Thanks to ...
 
-* Greg Fast
-* Kelly Felkins
-* Martin Fowler
-* Stuart Jansen
-* Masao Mutch
-* Charles F. I. Savage
+* Greg Fast (better ruby_opt test options)
+* Kelly Felkins (requested by better namespace support)
+* Martin Fowler (suggested Task.investigation)
+* Stuart Jansen (send initial patch for multiple prerequisites).
+* Masao Mutch (better support for non-ruby Gem platforms)
+* Philipp Neubeck (patch for file task exception fix)
 
 -- Jim Weirich

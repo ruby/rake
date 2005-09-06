@@ -14,8 +14,7 @@
 * Added investigation to task object. (suggested by Martin Fowler)
 * Added ruby_opts to the test task to allow arbitrary ruby options to
   be passed to the test script. (Greg Fast)
-* Fixed the test loader to ignore options. (requested by Charles
-  F. I. Savage)
+* Fixed the test loader to ignore options. (Greg Fast)
 * Moved Task, FileTask, FileCreationTask and RakeApp into the Rake
   module namespace.  Old style namespace behavior can be invoked via
   the --classic-namespace option. (requested by Kelly Felkins).
