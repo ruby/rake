@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.6.0.1'
+RAKEVERSION = '0.6.2'
 
 require 'rbconfig'
 require 'ftools'
@@ -1204,6 +1204,8 @@ module Rake
   # command line, a Rake::Application object is created and run.
   #
   class Application
+    attr_reader :original_dir
+
     RAKEFILES = ['rakefile', 'Rakefile', 'rakefile.rb', 'Rakefile.rb']
     
     OPTIONS = [
@@ -1247,6 +1249,7 @@ module Rake
       @nosearch = false
       @loaders = {}
       @default_loader = Rake::DefaultLoader.new
+      @original_dir = Dir.pwd
       Rake.application = self
     end
     
