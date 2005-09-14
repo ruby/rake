@@ -1,6 +1,15 @@
 = Rake Changelog
 
-== PreVersion 0.5.5
+== Pre-Version 0.6.2
+
+* Added Rake.original_dir to return the original starting directory of
+  the rake application.
+
+== Version 0.6.1
+
+* Rebuilt 0.6.0 gem without signnig.
+
+== Version 0.6.0
 
 * Fixed file creation bug in the unit tests (caused infinite loop on
   windows).

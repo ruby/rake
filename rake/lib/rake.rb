@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.6.2'
+RAKEVERSION = '0.6.1.1'
 
 require 'rbconfig'
 require 'ftools'
@@ -99,6 +99,12 @@ module Rake
     def application=(app)
       fail "Rake::Application already exists" if defined?(@application)
       @application = app
+    end
+
+    # Return the original directory where the Rake application was
+    # started.
+    def original_dir
+      application.original_dir
     end
 
   end
