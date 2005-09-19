@@ -604,7 +604,7 @@ module FileUtils
     else
       begin
         ln(*args)
-      rescue Errno::EOPNOTSUPP
+      rescue Errno::EOPNOTSUPP, Errno::EXDEV
         LN_SUPPORTED[0] = false
         cp(*args)
       end
