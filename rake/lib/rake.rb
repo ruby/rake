@@ -1469,6 +1469,7 @@ module Rake
 	  puts ex.backtrace.join("\n")
 	else
 	  puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
+	  puts "(See full trace by running task with --trace)"
 	end
 	exit(1)
       end    
