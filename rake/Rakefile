@@ -351,6 +351,3 @@ end
 # Require experimental XForge/Metaproject support.
 
 load 'xforge.rf' if File.exist?('xforge.rf')
-task :oops do
-  fail "oops"
-end

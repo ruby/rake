@@ -5,6 +5,7 @@
 * Added Rake.original_dir to return the original starting directory of
   the rake application.
 * Added safe_ln support for openAFS.
+* Added --trace reminder on short exception messages.
 
 == Version 0.6.1
 
