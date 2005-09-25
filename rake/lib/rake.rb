@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 #--
-# Copyright (c) 2003, 2004 Jim Weirich
+# Copyright (c) 2003, 2004, 2005 Jim Weirich
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -36,6 +36,7 @@ require 'ftools'
 require 'getoptlong'
 require 'fileutils'
 require 'singleton'
+require 'monitor'
 
 $last_comment = nil
 $show_tasks = nil
@@ -161,6 +162,7 @@ module Rake
       @actions = []
       @already_invoked = false
       @comment = nil
+      @monitor = Monitor.new
     end
     
     # Enhance a task with prerequisites or actions.  Returns self.
@@ -177,15 +179,22 @@ module Rake
     
     # Invoke the task if it is needed.  Prerequites are invoked first.
     def invoke
-      if $trace
-	puts "** Invoke #{name} #{format_trace_flags}"
+      @monitor.synchronize do
+	if $trace
+	  puts "** Invoke #{name} #{format_trace_flags}"
+	end
+	return if @already_invoked
+	@already_invoked = true
+	invoke_prerequisites
+	execute if needed?
       end
-      return if @already_invoked
-      @already_invoked = true
-      @prerequisites.each { |n| Rake::Task[n].invoke }
-      execute if needed?
     end
-    
+
+    # Invoke all the prerequisites of a task.
+    def invoke_prerequisites
+      @prerequisites.each { |n| Rake::Task[n].invoke }
+    end
+
     # Format the trace flags for display.
     def format_trace_flags
       flags = []
@@ -443,6 +452,18 @@ module Rake
       Rake::EARLY
     end
   end
+
+  # Same as a regular task, but the immediate prerequisites are done
+  # in parallel using Ruby threads.
+
+  class MultiTask < Task
+    def invoke_prerequisites
+      threads = @prerequisites.collect { |p|
+	Thread.new(p) { |r| Task[r].invoke }
+      }
+      threads.each { |t| t.join }
+    end
+  end
 end
 
 ######################################################################
@@ -495,6 +516,21 @@ def directory(dir)
       mkdir_p t.name if ! File.exist?(t.name)
     end
   end
+end
+
+# Declare a task that performs its prerequisites in parallel.
+# Multitasks does *not* guarantee that its prerequisites will execute
+# in any given order (which is obvious when you think about it)
+#
+# Example:
+#   multitask :deploy => [:deploy_gem, :deploy_rdoc]
+#
+# <b>Note:</b> The multitask declaration should be considered
+# experimental at this time.  Prerequisites should be kept simple with
+# no secondary prerequisites.
+#
+def multitask(args, &block)
+  Rake::MultiTask.define_task(args, &block)
 end
 
 # Declare a rule for auto-tasks.
