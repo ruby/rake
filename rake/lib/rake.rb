@@ -36,7 +36,7 @@ require 'ftools'
 require 'getoptlong'
 require 'fileutils'
 require 'singleton'
-require 'monitor'
+require 'thread'
 
 $last_comment = nil
 $show_tasks = nil
@@ -162,7 +162,7 @@ module Rake
       @actions = []
       @already_invoked = false
       @comment = nil
-      @monitor = Monitor.new
+      @lock = Mutex.new
     end
     
     # Enhance a task with prerequisites or actions.  Returns self.
@@ -179,7 +179,7 @@ module Rake
     
     # Invoke the task if it is needed.  Prerequites are invoked first.
     def invoke
-      @monitor.synchronize do
+      @lock.synchronize do
 	if $trace
 	  puts "** Invoke #{name} #{format_trace_flags}"
 	end
@@ -1515,34 +1515,33 @@ module Rake
 end
 
 
-class Object
-  class << self
-
-    # Rename the original handler to make it available.
-    alias :rake_original_const_missing :const_missing
-
-    # Check for deprecated uses of top level (i.e. in Object) uses of
-    # Rake class names.  If someone tries to reference the constant
-    # name, display a warning and return the proper object.  Using
-    # --class-namespace will define these constants in Object and
-    # avoid this handler.
-    def const_missing(const_name)
-      case const_name
-      when :Task
-	Rake.application.const_warning(const_name)
-	Rake::Task
-      when :FileTask
-	Rake.application.const_warning(const_name)
-	Rake::FileTask
-      when :FileCreationTask
-	Rake.application.const_warning(const_name)
-	Rake::FileCreationTask
-      when :RakeApp
-	Rake.application.const_warning(const_name)
-	Rake::Application
-      else
-	rake_original_const_missing(const_name)
-      end
+class Module
+  # Rename the original handler to make it available.
+  alias :rake_original_const_missing :const_missing
+  
+  # Check for deprecated uses of top level (i.e. in Object) uses of
+  # Rake class names.  If someone tries to reference the constant
+  # name, display a warning and return the proper object.  Using
+  # --class-namespace will define these constants in Object and
+  # avoid this handler.
+  def const_missing(const_name)
+    puts "DBG: Looking for constant [#{const_name}] in [#{self}]"
+    case const_name
+    when :Task
+      Rake.application.const_warning(const_name)
+      Rake::Task
+    when :FileTask
+      Rake.application.const_warning(const_name)
+      Rake::FileTask
+    when :FileCreationTask
+      Rake.application.const_warning(const_name)
+      Rake::FileCreationTask
+    when :RakeApp
+      Rake.application.const_warning(const_name)
+      Rake::Application
+    else
+      puts "DBG: Delegating constant lookup"
+      rake_original_const_missing(const_name)
     end
   end
 end
