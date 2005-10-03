@@ -8,6 +8,7 @@
 * Added --trace reminder on short exception messages (David Heinemeier
   Hansson suggestion).
 * Added multitask declaration that executes prerequisites in parallel.
+* Fixed missing_const hack to be compatible with Rails.
 
 == Version 0.6.1
 
