@@ -1,14 +1,19 @@
 = Rake Changelog
 
-== Pre-Version 0.6.2
+== Pre-Version 0.7.0
 
 * Added Rake.original_dir to return the original starting directory of
   the rake application.
 * Added safe_ln support for openAFS.
 * Added --trace reminder on short exception messages (David Heinemeier
   Hansson suggestion).
-* Added multitask declaration that executes prerequisites in parallel.
-* Fixed missing_const hack to be compatible with Rails.
+* Added multitask declaration that executes prerequisites in
+  parallel. (Doug Young providied an initial implementation).
+* Fixed missing_const hack to be compatible with Rails. (Jamis Buck
+  supplied test case).
+* Made the RDoc task default to internal (in-process) RDoc formatting.
+  The old behavior is still available by setting the +external+ flag
+  to true.
 
 == Version 0.6.1
 
