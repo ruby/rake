@@ -30,8 +30,8 @@ end
 
 # Determine the current version of the software
 
-if `ruby -Ilib ./bin/rake --version` =~ /\S+$/
-  CURRENT_VERSION = $&
+if `ruby -Ilib ./bin/rake --version` =~ /rake, version ([0-9.]+)$/
+  CURRENT_VERSION = $1
 else
   CURRENT_VERSION = "0.0.0"
 end
@@ -41,7 +41,6 @@ if ENV['REL']
 else
   PKG_VERSION = CURRENT_VERSION
 end
-
 
 SRC_RB = FileList['lib/**/*.rb']
 
@@ -106,7 +105,7 @@ rd = Rake::RDocTask.new("rdoc") { |rdoc|
   rdoc.rdoc_dir = 'html'
 #  rdoc.template = 'kilmer'
 #  rdoc.template = 'css2'
-  rdoc.template = 'doc/jamis.rb'
+  rdoc.template = '/home/jim/working/rubyforge/rake/doc/jamis.rb'
   rdoc.title    = "Rake -- Ruby Make"
   rdoc.options << '--line-numbers' << '--inline-source' << '--main' << 'README'
   rdoc.rdoc_files.include('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
