@@ -64,6 +64,9 @@ module Rake
     # List of options to be passed rdoc.  (default is [])
     attr_accessor :options
 
+    # Run the rdoc process as an external shell (default is false)
+    attr_accessor :external
+
     # Create an RDoc task named <em>rdoc</em>.  Default task name is +rdoc+.
     def initialize(name=:rdoc)	# :yield: self
       @name = name
@@ -72,6 +75,7 @@ module Rake
       @main = nil
       @title = nil
       @template = 'html'
+      @in_shell = false
       @options = []
       yield self if block_given?
       define
@@ -100,18 +104,33 @@ module Rake
       task name => [rdoc_target]
       file rdoc_target => @rdoc_files + [$rakefile] do
 	rm_r @rdoc_dir rescue nil
-	opts = option_list.join(' ')
-	sh %{rdoc -o #{@rdoc_dir} #{opts} #{@rdoc_files}}
+	args = option_list + @rdoc_files
+	if @external
+	  argstring = args.join(' ')
+	  sh %{ruby -Ivendor vender/rd #{argstring}}
+	else
+	  require 'rdoc/rdoc'
+	  RDoc::RDoc.new.document(args)
+	end
       end
       self
     end
 
     def option_list
       result = @options.dup
-      result << "--main" << "'#{main}'" if main
-      result << "--title" << "'#{title}'" if title
-      result << "-T" << "'#{template}'" if template
+      result << "-o" << @rdoc_dir
+      result << "--main" << quote(main) if main
+      result << "--title" << quote(title) if title
+      result << "-T" << quote(template) if template
       result
+    end
+
+    def quote(str)
+      if @external
+	"'#{str}'"
+      else
+	str
+      end
     end
 
     def option_string
