@@ -38,11 +38,8 @@ require 'fileutils'
 require 'singleton'
 require 'thread'
 
-$last_comment = nil
 $show_tasks = nil
 $show_prereqs = nil
-$trace = nil
-$dryrun = nil
 $silent = false
 
 # Some objects are dupable, some are not.  So we define a version of
@@ -140,6 +137,9 @@ module Rake
     
     # List of prerequisites for a task.
     attr_reader :prerequisites
+
+    # Application owning this task.
+    attr_reader :application
     
     # Comment for this task.
     attr_accessor :comment
@@ -163,6 +163,7 @@ module Rake
       @already_invoked = false
       @comment = nil
       @lock = Mutex.new
+      @application = Rake.application
     end
     
     # Enhance a task with prerequisites or actions.  Returns self.
@@ -180,7 +181,7 @@ module Rake
     # Invoke the task if it is needed.  Prerequites are invoked first.
     def invoke
       @lock.synchronize do
-	if $trace
+	if application.options.trace
 	  puts "** Invoke #{name} #{format_trace_flags}"
 	end
 	return if @already_invoked
@@ -206,11 +207,11 @@ module Rake
     
     # Execute the actions associated with this task.
     def execute
-      if $dryrun
+      if application.options.dryrun
 	puts "** Execute (dry run) #{name}"
 	return
       end
-      if $trace
+      if application.options.trace
 	puts "** Execute #{name}"
       end
       self.class.enhance_with_matching_rule(name) if @actions.empty?
@@ -231,14 +232,14 @@ module Rake
     # Add a comment to the task.  If a comment alread exists, separate
     # the new comment with " / ".
     def add_comment(comment)
-      return if ! $last_comment
+      return if ! application.last_comment
       if @comment 
 	@comment << " / "
       else
 	@comment = ''
       end
-      @comment << $last_comment
-      $last_comment = nil
+      @comment << application.last_comment
+      application.last_comment = nil
     end
     
     # Return a string describing the internal state of a task.  Useful
@@ -310,7 +311,7 @@ module Rake
 	deps = [deps] if (Symbol === deps) || (String === deps)
 	deps = deps.collect {|d| d.to_s }
 	t = lookup(task_name)
-	t.add_comment($last_comment)
+	t.add_comment(t.application.last_comment)
 	t.enhance(deps, &block)
       end
       
@@ -553,7 +554,7 @@ end
 #   end
 #
 def desc(comment)
-  $last_comment = comment
+  Rake.application.last_comment = comment
 end
 
 # Import the partial Rakekfile +fn+.
@@ -667,19 +668,25 @@ end
 module RakeFileUtils
   include FileUtils
   
-  $fileutils_output  = $stderr
-  $fileutils_label   = ''
   $fileutils_verbose = true
   $fileutils_nowrite = false
   
   FileUtils::OPT_TABLE.each do |name, opts|
-    next unless opts.include?('verbose')
+    default_options = []
+    if opts.include?('verbose')
+      default_options << ':verbose => $fileutils_verbose'
+    end
+    if opts.include?('noop')
+      default_options << ':noop => $fileutils_nowrite'
+    end
+
+    next if default_options.empty?
     module_eval(<<-EOS, __FILE__, __LINE__ + 1)
     def #{name}( *args, &block )
-      super(*fu_merge_option(args,
-          :verbose => $fileutils_verbose,
-          :noop => $fileutils_nowrite),
-        &block)
+      super(
+	*fu_merge_option(args,
+	  #{default_options.join(', ')}
+	  ), &block)
     end
     EOS
   end
@@ -1241,12 +1248,25 @@ end
 
 module Rake
 
+
+  # Class to control the command line options
+  CommandLineOptions = Struct.new(
+    :show_tasks,
+    :show_prereqs,
+    :trace,
+    :dryrun,
+    :silent)
+
   ######################################################################
   # Rake main application object.  When invoking +rake+ from the
   # command line, a Rake::Application object is created and run.
   #
   class Application
+    # The original directory where rake was invoked.
     attr_reader :original_dir
+
+    # Track the last comment made in the Rakefile.
+    attr_accessor :last_comment
 
     RAKEFILES = ['rakefile', 'Rakefile', 'rakefile.rb', 'Rakefile.rb']
     
@@ -1295,6 +1315,10 @@ module Rake
       Rake.application = self
     end
     
+    def options
+      @options ||= CommandLineOptions.new
+    end
+
     # True if one of the files in RAKEFILES is in the current directory.
     # If a match is found, it is copied into @rakefile.
     def have_rakefile
@@ -1363,8 +1387,8 @@ module Rake
       when '--dry-run'
 	verbose(true)
 	nowrite(true)
-	$dryrun = true
-	$trace = true
+	options.dryrun = true
+	options.trace = true
       when '--help'
 	help
 	exit
@@ -1387,7 +1411,7 @@ module Rake
       when '--tasks'
 	$show_tasks = true
       when '--trace'
-	$trace = true
+	options.trace = true
 	verbose(true)
       when '--usage'
 	usage
@@ -1501,7 +1525,7 @@ module Rake
       rescue Exception => ex
 	puts "rake aborted!"
 	puts ex.message
-	if $trace
+	if options.trace
 	  puts ex.backtrace.join("\n")
 	else
 	  puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
@@ -1525,7 +1549,6 @@ class Module
   # --class-namespace will define these constants in Object and
   # avoid this handler.
   def const_missing(const_name)
-    puts "DBG: Looking for constant [#{const_name}] in [#{self}]"
     case const_name
     when :Task
       Rake.application.const_warning(const_name)
@@ -1540,7 +1563,6 @@ class Module
       Rake.application.const_warning(const_name)
       Rake::Application
     else
-      puts "DBG: Delegating constant lookup"
       rake_original_const_missing(const_name)
     end
   end
