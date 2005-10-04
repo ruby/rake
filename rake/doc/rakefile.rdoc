@@ -110,6 +110,10 @@ both prerequisites and actions can be added later.  For example ...
     cp Dir["standard_data/*.data"], "testdata"
   end
 
+== Tasks with Parallel Prerequisites
+
+  multitask 
+
 == Rules
 
 When a file is named as a prerequisite, but does not have a file task
