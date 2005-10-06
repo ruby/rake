@@ -130,6 +130,9 @@ class FunctionalTest < Test::Unit::TestCase
     end
   end
 
+  def test_namespaces
+  end
+
   private
 
   def remove_chaining_files
