@@ -15,7 +15,7 @@ class TestTask < Test::Unit::TestCase
 
   def test_create
     arg = nil
-    t = Task.lookup(:name).enhance { |task| arg = task; 1234 }
+    t = intern(:name).enhance { |task| arg = task; 1234 }
     assert_equal "name", t.name
     assert_equal [], t.prerequisites
     assert t.prerequisites.is_a?(FileList)
@@ -27,19 +27,23 @@ class TestTask < Test::Unit::TestCase
 
   def test_invoke
     runlist = []
-    t1 = Task.lookup(:t1).enhance([:t2, :t3]) { |t| runlist << t.name; 3321 }
-    t2 = Task.lookup(:t2).enhance { |t| runlist << t.name }
-    t3 = Task.lookup(:t3).enhance { |t| runlist << t.name }
+    t1 = intern(:t1).enhance([:t2, :t3]) { |t| runlist << t.name; 3321 }
+    t2 = intern(:t2).enhance { |t| runlist << t.name }
+    t3 = intern(:t3).enhance { |t| runlist << t.name }
     assert_equal [:t2, :t3], t1.prerequisites
     t1.invoke
     assert_equal ["t2", "t3", "t1"], runlist
   end
 
+  def intern(name)
+    Rake.application.define_task(Rake::Task,name)
+  end
+
   def test_no_double_invoke
     runlist = []
-    t1 = Task.lookup(:t1).enhance([:t2, :t3]) { |t| runlist << t.name; 3321 }
-    t2 = Task.lookup(:t2).enhance([:t3]) { |t| runlist << t.name }
-    t3 = Task.lookup(:t3).enhance { |t| runlist << t.name }
+    t1 = intern(:t1).enhance([:t2, :t3]) { |t| runlist << t.name; 3321 }
+    t2 = intern(:t2).enhance([:t3]) { |t| runlist << t.name }
+    t3 = intern(:t3).enhance { |t| runlist << t.name }
     t1.invoke
     assert_equal ["t3", "t2", "t1"], runlist
   end
