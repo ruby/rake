@@ -2,7 +2,6 @@ begin
   require 'rake'
 rescue LoadError
   require 'rubygems'
-  require_gem 'rake'
+  require 'rake'
 end
-Rake::Application.new.run
-
+Rake.application.run
