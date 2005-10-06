@@ -40,16 +40,16 @@ class TestFileCreationTask < Test::Unit::TestCase
 
   def test_no_retriggers_on_filecreate_task
     create_timed_files(OLDFILE, NEWFILE)
-    t1 = FileCreationTask.lookup(OLDFILE).enhance([NEWFILE])
-    t2 = FileCreationTask.lookup(NEWFILE)
+    t1 = Rake.application.intern(FileCreationTask, OLDFILE).enhance([NEWFILE])
+    t2 = Rake.application.intern(FileCreationTask, NEWFILE)
     assert ! t2.needed?, "Should not need to build new file"
     assert ! t1.needed?, "Should not need to rebuild old file because of new"
   end
 
   def test_no_retriggers_on_file_task
     create_timed_files(OLDFILE, NEWFILE)
-    t1 = FileTask.lookup(OLDFILE).enhance([NEWFILE])
-    t2 = FileCreationTask.lookup(NEWFILE)
+    t1 = Rake.application.intern(FileCreationTask, OLDFILE).enhance([NEWFILE])
+    t2 = Rake.application.intern(FileCreationTask, NEWFILE)
     assert ! t2.needed?, "Should not need to build new file"
     assert ! t1.needed?, "Should not need to rebuild old file because of new"
   end

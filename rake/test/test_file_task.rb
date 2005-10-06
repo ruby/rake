@@ -33,8 +33,8 @@ class TestFileTask < Test::Unit::TestCase
   def test_file_times_new_depends_on_old
     create_timed_files(OLDFILE, NEWFILE)
 
-    t1 = FileTask.lookup(NEWFILE).enhance([OLDFILE])
-    t2 = FileTask.lookup(OLDFILE)
+    t1 = Rake.application.intern(FileTask, NEWFILE).enhance([OLDFILE])
+    t2 = Rake.application.intern(FileTask, OLDFILE)
     assert ! t2.needed?, "Should not need to build old file"
     assert ! t1.needed?, "Should not need to rebuild new file because of old"
   end
@@ -42,8 +42,8 @@ class TestFileTask < Test::Unit::TestCase
   def test_file_times_old_depends_on_new
     create_timed_files(OLDFILE, NEWFILE)
 
-    t1 = FileTask.lookup(OLDFILE).enhance([NEWFILE])
-    t2 = FileTask.lookup(NEWFILE)
+    t1 = Rake.application.intern(FileTask,OLDFILE).enhance([NEWFILE])
+    t2 = Rake.application.intern(FileTask, NEWFILE)
     assert ! t2.needed?, "Should not need to build new file"
     preq_stamp = t1.prerequisites.collect{|t| Task[t].timestamp}.max
     assert_equal t2.timestamp, preq_stamp
