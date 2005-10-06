@@ -75,7 +75,7 @@ module Rake
       @main = nil
       @title = nil
       @template = 'html'
-      @in_shell = false
+      @external = false
       @options = []
       yield self if block_given?
       define
