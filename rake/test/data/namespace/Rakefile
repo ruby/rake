@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+desc "copy"
+task :copy do
+  puts "COPY"
+end
+
+namespace "nest" do
+  desc "nest copy"
+  task :copy do
+    puts "NEST COPY"
+  end
+  task :xx => :copy
+end
+
+namespace do
+  desc "anon copy"
+  task :copy do
+    puts "ANON COPY"
+  end
+  task "rake:default" => "copy"
+end
