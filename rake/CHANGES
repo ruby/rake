@@ -14,6 +14,8 @@
 * Made the RDoc task default to internal (in-process) RDoc formatting.
   The old behavior is still available by setting the +external+ flag
   to true.
+* Rakefiles are now loaded with the expanded path to prevent
+  accidental polution from the Ruby load path.
 
 == Version 0.6.1
 

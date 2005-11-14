@@ -1163,7 +1163,7 @@ module Rake
   # Default Rakefile loader used by +import+.
   class DefaultLoader
     def load(fn)
-      Kernel.load fn
+      Kernel.load(File.expand_path(fn))
     end
   end
 
@@ -1592,7 +1592,7 @@ module Rake
       end
       puts "(in #{Dir.pwd})" unless options.silent
       $rakefile = @rakefile
-      load @rakefile
+      load File.expand_path(@rakefile)
       options.rakelib.each do |rlib|
 	Dir["#{rlib}/*.rake"].each do |name| add_import name end
       end
