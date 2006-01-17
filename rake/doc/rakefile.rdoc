@@ -112,7 +112,59 @@ both prerequisites and actions can be added later.  For example ...
 
 == Tasks with Parallel Prerequisites
 
-  multitask 
+Rake allows parallel execution of prerequisites using the following syntax:
+
+  multitask :copy_files => [:copy_src, :copy_doc, :copy_bin] do
+    # Task actions go here.
+  end
+
+In this example, +copy_files+ is a normal rake task.  Its actions are
+executed whereever all of its prerequisites are done.  The big
+differences is that the prerequisites (+copy_src+, +copy_bin+ and
++copy_doc+) 1are executed in parallel.  Each of the prerequisites are
+run in its own Ruby thread, allowing  [TBD]
+
+except that the +copy_src+,
++copy_doc+ and +copy_bin+ tasks are run in separate Rake threads,
+allowing them to proceed in parallel.
+
+The Rake internal data structures are thread-safe, so that Rake will
+correctly handle concurrency amoung the secondary prerequisites of a
+multitask.  All of the prerequisites executing in parallel will
+properly wait for any common secondary prerequisites to complete
+before proceeding.
+
+Let's look at a concrete example.  Suppose that in addition to the
++copy_files+ (multi) task defined above, each of the copy tasks in
+turn relied on a +prep_for_copy+ task as show here:
+
+  task :copy_src => [:prep_for_copy]
+  task :copy_bin => [:prep_for_copy]
+  task :copy_doc => [:prep_for_copy]
+
+When <tt>rake copy_files</tt> is executed, each of the copy
+prerequisites will wait for +prep_for_copy+ to finish before
+proceeding.  +prep_for_copy+ will only run once, even though it is
+invoked via multiple threads.
+
+Rakefile authors should be aware that they need to provide their own
+thread safety logic for any data structures they might be using.
+
+  FileNameQueue = []
+
+  multitask :run => [:produce, :consume]
+
+  task :produce do
+    while fn = get_file_name
+      FileNameQueue.push fn
+    end      
+  end
+
+  task :consume do
+    while fn = FileNameQueue.pop
+      process(fn)
+    end
+  end
 
 == Rules
 
@@ -234,6 +286,8 @@ generating a summary of your Rake file.
 Only tasks with descriptions will be displayed with the "-T" switch.
 Use "-P" (or "--prereqs") to get a list of all tasks and their
 prerequisites.
+
+== Namespaces
 
 == Odds and Ends
 
