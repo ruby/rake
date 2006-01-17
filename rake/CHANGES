@@ -16,6 +16,10 @@
   to true.
 * Rakefiles are now loaded with the expanded path to prevent
   accidental polution from the Ruby load path.
+* The +namespace+ command now returns a NameSpace object that can be
+  used to lookup tasks defined in that namespace.  This allows for
+  better anonymous namespace behavior.
+* Task objects my now be used in prerequisite lists directly.
 
 == Version 0.6.1
 

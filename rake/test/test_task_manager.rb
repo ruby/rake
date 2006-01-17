@@ -37,10 +37,12 @@ class TestTaskManager < Test::Unit::TestCase
   end
 
   def test_anonymous_namespace
-    @tm.in_namespace(nil) do
+    anon_ns = @tm.in_namespace(nil) do
       t = @tm.define_task(Rake::Task, :t)
       assert_equal "_anon_1:t", t.name
     end
+    task = anon_ns[:t]
+    assert_equal "_anon_1:t", task.name
   end
 
   def test_create_filetask_in_namespace

@@ -130,7 +130,39 @@ class FunctionalTest < Test::Unit::TestCase
     end
   end
 
-  def test_namespaces
+  def test_can_invoke_task_in_toplevel_namespace
+    Dir.chdir("test/data/namespace") do
+      rake "copy"
+      assert_match(/^COPY$/, @out)
+    end
+  end
+
+  def test_can_invoke_task_in_nested_namespace
+    Dir.chdir("test/data/namespace") do
+      rake "nest:copy"
+      assert_match(/^NEST COPY$/, @out)
+    end
+  end
+
+  def test_tasks_can_reference_task_in_other_namespaces
+    Dir.chdir("test/data/namespace") do
+      rake "b:run"
+      assert_match(/^IN A\nIN B$/m, @out)
+    end
+  end
+
+  def test_anonymous_tasks_can_be_invoked_indirectly
+    Dir.chdir("test/data/namespace") do
+      rake "anon"
+      assert_match(/^ANON COPY$/m, @out)
+    end
+  end
+
+  def test_rake_namespace_refers_to_toplevel
+    Dir.chdir("test/data/namespace") do
+      rake "very:nested:run"
+      assert_match(/^COPY$/m, @out)
+    end
   end
 
   private

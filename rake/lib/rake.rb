@@ -149,6 +149,11 @@ module Rake
     # Array of nested namespaces names used for task lookup by this task.
     attr_reader :scope
 
+    # Return task name
+    def to_s
+      name
+    end
+    
     # List of sources for task.
     attr_writer :sources
     def sources
@@ -180,7 +185,7 @@ module Rake
       self
     end
     
-    # Name of the task.
+    # Name of the task, including any namespace qualifiers.
     def name
       @name.to_s
     end
@@ -465,6 +470,17 @@ def multitask(args, &block)
   Rake::MultiTask.define_task(args, &block)
 end
 
+# Create a new rake namespace and use it for evaluating the given
+# block. Returns a NameSpace object that can be used to lookup tasks
+# defined in the namespace.
+#
+# E.g.
+#
+#   ns = namespace "nested" do
+#     task :run
+#   end
+#   task_run = ns[:run] # find :run in the given namespace.
+#
 def namespace(name=nil, &block)
   Rake.application.in_namespace(name, &block)
 end
@@ -1189,17 +1205,33 @@ end
 # Extensions to time to allow comparisons with an early time class.
 #
 class Time
-  alias pre_early_time_compare :<=>
+  alias rake_original_time_compare :<=>
   def <=>(other)
     if Rake::EarlyTime === other
       - other.<=>(self)
     else
-      pre_early_time_compare(other)
+      rake_original_time_compare(other)
     end
   end     
 end
 
 module Rake
+
+  ####################################################################
+  # The NameSpace class will lookup task names in the the scope
+  # defined by a +namespace' command.
+  #
+  class NameSpace
+    def initialize(task_manager, scope)
+      @task_manager = task_manager
+      @scope = scope.dup
+    end
+
+    def [](name)
+      @task_manager.lookup(name, @scope)
+    end
+  end
+
 
   ####################################################################
   # The TaskManager module is a mixin for managing tasks.  
@@ -1224,7 +1256,7 @@ module Rake
     def define_task(task_class, args, &block)
       task_name, deps = resolve_args(args)
       task_name = task_class.scope_name(@scope, task_name)
-      deps = [deps] if (Symbol === deps) || (String === deps)
+      deps = [deps] unless deps.respond_to?(:to_ary)
       deps = deps.collect {|d| d.to_s }
       task = intern(task_class, task_name)
       task.application = self
@@ -1337,8 +1369,10 @@ module Rake
 
     # Evaluate the block in a nested namespace.
     def in_namespace(name)
-      @scope.push(name||generate_name)
+      name ||= generate_name
+      @scope.push(name)
       yield
+      NameSpace.new(self, @scope)
     ensure
       @scope.pop
     end
@@ -1644,7 +1678,7 @@ module Rake
       @const_warning ||= false
       if ! @const_warning
 	puts %{WARNING: Deprecated reference to top-level constant '#{const_name}'} +
-	  %{found at: #{rakefile_location}}
+	  %{found at: #{rakefile_location}} # '
 	puts %{    Use --classic-namespace on rake command}
 	puts %{    or 'require "rake/classic_namespace"' in Rakefile}
       end

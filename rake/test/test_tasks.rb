@@ -77,5 +77,30 @@ class TestTask < Test::Unit::TestCase
     assert_equal ["t1", "t2"], Task.tasks.collect {|t| t.name}
   end
 
+  def test_task_gives_name_on_to_s
+    task :abc
+    assert_equal "abc", Task[:abc].to_s
+  end
+
+  def test_symbols_can_be_prerequisites
+    task :a => :b
+    assert_equal ["b"], Task[:a].prerequisites
+  end
+
+  def test_strings_can_be_prerequisites
+    task :a => "b"
+    assert_equal ["b"], Task[:a].prerequisites
+  end
+
+  def test_arrays_can_be_prerequisites
+    task :a => ["b", "c"]
+    assert_equal ["b", "c"], Task[:a].prerequisites
+  end
+
+  def test_filelists_can_be_prerequisites
+    task :a => FileList.new.include("b", "c")
+    assert_equal ["b", "c"], Task[:a].prerequisites
+  end
+
 end
 
