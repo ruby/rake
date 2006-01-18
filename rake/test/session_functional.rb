@@ -144,6 +144,13 @@ class FunctionalTest < Test::Unit::TestCase
     end
   end
 
+  def test_tasks_can_reference_task_in_same_namespace
+    Dir.chdir("test/data/namespace") do
+      rake "nest:xx"
+      assert_match(/^NEST COPY$/m, @out)
+    end
+  end
+
   def test_tasks_can_reference_task_in_other_namespaces
     Dir.chdir("test/data/namespace") do
       rake "b:run"
