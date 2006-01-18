@@ -47,17 +47,19 @@ SRC_RB = FileList['lib/**/*.rb']
 # The default task is run if rake is given no explicit arguments.
 
 desc "Default Task"
-task :default => :alltests
+task :default => :test_all
 
 # Test Tasks ---------------------------------------------------------
 
-task :ta => :alltests
-task :tf => :funtests
-task :tu => :unittests
-task :tc => :contribtests
-task :test => :unittests
+# Common Abbreviations ...
 
-Rake::TestTask.new(:alltests) do |t|
+task :ta => :test_all
+task :tf => :test_functional
+task :tu => :test_units
+task :tc => :test_contribs
+task :test => :test_units
+
+Rake::TestTask.new(:test_all) do |t|
   t.test_files = FileList[
     'test/test*.rb',
     'test/contrib/test*.rb',
@@ -67,26 +69,26 @@ Rake::TestTask.new(:alltests) do |t|
   t.verbose = true
 end
 
-Rake::TestTask.new(:unittests) do |t|
+Rake::TestTask.new(:test_units) do |t|
   t.test_files = FileList['test/test*.rb']
   t.warning = true
   t.verbose = false
 end
 
-Rake::TestTask.new(:funtests) do |t|
+Rake::TestTask.new(:test_functional) do |t|
   t.test_files = FileList['test/fun*.rb']
   t.warning = true
   t.warning = true
 end
 
-Rake::TestTask.new(:contribtests) do |t|
+Rake::TestTask.new(:test_contribs) do |t|
   t.test_files = FileList['test/contrib/test*.rb']
   t.verbose = false
   t.warning = true
 end
 
 directory 'testdata'
-[:alltests, :unittests, :contribtests, :funtests].each do |t|
+[:test_all, :test_units, :test_contribs, :test_functional].each do |t|
   task t => ['testdata']
 end
 
@@ -265,7 +267,7 @@ desc "Make a new release"
 task :release => [
   :prerelease,
   :clobber,
-  :alltests,
+  :test_all,
   :update_version,
   :package,
   :tag] do
