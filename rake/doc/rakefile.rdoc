@@ -120,51 +120,35 @@ Rake allows parallel execution of prerequisites using the following syntax:
 
 In this example, +copy_files+ is a normal rake task.  Its actions are
 executed whereever all of its prerequisites are done.  The big
-differences is that the prerequisites (+copy_src+, +copy_bin+ and
-+copy_doc+) 1are executed in parallel.  Each of the prerequisites are
-run in its own Ruby thread, allowing  [TBD]
+difference is that the prerequisites (+copy_src+, +copy_bin+ and
++copy_doc+) are executed in parallel.  Each of the prerequisites are
+run in their own Ruby thread, possibly allowing faster overall runtime.
 
-except that the +copy_src+,
-+copy_doc+ and +copy_bin+ tasks are run in separate Rake threads,
-allowing them to proceed in parallel.
+=== Secondary Prerequisites
 
-The Rake internal data structures are thread-safe, so that Rake will
-correctly handle concurrency amoung the secondary prerequisites of a
-multitask.  All of the prerequisites executing in parallel will
-properly wait for any common secondary prerequisites to complete
-before proceeding.
+If any of the primary prerequites of a multitask have common secondary
+prerequisites, all of the primary prerequisites will wait until the
+common prerequisites have been run.
 
-Let's look at a concrete example.  Suppose that in addition to the
-+copy_files+ (multi) task defined above, each of the copy tasks in
-turn relied on a +prep_for_copy+ task as show here:
+For example, if the <tt>copy_<em>xxx</em></tt> tasks have the
+following prerequisites:
 
   task :copy_src => [:prep_for_copy]
   task :copy_bin => [:prep_for_copy]
   task :copy_doc => [:prep_for_copy]
 
-When <tt>rake copy_files</tt> is executed, each of the copy
-prerequisites will wait for +prep_for_copy+ to finish before
-proceeding.  +prep_for_copy+ will only run once, even though it is
-invoked via multiple threads.
+Then the +prep_for_copy+ task is run before starting all the copies in
+parallel.  Once +prep_for_copy+ is complete, +copy_src+, +copy_bin+,
+and +copy_doc+ are all run in parallel.  Note that +prep_for_copy+ is
+run only once, even though it is referenced in multiple threads.
 
-Rakefile authors should be aware that they need to provide their own
-thread safety logic for any data structures they might be using.
+=== Thread Safety
 
-  FileNameQueue = []
-
-  multitask :run => [:produce, :consume]
-
-  task :produce do
-    while fn = get_file_name
-      FileNameQueue.push fn
-    end      
-  end
-
-  task :consume do
-    while fn = FileNameQueue.pop
-      process(fn)
-    end
-  end
+The Rake internal data structures are thread-safe with respect
+to the multitask parallel execution, so there is no need for the user
+to do extra synchronization for Rake's benefit.  However, if there are
+user data structures shared between the parallel prerequisites, the
+user must do whatever is necessary to prevent race conditions.
 
 == Rules
 
@@ -288,6 +272,8 @@ Use "-P" (or "--prereqs") to get a list of all tasks and their
 prerequisites.
 
 == Namespaces
+
+TBD
 
 == Odds and Ends
 
