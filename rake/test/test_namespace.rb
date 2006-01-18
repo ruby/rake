@@ -15,10 +15,10 @@ class TestNameSpace < Test::Unit::TestCase
 
   def test_namespace_lookup
     FlexMock.use("TaskManager") do |mgr|
-      mgr.should_receive(:lookup).with(:t, ["a"]).and_return(nil)
+      mgr.should_receive(:lookup).with(:t, ["a"]).
+	and_return(nil).once
       ns = Rake::NameSpace.new(mgr, ["a"])
       ns[:t]
     end
   end
-
 end
