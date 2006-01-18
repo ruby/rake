@@ -172,6 +172,13 @@ class FunctionalTest < Test::Unit::TestCase
     end
   end
 
+  def test_file_task_are_not_scoped_by_namespaces
+    Dir.chdir("test/data/namespace") do
+      rake "xyz.rb"
+      assert_match(/^XYZ1\nXYZ2$/m, @out)
+    end
+  end
+
   private
 
   def remove_chaining_files

@@ -43,3 +43,15 @@ namespace "b" do
   end
 end
 
+namespace "file1" do
+  file "xyz.rb" do
+    puts "XYZ1"
+  end
+end
+
+namespace "file2" do
+  file "xyz.rb" do
+    puts "XYZ2"
+  end
+end
+
