@@ -53,6 +53,14 @@ class TestTaskManager < Test::Unit::TestCase
     assert_equal ["fn"], @tm.tasks.collect { |t| t.name }
   end
 
+  def testS_namespace_yields_same_namespace_as_returned
+    yielded_namespace = nil
+    returned_namespace = @tm.in_namespace("x") do |ns|
+      yielded_namespace = ns
+    end
+    assert_equal returned_namespace, yielded_namespace
+  end
+
   def test_name_lookup_with_implicit_file_tasks
     t = @tm["README"]
     assert_equal "README", t.name
