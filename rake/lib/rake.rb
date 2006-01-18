@@ -1382,8 +1382,9 @@ module Rake
     def in_namespace(name)
       name ||= generate_name
       @scope.push(name)
-      yield
-      NameSpace.new(self, @scope)
+      ns = NameSpace.new(self, @scope)
+      yield(ns)
+      ns
     ensure
       @scope.pop
     end
