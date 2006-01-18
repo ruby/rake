@@ -115,7 +115,7 @@ both prerequisites and actions can be added later.  For example ...
 Rake allows parallel execution of prerequisites using the following syntax:
 
   multitask :copy_files => [:copy_src, :copy_doc, :copy_bin] do
-    # Task actions go here.
+    puts "All Copies Complete"
   end
 
 In this example, +copy_files+ is a normal rake task.  Its actions are
@@ -127,8 +127,8 @@ run in their own Ruby thread, possibly allowing faster overall runtime.
 === Secondary Prerequisites
 
 If any of the primary prerequites of a multitask have common secondary
-prerequisites, all of the primary prerequisites will wait until the
-common prerequisites have been run.
+prerequisites, all of the primary/parallel prerequisites will wait
+until the common prerequisites have been run.
 
 For example, if the <tt>copy_<em>xxx</em></tt> tasks have the
 following prerequisites:
@@ -273,8 +273,88 @@ prerequisites.
 
 == Namespaces
 
+As projects grow (and along with it, the number of tasks), it is
+common for task names to begin to clash.  For example, if you might
+have a main program and a set of sample programs built by a single
+Rakefile.  By placing the tasks related to the main program in one
+namespace, and the tasks for building the sample programs in a
+different namespace, the task names will not will not interfer with
+each other.
 
+For example:
 
+  namespace "main"
+    task :build do
+      # Build the main program
+    end
+  end
+
+  namespace "samples" do
+    task :build do
+      # Build the sample programs
+    end
+  end
+
+  task :build => ["main:build", "samples:build"]
+
+Referencing a task in a separate namespace can be achieved by
+prefixing the task name with the namespace and a colon
+(e.g. "main:build" refers to the :build task in the +main+ namespace).
+Nested namespaces are supported, so
+
+Note that the name given in the +task+ command is always the unadorned
+task name without any namespace prefixes.  The +task+ command always
+defines a task in the current namespace.  
+
+=== FileTasks
+
+File task names are not scoped by the namespace command.  Since the
+name of a file task is the name of an actual file in the file system,
+it makes little sense to include file task names in name space.
+Directory tasks (created by the +directory+ command) are a type of
+file task and also do not affected by namespaces.
+
+=== Name Resolution
+
+When looking up a task name, rake will start with the current
+namespace and attempt to find the name there.  If it fails to find a
+name in the current namespace, it will search the parent namespaces
+until a match is found (or an error occurs if there is no match).
+
+The "rake" namespace is a special implicit namespace that refers to
+the toplevel names.
+
+If a task name begins with a "^" character, the name resolution will
+start in the parent namespace.  Multiple "^" characters are allowed.
+
+Here is an example file with multiple :run tasks and how various names
+resolve in different locations.
+
+  task :run
+
+  namespace "one" do
+    task :run
+
+    namespace "two" do
+      task :run
+
+      # :run            => "one:two:run"
+      # "two:run"       => "one:two:run"
+      # "one:two:run"   => "one:two:run"
+      # "one:run"       => "one:run"
+      # "^run"          => "one:run"
+      # "^^run"         => "rake:run" (the top level task)
+      # "rake:run"      => "rake:run" (the top level task)
+    end
+
+    # :run       => "one:run"
+    # "two:run"  => "one:two:run"
+    # "^run"     => "rake:run"
+  end
+
+  # :run           => "rake:run"
+  # "one:run"      => "one:run"
+  # "one:two:run"  => "one:two:run"
 
 == Odds and Ends
 

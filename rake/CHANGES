@@ -4,7 +4,7 @@
 
 * Added Rake.original_dir to return the original starting directory of
   the rake application.
-* Added safe_ln support for openAFS.
+* Added safe_ln support for openAFS (from Ludvig Omholt).
 * Added --trace reminder on short exception messages (David Heinemeier
   Hansson suggestion).
 * Added multitask declaration that executes prerequisites in
