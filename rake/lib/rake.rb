@@ -994,6 +994,7 @@ module Rake
         self << fn
       end
     end
+    private :resolve_add
 
     def resolve_exclude
       @exclude_patterns.each do |pat|
@@ -1009,6 +1010,7 @@ module Rake
       end
       self
     end
+    private :resolve_exclude
 
     # Return a new FileList with the results of running +sub+ against
     # each element of the oringal list.
@@ -1219,14 +1221,18 @@ module Rake
 
   ####################################################################
   # The NameSpace class will lookup task names in the the scope
-  # defined by a +namespace' command.
+  # defined by a +namespace+ command.
   #
   class NameSpace
-    def initialize(task_manager, scope)
-      @task_manager = task_manager
-      @scope = scope.dup
-    end
 
+    # Create a namespace lookup object using the given task manager
+    # and the list of scopes.
+    def initialize(task_manager, scope_list)
+      @task_manager = task_manager
+      @scope = scope_list.dup
+    end
+    
+    # Lookup a task named +name+ in the namespace.
     def [](name)
       @task_manager.lookup(name, @scope)
     end
@@ -1334,8 +1340,9 @@ module Rake
 
     # Lookup a task, using scope and the scope hints in the task name.
     # This method performs straight lookups without trying to
-    # synthesize file tasks or rules.  Return nil if the task cannot
-    # be found.
+    # synthesize file tasks or rules.  Special scope names (e.g. '^')
+    # are recognized.  If no scope argument is supplied, use the
+    # current scope.  Return nil if the task cannot be found.
     def lookup(task_name, initial_scope=nil)
       initial_scope ||= @scope
       task_name = task_name.to_s
@@ -1362,12 +1369,16 @@ module Rake
       end
       nil
     end
+    private :lookup_in_scope
 
+    # Return the list of scope names currently active in the task
+    # manager.
     def current_scope
       @scope.dup
     end
 
-    # Evaluate the block in a nested namespace.
+    # Evaluate the block in a nested namespace named +name+.  Create
+    # an anonymous namespace if +name+ is nil.
     def in_namespace(name)
       name ||= generate_name
       @scope.push(name)
@@ -1728,9 +1739,9 @@ class Module
   
   # Check for deprecated uses of top level (i.e. in Object) uses of
   # Rake class names.  If someone tries to reference the constant
-  # name, display a warning and return the proper object.  Using
-  # --class-namespace will define these constants in Object and
-  # avoid this handler.
+  # name, display a warning and return the proper object.  Using the
+  # --classic-namespace command line option will define these
+  # constants in Object and avoid this handler.
   def const_missing(const_name)
     case const_name
     when :Task
