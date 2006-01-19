@@ -1,6 +1,6 @@
 = RAKE -- Ruby Make 
 
-Supporting Rake version: 0.6
+Supporting Rake version: 0.7.x
 
 This package contains Rake, a simple ruby build program with
 capabilities similar to make.
@@ -111,8 +111,8 @@ other projects with similar (and not so similar) goals.
 * http://www.a-a-p.org -- Make in Python
 * http://www.aromatic.com/tools/jam.txt -- JAM, Java Automated Make
 * http://ant.apache.org -- The Ant project
-* http://www.perl.com/language/ppt/src/make/index.html -- Make from
-  the Perl Power Tools implementation.
+* http://ppt.perl.org/commands/make/index.html -- Make from the Perl
+  Power Tools implementation.
 * http://search.cpan.org/search?query=PerlBuildSystem -- The Perl Build System
 * http://make.rubyforge.org -- Rant, another Ruby make tool.
 
