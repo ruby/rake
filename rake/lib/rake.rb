@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 #--
-# Copyright (c) 2003, 2004, 2005 Jim Weirich
+# Copyright (c) 2003, 2004, 2005, 2006 Jim Weirich
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.6.99.2'
+RAKEVERSION = '0.6.99.3'
 
 require 'rbconfig'
 require 'ftools'
