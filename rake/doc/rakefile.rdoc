@@ -312,7 +312,7 @@ File task names are not scoped by the namespace command.  Since the
 name of a file task is the name of an actual file in the file system,
 it makes little sense to include file task names in name space.
 Directory tasks (created by the +directory+ command) are a type of
-file task and also do not affected by namespaces.
+file task and are also not affected by namespaces.
 
 === Name Resolution
 
