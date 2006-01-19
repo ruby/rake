@@ -21,12 +21,12 @@ are, I hope you enjoy them.
 
 * Task objects my now be used in prerequisite lists directly.
 
-* Task objects (rather than task names) may now be included in the
+* Task objects (in addition to task names) may now be included in the
   prerequisite list of a task.
 
 * Internals cleanup and refactoring.
 
-=== Bug Fixes  
+=== Bug Fixes
 
 * Compatibility fixes for Ruby 1.8.4 FileUtils changes.
 
