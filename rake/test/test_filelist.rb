@@ -252,7 +252,7 @@ class TestFileList < Test::Unit::TestCase
       assert_match(/files\.egrep/, line)
       found = true
     end
-    assert found, "should have foudn a matching line"
+    assert found, "should have found a matching line"
   end
 
 
