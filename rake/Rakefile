@@ -245,7 +245,7 @@ load "publish.rf" if File.exist? "publish.rf"
 
 desc "Look for TODO and FIXME tags in the code"
 task :todo do
-  FileList['**/*.rb'].egrep /#.*(FIXME|TODO|TBD)/
+  FileList['**/*.rb'].exclude('pkg').egrep /#.*(FIXME|TODO|TBD)/
 end
 
 desc "Look for Debugging print lines"
