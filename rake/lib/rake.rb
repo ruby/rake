@@ -1465,8 +1465,8 @@ module Rake
 	"Require MODULE before executing rakefile."],
       ['--silent',   '-s', GetoptLong::NO_ARGUMENT,
 	"Like --quiet, but also suppresses the 'in directory' announcement."],
-      ['--tasks',    '-T', GetoptLong::NO_ARGUMENT,
-	"Display the tasks and dependencies, then exit."],
+      ['--tasks',    '-T', GetoptLong::OPTIONAL_ARGUMENT,
+	"Display the tasks (matching optional PATTERN) with descriptions, then exit."],
       ['--trace',    '-t', GetoptLong::NO_ARGUMENT,
 	"Turn on invoke/execute tracing, enable full backtrace."],
       ['--usage',    '-h', GetoptLong::NO_ARGUMENT,
@@ -1533,15 +1533,14 @@ module Rake
     
     # Display the tasks and dependencies.
     def display_tasks_and_comments
-      width = Rake::Task.tasks.select { |t|
-	t.comment
-      }.collect { |t|
+      displayable_tasks = Rake::Task.tasks.select { |t|
+	t.comment && t.name =~ options.show_task_pattern
+      }
+      width = displayable_tasks.collect { |t|
 	t.name.length
       }.max
-      Rake::Task.tasks.each do |t|
-	if t.comment
-	  printf "rake %-#{width}s  # %s\n", t.name, t.comment
-	end
+      displayable_tasks.each do |t|
+	printf "rake %-#{width}s  # %s\n", t.name, t.comment
       end
     end
     
@@ -1590,6 +1589,7 @@ module Rake
 	options.silent = true
       when '--tasks'
 	options.show_tasks = true
+	options.show_task_pattern = Regexp.new(value || '.')
       when '--trace'
 	options.trace = true
 	verbose(true)
