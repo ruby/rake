@@ -178,6 +178,28 @@ class TestRules < Test::Unit::TestCase
     rm_r("testdata/src", :verbose=>false) rescue nil
   end
 
+  def test_proc_returning_lists_are_flattened_into_prereqs
+    ran = false
+    File.makedirs("testdata/flatten")
+    create_file("testdata/flatten/a.txt")
+    task 'testdata/flatten/b.data' do |t|
+      ran = true
+      touch t.name, :verbose => false
+    end
+    rule '.html' =>
+      proc { |fn|
+      [
+        fn.ext("txt"),
+        "testdata/flatten/b.data"
+      ]
+    } do |task|
+    end
+    Task['testdata/flatten/a.html'].invoke
+    assert ran, "Should have triggered flattened dependency"
+  ensure
+    rm_r("testdata/flatten", :verbose=>false) rescue nil
+  end
+
   def test_recursive_rules
     actions = []
     create_file("testdata/abc.xml")
