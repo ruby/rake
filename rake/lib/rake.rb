@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.7.0'
+RAKEVERSION = '0.7.0.1'
 
 require 'rbconfig'
 require 'ftools'
@@ -78,8 +78,91 @@ class String
       dup.sub!(%r(([^/\\])\.[^./\\]*$)) { $1 + newext } || self + newext
     end
   end
-end
 
+
+  unless instance_methods.include? "pathmap" 
+    def pathmap_explode
+      head, tail = File.split(self)
+      return [self] if head == self
+      return [tail] if head == '.' || tail == '/'
+      return [head, tail] if head == '/'
+      return head.pathmap_explode + [tail]
+    end
+    protected :pathmap_explode
+
+    def pathmap_partial(n)
+      target = File.dirname(self)
+      dirs = target.pathmap_explode
+      if n > 0
+        File.join(dirs[0...n])
+      elsif n < 0
+        partial = dirs[n..-1]
+        if partial.nil? || partial.empty?
+          target
+        else
+          File.join(partial)
+        end
+      else
+        "."
+      end
+    end
+    protected :pathmap_partial
+
+    def pathmap_replace(patterns, &block)
+      result = self
+      patterns.split(';').each do |pair|
+        pattern, replacement = pair.split(',')
+        pattern = Regexp.new(pattern)
+        if replacement == '*' && block_given?
+          result = result.sub(pattern, &block)
+        elsif replacement
+          result = result.sub(pattern, replacement)
+        else
+          result = result.sub(pattern, '')
+        end
+      end
+      result
+    end
+    protected :pathmap_replace
+
+    def pathmap(spec=nil, &block)
+      return self if spec.nil?
+      result = ''
+      spec.scan(/%\{[^}]*\}-?\d*[sdpfnxX]|%-?\d+d|%.|[^%]+/) do |frag|
+        case frag
+        when '%f'
+          result << File.basename(self)
+        when '%n'
+          result << File.basename(self).ext
+        when '%d'
+          result << File.dirname(self)
+        when '%x'
+          result << $1 if self =~ /[^\/](\.[^.]+)$/
+        when '%X'
+          if self =~ /^(.+[^\/])(\.[^.]+)$/
+            result << $1
+          else
+            result << self
+          end
+        when '%p'
+          result << self
+        when '%s'
+          result << (File::ALT_SEPARATOR || File::SEPARATOR)
+        when /%(-?\d+)d/
+          result << pathmap_partial($1.to_i)
+        when /^%\{([^}]*)\}(\d*[dpfnxX])/
+          patterns, operator = $1, $2
+          result << pathmap('%' + operator).pathmap_replace(patterns, &block)
+        when /^%/
+          fail ArgumentError, "Unknown pathmap specifier #{frag} in '#{spec}'"
+        else
+          result << frag
+        end
+      end
+      result
+    end
+  end
+end
 
 ######################################################################
 module Rake
@@ -1043,6 +1126,12 @@ module Rake
     def gsub!(pat, rep)
       each_with_index { |fn, i| self[i] = fn.gsub(pat,rep) }
       self
+    end
+
+    # Apply the pathmap spec to each of the included file names,
+    # returning a new file list with the modified paths.
+    def pathmap(spec=nil)
+      collect { |fn| fn.pathmap(spec) }
     end
 
     # Return a new array with <tt>String#ext</tt> method applied to
