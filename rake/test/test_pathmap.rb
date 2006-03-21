@@ -115,6 +115,10 @@ class TestPathMap < Test::Unit::TestCase
     assert_equal "/this/is/a/dir/abc.rb", "/this/is/a/dir/abc.rb".pathmap("%p")
   end
 
+  def test_percent_percent_returns_percent
+    assert_equal "a%b", "".pathmap("a%%b")
+  end
+
   def test_undefined_percent_causes_error
     ex = assert_raise(ArgumentError) {
       "dir/abc.rb".pathmap("%z")
