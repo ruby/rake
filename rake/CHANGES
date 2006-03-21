@@ -1,8 +1,11 @@
 = Rake Changelog
 
-== Pre-Version 0.7.0
+== Pre-Version 0.7.1
 
 * Added optional filter parameter to the --tasks command line option.
+* Added flatten to allow rule transform procs to return lists of
+  prereqs (Joel VanderWerf provided patch).
+* Added pathmap to String and FileList.
 
 == Version 0.7.0
 
