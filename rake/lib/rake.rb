@@ -1421,13 +1421,13 @@ module Rake
       extensions.collect { |ext|
 	case ext
 	when String
-	  source = task_name.sub(/\.[^.]*$/, ext)
+	  task_name.sub(/\.[^.]*$/, ext)
 	when Proc
-	  source = ext.call(task_name)
+	  ext.call(task_name)
 	else
 	  fail "Don't know how to handle rule dependent: #{ext.inspect}"
 	end
-      }
+      }.flatten
     end
     
   end
