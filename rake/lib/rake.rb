@@ -81,6 +81,7 @@ class String
 
 
   unless instance_methods.include? "pathmap" 
+    # Explode a path into individual components.  Used by +pathmap+.
     def pathmap_explode
       head, tail = File.split(self)
       return [self] if head == self
@@ -90,6 +91,10 @@ class String
     end
     protected :pathmap_explode
 
+    # Extract a partial path from the path.  Include +n+ directories
+    # from the front end (left hand side) if +n+ is positive.  Include
+    # |+n+| directories from the back end (right hand side) if +n+ is
+    # negative.
     def pathmap_partial(n)
       target = File.dirname(self)
       dirs = target.pathmap_explode
@@ -108,6 +113,8 @@ class String
     end
     protected :pathmap_partial
 
+    # Preform the pathmap replacement operations on the given path.
+    # The patterns take the form 'pat1,rep1;pat2,rep2...'.
     def pathmap_replace(patterns, &block)
       result = self
       patterns.split(';').each do |pair|
@@ -125,10 +132,73 @@ class String
     end
     protected :pathmap_replace
 
+    # Map the path according to the given specification.  The
+    # specification controls the details of the mapping.  The
+    # following special patterns are recognized:
+    #
+    # * <b>%p</b> -- The complete path.   
+    # * <b>%f</b> -- The base file name of the path, with its file
+    #   extension, but without any directories.
+    # * <b>%n</b> -- The file name of the path without its file
+    #   extension.
+    # * <b>%d</b> -- The directory list of the path.
+    # * <b>%x</b> -- The file extension of the path.  An empty string
+    #   if there is no extension.
+    # * <b>%X</b> -- Everything *but* the file extension.
+    # * <b>%s</b> -- The alternate file separater if defined,
+    #   otherwise use the standard file separator.
+    # # <b>%%</b> -- A percent sign.
+    #
+    # The %d specifier can also have a numeric prefix (e.g. '%2d').
+    # If the number is positive, only return (up to) +n+ directories
+    # in the path, starting from the left hand side.  If +n+ is
+    # negative, return (up to) |+n+| directories from the right hand
+    # side of the path.
+    #
+    # Examples:
+    #
+    #   'a/b/c/d/file.txt'.pathmap("%2d")   => 'a/b'
+    #   'a/b/c/d/file.txt'.pathmap("%-2d")  => 'c/d'
+    #
+    # Also the %d, %p, $f, $n, %x, and %X operators can take a
+    # pattern/replacement argument to perform simple string
+    # substititions on a particular part of the path.  The pattern and
+    # replacement are speparated by a comma and are enclosed by curly
+    # braces.  The replacement spec comes after the % character but
+    # before the operator letter.  (e.g. "%{old,new}d").  Muliple
+    # replacement specs should be separated by semi-colons
+    # (e.g. "%{old,new;src,bin}d").
+    #
+    # Regular expressions may be used for the pattern, and back refs
+    # may be used in the replacement text.  Curly braces, commas and
+    # semi-colons are excluded from both the pattern and replacement
+    # text (let's keep parsing reasonable).
+    #
+    # For example: 
+    #
+    #    "src/org/onestepback/proj/A.java".pathmap("%{^src,bin}X.class")
+    # 
+    # returns:
+    #
+    #    "bin/org/onestepback/proj/A.class"
+    #
+    # If the replacement text is '*', then a block may be provided to
+    # perform some arbitrary calculation for the replacement.
+    #
+    # For example:
+    #
+    #   "/path/to/file.TXT".pathmap("%X%{.*,*}x") { |ext|
+    #      ext.downcase
+    #   }
+    #
+    # Returns:
+    #
+    #  "/path/to/file.txt"
+    #
     def pathmap(spec=nil, &block)
       return self if spec.nil?
       result = ''
-      spec.scan(/%\{[^}]*\}-?\d*[sdpfnxX]|%-?\d+d|%.|[^%]+/) do |frag|
+      spec.scan(/%\{[^}]*\}-?\d*[sdpfnxX%]|%-?\d+d|%.|[^%]+/) do |frag|
         case frag
         when '%f'
           result << File.basename(self)
@@ -148,6 +218,8 @@ class String
           result << self
         when '%s'
           result << (File::ALT_SEPARATOR || File::SEPARATOR)
+        when '%%'
+          result << "%"
         when /%(-?\d+)d/
           result << pathmap_partial($1.to_i)
         when /^%\{([^}]*)\}(\d*[dpfnxX])/
@@ -1129,7 +1201,8 @@ module Rake
     end
 
     # Apply the pathmap spec to each of the included file names,
-    # returning a new file list with the modified paths.
+    # returning a new file list with the modified paths.  (See
+    # String#pathmap for details.)
     def pathmap(spec=nil)
       collect { |fn| fn.pathmap(spec) }
     end
