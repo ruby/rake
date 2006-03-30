@@ -6,6 +6,10 @@
 * Added flatten to allow rule transform procs to return lists of
   prereqs (Joel VanderWerf provided patch).
 * Added pathmap to String and FileList.
+* The -r option will now load .rake files (but a straight require
+  doesn't yet).  NOTE: check if -r will load from gems.
+* The -f option without a value will disable the search for a
+  Rakefile.  The assumption is that the -r files are adequate.
 
 == Version 0.7.0
 
