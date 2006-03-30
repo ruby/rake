@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.7.0.1'
+RAKEVERSION = '0.7.0.2'
 
 require 'rbconfig'
 require 'ftools'
@@ -1621,7 +1621,7 @@ module Rake
 	"Display the tasks and dependencies, then exit."],
       ['--quiet',    '-q', GetoptLong::NO_ARGUMENT,
 	"Do not log messages to standard output."],
-      ['--rakefile', '-f', GetoptLong::REQUIRED_ARGUMENT,
+      ['--rakefile', '-f', GetoptLong::OPTIONAL_ARGUMENT,
 	"Use FILE as the rakefile."],
       ['--require',  '-r', GetoptLong::REQUIRED_ARGUMENT,
 	"Require MODULE before executing rakefile."],
@@ -1663,7 +1663,7 @@ module Rake
     # If a match is found, it is copied into @rakefile.
     def have_rakefile
       RAKEFILES.each do |fn|
-	if File.exist?(fn)
+	if File.exist?(fn) || fn == ''
 	  @rakefile = fn
 	  return true
 	end
@@ -1745,7 +1745,15 @@ module Rake
       when '--rakelibdir'
 	options.rakelib = value.split(':')
       when '--require'
-	require value
+        begin
+          require value
+        rescue LoadError => ex
+          begin
+            rake_require value
+          rescue LoadError => ex2
+            raise ex
+          end
+        end
       when '--silent'
 	verbose(false)
 	options.silent = true
@@ -1789,6 +1797,23 @@ module Rake
       end
     end
     
+    # Similar to the regular Ruby +require+ command, but will check
+    # for .rake files in addition to .rb files.
+    def rake_require(file_name, paths=$LOAD_PATH, loaded=$")
+      return false if loaded.include?(file_name)
+      paths.each do |path|
+        fn = file_name + ".rake"
+        full_path = File.join(path, fn)
+        if File.exist?(full_path)
+          load full_path
+          loaded << fn
+          return true
+        end
+      end
+      fail LoadError, "Can't find #{file_name}"
+    end
+
+    # Find the rakefile and then load it and any pending imports.
     def load_rakefile
       here = Dir.pwd
       while ! have_rakefile
@@ -1800,7 +1825,7 @@ module Rake
       end
       puts "(in #{Dir.pwd})" unless options.silent
       $rakefile = @rakefile
-      load File.expand_path(@rakefile)
+      load File.expand_path(@rakefile) if @rakefile != ''
       options.rakelib.each do |rlib|
 	Dir["#{rlib}/*.rake"].each do |name| add_import name end
       end
