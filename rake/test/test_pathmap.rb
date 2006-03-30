@@ -89,7 +89,7 @@ class TestPathMap < Test::Unit::TestCase
     ex = assert_raise(ArgumentError) do
       "abc.xyz".pathmap("%{src,bin}z")
     end
-    assert_match /unknown.*pathmap.*spec.*z/i, ex.message
+    assert_match(/unknown.*pathmap.*spec.*z/i, ex.message)
   end
 
   def test_x_returns_extension
