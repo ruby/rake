@@ -130,6 +130,16 @@ class FunctionalTest < Test::Unit::TestCase
     end
   end
 
+  def test_dash_f_with_no_arg_foils_rakefile_lookup
+    rake "-I test/data/rakelib -rtest1 -f"
+    assert_match(/^TEST1$/, @out)
+  end
+
+  def test_dot_rake_files_can_be_laoded_with_dash_r
+    rake "-I test/data/rakelib -rtest2 -f"
+    assert_match(/^TEST2$/, @out)
+  end
+
   def test_can_invoke_task_in_toplevel_namespace
     Dir.chdir("test/data/namespace") do
       rake "copy"
