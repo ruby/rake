@@ -38,6 +38,13 @@ class TestFileUtils < Test::Unit::TestCase
     assert ! File.exist?("testdata/b")
   end
 
+  def test_ln
+    create_dir("testdata")
+    open("testdata/a", "w") { |f| f.puts "TEST_LN" }
+    RakeFileUtils.safe_ln("testdata/a", "testdata/b", :verbose => false)
+    assert_equal "TEST_LN\n", open("testdata/b") { |f| f.read }
+  end
+
   def test_verbose
     verbose true
     assert_equal true, verbose
