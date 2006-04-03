@@ -29,7 +29,7 @@
 # referenced as a library via a require statement, but it can be
 # distributed independently as an application.
 
-RAKEVERSION = '0.7.0.3'
+RAKEVERSION = '0.7.0.4'
 
 require 'rbconfig'
 require 'ftools'
@@ -758,7 +758,7 @@ module FileUtils
     else
       begin
         ln(*args)
-      rescue StandardError
+      rescue StandardError, NotImplementedError
         LN_SUPPORTED[0] = false
         cp(*args)
       end
