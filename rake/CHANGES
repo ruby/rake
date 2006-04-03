@@ -10,6 +10,8 @@
   doesn't yet).  NOTE: check if -r will load from gems.
 * The -f option without a value will disable the search for a
   Rakefile.  The assumption is that the -r files are adequate.
+* Fixed the safe_ln function to fall back to cp in more error
+  scenarios.
 
 == Version 0.7.0
 
