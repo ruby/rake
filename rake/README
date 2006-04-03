@@ -108,6 +108,8 @@ package.
 Rake is a late entry in the make replacement field.  Here are links to
 other projects with similar (and not so similar) goals.
 
+* http://directory.fsf.org/bras.html -- Bras, one of earliest
+  implementations of "make in a scripting language".
 * http://www.a-a-p.org -- Make in Python
 * http://www.aromatic.com/tools/jam.txt -- JAM, Java Automated Make
 * http://ant.apache.org -- The Ant project
