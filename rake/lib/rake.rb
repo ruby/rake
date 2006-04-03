@@ -147,7 +147,7 @@ class String
     # * <b>%X</b> -- Everything *but* the file extension.
     # * <b>%s</b> -- The alternate file separater if defined,
     #   otherwise use the standard file separator.
-    # # <b>%%</b> -- A percent sign.
+    # * <b>%%</b> -- A percent sign.
     #
     # The %d specifier can also have a numeric prefix (e.g. '%2d').
     # If the number is positive, only return (up to) +n+ directories
