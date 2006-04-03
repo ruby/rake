@@ -1,13 +1,14 @@
 = Rake Changelog
 
-== Pre-Version 0.7.1
+== Version 0.7.1
 
 * Added optional filter parameter to the --tasks command line option.
 * Added flatten to allow rule transform procs to return lists of
   prereqs (Joel VanderWerf provided patch).
 * Added pathmap to String and FileList.
 * The -r option will now load .rake files (but a straight require
-  doesn't yet).  NOTE: check if -r will load from gems.
+  doesn't yet).  NOTE: This is experimental ... it may be
+  discontinued.
 * The -f option without a value will disable the search for a
   Rakefile.  The assumption is that the -r files are adequate.
 * Fixed the safe_ln function to fall back to cp in more error
