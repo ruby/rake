@@ -3,7 +3,7 @@
 # Copyright 2003, 2004, 2005 by Jim Weirich (jim@weirichhouse.org)
 # All rights reserved.
 
-# This file is may be distributed under an MIT style license.  See
+# This file may be distributed under an MIT style license.  See
 # MIT-LICENSE for details.
 
 begin
@@ -109,7 +109,9 @@ rd = Rake::RDocTask.new("rdoc") { |rdoc|
 #  rdoc.template = 'css2'
   rdoc.template = '/home/jim/working/rubyforge/rake/doc/jamis.rb'
   rdoc.title    = "Rake -- Ruby Make"
-  rdoc.options << '--line-numbers' << '--inline-source' << '--main' << 'README'
+  rdoc.options << '--line-numbers' << '--inline-source' <<
+    '--main' << 'README' <<
+    '--title' <<  'Rake -- Ruby Make' 
   rdoc.rdoc_files.include('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
   rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
   rdoc.rdoc_files.exclude(/\bcontrib\b/)
@@ -173,10 +175,7 @@ else
 
     s.has_rdoc = true
     s.extra_rdoc_files = rd.rdoc_files.reject { |fn| fn =~ /\.rb$/ }.to_a
-    s.rdoc_options <<
-      '--title' <<  'Rake -- Ruby Make' <<
-      '--main' << 'README' <<
-      '--line-numbers'
+    s.rdoc_options = rd.options
 
     #### Author and project details.
 
