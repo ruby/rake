@@ -1,5 +1,12 @@
 = Rake Changelog
 
+== Pre-Version 0.7.2
+
+* Error messages are now send to stderr rather than stdout (from
+  Payton Quackenbush).
+* Better error handling on invalid command line arguments (from Payton
+  Quackenbush).
+
 == Version 0.7.1
 
 * Added optional filter parameter to the --tasks command line option.
