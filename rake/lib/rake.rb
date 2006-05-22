@@ -1905,9 +1905,11 @@ module Rake
         else
           tasks.each { |task_name| Rake::Task[task_name].invoke }
         end
-      rescue GetoptLong::InvalidOption => ex
-        # Do nothing with Invalid command line option error
+      rescue SystemExit, GetoptLong::InvalidOption => ex
+        # Exit silently
+        exit(1)
       rescue Exception => ex
+        # Exit with error message
         $stderr.puts "rake aborted!"
         $stderr.puts ex.message
         if options.trace
