@@ -1876,10 +1876,10 @@ module Rake
     def const_warning(const_name)
       @const_warning ||= false
       if ! @const_warning
-        puts %{WARNING: Deprecated reference to top-level constant '#{const_name}'} +
+        $stderr.puts %{WARNING: Deprecated reference to top-level constant '#{const_name}'} +
           %{found at: #{rakefile_location}} # '
-        puts %{    Use --classic-namespace on rake command}
-        puts %{    or 'require "rake/classic_namespace"' in Rakefile}
+        $stderr.puts %{    Use --classic-namespace on rake command}
+        $stderr.puts %{    or 'require "rake/classic_namespace"' in Rakefile}
       end
       @const_warning = true
     end
@@ -1894,8 +1894,8 @@ module Rake
 
     # Run the +rake+ application.
     def run
-      handle_options
       begin
+        handle_options
         tasks = collect_tasks
         load_rakefile
         if options.show_tasks
@@ -1905,14 +1905,16 @@ module Rake
         else
           tasks.each { |task_name| Rake::Task[task_name].invoke }
         end
+      rescue GetoptLong::InvalidOption => ex
+        # Do nothing with Invalid command line option error
       rescue Exception => ex
-        puts "rake aborted!"
-        puts ex.message
+        $stderr.puts "rake aborted!"
+        $stderr.puts ex.message
         if options.trace
-          puts ex.backtrace.join("\n")
+          $stderr.puts ex.backtrace.join("\n")
         else
-          puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
-          puts "(See full trace by running task with --trace)"
+          $stderr.puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
+          $stderr.puts "(See full trace by running task with --trace)"
         end
         exit(1)
       end    
