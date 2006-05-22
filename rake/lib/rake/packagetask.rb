@@ -100,50 +100,50 @@ module Rake
       
       desc "Remove package products" 
       task :clobber_package do
-	rm_r package_dir rescue nil
+        rm_r package_dir rescue nil
       end
 
       task :clobber => [:clobber_package]
 
       [
-	[need_tar, tgz_file, "z"],
-	[need_tar_gz, tar_gz_file, "z"],
-	[need_tar_bz2, tar_bz2_file, "j"]
+        [need_tar, tgz_file, "z"],
+        [need_tar_gz, tar_gz_file, "z"],
+        [need_tar_bz2, tar_bz2_file, "j"]
       ].each do |(need, file, flag)|
-	if need
-	  task :package => ["#{package_dir}/#{file}"]
-	  file "#{package_dir}/#{file}" => [package_dir_path] + package_files do
-	    chdir(package_dir) do
-	      sh %{tar #{flag}cvf #{file} #{package_name}}
-	    end
-	  end
-	end
+        if need
+          task :package => ["#{package_dir}/#{file}"]
+          file "#{package_dir}/#{file}" => [package_dir_path] + package_files do
+            chdir(package_dir) do
+              sh %{tar #{flag}cvf #{file} #{package_name}}
+            end
+          end
+        end
       end
       
       if need_zip
-	task :package => ["#{package_dir}/#{zip_file}"]
-	file "#{package_dir}/#{zip_file}" => [package_dir_path] + package_files do
-	  chdir(package_dir) do
-	    sh %{zip -r #{zip_file} #{package_name}}
-	  end
-	end
+        task :package => ["#{package_dir}/#{zip_file}"]
+        file "#{package_dir}/#{zip_file}" => [package_dir_path] + package_files do
+          chdir(package_dir) do
+            sh %{zip -r #{zip_file} #{package_name}}
+          end
+        end
       end
 
       directory package_dir
 
       file package_dir_path => @package_files do
-	mkdir_p package_dir rescue nil
-	@package_files.each do |fn|
-	  f = File.join(package_dir_path, fn)
-	  fdir = File.dirname(f)
-	  mkdir_p(fdir) if !File.exist?(fdir)
-	  if File.directory?(fn)
-	    mkdir_p(f)
-	  else
-	    rm_f f
-	    safe_ln(fn, f)
-	  end
-	end
+        mkdir_p package_dir rescue nil
+        @package_files.each do |fn|
+          f = File.join(package_dir_path, fn)
+          fdir = File.dirname(f)
+          mkdir_p(fdir) if !File.exist?(fdir)
+          if File.directory?(fn)
+            mkdir_p(f)
+          else
+            rm_f f
+            safe_ln(fn, f)
+          end
+        end
       end
       self
     end
@@ -174,5 +174,3 @@ module Rake
   end
 
 end
-
-    

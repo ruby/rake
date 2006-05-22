@@ -130,11 +130,10 @@ class TestDirectoryTask < Test::Unit::TestCase
       assert_equal "WIN32 DESC",   Task['c:/testdata/a/b/c'].comment
       assert_nil             Task['c:/testdata/a/b'].comment
       verbose(false) {
-	Task['c:/testdata/a/b'].invoke
+        Task['c:/testdata/a/b'].invoke
       }
       assert File.exist?('c:/testdata/a/b')
       assert ! File.exist?('c:/testdata/a/b/c')
     end
   end
 end
-

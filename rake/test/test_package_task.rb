@@ -10,13 +10,13 @@ class TestPackageTask < Test::Unit::TestCase
     pkg = Rake::PackageTask.new("pkgr", "1.2.3") { |p|
       p.package_files << "install.rb"
       p.package_files.include(
-	'[A-Z]*',
-	'bin/**/*',
-	'lib/**/*.rb',
-	'test/**/*.rb',
-	'doc/**/*',
-	'build/rubyapp.rb',
-	'*.blurb')
+        '[A-Z]*',
+        'bin/**/*',
+        'lib/**/*.rb',
+        'test/**/*.rb',
+        'doc/**/*',
+        'build/rubyapp.rb',
+        '*.blurb')
       p.package_files.exclude(/\bCVS\b/)
       p.package_files.exclude(/~$/)
       p.package_dir = 'pkg'
@@ -74,12 +74,12 @@ else
   class TestGemPackageTask < Test::Unit::TestCase
     def test_gem_package
       gem = Gem::Specification.new do |g|
-	g.name = "pkgr"
-	g.version = "1.2.3"
-	g.files = FileList["x"].resolve
+        g.name = "pkgr"
+        g.version = "1.2.3"
+        g.files = FileList["x"].resolve
       end
       pkg = Rake::GemPackageTask.new(gem)  do |p|
-	p.package_files << "y"
+        p.package_files << "y"
       end
       assert_equal ["x", "y"], pkg.package_files
       assert_equal "pkgr-1.2.3.gem", pkg.gem_file
@@ -87,13 +87,13 @@ else
 
     def test_gem_package_with_specific_platform
       gem = Gem::Specification.new do |g|
-	g.name = "pkgr"
-	g.version = "1.2.3"
-	g.files = FileList["x"].resolve
-	g.platform = Gem::Platform::WIN32
+        g.name = "pkgr"
+        g.version = "1.2.3"
+        g.files = FileList["x"].resolve
+        g.platform = Gem::Platform::WIN32
       end
       pkg = Rake::GemPackageTask.new(gem)  do |p|
-	p.package_files << "y"
+        p.package_files << "y"
       end
       assert_equal ["x", "y"], pkg.package_files
       assert_equal "pkgr-1.2.3-mswin32.gem", pkg.gem_file
@@ -101,13 +101,13 @@ else
 
     def test_gem_package_with_current_platform
       gem = Gem::Specification.new do |g|
-	g.name = "pkgr"
-	g.version = "1.2.3"
-	g.files = FileList["x"].resolve
-	g.platform = Gem::Platform::CURRENT
+        g.name = "pkgr"
+        g.version = "1.2.3"
+        g.files = FileList["x"].resolve
+        g.platform = Gem::Platform::CURRENT
       end
       pkg = Rake::GemPackageTask.new(gem)  do |p|
-	p.package_files << "y"
+        p.package_files << "y"
       end
       assert_equal ["x", "y"], pkg.package_files
       assert_match(/^pkgr-1\.2\.3-(\S+)\.gem$/, pkg.gem_file)
@@ -115,13 +115,13 @@ else
 
     def test_gem_package_with_ruby_platform
       gem = Gem::Specification.new do |g|
-	g.name = "pkgr"
-	g.version = "1.2.3"
-	g.files = FileList["x"].resolve
-	g.platform = Gem::Platform::RUBY
+        g.name = "pkgr"
+        g.version = "1.2.3"
+        g.files = FileList["x"].resolve
+        g.platform = Gem::Platform::RUBY
       end
       pkg = Rake::GemPackageTask.new(gem)  do |p|
-	p.package_files << "y"
+        p.package_files << "y"
       end
       assert_equal ["x", "y"], pkg.package_files
       assert_equal "pkgr-1.2.3.gem", pkg.gem_file

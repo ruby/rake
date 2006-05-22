@@ -82,18 +82,18 @@ class TestTaskManager < Test::Unit::TestCase
       aa = @tm.define_task(Rake::Task, :aa)
       mid_z = @tm.define_task(Rake::Task, :z)
       @tm.in_namespace("b") do
-	bb = @tm.define_task(Rake::Task, :bb)
-	bot_z = @tm.define_task(Rake::Task, :z)
+        bb = @tm.define_task(Rake::Task, :bb)
+        bot_z = @tm.define_task(Rake::Task, :z)
 
-	assert_equal ["a", "b"], @tm.current_scope
+        assert_equal ["a", "b"], @tm.current_scope
 
-	assert_equal bb, @tm["a:b:bb"]
-	assert_equal aa, @tm["a:aa"]
-	assert_equal xx, @tm["xx"]
-	assert_equal bot_z, @tm["z"]
-	assert_equal mid_z, @tm["^z"]
-	assert_equal top_z, @tm["^^z"]
-	assert_equal top_z, @tm["rake:z"]
+        assert_equal bb, @tm["a:b:bb"]
+        assert_equal aa, @tm["a:aa"]
+        assert_equal xx, @tm["xx"]
+        assert_equal bot_z, @tm["z"]
+        assert_equal mid_z, @tm["^z"]
+        assert_equal top_z, @tm["^^z"]
+        assert_equal top_z, @tm["rake:z"]
       end
 
       assert_equal ["a"], @tm.current_scope
@@ -122,7 +122,7 @@ class TestTaskManager < Test::Unit::TestCase
       t2 = @tm.define_task(Rake::Task, :t)
       s =  @tm.define_task(Rake::Task, :s)
       @tm.in_namespace("b") do
-	t3 = @tm.define_task(Rake::Task, :t)
+        t3 = @tm.define_task(Rake::Task, :t)
       end
     end
     assert_equal t1, @tm[:t, []]

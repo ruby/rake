@@ -9,9 +9,9 @@ module Rake
     
     def initialize(projname, user)
       super(
-	"#{user}@rubyforge.org",
-	"/var/www/gforge-projects/#{projname}",
-	"html")
+        "#{user}@rubyforge.org",
+        "/var/www/gforge-projects/#{projname}",
+        "html")
     end
   end
   

@@ -68,7 +68,7 @@ module Rake
     attr_accessor :external
 
     # Create an RDoc task named <em>rdoc</em>.  Default task name is +rdoc+.
-    def initialize(name=:rdoc)	# :yield: self
+    def initialize(name=:rdoc)  # :yield: self
       @name = name
       @rdoc_files = Rake::FileList.new
       @rdoc_dir = 'html'
@@ -84,7 +84,7 @@ module Rake
     # Create the tasks defined by this task lib.
     def define
       if name.to_s != "rdoc"
-	desc "Build the RDOC HTML Files"
+        desc "Build the RDOC HTML Files"
       end
 
       desc "Build the #{name} HTML Files"
@@ -95,7 +95,7 @@ module Rake
       
       desc "Remove rdoc products" 
       task paste("clobber_", name) do
-	rm_r rdoc_dir rescue nil
+        rm_r rdoc_dir rescue nil
       end
 
       task :clobber => [paste("clobber_", name)]
@@ -103,15 +103,15 @@ module Rake
       directory @rdoc_dir
       task name => [rdoc_target]
       file rdoc_target => @rdoc_files + [$rakefile] do
-	rm_r @rdoc_dir rescue nil
-	args = option_list + @rdoc_files
-	if @external
-	  argstring = args.join(' ')
-	  sh %{ruby -Ivendor vender/rd #{argstring}}
-	else
-	  require 'rdoc/rdoc'
-	  RDoc::RDoc.new.document(args)
-	end
+        rm_r @rdoc_dir rescue nil
+        args = option_list + @rdoc_files
+        if @external
+          argstring = args.join(' ')
+          sh %{ruby -Ivendor vender/rd #{argstring}}
+        else
+          require 'rdoc/rdoc'
+          RDoc::RDoc.new.document(args)
+        end
       end
       self
     end
@@ -127,9 +127,9 @@ module Rake
 
     def quote(str)
       if @external
-	"'#{str}'"
+        "'#{str}'"
       else
-	str
+        str
       end
     end
 

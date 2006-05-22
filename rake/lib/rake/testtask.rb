@@ -98,24 +98,24 @@ module Rake
       lib_path = @libs.join(File::PATH_SEPARATOR)
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
-	run_code = ''
-	RakeFileUtils.verbose(@verbose) do
-	  run_code =
-	    case @loader
-	    when :direct
-	      "-e 'ARGV.each{|f| load f}'"
-	    when :testrb
-	      "-S testrb #{fix}"
-	    when :rake
-	      rake_loader
-	    end
+        run_code = ''
+        RakeFileUtils.verbose(@verbose) do
+          run_code =
+            case @loader
+            when :direct
+              "-e 'ARGV.each{|f| load f}'"
+            when :testrb
+              "-S testrb #{fix}"
+            when :rake
+              rake_loader
+            end
           @ruby_opts.unshift( "-I#{lib_path}" )
-	  @ruby_opts.unshift( "-w" ) if @warning
-	  ruby @ruby_opts.join(" ") +
+          @ruby_opts.unshift( "-w" ) if @warning
+          ruby @ruby_opts.join(" ") +
             " \"#{run_code}\" " +
-	    file_list.collect { |fn| "\"#{fn}\"" }.join(' ') +
-	    " #{option_list}"
-	end
+            file_list.collect { |fn| "\"#{fn}\"" }.join(' ') +
+            " #{option_list}"
+        end
       end
       self
     end
@@ -126,37 +126,36 @@ module Rake
 
     def file_list # :nodoc:
       if ENV['TEST']
-	FileList[ ENV['TEST'] ]
+        FileList[ ENV['TEST'] ]
       else
-	result = []
-	result += @test_files.to_a if @test_files
-	result += FileList[ @pattern ].to_a if @pattern
-	FileList[result]
+        result = []
+        result += @test_files.to_a if @test_files
+        result += FileList[ @pattern ].to_a if @pattern
+        FileList[result]
       end
     end
 
     def fix # :nodoc:
       case RUBY_VERSION
       when '1.8.2'
-	find_file 'rake/ruby182_test_unit_fix'
+        find_file 'rake/ruby182_test_unit_fix'
       else
-	nil
+        nil
       end || ''
     end
 
     def rake_loader # :nodoc:
       find_file('rake/rake_test_loader') or
-	fail "unable to find rake test loader"
+        fail "unable to find rake test loader"
     end
 
     def find_file(fn) # :nodoc:
       $LOAD_PATH.each do |path|
-	file_path = File.join(path, "#{fn}.rb")
-	return file_path if File.exist? file_path
+        file_path = File.join(path, "#{fn}.rb")
+        return file_path if File.exist? file_path
       end
       nil
     end
 
   end
 end
-

@@ -93,14 +93,14 @@ class TestFileUtils < Test::Unit::TestCase
     count = 0
     verbose(false) {
       sh(%{test/shellcommand.rb}) do |ok, res|
-	assert(ok)
-	assert_equal 0, res.exitstatus
-	count += 1
+        assert(ok)
+        assert_equal 0, res.exitstatus
+        count += 1
       end
       sh(%{test/shellcommand.rb 1}) do |ok, res|
-	assert(!ok)
-	assert_equal 1, res.exitstatus
-	count += 1
+        assert(!ok)
+        assert_equal 1, res.exitstatus
+        count += 1
       end
     }
     assert_equal 2, count, "Block count should be 2"
@@ -114,7 +114,7 @@ class TestFileUtils < Test::Unit::TestCase
       ruby %{-e "exit $RAKE_TEST_RUBY"} do |ok, status|
         assert(!ok)
         assert_equal 123, status.exitstatus
-	block_run = true
+        block_run = true
       end
       assert block_run, "The block must be run"
 
@@ -123,7 +123,7 @@ class TestFileUtils < Test::Unit::TestCase
       ruby '-e', 'exit "$RAKE_TEST_RUBY".length' do |ok, status|
         assert(!ok)
         assert_equal 15, status.exitstatus
-	block_run = true
+        block_run = true
       end
       assert block_run, "The block must be run"
     end

@@ -73,7 +73,7 @@ class String
     def ext(newext='')
       return self.dup if ['.', '..'].include? self
       if newext != ''
- 	newext = (newext =~ /^\./) ? newext : ("." + newext)
+        newext = (newext =~ /^\./) ? newext : ("." + newext)
       end
       dup.sub!(%r(([^/\\])\.[^./\\]*$)) { $1 + newext } || self + newext
     end
@@ -348,20 +348,20 @@ module Rake
     # Invoke the task if it is needed.  Prerequites are invoked first.
     def invoke
       @lock.synchronize do
-	if application.options.trace
-	  puts "** Invoke #{name} #{format_trace_flags}"
-	end
-	return if @already_invoked
-	@already_invoked = true
-	invoke_prerequisites
-	execute if needed?
+        if application.options.trace
+          puts "** Invoke #{name} #{format_trace_flags}"
+        end
+        return if @already_invoked
+        @already_invoked = true
+        invoke_prerequisites
+        execute if needed?
       end
     end
 
     # Invoke all the prerequisites of a task.
     def invoke_prerequisites
       @prerequisites.each { |n|
-	application[n, @scope].invoke
+        application[n, @scope].invoke
       }
     end
 
@@ -377,11 +377,11 @@ module Rake
     # Execute the actions associated with this task.
     def execute
       if application.options.dryrun
-	puts "** Execute (dry run) #{name}"
-	return
+        puts "** Execute (dry run) #{name}"
+        return
       end
       if application.options.trace
-	puts "** Execute #{name}"
+        puts "** Execute #{name}"
       end
       application.enhance_with_matching_rule(name) if @actions.empty?
       @actions.each { |act| result = act.call(self) }
@@ -403,9 +403,9 @@ module Rake
     def add_comment(comment)
       return if ! comment
       if @comment 
-	@comment << " / "
+        @comment << " / "
       else
-	@comment = ''
+        @comment = ''
       end
       @comment << comment
     end
@@ -422,7 +422,7 @@ module Rake
       prereqs = @prerequisites.collect {|name| Rake::Task[name]}
       prereqs.sort! {|a,b| a.timestamp <=> b.timestamp}
       prereqs.each do |p|
-	result << "--#{p.name} (#{p.timestamp})\n"
+        result << "--#{p.name} (#{p.timestamp})\n"
       end
       latest_prereq = @prerequisites.collect{|n| Rake::Task[n].timestamp}.max
       result <<  "latest-prerequisite time: #{latest_prereq}\n"
@@ -439,12 +439,12 @@ module Rake
       # the tasks that have been assigned.  (Normally used in the unit
       # tests.)
       def clear
-	Rake.application.clear
+        Rake.application.clear
       end
       
       # List of all defined tasks.
       def tasks
-	Rake.application.tasks
+        Rake.application.tasks
       end
       
       # Return a task with the given name.  If the task is not currently
@@ -452,31 +452,31 @@ module Rake
       # rules are found, but an existing file matches the task name,
       # assume it is a file task with no dependencies or actions.
       def [](task_name)
-	Rake.application[task_name]
+        Rake.application[task_name]
       end
       
       # TRUE if the task name is already defined.
       def task_defined?(task_name)
-	Rake.application.lookup(task_name) != nil
+        Rake.application.lookup(task_name) != nil
       end
       
       # Define a task given +args+ and an option block.  If a rule with
       # the given name already exists, the prerequisites and actions are
       # added to the existing task.  Returns the defined task.
       def define_task(args, &block)
-	Rake.application.define_task(self, args, &block)
+        Rake.application.define_task(self, args, &block)
       end
       
       # Define a rule for synthesizing tasks.  
       def create_rule(args, &block)
-	Rake.application.create_rule(args, &block)
+        Rake.application.create_rule(args, &block)
       end
 
       # Apply the scope to the task name according to the rules for
       # this kind of task.  Generic tasks will accept the scope as
       # part of the name.
       def scope_name(scope, task_name)
-	(scope + [task_name]).join(':')
+        (scope + [task_name]).join(':')
       end
 
     end
@@ -502,9 +502,9 @@ module Rake
     # Time stamp for file task.
     def timestamp
       if File.exist?(name)
-	File.mtime(name.to_s)
+        File.mtime(name.to_s)
       else
-	Rake::EARLY
+        Rake::EARLY
       end
     end
 
@@ -524,7 +524,7 @@ module Rake
       # this kind of task.  File based tasks ignore the scope when
       # creating the name.
       def scope_name(scope, task_name)
-	task_name
+        task_name
       end
     end
   end
@@ -555,7 +555,7 @@ module Rake
   class MultiTask < Task
     def invoke_prerequisites
       threads = @prerequisites.collect { |p|
-	Thread.new(p) { |r| Task[r].invoke }
+        Thread.new(p) { |r| Task[r].invoke }
       }
       threads.each { |t| t.join }
     end
@@ -807,9 +807,9 @@ module RakeFileUtils
     module_eval(<<-EOS, __FILE__, __LINE__ + 1)
     def #{name}( *args, &block )
       super(
-	*fu_merge_option(args,
-	  #{default_options.join(', ')}
-	  ), &block)
+        *fu_merge_option(args,
+          #{default_options.join(', ')}
+          ), &block)
     end
     EOS
   end
@@ -852,7 +852,7 @@ module RakeFileUtils
       begin
         yield
       ensure
-	RakeFileUtils.nowrite_flag = oldvalue
+        RakeFileUtils.nowrite_flag = oldvalue
       end
     end
     oldvalue
@@ -1034,11 +1034,11 @@ module Rake
     def include(*filenames)
       # TODO: check for pending
       filenames.each do |fn|
-	if fn.respond_to? :to_ary
-	  include(*fn.to_ary)
-	else
-	  @pending_add << fn
-	end
+        if fn.respond_to? :to_ary
+          include(*fn.to_ary)
+        else
+          @pending_add << fn
+        end
       end
       @pending = true
       self
@@ -1102,9 +1102,9 @@ module Rake
       result = @items * other
       case result
       when Array
-	FileList.new.import(result)
+        FileList.new.import(result)
       else
-	result
+        result
       end
     end
 
@@ -1227,25 +1227,25 @@ module Rake
     # file:linenumber:line message will be printed to standard out.
     def egrep(pattern)
       each do |fn|
-	open(fn) do |inf|
-	  count = 0
-	  inf.each do |line|
-	    count += 1
-	    if pattern.match(line)
-	      if block_given?
-		yield fn, count, line
-	      else
-		puts "#{fn}:#{count}:#{line}"
-	      end		
-	    end
-	  end
-	end
+        open(fn) do |inf|
+          count = 0
+          inf.each do |line|
+            count += 1
+            if pattern.match(line)
+              if block_given?
+                yield fn, count, line
+              else
+                puts "#{fn}:#{count}:#{line}"
+              end               
+            end
+          end
+        end
       end
     end
 
     # FileList version of partition.  Needed because the nested arrays
     # should be FileLists in this version.
-    def partition(&block)	# :nodoc:
+    def partition(&block)       # :nodoc:
       resolve
       result = @items.partition(&block)
       [
@@ -1326,9 +1326,9 @@ module Rake
     def each_dir_parent(dir)
       old_length = nil
       while dir != '.' && dir.length != old_length
-	yield(dir)
-	old_length = dir.length
-	dir = File.dirname(dir)
+        yield(dir)
+        old_length = dir.length
+        dir = File.dirname(dir)
       end
     end
   end
@@ -1444,9 +1444,9 @@ module Rake
     def [](task_name, scopes=nil)
       task_name = task_name.to_s
       self.lookup(task_name, scopes) or
-	enhance_with_matching_rule(task_name) or
-	synthesize_file_task(task_name) or
-	fail "Don't know how to build task '#{task_name}'"
+        enhance_with_matching_rule(task_name) or
+        synthesize_file_task(task_name) or
+        fail "Don't know how to build task '#{task_name}'"
     end
 
     def synthesize_file_task(task_name)
@@ -1458,14 +1458,14 @@ module Rake
     def resolve_args(args)
       case args
       when Hash
-	fail "Too Many Task Names: #{args.keys.join(' ')}" if args.size > 1
-	fail "No Task Name Given" if args.size < 1
-	task_name = args.keys[0]
-	deps = args[task_name]
-	deps = [deps] if (String===deps) || (Regexp===deps) || (Proc===deps)
+        fail "Too Many Task Names: #{args.keys.join(' ')}" if args.size > 1
+        fail "No Task Name Given" if args.size < 1
+        task_name = args.keys[0]
+        deps = args[task_name]
+        deps = [deps] if (String===deps) || (Regexp===deps) || (Proc===deps)
       else
-	task_name = args
-	deps = []
+        task_name = args
+        deps = []
       end
       [task_name, deps]
     end
@@ -1476,12 +1476,12 @@ module Rake
     # the enhanced task or nil of no rule was found.
     def enhance_with_matching_rule(task_name, level=0)
       fail Rake::RuleRecursionOverflowError,
-	"Rule Recursion Too Deep" if level >= 16
+        "Rule Recursion Too Deep" if level >= 16
       @rules.each do |pattern, extensions, block|
-	if md = pattern.match(task_name)
-	  task = attempt_rule(task_name, extensions, block, level)
-	  return task if task
-	end
+        if md = pattern.match(task_name)
+          task = attempt_rule(task_name, extensions, block, level)
+          return task if task
+        end
       end
       nil
     rescue Rake::RuleRecursionOverflowError => ex
@@ -1509,13 +1509,13 @@ module Rake
       initial_scope ||= @scope
       task_name = task_name.to_s
       if task_name =~ /^rake:/
-	scopes = []
-	task_name = task_name.sub(/^rake:/, '')
+        scopes = []
+        task_name = task_name.sub(/^rake:/, '')
       elsif task_name =~ /^(\^+)/
-	scopes = initial_scope[0, initial_scope.size - $1.size]
-	task_name = task_name.sub(/^(\^+)/, '')
+        scopes = initial_scope[0, initial_scope.size - $1.size]
+        task_name = task_name.sub(/^(\^+)/, '')
       else
-	scopes = initial_scope
+        scopes = initial_scope
       end
       lookup_in_scope(task_name, scopes)
     end
@@ -1524,10 +1524,10 @@ module Rake
     def lookup_in_scope(name, scope)
       n = scope.size
       while n >= 0
-	tn = (scope[0,n] + [name]).join(':')
-	task = @tasks[tn]
-	return task if task
-	n -= 1
+        tn = (scope[0,n] + [name]).join(':')
+        task = @tasks[tn]
+        return task if task
+        n -= 1
       end
       nil
     end
@@ -1564,13 +1564,13 @@ module Rake
     def attempt_rule(task_name, extensions, block, level)
       sources = make_sources(task_name, extensions)
       prereqs = sources.collect { |source|
-	if File.exist?(source) || Rake::Task.task_defined?(source)
-	  source
-	elsif parent = enhance_with_matching_rule(sources.first, level+1)
-	  parent.name
-	else
-	  return nil
-	end
+        if File.exist?(source) || Rake::Task.task_defined?(source)
+          source
+        elsif parent = enhance_with_matching_rule(sources.first, level+1)
+          parent.name
+        else
+          return nil
+        end
       }
       task = FileTask.define_task({task_name => prereqs}, &block)
       task.sources = prereqs
@@ -1581,14 +1581,14 @@ module Rake
     # translation procs.
     def make_sources(task_name, extensions)
       extensions.collect { |ext|
-	case ext
-	when String
-	  task_name.sub(/\.[^.]*$/, ext)
-	when Proc
-	  ext.call(task_name)
-	else
-	  fail "Don't know how to handle rule dependent: #{ext.inspect}"
-	end
+        case ext
+        when String
+          task_name.sub(/\.[^.]*$/, ext)
+        when Proc
+          ext.call(task_name)
+        else
+          fail "Don't know how to handle rule dependent: #{ext.inspect}"
+        end
       }.flatten
     end
     
@@ -1608,37 +1608,37 @@ module Rake
     
     OPTIONS = [
       ['--dry-run',  '-n', GetoptLong::NO_ARGUMENT,
-	"Do a dry run without executing actions."],
+        "Do a dry run without executing actions."],
       ['--help',     '-H', GetoptLong::NO_ARGUMENT,
-	"Display this help message."],
+        "Display this help message."],
       ['--libdir',   '-I', GetoptLong::REQUIRED_ARGUMENT,
-	"Include LIBDIR in the search path for required modules."],
+        "Include LIBDIR in the search path for required modules."],
       ['--rakelibdir', '-R', GetoptLong::REQUIRED_ARGUMENT,
-	"Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')"],
+        "Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')"],
       ['--nosearch', '-N', GetoptLong::NO_ARGUMENT,
-	"Do not search parent directories for the Rakefile."],
+        "Do not search parent directories for the Rakefile."],
       ['--prereqs',  '-P', GetoptLong::NO_ARGUMENT,
-	"Display the tasks and dependencies, then exit."],
+        "Display the tasks and dependencies, then exit."],
       ['--quiet',    '-q', GetoptLong::NO_ARGUMENT,
-	"Do not log messages to standard output."],
+        "Do not log messages to standard output."],
       ['--rakefile', '-f', GetoptLong::OPTIONAL_ARGUMENT,
-	"Use FILE as the rakefile."],
+        "Use FILE as the rakefile."],
       ['--require',  '-r', GetoptLong::REQUIRED_ARGUMENT,
-	"Require MODULE before executing rakefile."],
+        "Require MODULE before executing rakefile."],
       ['--silent',   '-s', GetoptLong::NO_ARGUMENT,
-	"Like --quiet, but also suppresses the 'in directory' announcement."],
+        "Like --quiet, but also suppresses the 'in directory' announcement."],
       ['--tasks',    '-T', GetoptLong::OPTIONAL_ARGUMENT,
-	"Display the tasks (matching optional PATTERN) with descriptions, then exit."],
+        "Display the tasks (matching optional PATTERN) with descriptions, then exit."],
       ['--trace',    '-t', GetoptLong::NO_ARGUMENT,
-	"Turn on invoke/execute tracing, enable full backtrace."],
+        "Turn on invoke/execute tracing, enable full backtrace."],
       ['--usage',    '-h', GetoptLong::NO_ARGUMENT,
-	"Display usage."],
+        "Display usage."],
       ['--verbose',  '-v', GetoptLong::NO_ARGUMENT,
-	"Log message to standard output (default)."],
+        "Log message to standard output (default)."],
       ['--version',  '-V', GetoptLong::NO_ARGUMENT,
-	"Display the program version."],
+        "Display the program version."],
       ['--classic-namespace', '-C', GetoptLong::NO_ARGUMENT,
-	"Put Task and FileTask in the top level namespace"],
+        "Put Task and FileTask in the top level namespace"],
     ]
     
     # Create a Rake::Application object.
@@ -1663,10 +1663,10 @@ module Rake
     # If a match is found, it is copied into @rakefile.
     def have_rakefile
       RAKEFILES.each do |fn|
-	if File.exist?(fn) || fn == ''
-	  @rakefile = fn
-	  return true
-	end
+        if File.exist?(fn) || fn == ''
+          @rakefile = fn
+          return true
+        end
       end
       return false
     end
@@ -1683,34 +1683,34 @@ module Rake
       puts "Options are ..."
       puts
       OPTIONS.sort.each do |long, short, mode, desc|
-	if mode == GetoptLong::REQUIRED_ARGUMENT
-	  if desc =~ /\b([A-Z]{2,})\b/
-	    long = long + "=#{$1}"
-	  end
-	end
-	printf "  %-20s (%s)\n", long, short
-	printf "      %s\n", desc
+        if mode == GetoptLong::REQUIRED_ARGUMENT
+          if desc =~ /\b([A-Z]{2,})\b/
+            long = long + "=#{$1}"
+          end
+        end
+        printf "  %-20s (%s)\n", long, short
+        printf "      %s\n", desc
       end
     end
     
     # Display the tasks and dependencies.
     def display_tasks_and_comments
       displayable_tasks = Rake::Task.tasks.select { |t|
-	t.comment && t.name =~ options.show_task_pattern
+        t.comment && t.name =~ options.show_task_pattern
       }
       width = displayable_tasks.collect { |t|
-	t.name.length
+        t.name.length
       }.max
       displayable_tasks.each do |t|
-	printf "rake %-#{width}s  # %s\n", t.name, t.comment
+        printf "rake %-#{width}s  # %s\n", t.name, t.comment
       end
     end
     
     # Display the tasks and prerequisites
     def display_prerequisites
       Rake::Task.tasks.each do |t|
-	puts "rake #{t.name}"
-	t.prerequisites.each { |pre| puts "    #{pre}" }
+        puts "rake #{t.name}"
+        t.prerequisites.each { |pre| puts "    #{pre}" }
       end
     end
     
@@ -1724,26 +1724,26 @@ module Rake
     def do_option(opt, value)
       case opt
       when '--dry-run'
-	verbose(true)
-	nowrite(true)
-	options.dryrun = true
-	options.trace = true
+        verbose(true)
+        nowrite(true)
+        options.dryrun = true
+        options.trace = true
       when '--help'
-	help
-	exit
+        help
+        exit
       when '--libdir'
-	$:.push(value)
+        $:.push(value)
       when '--nosearch'
-	options.nosearch = true
+        options.nosearch = true
       when '--prereqs'
-	options.show_prereqs = true
+        options.show_prereqs = true
       when '--quiet'
-	verbose(false)
+        verbose(false)
       when '--rakefile'
-	RAKEFILES.clear
-	RAKEFILES << value
+        RAKEFILES.clear
+        RAKEFILES << value
       when '--rakelibdir'
-	options.rakelib = value.split(':')
+        options.rakelib = value.split(':')
       when '--require'
         begin
           require value
@@ -1755,27 +1755,27 @@ module Rake
           end
         end
       when '--silent'
-	verbose(false)
-	options.silent = true
+        verbose(false)
+        options.silent = true
       when '--tasks'
-	options.show_tasks = true
-	options.show_task_pattern = Regexp.new(value || '.')
+        options.show_tasks = true
+        options.show_task_pattern = Regexp.new(value || '.')
       when '--trace'
-	options.trace = true
-	verbose(true)
+        options.trace = true
+        verbose(true)
       when '--usage'
-	usage
-	exit
+        usage
+        exit
       when '--verbose'
-	verbose(true)
+        verbose(true)
       when '--version'
-	puts "rake, version #{RAKEVERSION}"
-	exit
+        puts "rake, version #{RAKEVERSION}"
+        exit
       when '--classic-namespace'
-	require 'rake/classic_namespace'
-	options.classic_namespace = true
+        require 'rake/classic_namespace'
+        options.classic_namespace = true
       else
-	fail "Unknown option: #{opt}"
+        fail "Unknown option: #{opt}"
       end
     end
     
@@ -1789,11 +1789,11 @@ module Rake
       # If class namespaces are requested, set the global options
       # according to the values in the options structure.
       if options.classic_namespace
-	$show_tasks = options.show_tasks
-	$show_prereqs = options.show_prereqs
-	$trace = options.trace
-	$dryrun = options.dryrun
-	$silent = options.silent
+        $show_tasks = options.show_tasks
+        $show_prereqs = options.show_prereqs
+        $trace = options.trace
+        $dryrun = options.dryrun
+        $silent = options.silent
       end
     end
     
@@ -1817,17 +1817,17 @@ module Rake
     def load_rakefile
       here = Dir.pwd
       while ! have_rakefile
-	Dir.chdir("..")
-	if Dir.pwd == here || options.nosearch
-	  fail "No Rakefile found (looking for: #{RAKEFILES.join(', ')})"
-	end
-	here = Dir.pwd
+        Dir.chdir("..")
+        if Dir.pwd == here || options.nosearch
+          fail "No Rakefile found (looking for: #{RAKEFILES.join(', ')})"
+        end
+        here = Dir.pwd
       end
       puts "(in #{Dir.pwd})" unless options.silent
       $rakefile = @rakefile
       load File.expand_path(@rakefile) if @rakefile != ''
       options.rakelib.each do |rlib|
-	Dir["#{rlib}/*.rake"].each do |name| add_import name end
+        Dir["#{rlib}/*.rake"].each do |name| add_import name end
       end
       load_imports
     end
@@ -1838,11 +1838,11 @@ module Rake
     def collect_tasks
       tasks = []
       ARGV.each do |arg|
-	if arg =~ /^(\w+)=(.*)$/
-	  ENV[$1] = $2
-	else
-	  tasks << arg
-	end
+        if arg =~ /^(\w+)=(.*)$/
+          ENV[$1] = $2
+        else
+          tasks << arg
+        end
       end
       tasks.push("default") if tasks.size == 0
       tasks
@@ -1856,12 +1856,12 @@ module Rake
     # Load the pending list of imported files.
     def load_imports
       while fn = @pending_imports.shift
-	next if @imported.member?(fn)
-	Rake::Task[fn].invoke if Rake::Task.task_defined?(fn)
-	ext = File.extname(fn)
-	loader = @loaders[ext] || @default_loader
-	loader.load(fn)
-	@imported << fn
+        next if @imported.member?(fn)
+        Rake::Task[fn].invoke if Rake::Task.task_defined?(fn)
+        ext = File.extname(fn)
+        loader = @loaders[ext] || @default_loader
+        loader.load(fn)
+        @imported << fn
       end
     end
     
@@ -1876,19 +1876,19 @@ module Rake
     def const_warning(const_name)
       @const_warning ||= false
       if ! @const_warning
-	puts %{WARNING: Deprecated reference to top-level constant '#{const_name}'} +
-	  %{found at: #{rakefile_location}} # '
-	puts %{    Use --classic-namespace on rake command}
-	puts %{    or 'require "rake/classic_namespace"' in Rakefile}
+        puts %{WARNING: Deprecated reference to top-level constant '#{const_name}'} +
+          %{found at: #{rakefile_location}} # '
+        puts %{    Use --classic-namespace on rake command}
+        puts %{    or 'require "rake/classic_namespace"' in Rakefile}
       end
       @const_warning = true
     end
 
     def rakefile_location
       begin
-	fail
+        fail
       rescue RuntimeError => ex
-	ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
+        ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
       end
     end
 
@@ -1896,25 +1896,25 @@ module Rake
     def run
       handle_options
       begin
-	tasks = collect_tasks
-	load_rakefile
-	if options.show_tasks
-	  display_tasks_and_comments
-	elsif options.show_prereqs
-	  display_prerequisites
-	else
-	  tasks.each { |task_name| Rake::Task[task_name].invoke }
-	end
+        tasks = collect_tasks
+        load_rakefile
+        if options.show_tasks
+          display_tasks_and_comments
+        elsif options.show_prereqs
+          display_prerequisites
+        else
+          tasks.each { |task_name| Rake::Task[task_name].invoke }
+        end
       rescue Exception => ex
-	puts "rake aborted!"
-	puts ex.message
-	if options.trace
-	  puts ex.backtrace.join("\n")
-	else
-	  puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
-	  puts "(See full trace by running task with --trace)"
-	end
-	exit(1)
+        puts "rake aborted!"
+        puts ex.message
+        if options.trace
+          puts ex.backtrace.join("\n")
+        else
+          puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
+          puts "(See full trace by running task with --trace)"
+        end
+        exit(1)
       end    
     end
   end

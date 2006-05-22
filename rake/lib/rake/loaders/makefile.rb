@@ -9,17 +9,17 @@ module Rake
     def load(fn)
       buffer = ''
       open(fn) do |mf|
-	mf.each do |line|
-	  next if line =~ /^\s*#/
-	  buffer << line
-	  if buffer =~ /\\$/
-	    buffer.sub!(/\\\n/, ' ')
-	    state = :append
-	  else
-	    process_line(buffer)
-	    buffer = ''
-	  end
-	end
+        mf.each do |line|
+          next if line =~ /^\s*#/
+          buffer << line
+          if buffer =~ /\\$/
+            buffer.sub!(/\\\n/, ' ')
+            state = :append
+          else
+            process_line(buffer)
+            buffer = ''
+          end
+        end
       end
       process_line(buffer) if buffer != ''
     end
@@ -37,5 +37,4 @@ module Rake
 
   # Install the handler
   Rake.application.add_loader('mf', MakefileLoader.new)
-
 end

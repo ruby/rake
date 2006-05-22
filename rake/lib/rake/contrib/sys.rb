@@ -97,13 +97,13 @@ module Sys
   def delete(*wildcards)
     wildcards.each do |wildcard|
       Dir[wildcard].each do |fn|
-	if File.directory?(fn)
-	  log "Deleting directory #{fn}"
-	  Dir.delete(fn)
-	else
-	  log "Deleting file #{fn}"
-	  File.delete(fn)
-	end
+        if File.directory?(fn)
+          log "Deleting directory #{fn}"
+          Dir.delete(fn)
+        else
+          log "Deleting file #{fn}"
+          File.delete(fn)
+        end
       end
     end
   end
@@ -112,18 +112,18 @@ module Sys
   def delete_all(*wildcards)
     wildcards.each do |wildcard|
       Dir[wildcard].each do |fn|
-	next if ! File.exist?(fn)
-	if File.directory?(fn)
-	  Dir["#{fn}/*"].each do |subfn|
-	    next if subfn=='.' || subfn=='..'
-	    delete_all(subfn)
-	  end
-	  log "Deleting directory #{fn}"
-	  Dir.delete(fn)
-	else
-	  log "Deleting file #{fn}"
-	  File.delete(fn)
-	end
+        next if ! File.exist?(fn)
+        if File.directory?(fn)
+          Dir["#{fn}/*"].each do |subfn|
+            next if subfn=='.' || subfn=='..'
+            delete_all(subfn)
+          end
+          log "Deleting directory #{fn}"
+          Dir.delete(fn)
+        else
+          log "Deleting file #{fn}"
+          File.delete(fn)
+        end
       end
     end
   end
@@ -177,7 +177,7 @@ module Sys
   def for_files(*wildcards)
     wildcards.each do |wildcard|
       Dir[wildcard].each do |fn|
-	yield(fn)
+        yield(fn)
       end
     end
   end
@@ -204,4 +204,3 @@ module Sys
   end
 
 end
-

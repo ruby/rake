@@ -11,8 +11,8 @@ module FileCreation
     old_time = create_file(oldfile)
     newfiles.each do |newfile|
       while create_file(newfile) <= old_time
-	sleep(0.1)
-	File.delete(newfile) rescue nil
+        sleep(0.1)
+        File.delete(newfile) rescue nil
       end
     end
   end
@@ -32,4 +32,3 @@ module FileCreation
     File.delete(name) rescue nil
   end
 end
-

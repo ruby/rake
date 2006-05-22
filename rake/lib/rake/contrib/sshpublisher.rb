@@ -40,7 +40,7 @@ module Rake
     # Upload the local directory to the remote directory.
     def upload
       @files.each do |fn|
-	sh %{scp -q #{@local_dir}/#{fn} #{@host}:#{@remote_dir}}
+        sh %{scp -q #{@local_dir}/#{fn} #{@host}:#{@remote_dir}}
       end
     end
   end

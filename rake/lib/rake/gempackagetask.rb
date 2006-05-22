@@ -79,20 +79,20 @@ module Rake
       task :package => [:gem]
       task :gem => ["#{package_dir}/#{gem_file}"]
       file "#{package_dir}/#{gem_file}" => [package_dir] + @gem_spec.files do
-	when_writing("Creating GEM") {
-	  Gem::Builder.new(gem_spec).build
-	  verbose(true) {
-	    mv gem_file, "#{package_dir}/#{gem_file}"
-	  }
-	}
+        when_writing("Creating GEM") {
+          Gem::Builder.new(gem_spec).build
+          verbose(true) {
+            mv gem_file, "#{package_dir}/#{gem_file}"
+          }
+        }
       end
     end
     
     def gem_file
       if @gem_spec.platform == Gem::Platform::RUBY
-	"#{package_name}.gem"
+        "#{package_name}.gem"
       else
-	"#{package_name}-#{@gem_spec.platform}.gem"
+        "#{package_name}-#{@gem_spec.platform}.gem"
       end
     end
     

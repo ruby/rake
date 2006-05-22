@@ -48,7 +48,7 @@ module Rake # :nodoc:
     def parse_mode(m)
       result = 0
       (1..9).each do |i|
-	result = 2*result + ((m[i]==?-) ? 0 : 1)
+        result = 2*result + ((m[i]==?-) ? 0 : 1)
       end
       result
     end
@@ -56,12 +56,12 @@ module Rake # :nodoc:
     def determine_time(d1, d2, d3)
       elements = ParseDate.parsedate("#{d1} #{d2} #{d3}")
       if elements[0].nil?
-	today = self.class.date.today
-	if elements[1] > today.month
-	  elements[0] = today.year - 1
-	else
-	  elements[0] = today.year
-	end
+        today = self.class.date.today
+        if elements[1] > today.month
+          elements[0] = today.year - 1
+        else
+          elements[0] = today.year
+        end
       end
       elements = elements.collect { |el| el.nil? ? 0 : el }
       Time.mktime(*elements[0,7])
@@ -79,12 +79,12 @@ module Rake # :nodoc:
       # Create an uploader and pass it to the given block as +up+.
       # When the block is complete, close the uploader.
       def connect(path, host, account, password)
-	up = self.new(path, host, account, password)
-	begin
-	  yield(up)
-	ensure
-	  up.close
-	end
+        up = self.new(path, host, account, password)
+        begin
+          yield(up)
+        ensure
+          up.close
+        end
       end
     end
 
@@ -103,13 +103,13 @@ module Rake # :nodoc:
     def makedirs(path)
       route = []
       File.split(path).each do |dir|
-	route << dir
-	current_dir = File.join(route)
-	if @created[current_dir].nil?
-	  @created[current_dir] = true
-	  puts "Creating Directory  #{current_dir}" if @verbose
-	  @ftp.mkdir(current_dir) rescue nil
-	end
+        route << dir
+        current_dir = File.join(route)
+        if @created[current_dir].nil?
+          @created[current_dir] = true
+          puts "Creating Directory  #{current_dir}" if @verbose
+          @ftp.mkdir(current_dir) rescue nil
+        end
       end
     end
 
@@ -117,7 +117,7 @@ module Rake # :nodoc:
     # path.
     def upload_files(wildcard)
       Dir[wildcard].each do |fn|
-	upload(fn)
+        upload(fn)
       end
     end
     
