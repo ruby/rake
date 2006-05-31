@@ -39,7 +39,7 @@ class FunctionalTest < Test::Unit::TestCase
 
   def test_rake_error_on_bad_task
     Dir.chdir("test/data/default") do rake "xyz" end
-    assert_match(/rake aborted/, @out)
+    assert_match(/rake aborted/, @err)
     assert_status(1)
   end
 
@@ -69,7 +69,7 @@ class FunctionalTest < Test::Unit::TestCase
 
   def test_nosearch
     Dir.chdir("test/data/nosearch") do rake "-N" end
-    assert_match %r{^No Rakefile found}, @out
+    assert_match %r{^No Rakefile found}, @err
   end
 
   def test_dry_run
