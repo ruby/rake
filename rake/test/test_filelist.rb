@@ -2,9 +2,11 @@
 
 require 'test/unit'
 require 'rake'
+require 'test/capture_stdout'
 
 class TestFileList < Test::Unit::TestCase
   FileList = Rake::FileList
+  include CaptureStdout
 
   def setup
     create_test_data
@@ -130,6 +132,13 @@ class TestFileList < Test::Unit::TestCase
 
   def test_exclude_return_on_create
     fl = FileList['testdata/*'].exclude(/.*\.c$/)
+    assert_equal ['testdata/existing'], fl
+    assert_equal FileList, fl.class
+  end
+
+  def test_exclude_with_string_return_on_create
+    fl = FileList['testdata/*'].exclude('testdata/abc.c')
+    assert_equal ["testdata/existing", "testdata/x.c", "testdata/xyz.c"].sort, fl.sort
     assert_equal FileList, fl.class
   end
 
@@ -242,7 +251,22 @@ class TestFileList < Test::Unit::TestCase
       f2.sort
   end
 
-  def test_egrep
+  def test_gsub!
+    create_test_data
+    f = FileList["testdata/*.c"]
+    f.gsub!(/a/, "A")
+    assert_equal ["testdAtA/Abc.c", "testdAtA/x.c", "testdAtA/xyz.c"].sort,
+      f.sort
+  end
+
+  def test_egrep_with_output
+    files = FileList['test/test*.rb']
+    the_line_number = __LINE__ + 1
+    out = capture_stdout do files.egrep(/PUGH/) end
+    assert_match(/:#{the_line_number}:/, out)
+  end
+
+  def test_egrep_with_block
     files = FileList['test/test*.rb']
     found = false
     the_line_number = __LINE__ + 1

@@ -53,4 +53,10 @@ class TestFileCreationTask < Test::Unit::TestCase
     assert ! t2.needed?, "Should not need to build new file"
     assert ! t1.needed?, "Should not need to rebuild old file because of new"
   end
+
+  def test_very_early_timestamp
+    t1 = Rake.application.intern(FileCreationTask, OLDFILE)
+    assert t1.timestamp < Time.now
+    assert t1.timestamp < Time.now - 1000000
+  end
 end

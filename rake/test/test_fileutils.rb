@@ -14,6 +14,7 @@ class TestFileUtils < Test::Unit::TestCase
   
   def teardown
     FileUtils.rm_rf("testdata")
+    FileUtils::LN_SUPPORTED[0] = true
   end
   
   def test_rm_one_file
@@ -45,12 +46,49 @@ class TestFileUtils < Test::Unit::TestCase
     assert_equal "TEST_LN\n", open("testdata/b") { |f| f.read }
   end
 
+  class BadLink
+    include RakeFileUtils
+    attr_reader :cp_args
+    def initialize(klass)
+      @failure_class = klass
+    end
+    def cp(*args)
+      @cp_args = args
+    end
+    def ln(*args)
+      fail @failure_class, "ln not supported"
+    end
+    public :safe_ln
+  end
+
+  def test_safe_ln_failover_to_cp_on_standard_error
+    FileUtils::LN_SUPPORTED[0] = true
+    c = BadLink.new(StandardError)
+    c.safe_ln "a", "b"
+    assert_equal ['a', 'b'], c.cp_args
+    c.safe_ln "x", "y"
+    assert_equal ['x', 'y'], c.cp_args
+  end
+
+  def test_safe_ln_failover_to_cp_on_not_implemented_error
+    FileUtils::LN_SUPPORTED[0] = true
+    c = BadLink.new(NotImplementedError)
+    c.safe_ln "a", "b"
+    assert_equal ['a', 'b'], c.cp_args
+  end
+
+  def test_safe_ln_fails_on_script_error
+    FileUtils::LN_SUPPORTED[0] = true
+    c = BadLink.new(ScriptError)
+    assert_raise(ScriptError) do c.safe_ln "a", "b" end
+  end
+
   def test_verbose
     verbose true
     assert_equal true, verbose
     verbose false
     assert_equal false, verbose
-    verbose(true){
+    verbose(true) {
       assert_equal true, verbose
     }
     assert_equal false, verbose
@@ -127,6 +165,15 @@ class TestFileUtils < Test::Unit::TestCase
       end
       assert block_run, "The block must be run"
     end
+  end
+
+  def test_split_all
+    assert_equal ['a'], RakeFileUtils.split_all('a')
+    assert_equal ['..'], RakeFileUtils.split_all('..')
+    assert_equal ['/'], RakeFileUtils.split_all('/')
+    assert_equal ['a', 'b'], RakeFileUtils.split_all('a/b')
+    assert_equal ['/', 'a', 'b'], RakeFileUtils.split_all('/a/b')
+    assert_equal ['..', 'a', 'b'], RakeFileUtils.split_all('../a/b')
   end
 
 end

@@ -6,6 +6,9 @@
   Payton Quackenbush).
 * Better error handling on invalid command line arguments (from Payton
   Quackenbush).
+* Added rcov task and updated unit testing for better code coverage.
+* Fixed some bugs where the application object was going to the global
+  appliation instead of using its own data.
 
 == Version 0.7.1
 

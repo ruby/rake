@@ -224,5 +224,10 @@ class TestRules < Test::Unit::TestCase
     assert_match(/a\.z => testdata\/a.y/, ex.message)
   end
 
+  def test_bad_dependent
+    rule "a" => [ 1 ] do |t| puts t.name end
+    assert_raise(RuntimeError) do Task['a'].invoke end
+  end
+
 end
 

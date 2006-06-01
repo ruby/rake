@@ -28,4 +28,8 @@ class TestEarlyTime < Test::Unit::TestCase
     assert t1 == t1
     assert t2 == t2    
   end
+
+  def test_to_s
+    assert_equal "<EARLY TIME>", Rake::EARLY.to_s
+  end
 end

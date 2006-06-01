@@ -17,5 +17,18 @@ class TestRake < Test::Unit::TestCase
     Rake.each_dir_parent(fn) { |d| result << d }
     result
   end
+
+  def test_can_override_application
+    old_app = Rake.application
+    fake_app = Object.new
+    Rake.application = fake_app
+    assert_equal fake_app, Rake.application
+  ensure
+    Rake.application = old_app
+  end
+
+  def test_original_dir_reports_current_dir
+    assert_equal Dir.pwd, Rake.original_dir
+  end
     
 end

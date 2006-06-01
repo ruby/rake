@@ -23,6 +23,7 @@ CLOBBER.include('test/data/chains/play.*')
 CLOBBER.include('test/data/file_creation_task/build')
 CLOBBER.include('test/data/file_creation_task/src')
 CLOBBER.include('TAGS')
+CLOBBER.include('coverage')
 
 def announce(msg='')
   STDERR.puts msg
@@ -85,6 +86,18 @@ Rake::TestTask.new(:test_contribs) do |t|
   t.test_files = FileList['test/contrib/test*.rb']
   t.verbose = false
   t.warning = true
+end
+
+require 'rcov/rcovtask'
+
+Rcov::RcovTask.new do |t|
+  t.libs << "test"
+  t.rcov_opts = ['-xRakefile', '-xrakefile', '-xpublish.rf', '--text-report']
+  t.test_files = FileList[
+    'test/test*.rb',
+    'test/contrib/test*.rb'
+  ]
+  t.verbose = true
 end
 
 directory 'testdata'
@@ -244,12 +257,12 @@ load "publish.rf" if File.exist? "publish.rf"
 
 desc "Look for TODO and FIXME tags in the code"
 task :todo do
-  FileList['**/*.rb'].exclude('pkg').egrep /#.*(FIXME|TODO|TBD)/
+  FileList['**/*.rb'].exclude('pkg').egrep(/#.*(FIXME|TODO|TBD)/)
 end
 
 desc "Look for Debugging print lines"
 task :dbg do
-  FileList['**/*.rb'].egrep /\bDBG|\bbreakpoint\b/
+  FileList['**/*.rb'].egrep(/\bDBG|\bbreakpoint\b/)
 end
 
 desc "List all ruby files"

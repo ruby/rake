@@ -395,7 +395,7 @@ module Rake
     # Timestamp for this task.  Basic tasks return the current time for
     # their time stamp.  Other tasks can be more sophisticated.
     def timestamp
-      @prerequisites.collect { |p| Rake::Task[p].timestamp }.max || Time.now
+      @prerequisites.collect { |p| application[p].timestamp }.max || Time.now
     end
     
     # Add a comment to the task.  If a comment alread exists, separate
@@ -419,12 +419,12 @@ module Rake
       result <<  "task needed: #{needed?}\n"
       result <<  "timestamp: #{timestamp}\n"
       result << "pre-requisites: \n"
-      prereqs = @prerequisites.collect {|name| Rake::Task[name]}
+      prereqs = @prerequisites.collect {|name| application[name]}
       prereqs.sort! {|a,b| a.timestamp <=> b.timestamp}
       prereqs.each do |p|
         result << "--#{p.name} (#{p.timestamp})\n"
       end
-      latest_prereq = @prerequisites.collect{|n| Rake::Task[n].timestamp}.max
+      latest_prereq = @prerequisites.collect{|n| application[n].timestamp}.max
       result <<  "latest-prerequisite time: #{latest_prereq}\n"
       result << "................................\n\n"
       return result
@@ -513,7 +513,7 @@ module Rake
     # Are there any prerequisites with a later time than the given
     # time stamp?
     def out_of_date?(stamp)
-      @prerequisites.any? { |n| Rake::Task[n].timestamp > stamp}
+      @prerequisites.any? { |n| application[n].timestamp > stamp}
     end
 
     # ----------------------------------------------------------------
@@ -555,7 +555,7 @@ module Rake
   class MultiTask < Task
     def invoke_prerequisites
       threads = @prerequisites.collect { |p|
-        Thread.new(p) { |r| Task[r].invoke }
+        Thread.new(p) { |r| application[r].invoke }
       }
       threads.each { |t| t.join }
     end
@@ -710,11 +710,7 @@ module FileUtils
   #   end
   #
   def sh(*cmd, &block)
-    if Hash === cmd.last then
-      options = cmd.pop
-    else
-      options = {}
-    end
+    options = (Hash === cmd.last) ? cmd.pop : {}
     unless block_given?
       show_command = cmd.join(" ")
       show_command = show_command[0,42] + "..." if show_command.length > 45
@@ -736,11 +732,7 @@ module FileUtils
   #   ruby %{-pe '$_.upcase!' <README}
   #
   def ruby(*args,&block)
-    if Hash === args.last
-      options = args.pop
-    else
-      options = {}
-    end
+    options = (Hash === args.last) ? args.pop : {}
     if args.length > 1 then
       sh(*([RUBY] + args + [options]), &block)
     else
@@ -758,7 +750,7 @@ module FileUtils
     else
       begin
         ln(*args)
-      rescue StandardError, NotImplementedError
+      rescue StandardError, NotImplementedError => ex
         LN_SUPPORTED[0] = false
         cp(*args)
       end
@@ -1125,7 +1117,7 @@ module Rake
         case pat
         when Regexp
           ignores << pat
-        when /[*.]/
+        when /[*?]/
           Dir[pat].each do |p| ignores << p end
         else
           ignores << Regexp.quote(pat)
@@ -1141,8 +1133,6 @@ module Rake
 
     def resolve_add(fn)
       case fn
-      when Array
-        fn.each { |f| self.resolve_add(f) }
       when %r{[*?]}
         add_matching(fn)
       else
@@ -1156,7 +1146,7 @@ module Rake
         case pat
         when Regexp
           reject! { |fn| fn =~ pat }
-        when /[*.]/
+        when /[*?]/
           reject_list = Dir[pat]
           reject! { |fn| reject_list.include?(fn) }
         else
@@ -1427,7 +1417,6 @@ module Rake
       deps = [deps] unless deps.respond_to?(:to_ary)
       deps = deps.collect {|d| d.to_s }
       task = intern(task_class, task_name)
-      task.application = self
       task.add_comment(@last_comment)
       @last_comment = nil
       task.enhance(deps, &block)
@@ -1602,9 +1591,9 @@ module Rake
     include TaskManager
 
     # The original directory where rake was invoked.
-    attr_reader :original_dir
+    attr_reader :original_dir, :rakefile
 
-    RAKEFILES = ['rakefile', 'Rakefile', 'rakefile.rb', 'Rakefile.rb']
+    DEFAULT_RAKEFILES = ['rakefile', 'Rakefile', 'rakefile.rb', 'Rakefile.rb'].freeze
     
     OPTIONS = [
       ['--dry-run',  '-n', GetoptLong::NO_ARGUMENT,
@@ -1644,6 +1633,7 @@ module Rake
     # Create a Rake::Application object.
     def initialize
       super
+      @rakefiles = DEFAULT_RAKEFILES.dup
       @rakefile = nil
       @pending_imports = []
       @imported = []
@@ -1662,7 +1652,7 @@ module Rake
     # True if one of the files in RAKEFILES is in the current directory.
     # If a match is found, it is copied into @rakefile.
     def have_rakefile
-      RAKEFILES.each do |fn|
+      @rakefiles.each do |fn|
         if File.exist?(fn) || fn == ''
           @rakefile = fn
           return true
@@ -1695,12 +1685,10 @@ module Rake
     
     # Display the tasks and dependencies.
     def display_tasks_and_comments
-      displayable_tasks = Rake::Task.tasks.select { |t|
+      displayable_tasks = tasks.select { |t|
         t.comment && t.name =~ options.show_task_pattern
       }
-      width = displayable_tasks.collect { |t|
-        t.name.length
-      }.max
+      width = displayable_tasks.collect { |t| t.name.length }.max
       displayable_tasks.each do |t|
         printf "rake %-#{width}s  # %s\n", t.name, t.comment
       end
@@ -1708,7 +1696,7 @@ module Rake
     
     # Display the tasks and prerequisites
     def display_prerequisites
-      Rake::Task.tasks.each do |t|
+      tasks.each do |t|
         puts "rake #{t.name}"
         t.prerequisites.each { |pre| puts "    #{pre}" }
       end
@@ -1740,8 +1728,8 @@ module Rake
       when '--quiet'
         verbose(false)
       when '--rakefile'
-        RAKEFILES.clear
-        RAKEFILES << value
+        @rakefiles.clear
+        @rakefiles << value
       when '--rakelibdir'
         options.rakelib = value.split(':')
       when '--require'
@@ -1774,8 +1762,6 @@ module Rake
       when '--classic-namespace'
         require 'rake/classic_namespace'
         options.classic_namespace = true
-      else
-        fail "Unknown option: #{opt}"
       end
     end
     
@@ -1819,7 +1805,7 @@ module Rake
       while ! have_rakefile
         Dir.chdir("..")
         if Dir.pwd == here || options.nosearch
-          fail "No Rakefile found (looking for: #{RAKEFILES.join(', ')})"
+          fail "No Rakefile found (looking for: #{@rakefiles.join(', ')})"
         end
         here = Dir.pwd
       end
@@ -1833,7 +1819,7 @@ module Rake
     end
     
     # Collect the list of tasks on the command line.  If no tasks are
-    # give, return a list containing only the default task.
+    # given, return a list containing only the default task.
     # Environmental assignments are processed at this time as well.
     def collect_tasks
       tasks = []
@@ -1857,7 +1843,9 @@ module Rake
     def load_imports
       while fn = @pending_imports.shift
         next if @imported.member?(fn)
-        Rake::Task[fn].invoke if Rake::Task.task_defined?(fn)
+        if fn_task = lookup(fn)
+          fn_task.invoke
+        end
         ext = File.extname(fn)
         loader = @loaders[ext] || @default_loader
         loader.load(fn)
@@ -1903,7 +1891,7 @@ module Rake
         elsif options.show_prereqs
           display_prerequisites
         else
-          tasks.each { |task_name| Rake::Task[task_name].invoke }
+          tasks.each { |task_name| self[task_name].invoke }
         end
       rescue SystemExit, GetoptLong::InvalidOption => ex
         # Exit silently
