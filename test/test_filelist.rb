@@ -106,6 +106,22 @@ class TestFileList < Test::Unit::TestCase
     ].sort, fl.sort
   end
 
+  def test_square_bracket_pattern
+    fl = FileList.new
+    fl.include("testdata/abc.[ch]")
+    assert fl.size == 2
+    assert fl.include?("testdata/abc.c")
+    assert fl.include?("testdata/abc.h")
+  end
+
+  def test_curly_bracket_pattern
+    fl = FileList.new
+    fl.include("testdata/abc.{c,h}")
+    assert fl.size == 2
+    assert fl.include?("testdata/abc.c")
+    assert fl.include?("testdata/abc.h")
+  end
+
   def test_reject
     fl = FileList.new
     fl.include %w(testdata/x.c testdata/abc.c testdata/xyz.c testdata/existing)
@@ -120,9 +136,7 @@ class TestFileList < Test::Unit::TestCase
     fl.each { |fn| touch fn, :verbose => false }
     x = fl.exclude(%r{/x.+\.})
     assert_equal FileList, x.class
-    assert_equal [
-      'testdata/x.c', 'testdata/abc.c', 'testdata/existing'
-    ], fl
+    assert_equal %w(testdata/x.c testdata/abc.c testdata/existing), fl
     assert_equal fl.object_id, x.object_id
     fl.exclude('testdata/*.c')
     assert_equal ['testdata/existing'], fl
@@ -131,14 +145,14 @@ class TestFileList < Test::Unit::TestCase
   end
 
   def test_exclude_return_on_create
-    fl = FileList['testdata/*'].exclude(/.*\.c$/)
+    fl = FileList['testdata/*'].exclude(/.*\.[hcx]$/)
     assert_equal ['testdata/existing'], fl
     assert_equal FileList, fl.class
   end
 
   def test_exclude_with_string_return_on_create
     fl = FileList['testdata/*'].exclude('testdata/abc.c')
-    assert_equal ["testdata/existing", "testdata/x.c", "testdata/xyz.c"].sort, fl.sort
+    assert_equal %w(testdata/existing testdata/x.c testdata/abc.h testdata/abc.x testdata/xyz.c).sort, fl.sort
     assert_equal FileList, fl.class
   end
 
@@ -175,12 +189,12 @@ class TestFileList < Test::Unit::TestCase
 
   def test_to_s_pending
     fl = FileList['testdata/abc.*']
-    assert_equal  %{testdata/abc.c}, fl.to_s
+    assert_equal  %{testdata/abc.c testdata/abc.h testdata/abc.x}.sort, fl.to_s.sort
   end
 
   def test_inspect_pending
     fl = FileList['testdata/abc.*']
-    assert_equal  %{["testdata/abc.c"]}, fl.inspect
+    assert_equal  %{["testdata/abc.c", "testdata/abc.h", "testdata/abc.x"]}, fl.inspect
   end
 
   def test_sub
@@ -497,6 +511,8 @@ class TestFileList < Test::Unit::TestCase
       touch "testdata/x.c"
       touch "testdata/xyz.c"
       touch "testdata/abc.c"
+      touch "testdata/abc.h"
+      touch "testdata/abc.x"
       touch "testdata/existing"
     end
   end
