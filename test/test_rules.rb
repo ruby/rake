@@ -134,6 +134,19 @@ class TestRules < Test::Unit::TestCase
     end
   end
 
+  def test_pathmap_automatically_applies_to_name
+    verbose(false) do
+      chdir("testdata") do
+        create_file("abc.c")
+        rule ".o" => '%{x,a}n.c' do |t|
+          @runs << "#{t.name} - #{t.source}"
+        end
+        Task["xbc.o"].invoke
+        assert_equal ["xbc.o - abc.c"], @runs
+      end
+    end
+  end
+
   def test_rule_runs_when_explicit_task_has_no_actions
     create_file(SRCFILE)
     create_file(SRCFILE2)

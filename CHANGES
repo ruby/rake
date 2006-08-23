@@ -10,6 +10,8 @@
 * Fixed some bugs where the application object was going to the global
   appliation instead of using its own data.
 * Added square and curly bracket patterns to FileList#include (Tilman Sauerbeck).
+* Added plain filename support to rule dependents (suggested by Nobu Nakada).
+* Added pathmap support to rule dependents.
 
 == Version 0.7.1
 

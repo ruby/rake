@@ -218,6 +218,8 @@ class String
           result << self
         when '%s'
           result << (File::ALT_SEPARATOR || File::SEPARATOR)
+        when '%-'
+          # do nothing
         when '%%'
           result << "%"
         when /%(-?\d+)d/
@@ -1571,6 +1573,8 @@ module Rake
     def make_sources(task_name, extensions)
       extensions.collect { |ext|
         case ext
+        when /^%/
+          task_name.pathmap(ext)
         when %r{/}
           ext
         when /^\./

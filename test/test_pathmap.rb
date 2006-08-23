@@ -71,6 +71,11 @@ class TestPathMap < Test::Unit::TestCase
     assert_equal "/this/is/a/dir/abc.rb", "/this/is/a/dir/abc.rb".pathmap("%p")
   end
 
+  def test_dash_returns_empty_string
+    assert_equal "", "abc.rb".pathmap("%-")
+    assert_equal "abc.rb", "abc.rb".pathmap("%X%-%x")
+  end
+
   def test_percent_percent_returns_percent
     assert_equal "a%b", "".pathmap("a%%b")
   end
