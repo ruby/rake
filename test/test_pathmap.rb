@@ -13,16 +13,17 @@ class TestPathMap < Test::Unit::TestCase
   def test_s_returns_file_separator
     sep = File::ALT_SEPARATOR || File::SEPARATOR
     assert_equal sep, "abc.rb".pathmap("%s")
+    assert_equal sep, "".pathmap("%s")
     assert_equal "a#{sep}b", "a/b".pathmap("%d%s%f")
   end
 
-  def test_b_returns_basename
+  def test_f_returns_basename
     assert_equal "abc.rb", "abc.rb".pathmap("%f")
     assert_equal "abc.rb", "this/is/a/dir/abc.rb".pathmap("%f")
     assert_equal "abc.rb", "/this/is/a/dir/abc.rb".pathmap("%f")
   end
 
-  def test_B_returns_basename_without_extension
+  def test_n_returns_basename_without_extension
     assert_equal "abc", "abc.rb".pathmap("%n")
     assert_equal "abc", "abc".pathmap("%n") 
     assert_equal "abc", "this/is/a/dir/abc.rb".pathmap("%n")
@@ -37,7 +38,7 @@ class TestPathMap < Test::Unit::TestCase
     assert_equal "/this/is/a/dir", "/this/is/a/dir/abc.rb".pathmap("%d")
   end
 
-  def test_nnnd_returns_partial_dirname
+  def test_9d_returns_partial_dirname
     assert_equal "this/is", "this/is/a/dir/abc.rb".pathmap("%2d")
     assert_equal "this", "this/is/a/dir/abc.rb".pathmap("%1d")
     assert_equal ".", "this/is/a/dir/abc.rb".pathmap("%0d")
@@ -45,6 +46,39 @@ class TestPathMap < Test::Unit::TestCase
     assert_equal "a/dir", "this/is/a/dir/abc.rb".pathmap("%-2d")
     assert_equal "this/is/a/dir", "this/is/a/dir/abc.rb".pathmap("%100d")
     assert_equal "this/is/a/dir", "this/is/a/dir/abc.rb".pathmap("%-100d")
+  end
+
+  def test_x_returns_extension
+    assert_equal "", "abc".pathmap("%x")
+    assert_equal ".rb", "abc.rb".pathmap("%x")
+    assert_equal ".rb", "abc.xyz.rb".pathmap("%x")
+    assert_equal "", ".depends".pathmap("%x")
+    assert_equal "", "dir/.depends".pathmap("%x")
+  end
+
+  def test_X_returns_everything_but_extension
+    assert_equal "abc", "abc".pathmap("%X")
+    assert_equal "abc", "abc.rb".pathmap("%X")
+    assert_equal "abc.xyz", "abc.xyz.rb".pathmap("%X")
+    assert_equal ".depends", ".depends".pathmap("%X")
+    assert_equal "a/dir/.depends", "a/dir/.depends".pathmap("%X")
+    assert_equal "/.depends", "/.depends".pathmap("%X")
+  end
+
+  def test_p_returns_entire_pathname
+    assert_equal "abc.rb", "abc.rb".pathmap("%p")
+    assert_equal "this/is/a/dir/abc.rb", "this/is/a/dir/abc.rb".pathmap("%p")
+    assert_equal "/this/is/a/dir/abc.rb", "/this/is/a/dir/abc.rb".pathmap("%p")
+  end
+
+  def test_percent_percent_returns_percent
+    assert_equal "a%b", "".pathmap("a%%b")
+  end
+
+  def test_undefined_percent_causes_error
+    ex = assert_raise(ArgumentError) {
+      "dir/abc.rb".pathmap("%z")
+    }
   end
 
   def test_pattern_returns_substitutions
@@ -90,39 +124,6 @@ class TestPathMap < Test::Unit::TestCase
       "abc.xyz".pathmap("%{src,bin}z")
     end
     assert_match(/unknown.*pathmap.*spec.*z/i, ex.message)
-  end
-
-  def test_x_returns_extension
-    assert_equal "", "abc".pathmap("%x")
-    assert_equal ".rb", "abc.rb".pathmap("%x")
-    assert_equal ".rb", "abc.xyz.rb".pathmap("%x")
-    assert_equal "", ".depends".pathmap("%x")
-    assert_equal "", "dir/.depends".pathmap("%x")
-  end
-
-  def test_X_returns_everything_but_extension
-    assert_equal "abc", "abc".pathmap("%X")
-    assert_equal "abc", "abc.rb".pathmap("%X")
-    assert_equal "abc.xyz", "abc.xyz.rb".pathmap("%X")
-    assert_equal ".depends", ".depends".pathmap("%X")
-    assert_equal "a/dir/.depends", "a/dir/.depends".pathmap("%X")
-    assert_equal "/.depends", "/.depends".pathmap("%X")
-  end
-
-  def test_p_returns_entire_pathname
-    assert_equal "abc.rb", "abc.rb".pathmap("%p")
-    assert_equal "this/is/a/dir/abc.rb", "this/is/a/dir/abc.rb".pathmap("%p")
-    assert_equal "/this/is/a/dir/abc.rb", "/this/is/a/dir/abc.rb".pathmap("%p")
-  end
-
-  def test_percent_percent_returns_percent
-    assert_equal "a%b", "".pathmap("a%%b")
-  end
-
-  def test_undefined_percent_causes_error
-    ex = assert_raise(ArgumentError) {
-      "dir/abc.rb".pathmap("%z")
-    }
   end
 
   def test_works_with_windows_separators

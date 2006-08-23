@@ -1571,8 +1571,12 @@ module Rake
     def make_sources(task_name, extensions)
       extensions.collect { |ext|
         case ext
+        when %r{/}
+          ext
+        when /^\./
+          task_name.ext(ext)
         when String
-          task_name.sub(/\.[^.]*$/, ext)
+          ext
         when Proc
           ext.call(task_name)
         else

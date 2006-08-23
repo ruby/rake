@@ -14,6 +14,8 @@ class TestRules < Test::Unit::TestCase
   SRCFILE2 =  "testdata/xyz.c"
   FTNFILE  = "testdata/abc.f"
   OBJFILE  = "testdata/abc.o"
+  FOOFILE  = "testdata/foo"
+  DOTFOOFILE = "testdata/.foo"
 
   def setup
     Task.clear
@@ -66,7 +68,7 @@ class TestRules < Test::Unit::TestCase
     assert_equal [OBJFILE], @runs
   end
 
-  def test_create_by_string
+  def test_rule_can_be_created_by_string
     create_file(SRCFILE)
     rule '.o' => ['.c'] do |t|
       @runs << t.name
@@ -75,7 +77,64 @@ class TestRules < Test::Unit::TestCase
     assert_equal [OBJFILE], @runs
   end
 
-  def test_rule_and_no_action_task
+  def test_rule_prereqs_can_be_created_by_string
+    create_file(SRCFILE)
+    rule '.o' => '.c' do |t|
+      @runs << t.name
+    end
+    Task[OBJFILE].invoke
+    assert_equal [OBJFILE], @runs
+  end
+
+  def test_plain_strings_as_dependents_refer_to_files
+    create_file(SRCFILE)
+    rule '.o' => SRCFILE do |t|
+      @runs << t.name
+    end
+    Task[OBJFILE].invoke
+    assert_equal [OBJFILE], @runs
+  end
+
+  def test_file_names_beginning_with_dot_can_be_tricked_into_refering_to_file
+    verbose(false) do
+      chdir("testdata") do
+        create_file('.foo')
+        rule '.o' => "./.foo" do |t|
+          @runs << t.name
+        end
+        Task[OBJFILE].invoke
+        assert_equal [OBJFILE], @runs
+      end
+    end
+  end
+
+  def test_file_names_beginning_with_dot_can_be_wrapped_in_lambda
+    verbose(false) do
+      chdir("testdata") do
+        create_file(".foo")
+        rule '.o' => lambda{".foo"} do |t|
+          @runs << t.name
+        end
+        Task[OBJFILE].invoke
+        assert_equal [OBJFILE], @runs
+      end
+    end
+  end
+
+  def test_non_extension_rule_name_refers_to_file
+    verbose(false) do
+      chdir("testdata") do
+        create_file("abc.c")
+        rule "abc" => '.c' do |t|
+          @runs << t.name
+        end
+        Task["abc"].invoke
+        assert_equal ["abc"], @runs
+      end
+    end
+  end
+
+  def test_rule_runs_when_explicit_task_has_no_actions
     create_file(SRCFILE)
     create_file(SRCFILE2)
     delete_file(OBJFILE)
@@ -87,7 +146,7 @@ class TestRules < Test::Unit::TestCase
     assert_equal [SRCFILE], @runs
   end
 
-  def test_string_close_matches
+  def test_close_matches_on_name_do_not_trigger_rule
     create_file("testdata/x.c")
     rule '.o' => ['.c'] do |t|
       @runs << t.name
@@ -96,7 +155,7 @@ class TestRules < Test::Unit::TestCase
     assert_raises(RuntimeError) { Task['testdata/x.xyo'].invoke }
   end
 
-  def test_precedence_rule_vs_implicit
+  def test_rule_rebuilds_obj_when_source_is_newer
     create_timed_files(OBJFILE, SRCFILE)
     rule(/\.o$/ => ['.c']) do
       @runs << :RULE
@@ -105,7 +164,7 @@ class TestRules < Test::Unit::TestCase
     assert_equal [:RULE], @runs
   end
 
-  def test_rule_with_two_sources
+  def test_rule_with_two_sources_runs_if_both_sources_are_present
     create_timed_files(OBJFILE, SRCFILE, SRCFILE2)
     rule OBJFILE => [lambda{SRCFILE}, lambda{SRCFILE2}] do
       @runs << :RULE
@@ -114,7 +173,7 @@ class TestRules < Test::Unit::TestCase
     assert_equal [:RULE], @runs
   end
 
-  def test_rule_with_two_sources_but_one_missing
+  def test_rule_with_two_sources_but_one_missing_does_not_run
     create_timed_files(OBJFILE, SRCFILE)
     delete_file(SRCFILE2)
     rule OBJFILE => [lambda{SRCFILE}, lambda{SRCFILE2}] do
@@ -124,7 +183,7 @@ class TestRules < Test::Unit::TestCase
     assert_equal [], @runs
   end
 
-  def test_rule_ordering_finding_second_rule
+  def test_second_rule_runs_when_first_rule_doesnt
     create_timed_files(OBJFILE, SRCFILE)
     delete_file(SRCFILE2)
     rule OBJFILE => [lambda{SRCFILE}, lambda{SRCFILE2}] do
@@ -137,7 +196,7 @@ class TestRules < Test::Unit::TestCase
     assert_equal [:RULE2], @runs
   end
 
-  def test_rule_ordering_finding_first_rule
+  def test_second_rule_doest_run_if_first_triggers
     create_timed_files(OBJFILE, SRCFILE, SRCFILE2)
     rule OBJFILE => [lambda{SRCFILE}, lambda{SRCFILE2}] do
       @runs << :RULE1
@@ -149,7 +208,7 @@ class TestRules < Test::Unit::TestCase
     assert_equal [:RULE1], @runs
   end
 
-  def test_rule_ordering_not_finding_second_rule
+  def test_second_rule_doest_run_if_first_triggers_with_reversed_rules
     create_timed_files(OBJFILE, SRCFILE, SRCFILE2)
     rule OBJFILE => [lambda{SRCFILE}] do
       @runs << :RULE1
@@ -161,19 +220,19 @@ class TestRules < Test::Unit::TestCase
     assert_equal [:RULE1], @runs
   end
 
-  def test_proc_dependent
+  def test_rule_with_proc_dependent_will_trigger
     ran = false
     File.makedirs("testdata/src/jw")
     create_file("testdata/src/jw/X.java")
     rule %r(classes/.*\.class) => [
-      proc { |fn| fn.sub(/^classes/, 'testdata/src').sub(/\.class$/, '.java') }
+      proc { |fn| fn.pathmap("%{classes,testdata/src}d/%n.java") }
     ] do |task|
       assert_equal task.name, 'classes/jw/X.class'
       assert_equal task.source, 'testdata/src/jw/X.java'
-      ran = true
+      @runs << :RULE
     end
     Task['classes/jw/X.class'].invoke
-    assert ran, "Should have triggered rule"
+    assert_equal [:RULE], @runs
   ensure
     rm_r("testdata/src", :verbose=>false) rescue nil
   end
@@ -200,7 +259,7 @@ class TestRules < Test::Unit::TestCase
     rm_r("testdata/flatten", :verbose=>false) rescue nil
   end
 
-  def test_recursive_rules
+  def test_recursive_rules_will_work_as_long_as_they_terminate
     actions = []
     create_file("testdata/abc.xml")
     rule '.y' => '.xml' do actions << 'y' end
@@ -211,7 +270,7 @@ class TestRules < Test::Unit::TestCase
     assert_equal ['y', 'c', 'o', 'exe'], actions
   end
 
-  def test_recursive_overflow
+  def test_recursive_rules_that_dont_terminate_will_overflow
     create_file("testdata/a.a")
     prev = 'a'
     ('b'..'z').each do |letter|
@@ -224,7 +283,7 @@ class TestRules < Test::Unit::TestCase
     assert_match(/a\.z => testdata\/a.y/, ex.message)
   end
 
-  def test_bad_dependent
+  def test_rules_with_bad_dependents_will_fail
     rule "a" => [ 1 ] do |t| puts t.name end
     assert_raise(RuntimeError) do Task['a'].invoke end
   end
