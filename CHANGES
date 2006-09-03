@@ -12,6 +12,8 @@
 * Added square and curly bracket patterns to FileList#include (Tilman Sauerbeck).
 * Added plain filename support to rule dependents (suggested by Nobu Nakada).
 * Added pathmap support to rule dependents.
+* Added a 'tasks' method to a namespace to get a list of tasks
+  associated with the namespace.
 
 == Version 0.7.1
 

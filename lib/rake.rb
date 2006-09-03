@@ -1390,6 +1390,11 @@ module Rake
     def [](name)
       @task_manager.lookup(name, @scope)
     end
+
+    # Return the list of tasks defined in this namespace.
+    def tasks
+      @task_manager.tasks
+    end
   end
 
 
