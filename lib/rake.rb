@@ -59,11 +59,42 @@ end
   }
 end
 
+
+######################################################################
+# Rake extensions to Module.
+#
+class Module
+
+  # Check for an existing method in the current class before
+  # extending.  IF the method already exists, then a warning is
+  # printed and the extension is not added.  Otherwise the block is
+  # yielded and any definitions in the block will take effect.
+  #
+  # Usage:
+  #
+  #   class String
+  #     rake_extension("xyz") do
+  #       def xyz
+  #         ...
+  #       end
+  #     end
+  #   end
+  #
+  def rake_extension(method)
+    if instance_methods.include?(method)
+      $stderr.puts "WARNING: Possible conflict with Rake extension: #{self}##{method} already exists"
+    else
+      yield
+    end
+  end
+end
+
+
 ######################################################################
 # User defined methods to be added to String.
 #
 class String
-  unless instance_methods.include? "ext"
+  rake_extension("ext") do
     # Replace the file extension with +newext+.  If there is no
     # extenson on the string, append the new extension to the end.  If
     # the new extension is not given, or is the empty string, remove
@@ -79,8 +110,7 @@ class String
     end
   end
 
-
-  unless instance_methods.include? "pathmap" 
+  rake_extension("pathmap") do
     # Explode a path into individual components.  Used by +pathmap+.
     def pathmap_explode
       head, tail = File.split(self)
@@ -895,7 +925,8 @@ end
 # define methods on other objects.
 
 include RakeFileUtils
-private(*FileUtils.instance_methods(false))
+#private(*FileUtils.instance_methods(false))
+private(*FileUtils::OPT_TABLE.keys) 
 
 ######################################################################
 module Rake

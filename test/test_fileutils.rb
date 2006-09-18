@@ -105,6 +105,11 @@ class TestFileUtils < Test::Unit::TestCase
     assert_equal false, nowrite
   end
 
+  def test_fileutils_methods_dont_leak
+    obj = Object.new
+    assert_raise(NoMethodError){ obj.copy }
+  end
+
   def test_sh
     verbose(false) { sh %{test/shellcommand.rb} }
     assert true, "should not fail"
