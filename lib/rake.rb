@@ -753,7 +753,7 @@ module FileUtils
     fu_check_options options, :noop, :verbose
     fu_output_message cmd.join(" ") if options[:verbose]
     unless options[:noop]
-      res = system(*cmd)      
+      res = system(*cmd)
       block.call(res, $?)
     end
   end

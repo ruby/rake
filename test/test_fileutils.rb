@@ -4,6 +4,7 @@ require 'rake'
 require 'test/unit'
 require 'test/filecreation'
 require 'fileutils'
+require 'stringio'
 
 class TestFileUtils < Test::Unit::TestCase
   include FileCreation
@@ -149,6 +150,25 @@ class TestFileUtils < Test::Unit::TestCase
     assert_equal 2, count, "Block count should be 2"
   end
 
+  def test_sh_noop
+    verbose(false) { sh %{test/shellcommand.rb 1}, :noop=>true }
+    assert true, "should not fail"
+  end
+
+  def test_sh_bad_option
+    ex = assert_raise(ArgumentError) {
+      verbose(false) { sh %{test/shellcommand.rb}, :bad_option=>true }
+    }
+    assert_match /bad_option/, ex.message
+  end
+
+  def test_sh_verbose
+    out = redirect_stderr {
+      sh %{test/shellcommand.rb}, :noop=>true
+    }
+    assert_match /^test\/shellcommand\.rb$/, out
+  end
+
   def test_ruby
     verbose(false) do
       ENV['RAKE_TEST_RUBY'] = "123"
@@ -180,5 +200,15 @@ class TestFileUtils < Test::Unit::TestCase
     assert_equal ['/', 'a', 'b'], RakeFileUtils.split_all('/a/b')
     assert_equal ['..', 'a', 'b'], RakeFileUtils.split_all('../a/b')
   end
-
+  
+  private
+  
+  def redirect_stderr
+    old_err = $stderr
+    $stderr = StringIO.new
+    yield
+    $stderr.string
+  ensure
+    $stderr = old_err
+  end
 end
