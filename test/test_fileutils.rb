@@ -159,14 +159,23 @@ class TestFileUtils < Test::Unit::TestCase
     ex = assert_raise(ArgumentError) {
       verbose(false) { sh %{test/shellcommand.rb}, :bad_option=>true }
     }
-    assert_match /bad_option/, ex.message
+    assert_match(/bad_option/, ex.message)
   end
 
   def test_sh_verbose
     out = redirect_stderr {
+      verbose(true) {
+        sh %{test/shellcommand.rb}, :noop=>true
+      }
+    }
+    assert_match(/^test\/shellcommand\.rb$/, out)
+  end
+
+  def test_sh_default_verbosity_is_false
+    out = redirect_stderr {
       sh %{test/shellcommand.rb}, :noop=>true
     }
-    assert_match /^test\/shellcommand\.rb$/, out
+    assert_equal '', out
   end
 
   def test_ruby

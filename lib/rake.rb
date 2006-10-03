@@ -750,8 +750,8 @@ module FileUtils
         ok or fail "Command failed with status (#{status.exitstatus}): [#{show_command}]"
       }
     end
-    fu_check_options options, :noop, :verbose
-    fu_output_message cmd.join(" ") if options[:verbose]
+    rake_check_options options, :noop, :verbose
+    rake_output_message cmd.join(" ") if options[:verbose]
     unless options[:noop]
       res = system(*cmd)
       block.call(res, $?)
@@ -831,7 +831,7 @@ module RakeFileUtils
     module_eval(<<-EOS, __FILE__, __LINE__ + 1)
     def #{name}( *args, &block )
       super(
-        *fu_merge_option(args,
+        *rake_merge_option(args,
           #{default_options.join(', ')}
           ), &block)
     end
@@ -905,7 +905,7 @@ module RakeFileUtils
   end
 
   # Merge the given options with the default values.
-  def fu_merge_option(args, defaults)
+  def rake_merge_option(args, defaults)
     if Hash === args.last
       defaults.update(args.last)
       args.pop
@@ -913,10 +913,27 @@ module RakeFileUtils
     args.push defaults
     args
   end
-  private :fu_merge_option
+  private :rake_merge_option
+
+  # Send the message to the default rake output (which is $stderr).
+  def rake_output_message(message)
+    $stderr.puts(message)
+  end
+  private :rake_output_message
+
+  # Check that the options do not contain options not listed in
+  # +optdecl+.  An ArgumentError exception is thrown if non-declared
+  # options are found.
+  def rake_check_options(options, *optdecl)
+    h = options.dup
+    optdecl.each do |name|
+      h.delete name
+    end
+    raise ArgumentError, "no such option: #{h.keys.join(' ')}" unless h.empty?
+  end
+  private :rake_check_options
 
   extend self
-  
 end
 
 ######################################################################
