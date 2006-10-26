@@ -120,7 +120,7 @@ rd = Rake::RDocTask.new("rdoc") { |rdoc|
   rdoc.rdoc_dir = 'html'
 #  rdoc.template = 'kilmer'
 #  rdoc.template = 'css2'
-  rdoc.template = '/home/jim/working/rubyforge/rake/doc/jamis.rb'
+  rdoc.template = 'doc/jamis.rb'
   rdoc.title    = "Rake -- Ruby Make"
   rdoc.options << '--line-numbers' << '--inline-source' <<
     '--main' << 'README' <<
@@ -345,7 +345,7 @@ task :update_version => [:prerelease] do
     if ENV['RELTEST']
       announce "Release Task Testing, skipping commiting of new version"
     else
-      sh %{cvs commit -m "Updated to version #{PKG_VERSION}" lib/rake.rb}
+      sh %{cvs commit -m "Updated to version #{PKG_VERSION}" lib/rake.rb} # "
     end
   end
 end

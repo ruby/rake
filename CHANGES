@@ -21,6 +21,7 @@
 * Added rake_extension to handle detection of extension collisions.
 * Added test for noop, bad_option and verbose flags to sh command.
 * Removed dependency on internal fu_xxx functions from FileUtils.
+* Added a 'shame' task to the Rakefile.
 
 == Version 0.7.1
 

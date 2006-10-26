@@ -356,6 +356,24 @@ resolve in different locations.
   # "one:run"      => "one:run"
   # "one:two:run"  => "one:two:run"
 
+== FileLists
+
+FileLists are the way Rake manages lists of files.  You can treat a
+FileList as an array of strings for the most part, but FileLists
+support some additional operations.
+
+=== Creating a FileList
+
+Creating a file list is easy.  Just give it the list of file names:
+
+   fl = FileList['file1.rb', file2.rb']
+
+Or give it a glob pattern:
+
+   fl = FileList['*.rb']
+
+   
+
 == Odds and Ends
 
 === do/end verses { }
