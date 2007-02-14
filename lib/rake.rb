@@ -942,8 +942,8 @@ end
 # define methods on other objects.
 
 include RakeFileUtils
-#private(*FileUtils.instance_methods(false))
-private(*FileUtils::OPT_TABLE.keys) 
+private(*FileUtils.instance_methods(false))
+private(*RakeFileUtils.instance_methods(false))
 
 ######################################################################
 module Rake

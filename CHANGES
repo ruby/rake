@@ -28,6 +28,7 @@
   VanderWerf)
 * Added a protected 'require "rubygems"' to test/test_application to
   unbreak cruisecontrol.rb.
+* Added the handful of RakeFileUtils to the private method as well.
 
 == Version 0.7.1
 

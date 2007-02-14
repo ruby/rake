@@ -2,7 +2,7 @@
 
 begin
   require 'rubygems'
-  require_gem 'session'
+  gem 'session'
 rescue LoadError
   puts "UNABLE TO RUN FUNCTIONAL TESTS"
   puts "No Session Found"

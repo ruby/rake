@@ -106,9 +106,16 @@ class TestFileUtils < Test::Unit::TestCase
     assert_equal false, nowrite
   end
 
+  def test_file_utils_methods_are_available_at_top_level
+    create_file("testdata/a")
+    rm_rf "testdata/a"
+    assert ! File.exist?("testdata/a")
+  end
+
   def test_fileutils_methods_dont_leak
     obj = Object.new
-    assert_raise(NoMethodError){ obj.copy }
+    assert_raise(NoMethodError) { obj.copy } # from FileUtils
+    assert_raise(NoMethodError) { obj.ruby } # from RubyFileUtils
   end
 
   def test_sh
@@ -209,7 +216,7 @@ class TestFileUtils < Test::Unit::TestCase
     assert_equal ['/', 'a', 'b'], RakeFileUtils.split_all('/a/b')
     assert_equal ['..', 'a', 'b'], RakeFileUtils.split_all('../a/b')
   end
-  
+
   private
   
   def redirect_stderr
