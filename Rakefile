@@ -16,7 +16,7 @@ require 'rake/clean'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
-CLEAN.include('**/*.o')
+CLEAN.include('**/*.o', '*.dot')
 CLOBBER.include('doc/example/main', 'testdata')
 CLOBBER.include('test/data/**/temp_*')
 CLOBBER.include('test/data/chains/play.*')
@@ -373,3 +373,7 @@ end
 # Require experimental XForge/Metaproject support.
 
 load 'xforge.rf' if File.exist?('xforge.rf')
+
+task :where_am_i do
+  puts Rake.original_dir
+end

@@ -68,6 +68,12 @@ module Rake
     # List of files to be included in the package.
     attr_accessor :package_files
 
+    # Tar command for gzipped or bzip2ed archives.  The default is 'tar'.
+    attr_accessor :tar_command
+
+    # Zip command for zipped archives.  The default is 'zip'.
+    attr_accessor :zip_command
+
     # Create a Package Task with the given name and version. 
     def initialize(name=nil, version=nil)
       init(name, version)
@@ -85,6 +91,8 @@ module Rake
       @need_tar_gz = false
       @need_tar_bz2 = false
       @need_zip = false
+      @tar_command = 'tar'
+      @zip_command = 'zip'
     end
 
     # Create the tasks defined by this task library.
@@ -114,7 +122,7 @@ module Rake
           task :package => ["#{package_dir}/#{file}"]
           file "#{package_dir}/#{file}" => [package_dir_path] + package_files do
             chdir(package_dir) do
-              sh %{tar #{flag}cvf #{file} #{package_name}}
+              sh %{#{@tar_command} #{flag}cvf #{file} #{package_name}}
             end
           end
         end
@@ -124,7 +132,7 @@ module Rake
         task :package => ["#{package_dir}/#{zip_file}"]
         file "#{package_dir}/#{zip_file}" => [package_dir_path] + package_files do
           chdir(package_dir) do
-            sh %{zip -r #{zip_file} #{package_name}}
+            sh %{#{@zip_command} -r #{zip_file} #{package_name}}
           end
         end
       end

@@ -5,6 +5,7 @@ begin
   require 'rbosax'
   require 'code_statistics'
   
+  desc "Publish Code/Test Ratio on iChat"
   task :shame do
     stats = CodeStatistics.new(['Rake', 'lib'], ['Unit tests', 'test'])
     code  = stats.send :calculate_code

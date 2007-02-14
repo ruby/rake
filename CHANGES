@@ -22,6 +22,12 @@
 * Added test for noop, bad_option and verbose flags to sh command.
 * Removed dependency on internal fu_xxx functions from FileUtils.
 * Added a 'shame' task to the Rakefile.
+* Added tar_command and zip_command options to the Package task.
+* Added a description to the gem task in GemPackageTask.
+* Fixed a bug when rules have multiple prerequisites (patch by Joel
+  VanderWerf)
+* Added a protected 'require "rubygems"' to test/test_application to
+  unbreak cruisecontrol.rb.
 
 == Version 0.7.1
 
