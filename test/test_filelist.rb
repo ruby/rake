@@ -143,6 +143,13 @@ class TestFileList < Test::Unit::TestCase
     fl.exclude('testdata/existing')
     assert_equal [], fl
   end
+  
+  def test_excluding_via_block
+    fl = FileList['testdata/a.c', 'testdata/b.c', 'testdata/xyz.c']
+    fl.exclude { |fn| fn.pathmap('%n') == 'xyz' }
+    assert fl.exclude?("xyz.c"), "Should exclude xyz.c"
+    assert_equal ['testdata/a.c', 'testdata/b.c'], fl
+  end
 
   def test_exclude_return_on_create
     fl = FileList['testdata/*'].exclude(/.*\.[hcx]$/)
@@ -380,7 +387,7 @@ class TestFileList < Test::Unit::TestCase
     b = ['a', 'b']
     assert a == b
     assert b == a
-#    assert a.eql?(b)
+#   assert a.eql?(b)
 #    assert b.eql?(a)
     assert ! a.equal?(b)
     assert ! b.equal?(a)

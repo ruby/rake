@@ -16,7 +16,9 @@
 require 'rake'
 
 CLEAN = Rake::FileList["**/*~", "**/*.bak", "**/core"]
-CLEAN.clear_exclude
+CLEAN.clear_exclude.exclude { |fn| 
+  fn.pathmap("%f") == 'core' && File.directory?(fn) 
+}
 
 desc "Remove any temporary products."
 task :clean do

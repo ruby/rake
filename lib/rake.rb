@@ -39,27 +39,6 @@ require 'singleton'
 require 'thread'
 require 'ostruct'
 
-# Some objects are dupable, some are not.  So we define a version of
-# dup (called rake_dup) that returns self on the handful of classes
-# that are not dupable.
-
-module Kernel
-  # Duplicate an object if it can be duplicated.  If it can not be
-  # cloned or duplicated, then just return the original object.
-  def rake_dup()
-    dup
-  end
-end
-
-[NilClass, FalseClass, TrueClass, Fixnum, Symbol].each do |clazz|
-  clazz.class_eval {
-    # Duplicate an object if it can be duplicated.  If it can not be
-    # cloned or duplicated, then just return the original object.
-    def rake_dup() self end
-  }
-end
-
-
 ######################################################################
 # Rake extensions to Module.
 #
@@ -303,7 +282,8 @@ module Rake
       sibling = self.class.new
       instance_variables.each do |ivar|
         value = self.instance_variable_get(ivar)
-        sibling.instance_variable_set(ivar, value.rake_dup)
+        new_value = value.clone rescue value
+        sibling.instance_variable_set(ivar, new_value)
       end
       sibling
     end
@@ -1060,6 +1040,7 @@ module Rake
       @pending_add = []
       @pending = false
       @exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
+      @exclude_procs = DEFAULT_IGNORE_PROCS.dup
       @exclude_re = nil
       @items = []
       patterns.each { |pattern| include(pattern) }
@@ -1089,7 +1070,9 @@ module Rake
     
     # Register a list of file name patterns that should be excluded
     # from the list.  Patterns may be regular expressions, glob
-    # patterns or regular strings.
+    # patterns or regular strings.  In addition, a block given to
+    # exclude will remove entries that return true when given to the 
+    # block.
     #
     # Note that glob patterns are expanded against the file system.
     # If a file is explicitly added to a file list, but does not exist
@@ -1106,12 +1089,14 @@ module Rake
     # If "a.c" is not a file, then ...
     #   FileList['a.c', 'b.c'].exclude("a.*") => ['a.c', 'b.c']
     #
-    def exclude(*patterns)
-      patterns.each do |pat| @exclude_patterns << pat end
-      if ! @pending
-        calculate_exclude_regexp
-        reject! { |fn| fn =~ @exclude_re }
+    def exclude(*patterns, &block)
+      patterns.each do |pat|
+        @exclude_patterns << pat 
       end
+      if block_given?
+        @exclude_procs << block
+      end        
+      resolve_exclude if ! @pending
       self
     end
 
@@ -1119,7 +1104,9 @@ module Rake
     # Clear all the exclude patterns so that we exclude nothing.
     def clear_exclude
       @exclude_patterns = []
+      @exclude_procs = []
       calculate_exclude_regexp if ! @pending
+      self
     end
 
     # Define equality.
@@ -1192,17 +1179,8 @@ module Rake
     private :resolve_add
 
     def resolve_exclude
-      @exclude_patterns.each do |pat|
-        case pat
-        when Regexp
-          reject! { |fn| fn =~ pat }
-        when /[*?]/
-          reject_list = Dir[pat]
-          reject! { |fn| reject_list.include?(fn) }
-        else
-          reject! { |fn| fn == pat }
-        end
-      end
+      calculate_exclude_regexp
+      reject! { |fn| exclude?(fn) }
       self
     end
     private :resolve_exclude
@@ -1311,15 +1289,17 @@ module Rake
     # Should the given file name be excluded?
     def exclude?(fn)
       calculate_exclude_regexp unless @exclude_re
-      fn =~ @exclude_re
+      fn =~ @exclude_re || @exclude_procs.any? { |p| p.call(fn) }
     end
 
     DEFAULT_IGNORE_PATTERNS = [
       /(^|[\/\\])CVS([\/\\]|$)/,
       /(^|[\/\\])\.svn([\/\\]|$)/,
       /\.bak$/,
-      /~$/,
-      /(^|[\/\\])core$/
+      /~$/
+    ]
+    DEFAULT_IGNORE_PROCS = [
+      proc { |fn| fn =~ /(^|[\/\\])core$/ && ! File.directory?(fn) }
     ]
     @exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
 
@@ -2001,8 +1981,4 @@ class Module
       rake_original_const_missing(const_name)
     end
   end
-end
-
-if __FILE__ == $0 then
-  Rake::Application.new.run
 end

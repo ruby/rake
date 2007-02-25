@@ -29,6 +29,12 @@
 * Added a protected 'require "rubygems"' to test/test_application to
   unbreak cruisecontrol.rb.
 * Added the handful of RakeFileUtils to the private method as well.
+* Added block based exclusion.
+* The clean task will no longer delete 'core' if it is a directory.
+* Removed rake_dup.  Now we just simply rescue a bad dup.
+* Refactored the FileList reject logic to remove duplication.
+* Removed if __FILE__ at the end of the rake.rb file.
+* Fixed the rake shame task.
 
 == Version 0.7.1
 

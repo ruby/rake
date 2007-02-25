@@ -2,7 +2,7 @@
 # -*- ruby -*-
 
 begin
-  require 'rbosax'
+  require 'rbosa'
   require 'code_statistics'
   
   desc "Publish Code/Test Ratio on iChat"
