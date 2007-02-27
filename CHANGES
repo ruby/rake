@@ -34,7 +34,6 @@
 * Removed rake_dup.  Now we just simply rescue a bad dup.
 * Refactored the FileList reject logic to remove duplication.
 * Removed if __FILE__ at the end of the rake.rb file.
-* Fixed the rake shame task.
 
 == Version 0.7.1
 
