@@ -153,13 +153,13 @@ class TestFileList < Test::Unit::TestCase
 
   def test_exclude_return_on_create
     fl = FileList['testdata/*'].exclude(/.*\.[hcx]$/)
-    assert_equal ['testdata/existing'], fl
+    assert_equal ['testdata/existing', 'testdata/cfiles'].sort, fl.sort
     assert_equal FileList, fl.class
   end
 
   def test_exclude_with_string_return_on_create
     fl = FileList['testdata/*'].exclude('testdata/abc.c')
-    assert_equal %w(testdata/existing testdata/x.c testdata/abc.h testdata/abc.x testdata/xyz.c).sort, fl.sort
+    assert_equal %w(testdata/existing testdata/cfiles testdata/x.c testdata/abc.h testdata/abc.x testdata/xyz.c).sort, fl.sort
     assert_equal FileList, fl.class
   end
 
@@ -214,6 +214,28 @@ class TestFileList < Test::Unit::TestCase
     assert_equal FileList, f3.class
     assert_equal ["testdata/abc.o", "testdata/x.o", "testdata/xyz.o"].sort,
       f3.sort
+  end
+  
+  def test_claim_to_be_a_kind_of_array
+    fl = FileList['testdata/*.c']
+    assert fl.is_a?(Array)
+    assert fl.kind_of?(Array)
+  end
+  
+  def test_claim_to_be_a_kind_of_filelist
+    fl = FileList['testdata/*.c']
+    assert fl.is_a?(FileList)
+    assert fl.kind_of?(FileList)
+  end
+  
+  def test_claim_to_be_a_filelist_instance
+    fl = FileList['testdata/*.c']
+    assert fl.instance_of?(FileList)
+  end
+  
+  def test_dont_claim_to_be_an_array_instance
+    fl = FileList['testdata/*.c']
+    assert ! fl.instance_of?(Array)
   end
 
   def test_sub!
@@ -300,6 +322,18 @@ class TestFileList < Test::Unit::TestCase
     assert found, "should have found a matching line"
   end
 
+  def test_existing
+    fl = FileList['testdata/abc.c', 'testdata/notthere.c']
+    assert_equal ["testdata/abc.c"], fl.existing
+    assert fl.existing.is_a?(FileList)
+  end
+
+  def test_existing!
+    fl = FileList['testdata/abc.c', 'testdata/notthere.c']
+    result = fl.existing!
+    assert_equal ["testdata/abc.c"], fl
+    assert_equal fl.object_id, result.object_id
+  end
 
   def test_ignore_special
     f = FileList['testdata/*']
@@ -505,12 +539,25 @@ class TestFileList < Test::Unit::TestCase
     assert_equal ['b', 'd'], r
     assert_equal FileList, r.class
   end
+  
+  def test_file_utils_can_use_filelists
+    cfiles = FileList['testdata/*.c']
+    
+    cp cfiles, @cdir
+    
+    assert File.exist?(File.join(@cdir, 'abc.c'))
+    assert File.exist?(File.join(@cdir, 'xyz.c'))
+    assert File.exist?(File.join(@cdir, 'x.c'))
+  end
 
   def create_test_data
     verbose(false) do
+      
       mkdir "testdata" unless File.exist? "testdata"
       mkdir "testdata/CVS" rescue nil
       mkdir "testdata/.svn" rescue nil
+      @cdir = "testdata/cfiles"
+      mkdir @cdir rescue nil
       touch "testdata/.dummy"
       touch "testdata/x.bak"
       touch "testdata/x~"

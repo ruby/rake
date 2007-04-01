@@ -725,7 +725,8 @@ module FileUtils
     options = (Hash === cmd.last) ? cmd.pop : {}
     unless block_given?
       show_command = cmd.join(" ")
-      show_command = show_command[0,42] + "..." if show_command.length > 45
+      show_command = show_command[0,42] + "..." 
+        # TODO code application logic heref show_command.length > 45
       block = lambda { |ok, status|
         ok or fail "Command failed with status (#{status.exitstatus}): [#{show_command}]"
       }
@@ -1000,7 +1001,7 @@ module Rake
       + - & |
     ]
     
-    DELEGATING_METHODS = (ARRAY_METHODS + MUST_DEFINE - MUST_NOT_DEFINE).sort.uniq
+    DELEGATING_METHODS = (ARRAY_METHODS + MUST_DEFINE - MUST_NOT_DEFINE).collect{ |s| s.to_s }.sort.uniq
     
     # Now do the delegation.
     DELEGATING_METHODS.each_with_index do |sym, i|
@@ -1030,9 +1031,9 @@ module Rake
     # time, use the "yield self" pattern.
     #
     # Example:
-    #   file_list = FileList.new['lib/**/*.rb', 'test/test*.rb']
+    #   file_list = FileList.new('lib/**/*.rb', 'test/test*.rb')
     #
-    #   pkg_files = FileList.new['lib/**/*'] do |fl|
+    #   pkg_files = FileList.new('lib/**/*') do |fl|
     #     fl.exclude(/\bCVS\b/)
     #   end
     #
@@ -1122,9 +1123,14 @@ module Rake
 
     # Return the internal array object.
     def to_ary
-      resolve
-      @items
+      to_a
     end
+    
+    # Lie about our class.
+    def is_a?(klass)
+      klass == Array || super(klass)
+    end
+    alias kind_of? is_a?
 
     # Redefine * to return either a string or a new file list.
     def *(other)
@@ -1259,6 +1265,20 @@ module Rake
           end
         end
       end
+    end
+
+    # Return a new file list that only contains file names from the current
+    # file list that exist on the file system.
+    def existing
+      select { |fn| File.exists?(fn) }
+    end
+    
+    # Modify the current file list so that it contains only file name that
+    # exist on the file system.
+    def existing!
+      resolve
+      @items = @items.select { |fn| File.exists?(fn) }
+      self
     end
 
     # FileList version of partition.  Needed because the nested arrays

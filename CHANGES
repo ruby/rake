@@ -1,6 +1,12 @@
 = Rake Changelog
 
-== Pre-Version 0.7.2
+== Pre-version 0.7.3
+
+* Added existing and existing! methods to FileList
+* FileLists now claim to be Arrays (via is_a?) to get better support
+  from the FileUtil module.
+
+== Version 0.7.2
 
 * Error messages are now send to stderr rather than stdout (from
   Payton Quackenbush).

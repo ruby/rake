@@ -67,7 +67,7 @@ Rake::TestTask.new(:test_all) do |t|
     'test/fun*.rb'
   ]
   t.warning = true
-  t.verbose = true
+  t.verbose = false
 end
 
 Rake::TestTask.new(:test_units) do |t|
@@ -88,16 +88,20 @@ Rake::TestTask.new(:test_contribs) do |t|
   t.warning = true
 end
 
-require 'rcov/rcovtask'
+begin
+  require 'rcov/rcovtask'
 
-Rcov::RcovTask.new do |t|
-  t.libs << "test"
-  t.rcov_opts = ['-xRakefile', '-xrakefile', '-xpublish.rf', '--text-report']
-  t.test_files = FileList[
-    'test/test*.rb',
-    'test/contrib/test*.rb'
-  ]
-  t.verbose = true
+  Rcov::RcovTask.new do |t|
+    t.libs << "test"
+    t.rcov_opts = ['-xRakefile', '-xrakefile', '-xpublish.rf', '--text-report']
+    t.test_files = FileList[
+      'test/test*.rb',
+      'test/contrib/test*.rb'
+    ]
+    t.verbose = true
+  end
+rescue LoadError
+  # No rcov available
 end
 
 directory 'testdata'
