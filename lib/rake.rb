@@ -1925,7 +1925,7 @@ module Rake
     def const_warning(const_name)
       @const_warning ||= false
       if ! @const_warning
-        $stderr.puts %{WARNING: Deprecated reference to top-level constant '#{const_name}'} +
+        $stderr.puts %{WARNING: Deprecated reference to top-level constant '#{const_name}' } +
           %{found at: #{rakefile_location}} # '
         $stderr.puts %{    Use --classic-namespace on rake command}
         $stderr.puts %{    or 'require "rake/classic_namespace"' in Rakefile}
