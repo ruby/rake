@@ -1,35 +1,35 @@
 #!/usr/bin/env ruby
 
 #--
+
 # Copyright (c) 2003, 2004, 2005, 2006 Jim Weirich
 #
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to
+# deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+# sell copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+# IN THE SOFTWARE.
 #++
 #
 # = Rake -- Ruby Make
-# 
-# This is the main file for the Rake application.  Normally it is
-# referenced as a library via a require statement, but it can be
-# distributed independently as an application.
+#      
+# This is the main file for the Rake application.  Normally it is referenced
+# as a library via a require statement, but it can be distributed
+# independently as an application.
 
-RAKEVERSION = '0.7.2.1'
+RAKEVERSION = '0.7.3'
 
 require 'rbconfig'
 require 'ftools'
@@ -44,10 +44,10 @@ require 'ostruct'
 #
 class Module
 
-  # Check for an existing method in the current class before
-  # extending.  IF the method already exists, then a warning is
-  # printed and the extension is not added.  Otherwise the block is
-  # yielded and any definitions in the block will take effect.
+  # Check for an existing method in the current class before extending.  IF
+  # the method already exists, then a warning is printed and the extension is
+  # not added.  Otherwise the block is yielded and any definitions in the
+  # block will take effect.
   #
   # Usage:
   #
@@ -74,10 +74,9 @@ end
 #
 class String
   rake_extension("ext") do
-    # Replace the file extension with +newext+.  If there is no
-    # extenson on the string, append the new extension to the end.  If
-    # the new extension is not given, or is the empty string, remove
-    # any existing extension.
+    # Replace the file extension with +newext+.  If there is no extenson on
+    # the string, append the new extension to the end.  If the new extension
+    # is not given, or is the empty string, remove any existing extension.
     #
     # +ext+ is a user added method for the String class.
     def ext(newext='')
@@ -100,10 +99,9 @@ class String
     end
     protected :pathmap_explode
 
-    # Extract a partial path from the path.  Include +n+ directories
-    # from the front end (left hand side) if +n+ is positive.  Include
-    # |+n+| directories from the back end (right hand side) if +n+ is
-    # negative.
+    # Extract a partial path from the path.  Include +n+ directories from the
+    # front end (left hand side) if +n+ is positive.  Include |+n+|
+    # directories from the back end (right hand side) if +n+ is negative.
     def pathmap_partial(n)
       target = File.dirname(self)
       dirs = target.pathmap_explode
@@ -122,8 +120,8 @@ class String
     end
     protected :pathmap_partial
 
-    # Preform the pathmap replacement operations on the given path.
-    # The patterns take the form 'pat1,rep1;pat2,rep2...'.
+    # Preform the pathmap replacement operations on the given path. The
+    # patterns take the form 'pat1,rep1;pat2,rep2...'.
     def pathmap_replace(patterns, &block)
       result = self
       patterns.split(';').each do |pair|
@@ -141,28 +139,26 @@ class String
     end
     protected :pathmap_replace
 
-    # Map the path according to the given specification.  The
-    # specification controls the details of the mapping.  The
-    # following special patterns are recognized:
+    # Map the path according to the given specification.  The specification
+    # controls the details of the mapping.  The following special patterns are
+    # recognized:
     #
     # * <b>%p</b> -- The complete path.   
-    # * <b>%f</b> -- The base file name of the path, with its file
-    #   extension, but without any directories.
-    # * <b>%n</b> -- The file name of the path without its file
-    #   extension.
+    # * <b>%f</b> -- The base file name of the path, with its file extension,
+    #   but without any directories.
+    # * <b>%n</b> -- The file name of the path without its file extension.
     # * <b>%d</b> -- The directory list of the path.
-    # * <b>%x</b> -- The file extension of the path.  An empty string
-    #   if there is no extension.
+    # * <b>%x</b> -- The file extension of the path.  An empty string if there
+    #   is no extension.
     # * <b>%X</b> -- Everything *but* the file extension.
-    # * <b>%s</b> -- The alternate file separater if defined,
-    #   otherwise use the standard file separator.
+    # * <b>%s</b> -- The alternate file separater if defined, otherwise use
+    #   the standard file separator.
     # * <b>%%</b> -- A percent sign.
     #
-    # The %d specifier can also have a numeric prefix (e.g. '%2d').
-    # If the number is positive, only return (up to) +n+ directories
-    # in the path, starting from the left hand side.  If +n+ is
-    # negative, return (up to) |+n+| directories from the right hand
-    # side of the path.
+    # The %d specifier can also have a numeric prefix (e.g. '%2d'). If the
+    # number is positive, only return (up to) +n+ directories in the path,
+    # starting from the left hand side.  If +n+ is negative, return (up to)
+    # |+n+| directories from the right hand side of the path.
     #
     # Examples:
     #
@@ -170,29 +166,28 @@ class String
     #   'a/b/c/d/file.txt'.pathmap("%-2d")  => 'c/d'
     #
     # Also the %d, %p, $f, $n, %x, and %X operators can take a
-    # pattern/replacement argument to perform simple string
-    # substititions on a particular part of the path.  The pattern and
-    # replacement are speparated by a comma and are enclosed by curly
-    # braces.  The replacement spec comes after the % character but
-    # before the operator letter.  (e.g. "%{old,new}d").  Muliple
-    # replacement specs should be separated by semi-colons
-    # (e.g. "%{old,new;src,bin}d").
+    # pattern/replacement argument to perform simple string substititions on a
+    # particular part of the path.  The pattern and replacement are speparated
+    # by a comma and are enclosed by curly braces.  The replacement spec comes
+    # after the % character but before the operator letter.  (e.g.
+    # "%{old,new}d").  Muliple replacement specs should be separated by
+    # semi-colons (e.g. "%{old,new;src,bin}d").
     #
-    # Regular expressions may be used for the pattern, and back refs
-    # may be used in the replacement text.  Curly braces, commas and
-    # semi-colons are excluded from both the pattern and replacement
-    # text (let's keep parsing reasonable).
+    # Regular expressions may be used for the pattern, and back refs may be
+    # used in the replacement text.  Curly braces, commas and semi-colons are
+    # excluded from both the pattern and replacement text (let's keep parsing
+    # reasonable).
     #
     # For example: 
     #
     #    "src/org/onestepback/proj/A.java".pathmap("%{^src,bin}X.class")
-    # 
+    #  
     # returns:
     #
     #    "bin/org/onestepback/proj/A.class"
     #
-    # If the replacement text is '*', then a block may be provided to
-    # perform some arbitrary calculation for the replacement.
+    # If the replacement text is '*', then a block may be provided to perform
+    # some arbitrary calculation for the replacement.
     #
     # For example:
     #
@@ -247,10 +242,10 @@ class String
   end
 end
 
-######################################################################
+##############################################################################
 module Rake
 
-  # ------------------------------------------------------------------
+  # --------------------------------------------------------------------------
   # Rake module singleton methods.
   #
   class << self
@@ -264,20 +259,19 @@ module Rake
       @application = app
     end
 
-    # Return the original directory where the Rake application was
-    # started.
+    # Return the original directory where the Rake application was started.
     def original_dir
       application.original_dir
     end
 
   end
 
-  ####################################################################
+  # ##########################################################################
   # Mixin for creating easily cloned objects.
   #
   module Cloneable
-    # Clone an object by making a new object and setting all the
-    # instance variables to the same values.
+    # Clone an object by making a new object and setting all the instance
+    # variables to the same values.
     def clone
       sibling = self.class.new
       instance_variables.each do |ivar|
@@ -293,15 +287,14 @@ end
 
 module Rake
 
-  ######################################################################
-  # A Task is the basic unit of work in a Rakefile.  Tasks have
-  # associated actions (possibly more than one) and a list of
-  # prerequisites.  When invoked, a task will first ensure that all of
-  # its prerequisites have an opportunity to run and then it will
-  # execute its own actions.
+  # #########################################################################
+  # A Task is the basic unit of work in a Rakefile.  Tasks have associated
+  # actions (possibly more than one) and a list of prerequisites.  When
+  # invoked, a task will first ensure that all of its prerequisites have an
+  # opportunity to run and then it will execute its own actions.
   #
-  # Tasks are not usually created directly using the new method, but
-  # rather use the +file+ and +task+ convenience methods.
+  # Tasks are not usually created directly using the new method, but rather
+  # use the +file+ and +task+ convenience methods.
   #
   class Task
     # List of prerequisites for a task.
@@ -332,8 +325,8 @@ module Rake
       @sources.first if defined?(@sources)
     end
     
-    # Create a task named +task_name+ with no actions or prerequisites..
-    # use +enhance+ to add actions and prerequisites.
+    # Create a task named +task_name+ with no actions or prerequisites. Use
+    # +enhance+ to add actions and prerequisites.
     def initialize(task_name, app)
       @name = task_name.to_s
       @prerequisites = FileList[]
@@ -404,8 +397,8 @@ module Rake
       true
     end
     
-    # Timestamp for this task.  Basic tasks return the current time for
-    # their time stamp.  Other tasks can be more sophisticated.
+    # Timestamp for this task.  Basic tasks return the current time for their
+    # time stamp.  Other tasks can be more sophisticated.
     def timestamp
       @prerequisites.collect { |p| application[p].timestamp }.max || Time.now
     end
@@ -422,8 +415,8 @@ module Rake
       @comment << comment
     end
     
-    # Return a string describing the internal state of a task.  Useful
-    # for debugging.
+    # Return a string describing the internal state of a task.  Useful for
+    # debugging.
     def investigation
       result = "------------------------------\n"
       result << "Investigating #{name}\n" 
@@ -447,9 +440,8 @@ module Rake
     #    
     class << self
       
-      # Clear the task list.  This cause rake to immediately forget all
-      # the tasks that have been assigned.  (Normally used in the unit
-      # tests.)
+      # Clear the task list.  This cause rake to immediately forget all the
+      # tasks that have been assigned.  (Normally used in the unit tests.)
       def clear
         Rake.application.clear
       end
@@ -460,9 +452,9 @@ module Rake
       end
       
       # Return a task with the given name.  If the task is not currently
-      # known, try to synthesize one from the defined rules.  If no
-      # rules are found, but an existing file matches the task name,
-      # assume it is a file task with no dependencies or actions.
+      # known, try to synthesize one from the defined rules.  If no rules are
+      # found, but an existing file matches the task name, assume it is a file
+      # task with no dependencies or actions.
       def [](task_name)
         Rake.application[task_name]
       end
@@ -472,9 +464,9 @@ module Rake
         Rake.application.lookup(task_name) != nil
       end
       
-      # Define a task given +args+ and an option block.  If a rule with
-      # the given name already exists, the prerequisites and actions are
-      # added to the existing task.  Returns the defined task.
+      # Define a task given +args+ and an option block.  If a rule with the
+      # given name already exists, the prerequisites and actions are added to
+      # the existing task.  Returns the defined task.
       def define_task(args, &block)
         Rake.application.define_task(self, args, &block)
       end
@@ -495,16 +487,16 @@ module Rake
   end
   
   
-  ######################################################################
-  # A FileTask is a task that includes time based dependencies.  If
-  # any of a FileTask's prerequisites have a timestamp that is later
-  # than the file represented by this task, then the file must be
-  # rebuilt (using the supplied actions).
+  # #########################################################################
+  # A FileTask is a task that includes time based dependencies.  If any of a
+  # FileTask's prerequisites have a timestamp that is later than the file
+  # represented by this task, then the file must be rebuilt (using the
+  # supplied actions).
   #
   class FileTask < Task
     
-    # Is this file task needed?  Yes if it doesn't exist, or if its time
-    # stamp is out of date.
+    # Is this file task needed?  Yes if it doesn't exist, or if its time stamp
+    # is out of date.
     def needed?
       return true unless File.exist?(name)
       return true if out_of_date?(timestamp)
@@ -522,8 +514,7 @@ module Rake
 
     private
 
-    # Are there any prerequisites with a later time than the given
-    # time stamp?
+    # Are there any prerequisites with a later time than the given time stamp?
     def out_of_date?(stamp)
       @prerequisites.any? { |n| application[n].timestamp > stamp}
     end
@@ -532,21 +523,20 @@ module Rake
     # Task class methods.
     #
     class << self
-      # Apply the scope to the task name according to the rules for
-      # this kind of task.  File based tasks ignore the scope when
-      # creating the name.
+      # Apply the scope to the task name according to the rules for this kind
+      # of task.  File based tasks ignore the scope when creating the name.
       def scope_name(scope, task_name)
         task_name
       end
     end
   end
   
-  ######################################################################
-  # A FileCreationTask is a file task that when used as a dependency
-  # will be needed if and only if the file has not been created.  Once
-  # created, it is not re-triggered if any of its dependencies are
-  # newer, nor does trigger any rebuilds of tasks that depend on it
-  # whenever it is updated.
+  # #########################################################################
+  # A FileCreationTask is a file task that when used as a dependency will be
+  # needed if and only if the file has not been created.  Once created, it is
+  # not re-triggered if any of its dependencies are newer, nor does trigger
+  # any rebuilds of tasks that depend on it whenever it is updated.
+  #
   class FileCreationTask < FileTask
     # Is this file task needed?  Yes if it doesn't exist.
     def needed?
@@ -560,9 +550,9 @@ module Rake
     end
   end
 
-  ####################################################################
-  # Same as a regular task, but the immediate prerequisites are done
-  # in parallel using Ruby threads.
+  # #########################################################################
+  # Same as a regular task, but the immediate prerequisites are done in
+  # parallel using Ruby threads.
   #
   class MultiTask < Task
     def invoke_prerequisites
@@ -574,7 +564,7 @@ module Rake
   end
 end
 
-######################################################################
+# ###########################################################################
 # Task Definition Functions ...
 
 # Declare a basic task.
@@ -612,8 +602,7 @@ def file_create(args, &block)
   Rake::FileCreationTask.define_task(args, &block)
 end
 
-# Declare a set of files tasks to create the given directories on
-# demand.
+# Declare a set of files tasks to create the given directories on demand.
 #
 # Example:
 #   directory "testdata/doc"
@@ -626,9 +615,9 @@ def directory(dir)
   end
 end
 
-# Declare a task that performs its prerequisites in parallel.
-# Multitasks does *not* guarantee that its prerequisites will execute
-# in any given order (which is obvious when you think about it)
+# Declare a task that performs its prerequisites in parallel. Multitasks does
+# *not* guarantee that its prerequisites will execute in any given order
+# (which is obvious when you think about it)
 #
 # Example:
 #   multitask :deploy => [:deploy_gem, :deploy_rdoc]
@@ -637,9 +626,9 @@ def multitask(args, &block)
   Rake::MultiTask.define_task(args, &block)
 end
 
-# Create a new rake namespace and use it for evaluating the given
-# block. Returns a NameSpace object that can be used to lookup tasks
-# defined in the namespace.
+# Create a new rake namespace and use it for evaluating the given block.
+# Returns a NameSpace object that can be used to lookup tasks defined in the
+# namespace.
 #
 # E.g.
 #
@@ -675,11 +664,10 @@ def desc(comment)
   Rake.application.last_comment = comment
 end
 
-# Import the partial Rakefiles +fn+.  Imported files are loaded
-# _after_ the current file is completely loaded.  This allows the
-# import statement to appear anywhere in the importing file, and yet
-# allowing the imported files to depend on objects defined in the
-# importing file.
+# Import the partial Rakefiles +fn+.  Imported files are loaded _after_ the
+# current file is completely loaded.  This allows the import statement to
+# appear anywhere in the importing file, and yet allowing the imported files
+# to depend on objects defined in the importing file.
 #
 # A common use of the import statement is to include files containing
 # dependency declarations.
@@ -695,9 +683,9 @@ def import(*fns)
   end
 end
 
-######################################################################
-# This a FileUtils extension that defines several additional commands
-# to be added to the FileUtils utility functions.
+# ###########################################################################
+# This a FileUtils extension that defines several additional commands to be
+# added to the FileUtils utility functions.
 #
 module FileUtils
   RUBY = File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name'])
@@ -705,9 +693,9 @@ module FileUtils
   OPT_TABLE['sh']  = %w(noop verbose)
   OPT_TABLE['ruby'] = %w(noop verbose)
 
-  # Run the system command +cmd+. If multiple arguments are given
-  # the command is not run with the shell (same semantics as
-  # Kernel::exec and Kernel::system).
+  # Run the system command +cmd+. If multiple arguments are given the command
+  # is not run with the shell (same semantics as Kernel::exec and
+  # Kernel::system).
   #
   # Example:
   #   sh %{ls -ltr}
@@ -755,8 +743,8 @@ module FileUtils
   
   LN_SUPPORTED = [true]
 
-  #  Attempt to do a normal file link, but fall back to a copy if the
-  #  link fails.
+  #  Attempt to do a normal file link, but fall back to a copy if the link
+  #  fails.
   def safe_ln(*args)
     unless LN_SUPPORTED[0]
       cp(*args)
@@ -783,9 +771,9 @@ module FileUtils
   end
 end
 
-######################################################################
-# RakeFileUtils provides a custom version of the FileUtils methods
-# that respond to the <tt>verbose</tt> and <tt>nowrite</tt> commands.
+# ###########################################################################
+# RakeFileUtils provides a custom version of the FileUtils methods that
+# respond to the <tt>verbose</tt> and <tt>nowrite</tt> commands.
 #
 module RakeFileUtils
   include FileUtils
@@ -819,9 +807,8 @@ module RakeFileUtils
     EOS
   end
 
-  # Get/set the verbose flag controlling output from the FileUtils
-  # utilities.  If verbose is true, then the utility method is echoed
-  # to standard output.
+  # Get/set the verbose flag controlling output from the FileUtils utilities. 
+  # If verbose is true, then the utility method is echoed to standard output.
   #
   # Examples:
   #    verbose              # return the current value of the verbose flag
@@ -841,9 +828,8 @@ module RakeFileUtils
     RakeFileUtils.verbose_flag
   end
 
-  # Get/set the nowrite flag controlling output from the FileUtils
-  # utilities.  If verbose is true, then the utility method is echoed
-  # to standard output.
+  # Get/set the nowrite flag controlling output from the FileUtils utilities. 
+  # If verbose is true, then the utility method is echoed to standard output.
   #
   # Examples:
   #    nowrite              # return the current value of the nowrite flag
@@ -863,8 +849,8 @@ module RakeFileUtils
     oldvalue
   end
 
-  # Use this function to prevent protentially destructive ruby code
-  # from running when the :nowrite flag is set.
+  # Use this function to prevent protentially destructive ruby code from
+  # running when the :nowrite flag is set.
   #
   # Example: 
   #
@@ -872,8 +858,8 @@ module RakeFileUtils
   #     project.build
   #   end
   #
-  # The following code will build the project under normal conditions.
-  # If the nowrite(true) flag is set, then the example will print:
+  # The following code will build the project under normal conditions. If the
+  # nowrite(true) flag is set, then the example will print:
   #      DRYRUN: Building Project
   # instead of actually building the project.
   #
@@ -902,9 +888,8 @@ module RakeFileUtils
   end
   private :rake_output_message
 
-  # Check that the options do not contain options not listed in
-  # +optdecl+.  An ArgumentError exception is thrown if non-declared
-  # options are found.
+  # Check that the options do not contain options not listed in +optdecl+.  An
+  # ArgumentError exception is thrown if non-declared options are found.
   def rake_check_options(options, *optdecl)
     h = options.dup
     optdecl.each do |name|
@@ -917,10 +902,10 @@ module RakeFileUtils
   extend self
 end
 
-######################################################################
-# Include the FileUtils file manipulation functions in the top level
-# module, but mark them private so that they don't unintentionally
-# define methods on other objects.
+# ###########################################################################
+# Include the FileUtils file manipulation functions in the top level module,
+# but mark them private so that they don't unintentionally define methods on
+# other objects.
 
 include RakeFileUtils
 private(*FileUtils.instance_methods(false))
@@ -944,20 +929,19 @@ module Rake
     end
   end
 
-  ####################################################################
-  # A FileList is essentially an array with a few helper methods
-  # defined to make file manipulation a bit easier.
+  # #########################################################################
+  # A FileList is essentially an array with a few helper methods defined to
+  # make file manipulation a bit easier.
   #
-  # FileLists are lazy.  When given a list of glob patterns for
-  # possible files to be included in the file list, instead of
-  # searching the file structures to find the files, a FileList holds
-  # the pattern for latter use.
+  # FileLists are lazy.  When given a list of glob patterns for possible files
+  # to be included in the file list, instead of searching the file structures
+  # to find the files, a FileList holds the pattern for latter use.
   #
   # This allows us to define a number of FileList to match any number of
-  # files, but only search out the actual files when then FileList
-  # itself is actually used.  The key is that the first time an
-  # element of the FileList/Array is requested, the pending patterns
-  # are resolved into a real list of file names.
+  # files, but only search out the actual files when then FileList itself is
+  # actually used.  The key is that the first time an element of the
+  # FileList/Array is requested, the pending patterns are resolved into a real
+  # list of file names.
   #
   class FileList 
 
@@ -965,22 +949,19 @@ module Rake
 
     # == Method Delegation
     #
-    # The lazy evaluation magic of FileLists happens by implementing
-    # all the array specific methods to call +resolve+ before
-    # delegating the heavy lifting to an embedded array object
-    # (@items).
+    # The lazy evaluation magic of FileLists happens by implementing all the
+    # array specific methods to call +resolve+ before delegating the heavy
+    # lifting to an embedded array object (@items).
     #
-    # In addition, there are two kinds of delegation calls.  The
-    # regular kind delegates to the @items array and returns the
-    # result directly.  Well, almost directly.  It checks if the
-    # returned value is the @items object itself, and if so will
-    # return the FileList object instead.
+    # In addition, there are two kinds of delegation calls.  The regular kind
+    # delegates to the @items array and returns the result directly.  Well,
+    # almost directly.  It checks if the returned value is the @items object
+    # itself, and if so will return the FileList object instead.
     #
-    # The second kind of delegation call is used in methods that
-    # normally return a new Array object.  We want to capture the
-    # return value of these methods and wrap them in a new FileList
-    # object.  We enumerate these methods in the +SPECIAL_RETURN+ list
-    # below.
+    # The second kind of delegation call is used in methods that normally
+    # return a new Array object.  We want to capture the return value of these
+    # methods and wrap them in a new FileList object.  We enumerate these
+    # methods in the +SPECIAL_RETURN+ list below.
 
     # List of array methods (that are not in +Object+) that need to be
     # delegated.
@@ -989,12 +970,12 @@ module Rake
     # List of additional methods that must be delegated.
     MUST_DEFINE = %w[to_a inspect]
 
-    # List of methods that should not be delegated here (we define
-    # special versions of them explicitly below).
+    # List of methods that should not be delegated here (we define special
+    # versions of them explicitly below).
     MUST_NOT_DEFINE = %w[to_a to_ary partition *]
 
-    # List of delegated methods that return new array values which
-    # need wrapping.
+    # List of delegated methods that return new array values which need
+    # wrapping.
     SPECIAL_RETURN = %w[
       map collect sort sort_by select find_all reject grep
       compact flatten uniq values_at
@@ -1026,9 +1007,9 @@ module Rake
       end
     end
 
-    # Create a file list from the globbable patterns given.  If you
-    # wish to perform multiple includes or excludes at object build
-    # time, use the "yield self" pattern.
+    # Create a file list from the globbable patterns given.  If you wish to
+    # perform multiple includes or excludes at object build time, use the
+    # "yield self" pattern.
     #
     # Example:
     #   file_list = FileList.new('lib/**/*.rb', 'test/test*.rb')
@@ -1048,8 +1029,8 @@ module Rake
       yield self if block_given?
     end
 
-    # Add file names defined by glob patterns to the file list.  If an
-    # array is given, add each element of the array.
+    # Add file names defined by glob patterns to the file list.  If an array
+    # is given, add each element of the array.
     #
     # Example:
     #   file_list.include("*.java", "*.cfg")
@@ -1069,16 +1050,15 @@ module Rake
     end
     alias :add :include 
     
-    # Register a list of file name patterns that should be excluded
-    # from the list.  Patterns may be regular expressions, glob
-    # patterns or regular strings.  In addition, a block given to
-    # exclude will remove entries that return true when given to the 
-    # block.
+    # Register a list of file name patterns that should be excluded from the
+    # list.  Patterns may be regular expressions, glob patterns or regular
+    # strings.  In addition, a block given to exclude will remove entries that
+    # return true when given to the block.
     #
-    # Note that glob patterns are expanded against the file system.
-    # If a file is explicitly added to a file list, but does not exist
-    # in the file system, then an glob pattern in the exclude list
-    # will not exclude the file.
+    # Note that glob patterns are expanded against the file system. If a file
+    # is explicitly added to a file list, but does not exist in the file
+    # system, then an glob pattern in the exclude list will not exclude the
+    # file.
     #
     # Examples:
     #   FileList['a.c', 'b.c'].exclude("a.c") => ['b.c']
@@ -1191,8 +1171,8 @@ module Rake
     end
     private :resolve_exclude
 
-    # Return a new FileList with the results of running +sub+ against
-    # each element of the oringal list.
+    # Return a new FileList with the results of running +sub+ against each
+    # element of the oringal list.
     #
     # Example:
     #   FileList['a.c', 'b.c'].sub(/\.c$/, '.o')  => ['a.o', 'b.o']
@@ -1201,8 +1181,8 @@ module Rake
       inject(FileList.new) { |res, fn| res << fn.sub(pat,rep) }
     end
 
-    # Return a new FileList with the results of running +gsub+ against
-    # each element of the original list.
+    # Return a new FileList with the results of running +gsub+ against each
+    # element of the original list.
     #
     # Example:
     #   FileList['lib/test/file', 'x/y'].gsub(/\//, "\\")
@@ -1224,15 +1204,15 @@ module Rake
       self
     end
 
-    # Apply the pathmap spec to each of the included file names,
-    # returning a new file list with the modified paths.  (See
-    # String#pathmap for details.)
+    # Apply the pathmap spec to each of the included file names, returning a
+    # new file list with the modified paths.  (See String#pathmap for
+    # details.)
     def pathmap(spec=nil)
       collect { |fn| fn.pathmap(spec) }
     end
 
-    # Return a new array with <tt>String#ext</tt> method applied to
-    # each member of the array.
+    # Return a new array with <tt>String#ext</tt> method applied to each
+    # member of the array.
     #
     # This method is a shortcut for:
     #
@@ -1244,11 +1224,11 @@ module Rake
     end
 
 
-    # Grep each of the files in the filelist using the given pattern.
-    # If a block is given, call the block on each matching line,
-    # passing the file name, line number, and the matching line of
-    # text.  If no block is given, a standard emac style
-    # file:linenumber:line message will be printed to standard out.
+    # Grep each of the files in the filelist using the given pattern. If a
+    # block is given, call the block on each matching line, passing the file
+    # name, line number, and the matching line of text.  If no block is given,
+    # a standard emac style file:linenumber:line message will be printed to
+    # standard out.
     def egrep(pattern)
       each do |fn|
         open(fn) do |inf|
@@ -1281,8 +1261,8 @@ module Rake
       self
     end
 
-    # FileList version of partition.  Needed because the nested arrays
-    # should be FileLists in this version.
+    # FileList version of partition.  Needed because the nested arrays should
+    # be FileLists in this version.
     def partition(&block)       # :nodoc:
       resolve
       result = @items.partition(&block)
@@ -1336,17 +1316,17 @@ module Rake
         new(*args)
       end
 
-      # Set the ignore patterns back to the default value.  The
-      # default patterns will ignore files 
+      # Set the ignore patterns back to the default value.  The default
+      # patterns will ignore files 
       # * containing "CVS" in the file path
       # * containing ".svn" in the file path
       # * ending with ".bak"
       # * ending with "~"
       # * named "core"
       #
-      # Note that file names beginning with "." are automatically
-      # ignored by Ruby's glob patterns and are not specifically
-      # listed in the ignore patterns.
+      # Note that file names beginning with "." are automatically ignored by
+      # Ruby's glob patterns and are not specifically listed in the ignore
+      # patterns.
       def select_default_ignore_patterns
         @exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
       end
@@ -1377,7 +1357,7 @@ end
 # Alias FileList to be available at the top level.
 FileList = Rake::FileList
 
-######################################################################
+# ###########################################################################
 module Rake
 
   # Default Rakefile loader used by +import+.
@@ -1387,8 +1367,7 @@ module Rake
     end
   end
 
-  # EarlyTime is a fake timestamp that occurs _before_ any other time
-  # value.
+  # EarlyTime is a fake timestamp that occurs _before_ any other time value.
   class EarlyTime
     include Comparable
     include Singleton
@@ -1405,7 +1384,7 @@ module Rake
   EARLY = EarlyTime.instance
 end
 
-######################################################################
+# ###########################################################################
 # Extensions to time to allow comparisons with an early time class.
 #
 class Time
@@ -1651,12 +1630,21 @@ module Rake
   class Application
     include TaskManager
 
+    # The name of the application (typically 'rake')
+    attr_reader :name
+
     # The original directory where rake was invoked.
-    attr_reader :original_dir, :rakefile
+    attr_reader :original_dir
+    
+    # Name of the actual rakefile used.
+    attr_reader :rakefile
+    
+    # List of the top level task names (task names from the command line).
+    attr_reader :top_level_tasks
 
     DEFAULT_RAKEFILES = ['rakefile', 'Rakefile', 'rakefile.rb', 'Rakefile.rb'].freeze
     
-    OPTIONS = [
+    OPTIONS = [     # :nodoc:
       ['--dry-run',  '-n', GetoptLong::NO_ARGUMENT,
         "Do a dry run without executing actions."],
       ['--help',     '-H', GetoptLong::NO_ARGUMENT,
@@ -1691,9 +1679,10 @@ module Rake
         "Put Task and FileTask in the top level namespace"],
     ]
     
-    # Create a Rake::Application object.
+    # Initialize a Rake::Application object.
     def initialize
       super
+      @name = 'rake'
       @rakefiles = DEFAULT_RAKEFILES.dup
       @rakefile = nil
       @pending_imports = []
@@ -1701,8 +1690,62 @@ module Rake
       @loaders = {}
       @default_loader = Rake::DefaultLoader.new
       @original_dir = Dir.pwd
+      @top_level_tasks = []
       add_loader('rf', DefaultLoader.new)
       add_loader('rake', DefaultLoader.new)
+    end
+
+    # Run the Rake application.  The run method performs the following three steps:
+    #
+    # * Initialize the command line options (+init+).
+    # * Define the tasks (+load_rakefile+).
+    # * Run the top level tasks (+run_tasks+).
+    #
+    # If you wish to build a custom rake command, you should call +init+ on your 
+    # application.  The define any tasks.  Finally, call +top_level+ to run your top
+    # level tasks.
+    def run
+      standard_exception_handling do
+        init
+        load_rakefile
+        top_level
+      end
+    end
+
+    # Initialize the command line parameters and app name.
+    def init(app_name='rake')
+      standard_exception_handling do
+        @name = app_name
+        handle_options
+        collect_tasks
+      end
+    end
+
+    # Find the rakefile and then load it and any pending imports.
+    def load_rakefile
+      standard_exception_handling do
+        raw_load_rakefile
+      end
+    end 
+
+    # Run the top level tasks of a Rake application.
+    def top_level
+      standard_exception_handling do
+        if options.show_tasks
+          display_tasks_and_comments
+        elsif options.show_prereqs
+          display_prerequisites
+        else
+          top_level_tasks.each { |task_name| self[task_name].invoke }
+        end
+      end
+    end
+
+    # Add a loader to handle imported files ending in the extension
+    # +ext+.
+    def add_loader(ext, loader)
+      ext = ".#{ext}" unless ext =~ /^\./
+      @loaders[ext] = loader
     end
     
     # Application options from the command line
@@ -1710,6 +1753,29 @@ module Rake
       @options ||= OpenStruct.new
     end
 
+    private
+
+    # Provide standard execption handling for the given block.
+    def standard_exception_handling
+      begin
+        yield
+      rescue SystemExit, GetoptLong::InvalidOption => ex
+        # Exit silently
+        exit(1)
+      rescue Exception => ex
+        # Exit with error message
+        $stderr.puts "rake aborted!"
+        $stderr.puts ex.message
+        if options.trace
+          $stderr.puts ex.backtrace.join("\n")
+        else
+          $stderr.puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
+          $stderr.puts "(See full trace by running task with --trace)"
+        end
+        exit(1)
+      end    
+    end
+        
     # True if one of the files in RAKEFILES is in the current directory.
     # If a match is found, it is copied into @rakefile.
     def have_rakefile
@@ -1751,7 +1817,7 @@ module Rake
       }
       width = displayable_tasks.collect { |t| t.name.length }.max
       displayable_tasks.each do |t|
-        printf "rake %-#{width}s  # %s\n", t.name, t.comment
+        printf "#{name} %-#{width}s  # %s\n", t.name, t.comment
       end
     end
     
@@ -1860,8 +1926,7 @@ module Rake
       fail LoadError, "Can't find #{file_name}"
     end
 
-    # Find the rakefile and then load it and any pending imports.
-    def load_rakefile
+    def raw_load_rakefile # :nodoc:
       here = Dir.pwd
       while ! have_rakefile
         Dir.chdir("..")
@@ -1883,16 +1948,15 @@ module Rake
     # given, return a list containing only the default task.
     # Environmental assignments are processed at this time as well.
     def collect_tasks
-      tasks = []
+      @top_level_tasks = []
       ARGV.each do |arg|
         if arg =~ /^(\w+)=(.*)$/
           ENV[$1] = $2
         else
-          tasks << arg
+          @top_level_tasks << arg
         end
       end
-      tasks.push("default") if tasks.size == 0
-      tasks
+      @top_level_tasks.push("default") if @top_level_tasks.size == 0
     end
     
     # Add a file to the list of files to be imported.
@@ -1914,13 +1978,6 @@ module Rake
       end
     end
     
-    # Add a loader to handle imported files ending in the extension
-    # +ext+.
-    def add_loader(ext, loader)
-      ext = ".#{ext}" unless ext =~ /^\./
-      @loaders[ext] = loader
-    end
-    
     # Warn about deprecated use of top level constant names.
     def const_warning(const_name)
       @const_warning ||= false
@@ -1939,36 +1996,6 @@ module Rake
       rescue RuntimeError => ex
         ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
       end
-    end
-
-    # Run the +rake+ application.
-    def run
-      begin
-        handle_options
-        tasks = collect_tasks
-        load_rakefile
-        if options.show_tasks
-          display_tasks_and_comments
-        elsif options.show_prereqs
-          display_prerequisites
-        else
-          tasks.each { |task_name| self[task_name].invoke }
-        end
-      rescue SystemExit, GetoptLong::InvalidOption => ex
-        # Exit silently
-        exit(1)
-      rescue Exception => ex
-        # Exit with error message
-        $stderr.puts "rake aborted!"
-        $stderr.puts ex.message
-        if options.trace
-          $stderr.puts ex.backtrace.join("\n")
-        else
-          $stderr.puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
-          $stderr.puts "(See full trace by running task with --trace)"
-        end
-        exit(1)
-      end    
     end
   end
 end

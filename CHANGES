@@ -5,6 +5,7 @@
 * Added existing and existing! methods to FileList
 * FileLists now claim to be Arrays (via is_a?) to get better support
   from the FileUtil module.
+* Added init and top_level for custom rake applications.
 
 == Version 0.7.2
 

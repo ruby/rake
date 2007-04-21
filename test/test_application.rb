@@ -23,7 +23,7 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_constant_warning
-    err = capture_stderr do @app.const_warning("Task") end
+    err = capture_stderr do @app.instance_eval { const_warning("Task") } end
     assert_match(/warning/i, err)
     assert_match(/deprecated/i, err)
     assert_match(/Task/i, err)
@@ -33,28 +33,30 @@ class TestApplication < Test::Unit::TestCase
     @app.options.show_task_pattern = //
     @app.last_comment = "COMMENT"
     @app.define_task(Rake::Task, "t")
-    out = capture_stdout do @app.display_tasks_and_comments end
+    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
     assert_match(/^rake t/, out)
     assert_match(/# COMMENT/, out)
   end
 
   def test_finding_rakefile
-    assert @app.have_rakefile
+    assert @app.instance_eval { have_rakefile }
     assert_equal "rakefile", @app.rakefile.downcase
   end
 
   def test_not_finding_rakefile
     @app.instance_eval { @rakefiles = ['NEVER_FOUND'] }
-    assert ! @app.have_rakefile
+    assert( ! @app.instance_eval do have_rakefile end )
     assert_nil @app.rakefile
   end
 
   def test_load_rakefile
     original_dir = Dir.pwd
     Dir.chdir("test/data/unittest")
-    @app.handle_options
-    @app.options.silent = true
-    @app.load_rakefile
+    @app.instance_eval do 
+      handle_options
+      options.silent = true
+      load_rakefile
+    end
     assert_equal "rakefile", @app.rakefile.downcase
     assert_match(%r(unittest$), Dir.pwd)
   ensure
@@ -64,9 +66,11 @@ class TestApplication < Test::Unit::TestCase
   def test_load_rakefile_from_subdir
     original_dir = Dir.pwd
     Dir.chdir("test/data/unittest/subdir")
-    @app.handle_options
-    @app.options.silent = true
-    @app.load_rakefile
+    @app.instance_eval do
+      handle_options
+      options.silent = true
+      load_rakefile
+    end
     assert_equal "rakefile", @app.rakefile.downcase
     assert_match(%r(unittest$), Dir.pwd)
   ensure
@@ -76,42 +80,52 @@ class TestApplication < Test::Unit::TestCase
   def test_load_rakefile_not_found
     original_dir = Dir.pwd
     Dir.chdir("/")
-    @app.handle_options
-    @app.options.silent = true
-    ex = assert_raise(RuntimeError) do @app.load_rakefile end
+    @app.instance_eval do
+      handle_options
+      options.silent = true
+    end
+    ex = assert_raise(RuntimeError) do 
+      @app.instance_eval do raw_load_rakefile end 
+    end
     assert_match(/no rakefile found/i, ex.message)
   ensure
     Dir.chdir(original_dir)
   end
 
   def test_not_caring_about_finding_rakefile
-    @app.instance_eval { @rakefiles = [''] }
-    assert @app.have_rakefile
+    @app.instance_eval do @rakefiles = [''] end
+    assert(@app.instance_eval do have_rakefile end)
     assert_equal '', @app.rakefile
   end
 
   def test_loading_imports
     mock = flexmock("loader")
     mock.should_receive(:load).with("x.dummy").once
-    @app.add_loader("dummy", mock)
-    @app.add_import("x.dummy")
-    @app.load_imports
+    @app.instance_eval do
+      add_loader("dummy", mock)
+      add_import("x.dummy")
+      load_imports
+    end
   end
 
   def test_building_imported_files_on_demand
     mock = flexmock("loader")
     mock.should_receive(:load).with("x.dummy").once
     mock.should_receive(:make_dummy).with_no_args.once
-    @app.intern(Rake::Task, "x.dummy").enhance do mock.make_dummy end
-    @app.add_loader("dummy", mock)
-    @app.add_import("x.dummy")
-    @app.load_imports
+    @app.instance_eval do
+      intern(Rake::Task, "x.dummy").enhance do mock.make_dummy end
+        add_loader("dummy", mock)
+      add_import("x.dummy")
+      load_imports
+    end
   end
 
   def test_good_run
     ran = false
     @app.options.silent = true
-    @app.intern(Rake::Task, "default").enhance { ran = true }
+    @app.instance_eval do
+      intern(Rake::Task, "default").enhance { ran = true }
+    end
     @app.run
     assert ran
   end
@@ -358,7 +372,9 @@ class TestApplicationOptions < Test::Unit::TestCase
 
   def test_bad_option
     capture_stderr do
-      ex = assert_raise(GetoptLong::InvalidOption) { flags('--bad-option') }
+      ex = assert_raise(GetoptLong::InvalidOption) do
+        flags('--bad-option') 
+      end
       assert_match(/unrecognized option/, ex.message)
       assert_match(/--bad-option/, ex.message)
     end
@@ -388,7 +404,7 @@ class TestApplicationOptions < Test::Unit::TestCase
       @out = capture_stdout { 
         @exit = catch(:system_exit) { opts = command_line(*set) }
       }
-      yield(@app.options)
+      yield(@app.options) if block_given?
     end
   end
 
@@ -398,8 +414,11 @@ class TestApplicationOptions < Test::Unit::TestCase
     def @app.exit(*args)
       throw :system_exit, :exit
     end
-    @app.handle_options
-    @tasks = @app.collect_tasks
+    @app.instance_eval do
+      handle_options
+      collect_tasks
+    end
+    @tasks = @app.top_level_tasks
     @app.options
   end
 end
