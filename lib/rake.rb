@@ -1753,7 +1753,7 @@ module Rake
       @options ||= OpenStruct.new
     end
 
-    private
+    # private ----------------------------------------------------------------
 
     # Provide standard execption handling for the given block.
     def standard_exception_handling
