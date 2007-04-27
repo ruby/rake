@@ -2,7 +2,7 @@
 
 == Pre-Version 0.7.4
 
-* Added task parameters (e.g. "rake build[version7]")
+* Added task parameters (e.g. "rake build[version7]svn ")
 
 == Version 0.7.3
 
