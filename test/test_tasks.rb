@@ -26,6 +26,7 @@ class TestTask < Test::Unit::TestCase
     assert_equal t, arg
     assert_nil t.source
     assert_equal [], t.sources
+    assert_equal [], t.args
   end
 
   def test_invoke
@@ -134,6 +135,17 @@ class TestTask < Test::Unit::TestCase
     assert_match(/class:\s*Rake::Task/, out)
     assert_match(/needed:\s*true/, out)
     assert_match(/pre-requisites:\s*--t2/, out)
+  end
+  
+  def test_tasks_can_access_arguments
+    t = intern(:t1).enhance { |t| 
+      a, b, c = t.args
+      assert_equal 1, a
+      assert_equal 2, b
+      assert_equal 3, c
+    }
+    t.args = [1, 2, 3]
+    t.invoke
   end
 
   private

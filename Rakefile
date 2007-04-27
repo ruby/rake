@@ -51,6 +51,9 @@ desc "Default Task"
 task :default => :test_all
 
 # Test Tasks ---------------------------------------------------------
+task :dbg do |t|
+  puts "Arguments are: #{t.args.join(', ')}"
+end
 
 # Common Abbreviations ...
 

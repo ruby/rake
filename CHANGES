@@ -1,6 +1,10 @@
 = Rake Changelog
 
-== Pre-version 0.7.3
+== Pre-Version 0.7.4
+
+* Added task parameters (e.g. "rake build[version7]")
+
+== Version 0.7.3
 
 * Added existing and existing! methods to FileList
 * FileLists now claim to be Arrays (via is_a?) to get better support

@@ -423,3 +423,45 @@ class TestApplicationOptions < Test::Unit::TestCase
   end
 end
 
+class TestTaskArgumentParsing < Test::Unit::TestCase
+  def setup
+    @app = Rake::Application.new
+  end
+  
+  def test_name_only
+    name, args = @app.parse_task_string("name")
+    assert_equal "name", name
+    assert_equal [], args
+  end
+  
+  def test_empty_args
+    name, args = @app.parse_task_string("name[]")
+    assert_equal "name", name
+    assert_equal [], args
+  end
+  
+  def test_one_argument
+    name, args = @app.parse_task_string("name[one]")
+    assert_equal "name", name
+    assert_equal ["one"], args
+  end
+  
+  def test_two_arguments
+    name, args = @app.parse_task_string("name[one,two]")
+    assert_equal "name", name
+    assert_equal ["one", "two"], args
+  end
+  
+  def test_can_handle_spaces_between_args
+    name, args = @app.parse_task_string("name[one, two,\tthree , \tfour]")
+    assert_equal "name", name
+    assert_equal ["one", "two", "three", "four"], args
+  end
+
+  def test_keeps_embedded_spaces
+    name, args = @app.parse_task_string("name[a one ana, two]")
+    assert_equal "name", name
+    assert_equal ["a one ana", "two"], args
+  end
+
+end

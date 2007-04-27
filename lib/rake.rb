@@ -29,7 +29,7 @@
 # as a library via a require statement, but it can be distributed
 # independently as an application.
 
-RAKEVERSION = '0.7.3'
+RAKEVERSION = '0.7.3.1'
 
 require 'rbconfig'
 require 'ftools'
@@ -308,6 +308,9 @@ module Rake
     
     # Array of nested namespaces names used for task lookup by this task.
     attr_reader :scope
+    
+    # List of arguments to the task
+    attr_accessor :args
 
     # Return task name
     def to_s
@@ -336,6 +339,7 @@ module Rake
       @lock = Mutex.new
       @application = app
       @scope = app.current_scope
+      @args = []
     end
     
     # Enhance a task with prerequisites or actions.  Returns self.
@@ -1736,7 +1740,7 @@ module Rake
         elsif options.show_prereqs
           display_prerequisites
         else
-          top_level_tasks.each { |task_name| self[task_name].invoke }
+          top_level_tasks.each { |task_name| invoke_task(task_name) }
         end
       end
     end
@@ -1754,6 +1758,29 @@ module Rake
     end
 
     # private ----------------------------------------------------------------
+
+    def invoke_task(task_string)
+      name, args = parse_task_string(task_string)
+      t = self[name]
+      t.args = args if args
+      t.invoke
+      t.args = []
+    end
+    
+    def parse_task_string(string)
+      if string =~ /^([^\[]+)(\[(.*)\])?$/
+        name = $1
+        if $3
+          args = $3.split(/\s*,\s*/)
+        else
+          args = []
+        end
+      else
+        name = string
+        args = []
+      end
+      [name, args]
+    end
 
     # Provide standard execption handling for the given block.
     def standard_exception_handling
