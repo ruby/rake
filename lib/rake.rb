@@ -393,7 +393,16 @@ module Rake
         puts "** Execute #{name}"
       end
       application.enhance_with_matching_rule(name) if @actions.empty?
-      @actions.each { |act| result = act.call(self) }
+      @actions.each { |act| 
+        case act.arity
+        when 0
+          act.call
+        when 1
+          act.call(self) 
+        else
+          act.call(self, *args) 
+        end
+      }
     end
     
     # Is this task needed?

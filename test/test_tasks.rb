@@ -147,6 +147,62 @@ class TestTask < Test::Unit::TestCase
     t.args = [1, 2, 3]
     t.invoke
   end
+  
+  def test_arguments_are_passed_to_block
+    t = intern(:t).enhance { |t, a|
+      assert_equal 1, a
+    }
+    t.args = [1]
+    t.invoke
+  end
+
+  def test_extra_arguments_are_ignored
+    t = intern(:t).enhance { |t, a|
+      assert_equal 1, a
+    }
+    t.args = [1, 2]
+    t.invoke
+  end
+
+  def test_extra_parameters_are_nil
+    t = intern(:t).enhance { |t, a, b, c|
+      assert_equal 1, a
+      assert_equal 2, b
+      assert_nil c
+    }
+    t.args = [1, 2]
+    t.invoke
+  end
+  
+  def test_extra_arguments_can_be_splat_captured
+    t = intern(:t).enhance { |t, a, *b|
+      assert_equal 1, a
+      assert_equal [2, 3], b
+    }
+    t.args = [1, 2, 3]
+    t.invoke    
+  end
+  
+  def test_arguments_are_passed_to_all_blocks
+    counter = 0
+    t = intern(:t).enhance { |t, a|
+      assert_equal 1, a
+      counter += 1
+    }
+    intern(:t).enhance { |t, a|
+      assert_equal 1, a
+      counter += 1
+    }
+    t.args = [1]
+    t.invoke
+    assert_equal 2, counter
+  end
+  
+  def test_block_with_no_parameters_is_ok
+    t = intern(:t).enhance { }
+    t.args = [1,2]
+    t.invoke
+  end
 
   private
 
