@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
+begin
+  require 'rubygems'
+rescue LoadError
+  # got no gems
+end
+
 require 'test/unit'
 require 'flexmock'
 require 'rake'

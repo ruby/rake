@@ -1,5 +1,11 @@
 #!/usr/bin/env ruby
 
+begin
+  require 'rubygems'
+rescue LoadError
+  # got no gems
+end
+
 require 'test/unit'
 require 'test/capture_stdout'
 require 'rake'
