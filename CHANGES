@@ -2,7 +2,11 @@
 
 == Pre-Version 0.7.4
 
-* Added task parameters (e.g. "rake build[version7]svn ")
+* Added task parameters (e.g. "rake build[version7]")
+* Made task parameters passable to prerequisites.
+* The 'desc' command will now document task argument names.
+* Comments are limited to 80 columns or so (suggested by Jamis Buck).
+* Added -D to display full comments (suggested by Jamis Buck).
 
 == Version 0.7.3
 

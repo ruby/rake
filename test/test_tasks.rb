@@ -204,6 +204,102 @@ class TestTask < Test::Unit::TestCase
     t.invoke
   end
 
+  def test_descriptions_with_no_args
+    desc "T"
+    t = intern(:tt).enhance { }
+    assert_equal "tt", t.name
+    assert_nil  t.arg_description
+    assert_equal "T", t.comment
+  end
+
+  def test_name_with_args
+    desc "[a, b] T"
+    t = intern(:tt)
+    assert_equal "tt", t.name
+    assert_equal "T", t.comment
+    assert_equal "[a,b]", t.arg_description
+    assert_equal "tt[a,b]", t.name_with_args
+    assert_equal ["a", "b"],t.arg_names
+  end
+
+  def test_named_args_are_passed_to_prereqs
+    value = nil
+    desc "[rev] pre"
+    pre = intern(:pre).enhance { |t, rev| value = rev }
+    desc "[name,rev] t"
+    t = intern(:t).enhance([:pre])
+    t.args = ["bill", "1.2"]
+    t.invoke
+    assert_equal "1.2", value
+  end
+  
+  def test_args_not_passed_if_no_prereq_names
+    value = nil
+    desc "pre"
+    pre = intern(:pre).enhance { |t, rev| value = rev }
+    desc "[name,rev] t"
+    t = intern(:t).enhance([:pre])
+    t.args = ["bill", "1.2"]
+    t.invoke
+    assert_nil value
+  end
+
+  def test_args_not_passed_if_no_arg_names
+    value = nil
+    desc "[rev] pre"
+    pre = intern(:pre).enhance { |t, rev| value = rev }
+    desc "t"
+    t = intern(:t).enhance([:pre])
+    t.args = ["bill", "1.2"]
+    t.invoke
+    assert_nil value
+  end
+  
+  def test_task_can_have_arg_names_but_no_comment
+    desc "[a,b]"
+    t = intern(:t)
+    assert_equal "[a,b]", t.arg_description
+    assert_nil t.comment
+    assert_nil t.full_comment
+  end
+  
+  def test_extended_comments
+    desc %{
+      [name, rev]
+      This is a comment.
+      
+      And this is the extended comment.
+      name -- Name of task to execute.
+      rev  -- Software revision to use.
+    }
+    t = intern(:t)
+    assert_equal "[name,rev]", t.arg_description
+    assert_equal "This is a comment.", t.comment
+    assert_match(/^\s*name -- Name/, t.full_comment)
+    assert_match(/^\s*rev  -- Software/, t.full_comment)
+    assert_match(/\A\s*This is a comment\.$/, t.full_comment)
+  end
+  
+  def test_comments_below_limit_are_unchanged
+    desc %{12345678901234567890123456789012345678901234567890}
+    t = intern(:t)
+    assert_equal "12345678901234567890123456789012345678901234567890", t.comment
+  end
+
+  def test_comments_above_limit_are_truncated
+    desc %{123456789012345678901234567890123456789012345678901}
+    t = intern(:t)
+    assert_equal "12345678901234567890123456789012345678901234567...", t.comment
+  end
+
+  def test_multiple_comments
+    desc "line one"
+    t = intern(:t)
+    desc "line two"
+    intern(:t)
+    assert_equal "line one / line two", t.comment
+  end
+
   private
 
   def intern(name)

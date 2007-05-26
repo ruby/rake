@@ -357,7 +357,7 @@ task :update_version => [:prerelease] do
   end
 end
 
-desc "Tag all the CVS files with the latest release number (REL=x.y.z)"
+desc "[rel] Tag all the CVS files with the latest release number (REL=x.y.z)"
 task :tag => [:prerelease] do
   reltag = "REL_#{PKG_VERSION.gsub(/\./, '_')}"
   reltag << ENV['REUSE'].gsub(/\./, '_') if ENV['REUSE']
@@ -381,6 +381,7 @@ end
 
 load 'xforge.rf' if File.exist?('xforge.rf')
 
+desc "Where is the current directory.  This task displays\nthe current rake directory"
 task :where_am_i do
   puts Rake.original_dir
 end

@@ -31,7 +31,7 @@ class TestApplication < Test::Unit::TestCase
 
   def test_display_tasks
     @app.options.show_task_pattern = //
-    @app.last_comment = "COMMENT"
+    @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "t")
     out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
     assert_match(/^rake t/, out)
@@ -134,7 +134,7 @@ class TestApplication < Test::Unit::TestCase
     ran = false
     ARGV.clear
     ARGV << '-f' << '-s' << '--tasks'
-    @app.last_comment = "COMMENT"
+    @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "default")
     out = capture_stdout { @app.run }
     assert @app.options.show_tasks
@@ -147,7 +147,7 @@ class TestApplication < Test::Unit::TestCase
     ran = false
     ARGV.clear
     ARGV << '-f' << '-s' << '--prereqs'
-    @app.last_comment = "COMMENT"
+    @app.last_description = "COMMENT"
     t = @app.define_task(Rake::Task, "default")
     t.enhance([:a, :b])
     @app.define_task(Rake::Task, "a")

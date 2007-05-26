@@ -2,7 +2,7 @@
 
 #--
 
-# Copyright (c) 2003, 2004, 2005, 2006 Jim Weirich
+# Copyright (c) 2003, 2004, 2005, 2006, 2007  Jim Weirich
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -303,15 +303,19 @@ module Rake
     # Application owning this task.
     attr_accessor :application
     
-    # Comment for this task.
-    attr_accessor :comment
+    # Comment for this task.  Restricted to a single line of no more than 50
+    # characters.
+    attr_reader :comment
+    
+    # Full text of the (possibly multi-line) comment.
+    attr_reader :full_comment
     
     # Array of nested namespaces names used for task lookup by this task.
     attr_reader :scope
     
     # List of arguments to the task
     attr_accessor :args
-
+    
     # Return task name
     def to_s
       name
@@ -335,11 +339,13 @@ module Rake
       @prerequisites = FileList[]
       @actions = []
       @already_invoked = false
+      @full_comment = nil
       @comment = nil
       @lock = Mutex.new
       @application = app
       @scope = app.current_scope
       @args = []
+      @arg_names = nil
     end
     
     # Enhance a task with prerequisites or actions.  Returns self.
@@ -352,6 +358,35 @@ module Rake
     # Name of the task, including any namespace qualifiers.
     def name
       @name.to_s
+    end
+
+    # Name of task with argument list description.
+    def name_with_args # :nodoc:
+      if arg_description
+        "#{name}#{arg_description}"
+      else
+        name
+      end
+    end
+
+    # Argument description (nil if none).
+    def arg_description # :nodoc:
+      @arg_names ? "[#{(arg_names || []).join(',')}]" : nil
+    end
+    
+    # Hash of argument names to argument positions (0 based).  (empty if no
+    # named arguments).
+    def arg_map
+      result = {}
+      arg_names.each_with_index do |n, i|
+        result[n] = i
+      end
+      result
+    end
+    
+    # Name of arguments for this task.
+    def arg_names
+      @arg_names || []
     end
     
     # Invoke the task if it is needed.  Prerequites are invoked first.
@@ -370,9 +405,21 @@ module Rake
     # Invoke all the prerequisites of a task.
     def invoke_prerequisites
       @prerequisites.each { |n|
-        application[n, @scope].invoke
+        prereq = application[n, @scope]
+        setup_arguments(prereq)
+        prereq.invoke
       }
     end
+
+    # Setup the arguments to be passed to prerequesites.
+    def setup_arguments(prereq)   # :nodoc:
+      if ! arg_names.empty? && ! prereq.arg_names.empty?
+        prereq.args = prereq.arg_names.collect do |name|
+          arg_map[name] ? args[arg_map[name]] : nil
+        end
+      end
+    end
+    private :setup_arguments
 
     # Format the trace flags for display.
     def format_trace_flags
@@ -416,17 +463,45 @@ module Rake
       @prerequisites.collect { |p| application[p].timestamp }.max || Time.now
     end
     
+    # Add a description to the task.  The description can consist of an option
+    # argument list (enclosed brackets) and an optional comment.
+    def add_description(description)
+      return if ! description
+      if description =~ %r{\A\s*(\[([^\]]*)\])\s*(.*)\Z}m
+        arg_string = $2
+        comment = $3.strip
+      else
+        comment = description.strip
+      end
+      set_arg_names(arg_string) if arg_string
+      add_comment(comment) if comment && ! comment.empty?
+    end
+
     # Add a comment to the task.  If a comment alread exists, separate
     # the new comment with " / ".
     def add_comment(comment)
-      return if ! comment
-      if @comment 
-        @comment << " / "
+      if @full_comment 
+        @full_comment << " / "
       else
-        @comment = ''
+        @full_comment = ''
       end
-      @comment << comment
+      @full_comment << comment
+      if @full_comment =~ /\A([^.]+?\.)/
+        @comment = $1
+      else
+        @comment = @full_comment
+      end
+      if @comment.length > 50
+        @comment = @comment[0, 47] + "..."
+      end
     end
+    private :add_comment
+    
+    # Set the names of the arguments for this task.
+    def set_arg_names(arg_string)
+      @arg_names = arg_string.split(',').collect { |n| n.strip }
+    end
+    private :set_arg_names
     
     # Return a string describing the internal state of a task.  Useful for
     # debugging.
@@ -673,8 +748,8 @@ end
 #     runtests
 #   end
 #
-def desc(comment)
-  Rake.application.last_comment = comment
+def desc(description)
+  Rake.application.last_description = description
 end
 
 # Import the partial Rakefiles +fn+.  Imported files are loaded _after_ the
@@ -1442,14 +1517,15 @@ module Rake
   # The TaskManager module is a mixin for managing tasks.  
   module TaskManager
     # Track the last comment made in the Rakefile.
-    attr_accessor :last_comment
+    attr_accessor :last_description
+    alias :last_comment :last_description    # Backwards compatibility
 
     def initialize
       super
       @tasks = Hash.new
       @rules = Array.new
       @scope = Array.new
-      @last_comment = nil
+      @last_description = nil
     end
 
     def create_rule(args, &block)
@@ -1464,8 +1540,8 @@ module Rake
       deps = [deps] unless deps.respond_to?(:to_ary)
       deps = deps.collect {|d| d.to_s }
       task = intern(task_class, task_name)
-      task.add_comment(@last_comment)
-      @last_comment = nil
+      task.add_description(@last_description)
+      @last_description = nil
       task.enhance(deps, &block)
       task
     end
@@ -1658,38 +1734,40 @@ module Rake
     DEFAULT_RAKEFILES = ['rakefile', 'Rakefile', 'rakefile.rb', 'Rakefile.rb'].freeze
     
     OPTIONS = [     # :nodoc:
-      ['--dry-run',  '-n', GetoptLong::NO_ARGUMENT,
-        "Do a dry run without executing actions."],
+      ['--classic-namespace', '-C', GetoptLong::NO_ARGUMENT,
+        "Put Task and FileTask in the top level namespace"],
+      ['--describe',  '-D', GetoptLong::OPTIONAL_ARGUMENT,
+        "Describe the tasks (matching optional PATTERN), then exit."],
+      ['--rakefile', '-f', GetoptLong::OPTIONAL_ARGUMENT,
+        "Use FILE as the rakefile."],
+      ['--usage',    '-h', GetoptLong::NO_ARGUMENT,
+        "Display usage."],
       ['--help',     '-H', GetoptLong::NO_ARGUMENT,
         "Display this help message."],
       ['--libdir',   '-I', GetoptLong::REQUIRED_ARGUMENT,
         "Include LIBDIR in the search path for required modules."],
-      ['--rakelibdir', '-R', GetoptLong::REQUIRED_ARGUMENT,
-        "Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')"],
+      ['--dry-run',  '-n', GetoptLong::NO_ARGUMENT,
+        "Do a dry run without executing actions."],
       ['--nosearch', '-N', GetoptLong::NO_ARGUMENT,
         "Do not search parent directories for the Rakefile."],
       ['--prereqs',  '-P', GetoptLong::NO_ARGUMENT,
         "Display the tasks and dependencies, then exit."],
       ['--quiet',    '-q', GetoptLong::NO_ARGUMENT,
         "Do not log messages to standard output."],
-      ['--rakefile', '-f', GetoptLong::OPTIONAL_ARGUMENT,
-        "Use FILE as the rakefile."],
       ['--require',  '-r', GetoptLong::REQUIRED_ARGUMENT,
         "Require MODULE before executing rakefile."],
+      ['--rakelibdir', '-R', GetoptLong::REQUIRED_ARGUMENT,
+        "Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')"],
       ['--silent',   '-s', GetoptLong::NO_ARGUMENT,
         "Like --quiet, but also suppresses the 'in directory' announcement."],
       ['--tasks',    '-T', GetoptLong::OPTIONAL_ARGUMENT,
         "Display the tasks (matching optional PATTERN) with descriptions, then exit."],
       ['--trace',    '-t', GetoptLong::NO_ARGUMENT,
         "Turn on invoke/execute tracing, enable full backtrace."],
-      ['--usage',    '-h', GetoptLong::NO_ARGUMENT,
-        "Display usage."],
       ['--verbose',  '-v', GetoptLong::NO_ARGUMENT,
         "Log message to standard output (default)."],
       ['--version',  '-V', GetoptLong::NO_ARGUMENT,
         "Display the program version."],
-      ['--classic-namespace', '-C', GetoptLong::NO_ARGUMENT,
-        "Put Task and FileTask in the top level namespace"],
     ]
     
     # Initialize a Rake::Application object.
@@ -1851,9 +1929,29 @@ module Rake
       displayable_tasks = tasks.select { |t|
         t.comment && t.name =~ options.show_task_pattern
       }
-      width = displayable_tasks.collect { |t| t.name.length }.max
-      displayable_tasks.each do |t|
-        printf "#{name} %-#{width}s  # %s\n", t.name, t.comment
+      if options.full_description
+        displayable_tasks.each do |t|
+          puts "task #{t.name_with_args}"
+          t.full_comment.each do |line|
+            puts "    #{line}"
+          end
+          puts
+        end
+      else
+        width = displayable_tasks.collect { |t| t.name_with_args.length }.max
+        max_column = 80 - name.size - width - 7
+        displayable_tasks.each do |t|
+          printf "#{name} %-#{width}s  # %s\n", 
+            t.name_with_args, truncate(t.comment, max_column)
+        end
+      end
+    end
+    
+    def truncate(string, width)
+      if string.length <= width
+        string
+      else
+        string[0, width-3] + "..."
       end
     end
     
@@ -1874,6 +1972,10 @@ module Rake
     # Do the option defined by +opt+ and +value+.
     def do_option(opt, value)
       case opt
+      when '--describe'
+        options.show_tasks = true
+        options.show_task_pattern = Regexp.new(value || '.')
+        options.full_description = true
       when '--dry-run'
         verbose(true)
         nowrite(true)
@@ -1911,6 +2013,7 @@ module Rake
       when '--tasks'
         options.show_tasks = true
         options.show_task_pattern = Regexp.new(value || '.')
+        options.full_description = false
       when '--trace'
         options.trace = true
         verbose(true)
