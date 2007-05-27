@@ -1873,6 +1873,9 @@ module Rake
     def standard_exception_handling
       begin
         yield
+      rescue SystemExit => ex
+        # Exit silently with current status
+        exit(ex.status)
       rescue SystemExit, GetoptLong::InvalidOption => ex
         # Exit silently
         exit(1)

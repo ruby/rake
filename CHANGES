@@ -7,6 +7,10 @@
 * The 'desc' command will now document task argument names.
 * Comments are limited to 80 columns or so (suggested by Jamis Buck).
 * Added -D to display full comments (suggested by Jamis Buck).
+* The rake program will set the status value used in any explicit
+  exit(n) calls. (patch provided by Stephen Touset)
+* Fixed error in functional tests that were not including session (and
+  silently skipping the functionl tests.
 
 == Version 0.7.3
 

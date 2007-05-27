@@ -2,6 +2,7 @@
 
 require 'test/unit'
 require 'fileutils'
+require 'session'
 
 # Version 2.1.9 of session has a bug where the @debug instance
 # variable is not initialized, causing warning messages.  This snippet
@@ -186,6 +187,20 @@ class FunctionalTest < Test::Unit::TestCase
     Dir.chdir("test/data/namespace") do
       rake "xyz.rb"
       assert_match(/^XYZ1\nXYZ2$/m, @out)
+    end
+  end
+  
+  def test_rake_returns_status_error_values
+    Dir.chdir("test/data/statusreturn") do
+      rake "exit5"
+      assert_status(5)
+    end
+  end
+
+  def test_rake_returns_no_status_error_on_normal_exit
+    Dir.chdir("test/data/statusreturn") do
+      rake "normal"
+      assert_status(0)
     end
   end
 
