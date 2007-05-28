@@ -330,16 +330,17 @@ task :prerelease do |t, rel, reuse, reltest|
   end
 end
 
-task :update_version => [:prerelease] do
-  if $package_version == CURRENT_VERSION
+desc "[rel, reuse, reltest]"
+task :update_version => [:prerelease] do |t, rel, reuse, reltest|
+  if rel == CURRENT_VERSION
     announce "No version change ... skipping version update"
   else
-    announce "Updating Rake version to #{$package_version}"
+    announce "Updating Rake version to #{rel}"
     open("lib/rake.rb") do |rakein|
       open("lib/rake.rb.new", "w") do |rakeout|
 	rakein.each do |line|
 	  if line =~ /^RAKEVERSION\s*=\s*/
-	    rakeout.puts "RAKEVERSION = '#{$package_version}'"
+	    rakeout.puts "RAKEVERSION = '#{rel}'"
 	  else
 	    rakeout.puts line
 	  end
@@ -347,20 +348,20 @@ task :update_version => [:prerelease] do
       end
     end
     mv "lib/rake.rb.new", "lib/rake.rb"
-    if ENV['RELTEST']
+    if reltest
       announce "Release Task Testing, skipping commiting of new version"
     else
-      sh %{cvs commit -m "Updated to version #{$package_version}" lib/rake.rb} # "
+      sh %{svn commit -m "Updated to version #{rel}" lib/rake.rb} # "
     end
   end
 end
 
-desc "[rel] Tag all the CVS files with the latest release number (REL=x.y.z)"
-task :tag => [:prerelease] do
-  reltag = "REL_#{$package_version.gsub(/\./, '_')}"
-  reltag << ENV['REUSE'].gsub(/\./, '_') if ENV['REUSE']
+desc "[rel, reuse, reltest] Tag all the CVS files with the latest release number (REL=x.y.z)"
+task :tag => [:prerelease] do |t, rel, reuse, reltest|
+  reltag = "REL_#{rel.gsub(/\./, '_')}"
+  reltag << reuse.gsub(/\./, '_') if reuse
   announce "Tagging CVS with [#{reltag}]"
-  if ENV['RELTEST']
+  if reltest
     announce "Release Task Testing, skipping CVS tagging"
   else
     sh %{cvs tag #{reltag}}
