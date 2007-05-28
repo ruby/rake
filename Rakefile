@@ -360,11 +360,11 @@ desc "[rel, reuse, reltest] Tag all the CVS files with the latest release number
 task :tag => [:prerelease] do |t, rel, reuse, reltest|
   reltag = "REL_#{rel.gsub(/\./, '_')}"
   reltag << reuse.gsub(/\./, '_') if reuse
-  announce "Tagging CVS with [#{reltag}]"
+  announce "Tagging Repository with [#{reltag}]"
   if reltest
     announce "Release Task Testing, skipping CVS tagging"
   else
-    sh %{cvs tag #{reltag}}
+    sh %{svn copy svn+ssh://rubyforge.org/var/svn/rake/trunk svn+ssh://rubyforge.org/var/svn/rake/tags/#{reltag}}
   end
 end
 
