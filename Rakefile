@@ -37,11 +37,7 @@ else
   CURRENT_VERSION = "0.0.0"
 end
 
-if ENV['REL']
-  PKG_VERSION = ENV['REL']
-else
-  PKG_VERSION = CURRENT_VERSION
-end
+$package_version = CURRENT_VERSION
 
 SRC_RB = FileList['lib/**/*.rb']
 
@@ -163,7 +159,7 @@ else
     #### Basic information.
 
     s.name = 'rake'
-    s.version = PKG_VERSION
+    s.version = $package_version
     s.summary = "Ruby based make-like utility."
     s.description = <<-EOF
       Rake is a Make-like program implemented in Ruby. Tasks
@@ -282,7 +278,7 @@ task :rf => :rubyfiles
 # --------------------------------------------------------------------
 # Creating a release
 
-desc "Make a new release"
+desc "[rel, reuse, reltest] Make a new release"
 task :release => [
   :prerelease,
   :clobber,
@@ -293,55 +289,57 @@ task :release => [
   
   announce 
   announce "**************************************************************"
-  announce "* Release #{PKG_VERSION} Complete."
+  announce "* Release #{$package_version} Complete."
   announce "* Packages ready to upload."
   announce "**************************************************************"
   announce 
 end
 
 # Validate that everything is ready to go for a release.
-task :prerelease do
+desc "[rel, reuse, reltest]"
+task :prerelease do |t, rel, reuse, reltest|
+  $package_version = rel
   announce 
   announce "**************************************************************"
-  announce "* Making RubyGem Release #{PKG_VERSION}"
+  announce "* Making RubyGem Release #{$package_version}"
   announce "* (current version #{CURRENT_VERSION})"
   announce "**************************************************************"
   announce  
 
   # Is a release number supplied?
-  unless ENV['REL']
-    fail "Usage: rake release REL=x.y.z [REUSE=tag_suffix]"
+  unless rel
+    fail "Usage: rake release[X.Y.Z] [REUSE=tag_suffix]"
   end
 
   # Is the release different than the current release.
   # (or is REUSE set?)
-  if PKG_VERSION == CURRENT_VERSION && ! ENV['REUSE']
-    fail "Current version is #{PKG_VERSION}, must specify REUSE=tag_suffix to reuse version"
+  if $package_version == CURRENT_VERSION && ! reuse
+    fail "Current version is #{$package_version}, must specify REUSE=tag_suffix to reuse version"
   end
 
   # Are all source files checked in?
-  if ENV['RELTEST']
+  if reltest
     announce "Release Task Testing, skipping checked-in file test"
   else
     announce "Checking for unchecked-in files..."
-    data = `cvs -q update`
+    data = `svn st`
     unless data =~ /^$/
-      fail "CVS update is not clean ... do you have unchecked-in files?"
+      abort "svn status is not clean ... do you have unchecked-in files?"
     end
     announce "No outstanding checkins found ... OK"
   end
 end
 
 task :update_version => [:prerelease] do
-  if PKG_VERSION == CURRENT_VERSION
+  if $package_version == CURRENT_VERSION
     announce "No version change ... skipping version update"
   else
-    announce "Updating Rake version to #{PKG_VERSION}"
+    announce "Updating Rake version to #{$package_version}"
     open("lib/rake.rb") do |rakein|
       open("lib/rake.rb.new", "w") do |rakeout|
 	rakein.each do |line|
 	  if line =~ /^RAKEVERSION\s*=\s*/
-	    rakeout.puts "RAKEVERSION = '#{PKG_VERSION}'"
+	    rakeout.puts "RAKEVERSION = '#{$package_version}'"
 	  else
 	    rakeout.puts line
 	  end
@@ -352,14 +350,14 @@ task :update_version => [:prerelease] do
     if ENV['RELTEST']
       announce "Release Task Testing, skipping commiting of new version"
     else
-      sh %{cvs commit -m "Updated to version #{PKG_VERSION}" lib/rake.rb} # "
+      sh %{cvs commit -m "Updated to version #{$package_version}" lib/rake.rb} # "
     end
   end
 end
 
 desc "[rel] Tag all the CVS files with the latest release number (REL=x.y.z)"
 task :tag => [:prerelease] do
-  reltag = "REL_#{PKG_VERSION.gsub(/\./, '_')}"
+  reltag = "REL_#{$package_version.gsub(/\./, '_')}"
   reltag << ENV['REUSE'].gsub(/\./, '_') if ENV['REUSE']
   announce "Tagging CVS with [#{reltag}]"
   if ENV['RELTEST']
