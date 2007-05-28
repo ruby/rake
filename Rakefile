@@ -364,7 +364,7 @@ task :tag => [:prerelease] do |t, rel, reuse, reltest|
   if reltest
     announce "Release Task Testing, skipping CVS tagging"
   else
-    sh %{svn copy svn+ssh://rubyforge.org/var/svn/rake/trunk svn+ssh://rubyforge.org/var/svn/rake/tags/#{reltag}}
+    sh %{svn copy svn+ssh://rubyforge.org/var/svn/rake/trunk svn+ssh://rubyforge.org/var/svn/rake/tags/#{reltag} -m 'Commiting release #{reltag}'}
   end
 end
 
