@@ -39,6 +39,19 @@ class TestTask < Test::Unit::TestCase
     assert_equal ["t2", "t3", "t1"], runlist
   end
 
+  def test_invoke_with_circular_dependencies
+    runlist = []
+    t1 = intern(:t1).enhance([:t2]) { |t| runlist << t.name; 3321 }
+    t2 = intern(:t2).enhance([:t1]) { |t| runlist << t.name }
+    assert_equal [:t2], t1.prerequisites
+    assert_equal [:t1], t2.prerequisites
+    ex = assert_raise RuntimeError do
+      t1.invoke
+    end
+    assert_match(/circular dependency/i, ex.message)
+    assert_match(/t1 => t2 => t1/, ex.message)
+  end
+
   def test_dry_run_prevents_actions
     Rake.application.options.dryrun = true
     runlist = []
@@ -136,9 +149,9 @@ class TestTask < Test::Unit::TestCase
     assert_match(/needed:\s*true/, out)
     assert_match(/pre-requisites:\s*--t2/, out)
   end
-  
+
   def test_tasks_can_access_arguments
-    t = intern(:t1).enhance { |t| 
+    t = intern(:t1).enhance { |t|
       a, b, c = t.args
       assert_equal 1, a
       assert_equal 2, b
@@ -147,7 +160,7 @@ class TestTask < Test::Unit::TestCase
     t.args = [1, 2, 3]
     t.invoke
   end
-  
+
   def test_arguments_are_passed_to_block
     t = intern(:t).enhance { |t, a|
       assert_equal 1, a
@@ -173,16 +186,16 @@ class TestTask < Test::Unit::TestCase
     t.args = [1, 2]
     t.invoke
   end
-  
+
   def test_extra_arguments_can_be_splat_captured
     t = intern(:t).enhance { |t, a, *b|
       assert_equal 1, a
       assert_equal [2, 3], b
     }
     t.args = [1, 2, 3]
-    t.invoke    
+    t.invoke
   end
-  
+
   def test_arguments_are_passed_to_all_blocks
     counter = 0
     t = intern(:t).enhance { |t, a|
@@ -197,7 +210,7 @@ class TestTask < Test::Unit::TestCase
     t.invoke
     assert_equal 2, counter
   end
-  
+
   def test_block_with_no_parameters_is_ok
     t = intern(:t).enhance { }
     t.args = [1,2]
@@ -232,7 +245,7 @@ class TestTask < Test::Unit::TestCase
     t.invoke
     assert_equal "1.2", value
   end
-  
+
   def test_args_not_passed_if_no_prereq_names
     value = nil
     desc "pre"
@@ -254,7 +267,7 @@ class TestTask < Test::Unit::TestCase
     t.invoke
     assert_nil value
   end
-  
+
   def test_task_can_have_arg_names_but_no_comment
     desc "[a,b]"
     t = intern(:t)
@@ -262,12 +275,12 @@ class TestTask < Test::Unit::TestCase
     assert_nil t.comment
     assert_nil t.full_comment
   end
-  
+
   def test_extended_comments
     desc %{
       [name, rev]
       This is a comment.
-      
+
       And this is the extended comment.
       name -- Name of task to execute.
       rev  -- Software revision to use.
@@ -279,7 +292,7 @@ class TestTask < Test::Unit::TestCase
     assert_match(/^\s*rev  -- Software/, t.full_comment)
     assert_match(/\A\s*This is a comment\.$/, t.full_comment)
   end
-  
+
   def test_comments_below_limit_are_unchanged
     desc %{12345678901234567890123456789012345678901234567890}
     t = intern(:t)

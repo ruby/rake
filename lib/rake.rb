@@ -24,12 +24,12 @@
 #++
 #
 # = Rake -- Ruby Make
-#      
+#
 # This is the main file for the Rake application.  Normally it is referenced
 # as a library via a require statement, but it can be distributed
 # independently as an application.
 
-RAKEVERSION = '0.7.99.2'
+RAKEVERSION = '0.7.99.3'
 
 require 'rbconfig'
 require 'ftools'
@@ -66,7 +66,7 @@ class Module
       yield
     end
   end
-end
+end # module Module
 
 
 ######################################################################
@@ -143,7 +143,7 @@ class String
     # controls the details of the mapping.  The following special patterns are
     # recognized:
     #
-    # * <b>%p</b> -- The complete path.   
+    # * <b>%p</b> -- The complete path.
     # * <b>%f</b> -- The base file name of the path, with its file extension,
     #   but without any directories.
     # * <b>%n</b> -- The file name of the path without its file extension.
@@ -178,10 +178,10 @@ class String
     # excluded from both the pattern and replacement text (let's keep parsing
     # reasonable).
     #
-    # For example: 
+    # For example:
     #
     #    "src/org/onestepback/proj/A.java".pathmap("%{^src,bin}X.class")
-    #  
+    #
     # returns:
     #
     #    "bin/org/onestepback/proj/A.class"
@@ -240,7 +240,7 @@ class String
       result
     end
   end
-end
+end # class String
 
 ##############################################################################
 module Rake
@@ -283,7 +283,59 @@ module Rake
     end
     alias dup clone
   end
-end
+
+  ####################################################################
+  # InvocationChain tracks the chain of task invocations to detect
+  # circular dependencies.
+  class InvocationChain
+    def initialize(value, tail)
+      @value = value
+      @tail = tail
+    end
+
+    def member?(obj)
+      @value == obj || @tail.member?(obj)
+    end
+
+    def append(value)
+      if member?(value)
+        fail RuntimeError, "Circular dependency detected: #{to_s} => #{value}"
+      end
+      self.class.new(value, self)
+    end
+
+    def prefix
+      "#{@tail.to_s} => "
+    end
+
+    def to_s
+      "#{prefix}#{@value}"
+    end
+
+    def self.append(value, chain)
+      chain.append(value)
+    end
+
+    class EmptyInvocationChain
+      def member?(obj)
+        false
+      end
+      def append(value)
+        InvocationChain.new(value, self)
+      end
+      def prefix
+        "#{to_s} => "
+      end
+      def to_s
+        "TOP"
+      end
+    end
+
+    EMPTY = EmptyInvocationChain.new
+
+  end # class InvocationChain
+
+end # module Rake
 
 module Rake
 
@@ -302,25 +354,25 @@ module Rake
 
     # Application owning this task.
     attr_accessor :application
-    
+
     # Comment for this task.  Restricted to a single line of no more than 50
     # characters.
     attr_reader :comment
-    
+
     # Full text of the (possibly multi-line) comment.
     attr_reader :full_comment
-    
+
     # Array of nested namespaces names used for task lookup by this task.
     attr_reader :scope
-    
+
     # List of arguments to the task
     attr_accessor :args
-    
+
     # Return task name
     def to_s
       name
     end
-    
+
     # List of sources for task.
     attr_writer :sources
     def sources
@@ -331,7 +383,7 @@ module Rake
     def source
       @sources.first if defined?(@sources)
     end
-    
+
     # Create a task named +task_name+ with no actions or prerequisites. Use
     # +enhance+ to add actions and prerequisites.
     def initialize(task_name, app)
@@ -347,14 +399,14 @@ module Rake
       @args = []
       @arg_names = nil
     end
-    
+
     # Enhance a task with prerequisites or actions.  Returns self.
     def enhance(deps=nil, &block)
       @prerequisites |= deps if deps
       @actions << block if block_given?
       self
     end
-    
+
     # Name of the task, including any namespace qualifiers.
     def name
       @name.to_s
@@ -373,7 +425,7 @@ module Rake
     def arg_description # :nodoc:
       @arg_names ? "[#{(arg_names || []).join(',')}]" : nil
     end
-    
+
     # Hash of argument names to argument positions (0 based).  (empty if no
     # named arguments).
     def arg_map
@@ -383,31 +435,39 @@ module Rake
       end
       result
     end
-    
+
     # Name of arguments for this task.
     def arg_names
       @arg_names || []
     end
-    
+
     # Invoke the task if it is needed.  Prerequites are invoked first.
     def invoke
+      invoke_with_call_chain(InvocationChain::EMPTY)
+    end
+
+    # Same as invoke, but explicitly pass a call chain to detect
+    # circular dependencies.
+    def invoke_with_call_chain(invocation_chain)
+      new_chain = InvocationChain.append(self, invocation_chain)
       @lock.synchronize do
         if application.options.trace
           puts "** Invoke #{name} #{format_trace_flags}"
         end
         return if @already_invoked
         @already_invoked = true
-        invoke_prerequisites
+        invoke_prerequisites(new_chain)
         execute if needed?
       end
     end
+    protected :invoke_with_call_chain
 
     # Invoke all the prerequisites of a task.
-    def invoke_prerequisites
+    def invoke_prerequisites(invocation_chain)
       @prerequisites.each { |n|
         prereq = application[n, @scope]
         setup_arguments(prereq)
-        prereq.invoke
+        prereq.invoke_with_call_chain(invocation_chain)
       }
     end
 
@@ -429,7 +489,7 @@ module Rake
       flags.empty? ? "" : "(" + flags.join(", ") + ")"
     end
     private :format_trace_flags
-    
+
     # Execute the actions associated with this task.
     def execute
       if application.options.dryrun
@@ -440,29 +500,29 @@ module Rake
         puts "** Execute #{name}"
       end
       application.enhance_with_matching_rule(name) if @actions.empty?
-      @actions.each { |act| 
+      @actions.each { |act|
         case act.arity
         when 0
           act.call
         when 1
-          act.call(self) 
+          act.call(self)
         else
-          act.call(self, *args) 
+          act.call(self, *args)
         end
       }
     end
-    
+
     # Is this task needed?
     def needed?
       true
     end
-    
+
     # Timestamp for this task.  Basic tasks return the current time for their
     # time stamp.  Other tasks can be more sophisticated.
     def timestamp
       @prerequisites.collect { |p| application[p].timestamp }.max || Time.now
     end
-    
+
     # Add a description to the task.  The description can consist of an option
     # argument list (enclosed brackets) and an optional comment.
     def add_description(description)
@@ -477,10 +537,15 @@ module Rake
       add_comment(comment) if comment && ! comment.empty?
     end
 
+    # Writing to the comment attribute is the same as adding a description.
+    def comment=(description)
+      add_description(description)
+    end
+
     # Add a comment to the task.  If a comment alread exists, separate
     # the new comment with " / ".
     def add_comment(comment)
-      if @full_comment 
+      if @full_comment
         @full_comment << " / "
       else
         @full_comment = ''
@@ -496,18 +561,18 @@ module Rake
       end
     end
     private :add_comment
-    
+
     # Set the names of the arguments for this task.
     def set_arg_names(arg_string)
       @arg_names = arg_string.split(',').collect { |n| n.strip }
     end
     private :set_arg_names
-    
+
     # Return a string describing the internal state of a task.  Useful for
     # debugging.
     def investigation
       result = "------------------------------\n"
-      result << "Investigating #{name}\n" 
+      result << "Investigating #{name}\n"
       result << "class: #{self.class}\n"
       result <<  "task needed: #{needed?}\n"
       result <<  "timestamp: #{timestamp}\n"
@@ -522,23 +587,23 @@ module Rake
       result << "................................\n\n"
       return result
     end
-    
+
     # ----------------------------------------------------------------
     # Rake Module Methods
-    #    
+    #
     class << self
-      
+
       # Clear the task list.  This cause rake to immediately forget all the
       # tasks that have been assigned.  (Normally used in the unit tests.)
       def clear
         Rake.application.clear
       end
-      
+
       # List of all defined tasks.
       def tasks
         Rake.application.tasks
       end
-      
+
       # Return a task with the given name.  If the task is not currently
       # known, try to synthesize one from the defined rules.  If no rules are
       # found, but an existing file matches the task name, assume it is a file
@@ -546,20 +611,20 @@ module Rake
       def [](task_name)
         Rake.application[task_name]
       end
-      
+
       # TRUE if the task name is already defined.
       def task_defined?(task_name)
         Rake.application.lookup(task_name) != nil
       end
-      
+
       # Define a task given +args+ and an option block.  If a rule with the
       # given name already exists, the prerequisites and actions are added to
       # the existing task.  Returns the defined task.
       def define_task(args, &block)
         Rake.application.define_task(self, args, &block)
       end
-      
-      # Define a rule for synthesizing tasks.  
+
+      # Define a rule for synthesizing tasks.
       def create_rule(args, &block)
         Rake.application.create_rule(args, &block)
       end
@@ -571,10 +636,10 @@ module Rake
         (scope + [task_name]).join(':')
       end
 
-    end
-  end
-  
-  
+    end # class << Rake::Task
+  end # class Rake::Task
+
+
   # #########################################################################
   # A FileTask is a task that includes time based dependencies.  If any of a
   # FileTask's prerequisites have a timestamp that is later than the file
@@ -582,7 +647,7 @@ module Rake
   # supplied actions).
   #
   class FileTask < Task
-    
+
     # Is this file task needed?  Yes if it doesn't exist, or if its time stamp
     # is out of date.
     def needed?
@@ -590,7 +655,7 @@ module Rake
       return true if out_of_date?(timestamp)
       false
     end
-    
+
     # Time stamp for file task.
     def timestamp
       if File.exist?(name)
@@ -617,8 +682,8 @@ module Rake
         task_name
       end
     end
-  end
-  
+  end # class Rake::FileTask
+
   # #########################################################################
   # A FileCreationTask is a file task that when used as a dependency will be
   # needed if and only if the file has not been created.  Once created, it is
@@ -630,7 +695,7 @@ module Rake
     def needed?
       ! File.exist?(name)
     end
-    
+
     # Time stamp for file creation task.  This time stamp is earlier
     # than any other time stamp.
     def timestamp
@@ -643,14 +708,14 @@ module Rake
   # parallel using Ruby threads.
   #
   class MultiTask < Task
-    def invoke_prerequisites
+    def invoke_prerequisites(invocation_chain)
       threads = @prerequisites.collect { |p|
-        Thread.new(p) { |r| application[r].invoke }
+        Thread.new(p) { |r| application[r].invoke_with_call_chain(invocation_chain) }
       }
       threads.each { |t| t.join }
     end
   end
-end
+end # module Rake
 
 # ###########################################################################
 # Task Definition Functions ...
@@ -801,7 +866,7 @@ module FileUtils
     options = (Hash === cmd.last) ? cmd.pop : {}
     unless block_given?
       show_command = cmd.join(" ")
-      show_command = show_command[0,42] + "..." 
+      show_command = show_command[0,42] + "..."
         # TODO code application logic heref show_command.length > 45
       block = lambda { |ok, status|
         ok or fail "Command failed with status (#{status.exitstatus}): [#{show_command}]"
@@ -828,7 +893,7 @@ module FileUtils
       sh("#{RUBY} #{args}", options, &block)
     end
   end
-  
+
   LN_SUPPORTED = [true]
 
   #  Attempt to do a normal file link, but fall back to a copy if the link
@@ -871,10 +936,10 @@ module RakeFileUtils
   end
   RakeFileUtils.verbose_flag = true
   RakeFileUtils.nowrite_flag = false
-  
+
   $fileutils_verbose = true
   $fileutils_nowrite = false
-  
+
   FileUtils::OPT_TABLE.each do |name, opts|
     default_options = []
     if opts.include?('verbose')
@@ -895,7 +960,7 @@ module RakeFileUtils
     EOS
   end
 
-  # Get/set the verbose flag controlling output from the FileUtils utilities. 
+  # Get/set the verbose flag controlling output from the FileUtils utilities.
   # If verbose is true, then the utility method is echoed to standard output.
   #
   # Examples:
@@ -916,7 +981,7 @@ module RakeFileUtils
     RakeFileUtils.verbose_flag
   end
 
-  # Get/set the nowrite flag controlling output from the FileUtils utilities. 
+  # Get/set the nowrite flag controlling output from the FileUtils utilities.
   # If verbose is true, then the utility method is echoed to standard output.
   #
   # Examples:
@@ -940,7 +1005,7 @@ module RakeFileUtils
   # Use this function to prevent protentially destructive ruby code from
   # running when the :nowrite flag is set.
   #
-  # Example: 
+  # Example:
   #
   #   when_writing("Building Project") do
   #     project.build
@@ -1031,7 +1096,7 @@ module Rake
   # FileList/Array is requested, the pending patterns are resolved into a real
   # list of file names.
   #
-  class FileList 
+  class FileList
 
     include Cloneable
 
@@ -1069,9 +1134,9 @@ module Rake
       compact flatten uniq values_at
       + - & |
     ]
-    
+
     DELEGATING_METHODS = (ARRAY_METHODS + MUST_DEFINE - MUST_NOT_DEFINE).collect{ |s| s.to_s }.sort.uniq
-    
+
     # Now do the delegation.
     DELEGATING_METHODS.each_with_index do |sym, i|
       if SPECIAL_RETURN.include?(sym)
@@ -1136,8 +1201,8 @@ module Rake
       @pending = true
       self
     end
-    alias :add :include 
-    
+    alias :add :include
+
     # Register a list of file name patterns that should be excluded from the
     # list.  Patterns may be regular expressions, glob patterns or regular
     # strings.  In addition, a block given to exclude will remove entries that
@@ -1160,16 +1225,16 @@ module Rake
     #
     def exclude(*patterns, &block)
       patterns.each do |pat|
-        @exclude_patterns << pat 
+        @exclude_patterns << pat
       end
       if block_given?
         @exclude_procs << block
-      end        
+      end
       resolve_exclude if ! @pending
       self
     end
 
-    
+
     # Clear all the exclude patterns so that we exclude nothing.
     def clear_exclude
       @exclude_patterns = []
@@ -1193,7 +1258,7 @@ module Rake
     def to_ary
       to_a
     end
-    
+
     # Lie about our class.
     def is_a?(klass)
       klass == Array || super(klass)
@@ -1328,7 +1393,7 @@ module Rake
                 yield fn, count, line
               else
                 puts "#{fn}:#{count}:#{line}"
-              end               
+              end
             end
           end
         end
@@ -1340,7 +1405,7 @@ module Rake
     def existing
       select { |fn| File.exists?(fn) }
     end
-    
+
     # Modify the current file list so that it contains only file name that
     # exist on the file system.
     def existing!
@@ -1359,7 +1424,7 @@ module Rake
         FileList.new.import(result[1]),
       ]
     end
-    
+
     # Convert a FileList to a string by joining all elements with a space.
     def to_s
       resolve if @pending
@@ -1405,7 +1470,7 @@ module Rake
       end
 
       # Set the ignore patterns back to the default value.  The default
-      # patterns will ignore files 
+      # patterns will ignore files
       # * containing "CVS" in the file path
       # * containing ".svn" in the file path
       # * ending with ".bak"
@@ -1419,7 +1484,7 @@ module Rake
         @exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
       end
 
-      # Clear the ignore patterns.  
+      # Clear the ignore patterns.
       def clear_ignore_patterns
         @exclude_patterns = [ /^$/ ]
       end
@@ -1440,7 +1505,7 @@ module Rake
       end
     end
   end
-end
+end # module Rake
 
 # Alias FileList to be available at the top level.
 FileList = Rake::FileList
@@ -1470,7 +1535,7 @@ module Rake
   end
 
   EARLY = EarlyTime.instance
-end
+end # module Rake
 
 # ###########################################################################
 # Extensions to time to allow comparisons with an early time class.
@@ -1483,8 +1548,8 @@ class Time
     else
       rake_original_time_compare(other)
     end
-  end     
-end
+  end
+end # class Time
 
 module Rake
 
@@ -1500,7 +1565,7 @@ module Rake
       @task_manager = task_manager
       @scope = scope_list.dup
     end
-    
+
     # Lookup a task named +name+ in the namespace.
     def [](name)
       @task_manager.lookup(name, @scope)
@@ -1510,11 +1575,11 @@ module Rake
     def tasks
       @task_manager.tasks
     end
-  end
+  end # NameSpace
 
 
   ####################################################################
-  # The TaskManager module is a mixin for managing tasks.  
+  # The TaskManager module is a mixin for managing tasks.
   module TaskManager
     # Track the last comment made in the Rakefile.
     attr_accessor :last_description
@@ -1552,7 +1617,7 @@ module Rake
       @tasks[task_name.to_s] ||= task_class.new(task_name, self)
     end
 
-    # Find a matching task for +task_name+.  
+    # Find a matching task for +task_name+.
     def [](task_name, scopes=nil)
       task_name = task_name.to_s
       self.lookup(task_name, scopes) or
@@ -1565,7 +1630,7 @@ module Rake
       return nil unless File.exist?(task_name)
       define_task(Rake::FileTask, task_name)
     end
-    
+
     # Resolve the arguments for a task/rule.
     def resolve_args(args)
       case args
@@ -1581,7 +1646,7 @@ module Rake
       end
       [task_name, deps]
     end
-    
+
     # If a rule can be found that matches the task name, enhance the
     # task with the prerequisites and actions from the rule.  Set the
     # source attribute of the task appropriately for the rule.  Return
@@ -1600,7 +1665,7 @@ module Rake
       ex.add_target(task_name)
       fail ex
     end
-    
+
     # List of all defined tasks in this application.
     def tasks
       @tasks.values.sort_by { |t| t.name }
@@ -1632,7 +1697,7 @@ module Rake
       lookup_in_scope(task_name, scopes)
     end
 
-    # Lookup the task name 
+    # Lookup the task name
     def lookup_in_scope(name, scope)
       n = scope.size
       while n >= 0
@@ -1688,7 +1753,7 @@ module Rake
       task.sources = prereqs
       task
     end
-    
+
     # Make a list of sources from the list of file name extensions /
     # translation procs.
     def make_sources(task_name, extensions)
@@ -1709,8 +1774,8 @@ module Rake
         end
       }.flatten
     end
-    
-  end
+
+  end # TaskManager
 
   ######################################################################
   # Rake main application object.  When invoking +rake+ from the
@@ -1724,15 +1789,15 @@ module Rake
 
     # The original directory where rake was invoked.
     attr_reader :original_dir
-    
+
     # Name of the actual rakefile used.
     attr_reader :rakefile
-    
+
     # List of the top level task names (task names from the command line).
     attr_reader :top_level_tasks
 
     DEFAULT_RAKEFILES = ['rakefile', 'Rakefile', 'rakefile.rb', 'Rakefile.rb'].freeze
-    
+
     OPTIONS = [     # :nodoc:
       ['--classic-namespace', '-C', GetoptLong::NO_ARGUMENT,
         "Put Task and FileTask in the top level namespace"],
@@ -1769,7 +1834,7 @@ module Rake
       ['--version',  '-V', GetoptLong::NO_ARGUMENT,
         "Display the program version."],
     ]
-    
+
     # Initialize a Rake::Application object.
     def initialize
       super
@@ -1792,7 +1857,7 @@ module Rake
     # * Define the tasks (+load_rakefile+).
     # * Run the top level tasks (+run_tasks+).
     #
-    # If you wish to build a custom rake command, you should call +init+ on your 
+    # If you wish to build a custom rake command, you should call +init+ on your
     # application.  The define any tasks.  Finally, call +top_level+ to run your top
     # level tasks.
     def run
@@ -1817,7 +1882,7 @@ module Rake
       standard_exception_handling do
         raw_load_rakefile
       end
-    end 
+    end
 
     # Run the top level tasks of a Rake application.
     def top_level
@@ -1838,7 +1903,7 @@ module Rake
       ext = ".#{ext}" unless ext =~ /^\./
       @loaders[ext] = loader
     end
-    
+
     # Application options from the command line
     def options
       @options ||= OpenStruct.new
@@ -1853,7 +1918,7 @@ module Rake
       t.invoke
       t.args = []
     end
-    
+
     def parse_task_string(string)
       if string =~ /^([^\[]+)(\[(.*)\])?$/
         name = $1
@@ -1890,9 +1955,9 @@ module Rake
           $stderr.puts "(See full trace by running task with --trace)"
         end
         exit(1)
-      end    
+      end
     end
-        
+
     # True if one of the files in RAKEFILES is in the current directory.
     # If a match is found, it is copied into @rakefile.
     def have_rakefile
@@ -1904,12 +1969,12 @@ module Rake
       end
       return false
     end
-    
+
     # Display the program usage line.
     def usage
       puts "rake [-f rakefile] {options} targets..."
     end
-    
+
     # Display the rake command line help.
     def help
       usage
@@ -1926,7 +1991,7 @@ module Rake
         printf "      %s\n", desc
       end
     end
-    
+
     # Display the tasks and dependencies.
     def display_tasks_and_comments
       displayable_tasks = tasks.select { |t|
@@ -1944,12 +2009,12 @@ module Rake
         width = displayable_tasks.collect { |t| t.name_with_args.length }.max
         max_column = 80 - name.size - width - 7
         displayable_tasks.each do |t|
-          printf "#{name} %-#{width}s  # %s\n", 
+          printf "#{name} %-#{width}s  # %s\n",
             t.name_with_args, truncate(t.comment, max_column)
         end
       end
     end
-    
+
     def truncate(string, width)
       if string.length <= width
         string
@@ -1957,7 +2022,7 @@ module Rake
         string[0, width-3] + "..."
       end
     end
-    
+
     # Display the tasks and prerequisites
     def display_prerequisites
       tasks.each do |t|
@@ -1965,13 +2030,13 @@ module Rake
         t.prerequisites.each { |pre| puts "    #{pre}" }
       end
     end
-    
+
     # Return a list of the command line options supported by the
     # program.
     def command_line_options
       OPTIONS.collect { |lst| lst[0..-2] }
     end
-    
+
     # Do the option defined by +opt+ and +value+.
     def do_option(opt, value)
       case opt
@@ -2033,7 +2098,7 @@ module Rake
         options.classic_namespace = true
       end
     end
-    
+
     # Read and handle the command line options.
     def handle_options
       options.rakelib = 'rakelib'
@@ -2051,7 +2116,7 @@ module Rake
         $silent = options.silent
       end
     end
-    
+
     # Similar to the regular Ruby +require+ command, but will check
     # for .rake files in addition to .rb files.
     def rake_require(file_name, paths=$LOAD_PATH, loaded=$")
@@ -2085,7 +2150,7 @@ module Rake
       end
       load_imports
     end
-    
+
     # Collect the list of tasks on the command line.  If no tasks are
     # given, return a list containing only the default task.
     # Environmental assignments are processed at this time as well.
@@ -2100,12 +2165,12 @@ module Rake
       end
       @top_level_tasks.push("default") if @top_level_tasks.size == 0
     end
-    
+
     # Add a file to the list of files to be imported.
     def add_import(fn)
       @pending_imports << fn
     end
-    
+
     # Load the pending list of imported files.
     def load_imports
       while fn = @pending_imports.shift
@@ -2119,7 +2184,7 @@ module Rake
         @imported << fn
       end
     end
-    
+
     # Warn about deprecated use of top level constant names.
     def const_warning(const_name)
       @const_warning ||= false
@@ -2146,7 +2211,7 @@ end
 class Module
   # Rename the original handler to make it available.
   alias :rake_original_const_missing :const_missing
-  
+
   # Check for deprecated uses of top level (i.e. in Object) uses of
   # Rake class names.  If someone tries to reference the constant
   # name, display a warning and return the proper object.  Using the
