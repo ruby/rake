@@ -151,14 +151,36 @@ class TestTask < Test::Unit::TestCase
   end
 
   def test_tasks_can_access_arguments
-    t = intern(:t1).enhance { |t|
+    t = intern(:t).enhance do |t|
       a, b, c = t.args
       assert_equal 1, a
       assert_equal 2, b
       assert_equal 3, c
-    }
+    end
     t.args = [1, 2, 3]
     t.invoke
+  end
+
+  def test_actions_of_various_arity_are_ok_with_args
+    notes = []
+    t = intern(:t).enhance do
+      notes << :a
+    end
+    t.enhance do ||
+        notes << :b
+    end
+    t.enhance do |t|
+      notes << :c
+      assert_kind_of Task, t
+    end
+    t.enhance do |t2, a|
+      notes << :d
+      assert_equal t, t2
+      assert_equal 1, a
+    end
+    t.args = [1, 2, 3]
+    assert_nothing_raised do t.invoke end
+    assert_equal [:a, :b, :c, :d], notes
   end
 
   def test_arguments_are_passed_to_block
@@ -299,18 +321,18 @@ class TestTask < Test::Unit::TestCase
     assert_equal "12345678901234567890123456789012345678901234567890", t.comment
   end
 
-  def test_comments_above_limit_are_truncated
-    desc %{123456789012345678901234567890123456789012345678901}
-    t = intern(:t)
-    assert_equal "12345678901234567890123456789012345678901234567...", t.comment
-  end
-
   def test_multiple_comments
     desc "line one"
     t = intern(:t)
     desc "line two"
     intern(:t)
     assert_equal "line one / line two", t.comment
+  end
+
+  def test_settable_comments
+    t = intern(:t)
+    t.comment = "HI"
+    assert_equal "HI", t.comment
   end
 
   private

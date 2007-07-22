@@ -42,7 +42,6 @@ class TestAnInvocationChainWithOneMember < Test::Unit::TestCase
   end
 
   def test_to_s
-    assert_equal "TOP => ", @chain.prefix
     assert_equal "TOP => A", @chain.to_s
   end
 

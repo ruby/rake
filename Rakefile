@@ -23,7 +23,7 @@ CLOBBER.include('test/data/chains/play.*')
 CLOBBER.include('test/data/file_creation_task/build')
 CLOBBER.include('test/data/file_creation_task/src')
 CLOBBER.include('TAGS')
-CLOBBER.include('coverage')
+CLOBBER.include('coverage', 'rcov_aggregate')
 
 def announce(msg='')
   STDERR.puts msg
@@ -92,11 +92,14 @@ begin
 
   Rcov::RcovTask.new do |t|
     t.libs << "test"
-    t.rcov_opts = ['-xRakefile', '-xrakefile', '-xpublish.rf', '--text-report']
-    t.test_files = FileList[
-      'test/test*.rb',
-      'test/contrib/test*.rb'
+    t.rcov_opts = [
+      '-xRakefile', '-xrakefile', '-xpublish.rf', '--text-report',
     ]
+    t.test_files = FileList[
+      'test/test*.rb', 'test/functional.rb'
+#      'test/contrib/test*.rb'
+    ]
+    t.output_dir = 'coverage'
     t.verbose = true
   end
 rescue LoadError
@@ -245,12 +248,6 @@ task :lines do
   show_line("TOTAL", total_lines, total_code)
 end
 
-ARCHIVEDIR = '/mnt/usb'
-
-task :archive => [:package] do
-  cp FileList["pkg/*.tgz", "pkg/*.zip", "pkg/*.gem"], ARCHIVEDIR
-end
-
 # Define an optional publish target in an external file.  If the
 # publish.rf file is not found, the publish targets won't be defined.
 
@@ -258,22 +255,34 @@ load "publish.rf" if File.exist? "publish.rf"
 
 # Support Tasks ------------------------------------------------------
 
+RUBY_FILES = FileList['**/*.rb'].exclude('pkg')
+
 desc "Look for TODO and FIXME tags in the code"
 task :todo do
-  FileList['**/*.rb'].exclude('pkg').egrep(/#.*(FIXME|TODO|TBD)/)
+  RUBY_FILES.egrep(/#.*(FIXME|TODO|TBD)/)
 end
 
 desc "Look for Debugging print lines"
 task :dbg do
-  FileList['**/*.rb'].egrep(/\bDBG|\bbreakpoint\b/)
+  RUBY_FILES.egrep(/\bDBG|\bbreakpoint\b/)
 end
 
 desc "List all ruby files"
 task :rubyfiles do 
-  puts Dir['**/*.rb'].reject { |fn| fn =~ /^pkg/ }
-  puts Dir['bin/*'].reject { |fn| fn =~ /CVS|(~$)|(\.rb$)/ }
+  puts RUBY_FILES
+  puts FileList['bin/*'].exclude('bin/*.rb')
 end
 task :rf => :rubyfiles
+
+desc "Create a TAGS file"
+task :tags => "TAGS"
+
+TAGS = 'xctags -e'
+
+file "TAGS" => RUBY_FILES do
+  puts "Makings TAGS"
+  sh "#{TAGS} #{RUBY_FILES}", :verbose => false
+end
 
 # --------------------------------------------------------------------
 # Creating a release

@@ -304,10 +304,6 @@ module Rake
       self.class.new(value, self)
     end
 
-    def prefix
-      "#{@tail.to_s} => "
-    end
-
     def to_s
       "#{prefix}#{@value}"
     end
@@ -316,15 +312,18 @@ module Rake
       chain.append(value)
     end
 
+    private
+
+    def prefix
+      "#{@tail.to_s} => "
+    end
+
     class EmptyInvocationChain
       def member?(obj)
         false
       end
       def append(value)
         InvocationChain.new(value, self)
-      end
-      def prefix
-        "#{to_s} => "
       end
       def to_s
         "TOP"
@@ -500,16 +499,9 @@ module Rake
         puts "** Execute #{name}"
       end
       application.enhance_with_matching_rule(name) if @actions.empty?
-      @actions.each { |act|
-        case act.arity
-        when 0
-          act.call
-        when 1
-          act.call(self)
-        else
-          act.call(self, *args)
-        end
-      }
+      @actions.each do |act|
+        (act.arity == 1) ? act.call(self) : act.call(self, *args)
+      end
     end
 
     # Is this task needed?
@@ -556,9 +548,9 @@ module Rake
       else
         @comment = @full_comment
       end
-      if @comment.length > 50
-        @comment = @comment[0, 47] + "..."
-      end
+#      if @comment.length > 50
+#        @comment = @comment[0, 47] + "..."
+#      end
     end
     private :add_comment
 
@@ -1143,7 +1135,7 @@ module Rake
         ln = __LINE__+1
         class_eval %{
           def #{sym}(*args, &block)
-            resolve if @pending
+            resolve
             result = @items.send(:#{sym}, *args, &block)
             FileList.new.import(result)
           end
@@ -1152,7 +1144,7 @@ module Rake
         ln = __LINE__+1
         class_eval %{
           def #{sym}(*args, &block)
-            resolve if @pending
+            resolve
             result = @items.send(:#{sym}, *args, &block)
             result.object_id == @items.object_id ? self : result
           end
@@ -1427,7 +1419,7 @@ module Rake
 
     # Convert a FileList to a string by joining all elements with a space.
     def to_s
-      resolve if @pending
+      resolve
       self.join(' ')
     end
 
@@ -1454,7 +1446,7 @@ module Rake
     DEFAULT_IGNORE_PROCS = [
       proc { |fn| fn =~ /(^|[\/\\])core$/ && ! File.directory?(fn) }
     ]
-    @exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
+#    @exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
 
     def import(array)
       @items = array
@@ -1467,26 +1459,6 @@ module Rake
       #   FileList.new(*args)
       def [](*args)
         new(*args)
-      end
-
-      # Set the ignore patterns back to the default value.  The default
-      # patterns will ignore files
-      # * containing "CVS" in the file path
-      # * containing ".svn" in the file path
-      # * ending with ".bak"
-      # * ending with "~"
-      # * named "core"
-      #
-      # Note that file names beginning with "." are automatically ignored by
-      # Ruby's glob patterns and are not specifically listed in the ignore
-      # patterns.
-      def select_default_ignore_patterns
-        @exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
-      end
-
-      # Clear the ignore patterns.
-      def clear_ignore_patterns
-        @exclude_patterns = [ /^$/ ]
       end
     end
   end # FileList
@@ -1759,7 +1731,7 @@ module Rake
     def make_sources(task_name, extensions)
       extensions.collect { |ext|
         case ext
-        when /^%/
+        when /%/
           task_name.pathmap(ext)
         when %r{/}
           ext
@@ -1920,13 +1892,9 @@ module Rake
     end
 
     def parse_task_string(string)
-      if string =~ /^([^\[]+)(\[(.*)\])?$/
+      if string =~ /^([^\[]+)(\[(.*)\])$/
         name = $1
-        if $3
-          args = $3.split(/\s*,\s*/)
-        else
-          args = []
-        end
+        args = $3.split(/\s*,\s*/)
       else
         name = string
         args = []
@@ -1999,7 +1967,7 @@ module Rake
       }
       if options.full_description
         displayable_tasks.each do |t|
-          puts "task #{t.name_with_args}"
+          puts "rake #{t.name_with_args}"
           t.full_comment.each do |line|
             puts "    #{line}"
           end

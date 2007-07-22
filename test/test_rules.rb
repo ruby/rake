@@ -113,10 +113,23 @@ class TestRules < Test::Unit::TestCase
       chdir("testdata") do
         create_file(".foo")
         rule '.o' => lambda{".foo"} do |t|
-          @runs << t.name
+          @runs << "#{t.name} - #{t.source}"
         end
         Task[OBJFILE].invoke
-        assert_equal [OBJFILE], @runs
+        assert_equal ["#{OBJFILE} - .foo"], @runs
+      end
+    end
+  end
+
+  def test_file_names_containing_percent_can_be_wrapped_in_lambda
+    verbose(false) do
+      chdir("testdata") do
+        create_file("foo%x")
+        rule '.o' => lambda{"foo%x"} do |t|
+          @runs << "#{t.name} - #{t.source}"
+        end
+        Task[OBJFILE].invoke
+        assert_equal ["#{OBJFILE} - foo%x"], @runs
       end
     end
   end
@@ -137,12 +150,25 @@ class TestRules < Test::Unit::TestCase
   def test_pathmap_automatically_applies_to_name
     verbose(false) do
       chdir("testdata") do
-        create_file("abc.c")
-        rule ".o" => '%{x,a}n.c' do |t|
+        create_file("zzabc.c")
+        rule ".o" => 'zz%{x,a}n.c' do |t|
           @runs << "#{t.name} - #{t.source}"
         end
         Task["xbc.o"].invoke
-        assert_equal ["xbc.o - abc.c"], @runs
+        assert_equal ["xbc.o - zzabc.c"], @runs
+      end
+    end
+  end
+
+  def test_plain_strings_are_just_filenames
+    verbose(false) do
+      chdir("testdata") do
+        create_file("plainname")
+        rule ".o" => 'plainname' do |t|
+          @runs << "#{t.name} - #{t.source}"
+        end
+        Task["xbc.o"].invoke
+        assert_equal ["xbc.o - plainname"], @runs
       end
     end
   end

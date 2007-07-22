@@ -18,8 +18,13 @@ module Session
 end
 
 class FunctionalTest < Test::Unit::TestCase
+
+  RUBY_COMMAND = 'ruby'
+
   def setup
     @rake_path = File.expand_path("bin/rake")
+    @coverage_aggregate_file = File.expand_path("rcov_aggregate")
+    @rcov_dir = File.expand_path("coverage")
     lib_path = File.expand_path("lib")
     @ruby_options = "-I#{lib_path} -I."
     @verbose = ! ENV['VERBOSE'].nil?
@@ -61,6 +66,15 @@ class FunctionalTest < Test::Unit::TestCase
     assert_match %r{^rake a *# A / A2 *$}, @out
     assert_match %r{^rake b *# B *$}, @out
     assert_no_match %r{^rake c}, @out
+    assert_match %r{^rake d *# x{47}\.\.\.$}, @out
+  end
+
+  def test_long_description
+    Dir.chdir("test/data/multidesc") do rake "--describe" end
+    assert_match %r{^task a\n *A / A2 *$}m, @out
+    assert_match %r{^task b\n *B *$}m, @out
+    assert_match %r{^task d\n *x{80}}m, @out
+    assert_no_match %r{^task c\n}m, @out
   end
 
   def test_rbext
@@ -212,10 +226,26 @@ class FunctionalTest < Test::Unit::TestCase
     end
   end
 
+  class << self
+    def format_command
+      @format_command ||= lambda { |ruby_options, rake_path, options|
+        "ruby #{ruby_options} #{rake_path} #{options}"
+      }
+    end
+    
+    def format_command=(fmt_command)
+      @format_command = fmt_command
+    end
+  end
+  
   def rake(*option_list)
+    self.class.format_command = lambda { |ruby_options, rake_path, options|
+      "rcov --output=#{@rcov_dir} --aggregate=#{@coverage_aggregate_file} #{ruby_options} #{rake_path} -- #{options}"
+    }
+
     options = option_list.join(' ')
     shell = Session::Shell.new
-    command = "ruby #{@ruby_options} #{@rake_path} #{options}"
+    command = self.class.format_command[@ruby_options, @rake_path, options]
     puts "COMMAND: [#{command}]" if @verbose
     @out, @err = shell.execute command
     @status = shell.exit_status

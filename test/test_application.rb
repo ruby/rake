@@ -38,6 +38,25 @@ class TestApplication < Test::Unit::TestCase
     assert_match(/# COMMENT/, out)
   end
 
+  def test_display_tasks_with_long_comments
+    @app.options.show_task_pattern = //
+    @app.last_description = "12345678901234567890123456789012345678901234567890123456789012345678901234567890"
+    @app.define_task(Rake::Task, "t")
+    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+    assert_match(/^rake t/, out)
+    assert_match(/# 12345678901234567890123456789012345678901234567890123456789012345\.\.\./, out)
+  end
+
+  def test_display_tasks_with_full_descriptions
+    @app.options.show_task_pattern = //
+    @app.options.full_description = true
+    @app.last_description = "COMMENT"
+    @app.define_task(Rake::Task, "t")
+    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+    assert_match(/^rake t$/, out)
+    assert_match(/^ {4}COMMENT$/, out)
+  end
+
   def test_finding_rakefile
     assert @app.instance_eval { have_rakefile }
     assert_equal "rakefile", @app.rakefile.downcase
@@ -253,15 +272,23 @@ class TestApplicationOptions < Test::Unit::TestCase
   end
 
   def test_help
-    flags('--help', '-H') do |opts, output|
+    flags('--help', '-H') do |opts|
       assert_match(/\Arake/, @out)
       assert_match(/--help/, @out)
       assert_equal :exit, @exit
     end
   end
 
+  def test_describe
+    flags('--describe') do |opts|
+      assert opts.full_description
+      assert opts.show_tasks
+      assert_equal(//.to_s, opts.show_task_pattern.to_s)
+    end
+  end
+
   def test_usage
-    flags('--usage', '-h') do |opts, output|
+    flags('--usage', '-h') do |opts|
       assert_match(/\Arake/, @out)
       assert_match(/\boptions\b/, @out)
       assert_match(/\btargets\b/, @out)

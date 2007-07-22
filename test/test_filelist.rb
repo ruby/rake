@@ -13,7 +13,7 @@ class TestFileList < Test::Unit::TestCase
   end
 
   def teardown
-    FileList.select_default_ignore_patterns
+#    FileList.select_default_ignore_patterns
     FileUtils.rm_rf("testdata")
   end
 
@@ -543,7 +543,7 @@ class TestFileList < Test::Unit::TestCase
   def test_file_utils_can_use_filelists
     cfiles = FileList['testdata/*.c']
     
-    cp cfiles, @cdir
+    cp cfiles, @cdir, :verbose => false
     
     assert File.exist?(File.join(@cdir, 'abc.c'))
     assert File.exist?(File.join(@cdir, 'xyz.c'))
