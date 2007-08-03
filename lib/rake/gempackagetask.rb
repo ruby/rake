@@ -6,6 +6,7 @@
 require 'rubygems'
 require 'rake'
 require 'rake/packagetask'
+require 'rubygems/builder'
 
 begin
   Gem.manage_gems
