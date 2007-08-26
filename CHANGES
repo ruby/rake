@@ -11,6 +11,7 @@
   exit(n) calls. (patch provided by Stephen Touset)
 * Fixed error in functional tests that were not including session (and
   silently skipping the functionl tests.
+* Removed --usage and make -h the same as -H.
 
 == Version 0.7.3
 
