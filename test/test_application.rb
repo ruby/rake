@@ -272,9 +272,11 @@ class TestApplicationOptions < Test::Unit::TestCase
   end
 
   def test_help
-    flags('--help', '-H') do |opts|
+    flags('--help', '-H', '-h') do |opts|
       assert_match(/\Arake/, @out)
-      assert_match(/--help/, @out)
+      assert_match(/\boptions\b/, @out)
+      assert_match(/\btargets\b/, @out)
+      assert_equal :exit, @exit
       assert_equal :exit, @exit
     end
   end
@@ -284,15 +286,6 @@ class TestApplicationOptions < Test::Unit::TestCase
       assert opts.full_description
       assert opts.show_tasks
       assert_equal(//.to_s, opts.show_task_pattern.to_s)
-    end
-  end
-
-  def test_usage
-    flags('--usage', '-h') do |opts|
-      assert_match(/\Arake/, @out)
-      assert_match(/\boptions\b/, @out)
-      assert_match(/\btargets\b/, @out)
-      assert_equal :exit, @exit
     end
   end
 
