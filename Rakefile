@@ -78,13 +78,13 @@ end
 Rake::TestTask.new(:test_functional) do |t|
   t.test_files = FileList['test/fun*.rb']
   t.warning = true
-  t.warning = true
+  t.verbose = false
 end
 
 Rake::TestTask.new(:test_contribs) do |t|
   t.test_files = FileList['test/contrib/test*.rb']
-  t.verbose = false
   t.warning = true
+  t.verbose = false
 end
 
 begin

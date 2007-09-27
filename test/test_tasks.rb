@@ -169,9 +169,9 @@ class TestTask < Test::Unit::TestCase
     t.enhance do ||
         notes << :b
     end
-    t.enhance do |t|
+    t.enhance do |task|
       notes << :c
-      assert_kind_of Task, t
+      assert_kind_of Task, task
     end
     t.enhance do |t2, a|
       notes << :d
