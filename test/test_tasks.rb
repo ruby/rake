@@ -29,6 +29,11 @@ class TestTask < Test::Unit::TestCase
     assert_equal [], t.args
   end
 
+  def test_inspect
+    t = intern(:foo).enhance([:bar, :baz])
+    assert_equal "<Rake::Task foo [bar, baz]>", t.inspect
+  end
+
   def test_invoke
     runlist = []
     t1 = intern(:t1).enhance([:t2, :t3]) { |t| runlist << t.name; 3321 }

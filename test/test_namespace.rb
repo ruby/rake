@@ -7,11 +7,10 @@ rescue LoadError
 end
 
 require 'test/unit'
-require 'flexmock'
+require 'flexmock/test_unit'
 require 'rake'
 
 class TestNameSpace < Test::Unit::TestCase
-  include FlexMock::TestCase
 
   def test_namespace_creation
     mgr = flexmock("TaskManager")

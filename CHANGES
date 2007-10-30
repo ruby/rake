@@ -12,6 +12,7 @@
 * Fixed error in functional tests that were not including session (and
   silently skipping the functionl tests.
 * Removed --usage and make -h the same as -H.
+* Make a prettier inspect for tasks.
 
 == Version 0.7.3
 

@@ -372,6 +372,10 @@ module Rake
       name
     end
 
+    def inspect
+      "<#{self.class} #{name} => [#{prerequisites.join(', ')}]>"
+    end
+
     # List of sources for task.
     attr_writer :sources
     def sources
@@ -1936,14 +1940,9 @@ module Rake
       return false
     end
 
-    # Display the program usage line.
-    def usage
-      puts "rake [-f rakefile] {options} targets..."
-    end
-
     # Display the rake command line help.
     def help
-      usage
+      puts "rake [-f rakefile] {options} targets..."
       puts
       puts "Options are ..."
       puts
@@ -2051,9 +2050,6 @@ module Rake
       when '--trace'
         options.trace = true
         verbose(true)
-      when '--usage'
-        usage
-        exit
       when '--verbose'
         verbose(true)
       when '--version'

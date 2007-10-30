@@ -9,14 +9,13 @@ end
 require 'test/unit'
 require 'rake'
 require 'test/capture_stdout'
-require 'flexmock'
+require 'flexmock/test_unit'
 
 TESTING_REQUIRE = [ ]
 
 ######################################################################
 class TestApplication < Test::Unit::TestCase
   include CaptureStdout
-  include FlexMock::TestCase
 
   def setup
     @app = Rake::Application.new

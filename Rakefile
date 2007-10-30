@@ -97,13 +97,12 @@ begin
     ]
     t.test_files = FileList[
       'test/test*.rb', 'test/functional.rb'
-#      'test/contrib/test*.rb'
     ]
     t.output_dir = 'coverage'
     t.verbose = true
   end
 rescue LoadError
-  # No rcov available
+  puts "RCov is not available"
 end
 
 directory 'testdata'

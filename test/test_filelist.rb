@@ -2,6 +2,7 @@
 
 require 'test/unit'
 require 'rake'
+
 require 'test/capture_stdout'
 
 class TestFileList < Test::Unit::TestCase
