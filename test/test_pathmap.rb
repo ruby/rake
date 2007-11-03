@@ -181,6 +181,22 @@ class TestPathMapExplode < Test::Unit::TestCase
   end
 end
 
+class TestPathMapPartial < Test::Unit::TestCase
+  def test_pathmap_partial
+    @path = "1/2/file"
+    class << @path
+      send :public, :pathmap_partial 
+    end
+    assert_equal("1", @path.pathmap_partial(1))
+    assert_equal("1/2", @path.pathmap_partial(2))
+    assert_equal("1/2", @path.pathmap_partial(3))
+    assert_equal(".", @path.pathmap_partial(0))
+    assert_equal("2", @path.pathmap_partial(-1))
+    assert_equal("1/2", @path.pathmap_partial(-2))
+    assert_equal("1/2", @path.pathmap_partial(-3))
+  end
+end
+
 class TestFileListPathMap < Test::Unit::TestCase
   def test_file_list_supports_pathmap
     assert_equal ['a', 'b'], FileList['dir/a.rb', 'dir/b.rb'].pathmap("%n")

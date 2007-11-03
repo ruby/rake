@@ -31,7 +31,7 @@ class TestTask < Test::Unit::TestCase
 
   def test_inspect
     t = intern(:foo).enhance([:bar, :baz])
-    assert_equal "<Rake::Task foo [bar, baz]>", t.inspect
+    assert_equal "<Rake::Task foo => [bar, baz]>", t.inspect
   end
 
   def test_invoke

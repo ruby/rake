@@ -9,7 +9,7 @@ end
 require 'test/unit'
 require 'test/capture_stdout'
 require 'rake'
-require 'flexmock/test_case'
+require 'flexmock/test_unit'
 
 class TestTopLevelFunctions < Test::Unit::TestCase
   include CaptureStdout
