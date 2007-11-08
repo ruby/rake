@@ -103,23 +103,19 @@ class String
     # front end (left hand side) if +n+ is positive.  Include |+n+|
     # directories from the back end (right hand side) if +n+ is negative.
     def pathmap_partial(n)
-      target = File.dirname(self)
-      dirs = target.pathmap_explode
-      if n > 0
-        File.join(dirs[0...n])
-      elsif n < 0
-        partial = dirs[n..-1]
-        if partial.nil? || partial.empty?
-          target
+      dirs = File.dirname(self).pathmap_explode
+      partial_dirs =
+        if n > 0
+          dirs[0...n]
+        elsif n < 0
+          dirs.reverse[0...-n].reverse
         else
-          File.join(partial)
+          "."
         end
-      else
-        "."
-      end
+      File.join(partial_dirs)
     end
     protected :pathmap_partial
-
+      
     # Preform the pathmap replacement operations on the given path. The
     # patterns take the form 'pat1,rep1;pat2,rep2...'.
     def pathmap_replace(patterns, &block)
@@ -285,6 +281,81 @@ module Rake
   end
 
   ####################################################################
+  # TaskAguments manage the arguments passed to a task.
+  #
+  class TaskArguments
+    include Enumerable
+
+    attr_reader :names
+
+    def initialize(names, values, parent=nil)
+      @names = names
+      @values = values
+      @parent = parent
+      @hash = {}
+      names.each_with_index { |name, i|
+        @hash[name.to_s] = @values[i]
+      }
+    end
+
+    # Create a new argument scope using the prerequisite argument
+    # names.
+    def new_scope(names)
+      values = names.collect { |n| self[n] }
+      self.class.new(names, values, self)
+    end
+
+    # Find an argument value by name or index.
+    def [](index)
+      case index
+      when Integer
+        @values[index]
+      else
+        lookup(index.to_s)
+      end
+    end
+
+    # Compare to an array
+    def ==(other)
+      to_ary == other
+    end
+
+    def to_ary
+      @values
+    end
+
+    def each(&block)
+      @values.each(&block)
+    end
+
+    def method_missing(sym, *args, &block)
+      lookup(sym.to_s)
+    end
+
+    def to_s
+      "[" + @values.collect { |v| v.inspect }.join(', ') + "]"
+    end
+
+    def inspect
+      to_s
+    end
+    
+    protected
+    
+    def lookup(name)
+      if @hash.has_key?(name)
+        @hash[name]
+      elsif ENV.has_key?(name)
+        ENV[name]
+      elsif ENV.has_key?(name.upcase)
+        ENV[name.upcase]
+      elsif @parent
+        @parent.lookup(name)
+      end
+    end
+  end
+
+  ####################################################################
   # InvocationChain tracks the chain of task invocations to detect
   # circular dependencies.
   class InvocationChain
@@ -364,9 +435,6 @@ module Rake
     # Array of nested namespaces names used for task lookup by this task.
     attr_reader :scope
 
-    # List of arguments to the task
-    attr_accessor :args
-
     # Return task name
     def to_s
       name
@@ -399,7 +467,6 @@ module Rake
       @lock = Mutex.new
       @application = app
       @scope = app.current_scope
-      @args = []
       @arg_names = nil
     end
 
@@ -445,13 +512,14 @@ module Rake
     end
 
     # Invoke the task if it is needed.  Prerequites are invoked first.
-    def invoke
-      invoke_with_call_chain(InvocationChain::EMPTY)
+    def invoke(*args)
+      task_args = TaskArguments.new(arg_names, args)
+      invoke_with_call_chain(task_args, InvocationChain::EMPTY)
     end
 
     # Same as invoke, but explicitly pass a call chain to detect
     # circular dependencies.
-    def invoke_with_call_chain(invocation_chain)
+    def invoke_with_call_chain(task_args, invocation_chain)
       new_chain = InvocationChain.append(self, invocation_chain)
       @lock.synchronize do
         if application.options.trace
@@ -459,30 +527,30 @@ module Rake
         end
         return if @already_invoked
         @already_invoked = true
-        invoke_prerequisites(new_chain)
-        execute if needed?
+        invoke_prerequisites(task_args, new_chain)
+        execute(task_args) if needed?
       end
     end
     protected :invoke_with_call_chain
 
     # Invoke all the prerequisites of a task.
-    def invoke_prerequisites(invocation_chain)
+    def invoke_prerequisites(task_args, invocation_chain)
       @prerequisites.each { |n|
         prereq = application[n, @scope]
-        setup_arguments(prereq)
-        prereq.invoke_with_call_chain(invocation_chain)
+        prereq_args = task_args.new_scope(prereq.arg_names)
+        prereq.invoke_with_call_chain(prereq_args, invocation_chain)
       }
     end
 
     # Setup the arguments to be passed to prerequesites.
-    def setup_arguments(prereq)   # :nodoc:
+    def xsetup_arguments(prereq)   # :nodoc:
       if ! arg_names.empty? && ! prereq.arg_names.empty?
         prereq.args = prereq.arg_names.collect do |name|
           arg_map[name] ? args[arg_map[name]] : nil
         end
       end
     end
-    private :setup_arguments
+    #private :setup_arguments
 
     # Format the trace flags for display.
     def format_trace_flags
@@ -494,7 +562,7 @@ module Rake
     private :format_trace_flags
 
     # Execute the actions associated with this task.
-    def execute
+    def execute(args)
       if application.options.dryrun
         puts "** Execute (dry run) #{name}"
         return
@@ -504,7 +572,12 @@ module Rake
       end
       application.enhance_with_matching_rule(name) if @actions.empty?
       @actions.each do |act|
-        (act.arity == 1) ? act.call(self) : act.call(self, *args)
+        case act.arity
+        when 1
+          act.call(self)
+        else
+          act.call(self, args)
+        end
       end
     end
 
@@ -704,9 +777,9 @@ module Rake
   # parallel using Ruby threads.
   #
   class MultiTask < Task
-    def invoke_prerequisites(invocation_chain)
+    def invoke_prerequisites(args, invocation_chain)
       threads = @prerequisites.collect { |p|
-        Thread.new(p) { |r| application[r].invoke_with_call_chain(invocation_chain) }
+        Thread.new(p) { |r| application[r].invoke_with_call_chain(args, invocation_chain) }
       }
       threads.each { |t| t.join }
     end
@@ -1888,9 +1961,7 @@ module Rake
     def invoke_task(task_string)
       name, args = parse_task_string(task_string)
       t = self[name]
-      t.args = args if args
-      t.invoke
-      t.args = []
+      t.invoke(*args)
     end
 
     def parse_task_string(string)

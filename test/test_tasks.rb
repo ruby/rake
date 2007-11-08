@@ -22,11 +22,10 @@ class TestTask < Test::Unit::TestCase
     assert_equal [], t.prerequisites
     assert t.prerequisites.is_a?(FileList)
     assert t.needed?
-    t.execute
+    t.execute(0)
     assert_equal t, arg
     assert_nil t.source
     assert_equal [], t.sources
-    assert_equal [], t.args
   end
 
   def test_inspect
@@ -156,14 +155,10 @@ class TestTask < Test::Unit::TestCase
   end
 
   def test_tasks_can_access_arguments
-    t = intern(:t).enhance do |t|
-      a, b, c = t.args
-      assert_equal 1, a
-      assert_equal 2, b
-      assert_equal 3, c
+    t = intern(:t).enhance do |t, args|
+      assert_equal [1, 2, 3], args
     end
-    t.args = [1, 2, 3]
-    t.invoke
+    t.invoke(1, 2, 3)
   end
 
   def test_actions_of_various_arity_are_ok_with_args
@@ -178,70 +173,47 @@ class TestTask < Test::Unit::TestCase
       notes << :c
       assert_kind_of Task, task
     end
-    t.enhance do |t2, a|
+    t.enhance do |t2, args|
       notes << :d
       assert_equal t, t2
-      assert_equal 1, a
+      assert_equal [1], args
     end
-    t.args = [1, 2, 3]
-    assert_nothing_raised do t.invoke end
+    assert_nothing_raised do t.invoke(1) end
     assert_equal [:a, :b, :c, :d], notes
   end
 
   def test_arguments_are_passed_to_block
-    t = intern(:t).enhance { |t, a|
-      assert_equal 1, a
+    t = intern(:t).enhance { |t, args|
+      assert_equal [1, 2], args
     }
-    t.args = [1]
-    t.invoke
-  end
-
-  def test_extra_arguments_are_ignored
-    t = intern(:t).enhance { |t, a|
-      assert_equal 1, a
-    }
-    t.args = [1, 2]
-    t.invoke
+    t.invoke(1, 2)
   end
 
   def test_extra_parameters_are_nil
-    t = intern(:t).enhance { |t, a, b, c|
-      assert_equal 1, a
-      assert_equal 2, b
-      assert_nil c
+    t = intern(:t).enhance { |t, args|
+      assert_equal [1, 2], args
+      assert_nil args[2]
     }
-    t.args = [1, 2]
-    t.invoke
-  end
-
-  def test_extra_arguments_can_be_splat_captured
-    t = intern(:t).enhance { |t, a, *b|
-      assert_equal 1, a
-      assert_equal [2, 3], b
-    }
-    t.args = [1, 2, 3]
-    t.invoke
+    t.invoke(1, 2)
   end
 
   def test_arguments_are_passed_to_all_blocks
     counter = 0
-    t = intern(:t).enhance { |t, a|
-      assert_equal 1, a
+    t = intern(:t).enhance { |t, args|
+      assert_equal [1], args
       counter += 1
     }
-    intern(:t).enhance { |t, a|
-      assert_equal 1, a
+    intern(:t).enhance { |t, args|
+      assert_equal [1], args
       counter += 1
     }
-    t.args = [1]
-    t.invoke
+    t.invoke(1)
     assert_equal 2, counter
   end
 
   def test_block_with_no_parameters_is_ok
     t = intern(:t).enhance { }
-    t.args = [1,2]
-    t.invoke
+    t.invoke(1, 2)
   end
 
   def test_descriptions_with_no_args
@@ -262,37 +234,47 @@ class TestTask < Test::Unit::TestCase
     assert_equal ["a", "b"],t.arg_names
   end
 
-  def test_named_args_are_passed_to_prereqs
+  def test_task_args_can_be_named
+    desc "[aa,bb] T"
+    t = intern(:tt).enhance { |t, args|
+      assert_equal [1, 2], args
+      assert_equal 1, args.aa
+    }
+    t.invoke(1, 2)
+  end
+
+  def xtest_named_args_are_passed_to_prereqs
     value = nil
     desc "[rev] pre"
     pre = intern(:pre).enhance { |t, rev| value = rev }
     desc "[name,rev] t"
     t = intern(:t).enhance([:pre])
-    t.args = ["bill", "1.2"]
-    t.invoke
+    t.invoke("bill", "1.2")
     assert_equal "1.2", value
   end
 
   def test_args_not_passed_if_no_prereq_names
     value = nil
     desc "pre"
-    pre = intern(:pre).enhance { |t, rev| value = rev }
+    pre = intern(:pre).enhance { |t, args|
+      assert_equal [], args
+      assert_equal "bill", args.name
+    }
     desc "[name,rev] t"
     t = intern(:t).enhance([:pre])
-    t.args = ["bill", "1.2"]
-    t.invoke
+    t.invoke("bill", "1.2")
     assert_nil value
   end
 
   def test_args_not_passed_if_no_arg_names
     value = nil
     desc "[rev] pre"
-    pre = intern(:pre).enhance { |t, rev| value = rev }
+    pre = intern(:pre).enhance { |t, args|
+      assert_equal [nil], args
+    }
     desc "t"
     t = intern(:t).enhance([:pre])
-    t.args = ["bill", "1.2"]
-    t.invoke
-    assert_nil value
+    t.invoke("bill", "1.2")
   end
 
   def test_task_can_have_arg_names_but_no_comment
