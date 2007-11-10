@@ -2042,7 +2042,7 @@ module Rake
           puts
         end
       else
-        width = displayable_tasks.collect { |t| t.name_with_args.length }.max
+        width = displayable_tasks.collect { |t| t.name_with_args.length }.max || 10
         max_column = 80 - name.size - width - 7
         displayable_tasks.each do |t|
           printf "#{name} %-#{width}s  # %s\n",
