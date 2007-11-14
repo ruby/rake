@@ -7,7 +7,7 @@ class TestTestTask < Test::Unit::TestCase
   include Rake
   def setup
     Task.clear
-    ENV['TEST'] = nil
+    ENV.delete('TEST')
   end
 
   def teardown
@@ -43,7 +43,6 @@ class TestTestTask < Test::Unit::TestCase
   end
 
   def test_pattern
-    ENV['TEST'] = nil
     tt = Rake::TestTask.new do |t|
       t.pattern = '*.rb'
     end

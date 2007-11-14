@@ -2,6 +2,7 @@
 
 require 'test/unit'
 require 'rake'
+require 'stringio'
 
 ######################################################################
 class TestExtension < Test::Unit::TestCase
@@ -40,7 +41,6 @@ class TestExtension < Test::Unit::TestCase
         end
       end
     end
-    
   end
 
   def test_methods_actually_exist

@@ -248,7 +248,7 @@ class TestApplicationOptions < Test::Unit::TestCase
     assert_nil opts.show_prereqs
     assert_nil opts.show_tasks
     assert_nil opts.classic_namespace
-    assert_equal 'rakelib', opts.rakelib
+    assert_equal ['rakelib'], opts.rakelib
     assert ! RakeFileUtils.verbose_flag
     assert ! RakeFileUtils.nowrite_flag
   end

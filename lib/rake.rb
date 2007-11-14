@@ -43,7 +43,6 @@ require 'ostruct'
 # Rake extensions to Module.
 #
 class Module
-
   # Check for an existing method in the current class before extending.  IF
   # the method already exists, then a warning is printed and the extension is
   # not added.  Otherwise the block is yielded and any definitions in the
@@ -60,7 +59,7 @@ class Module
   #   end
   #
   def rake_extension(method)
-    if instance_methods.include?(method)
+    if instance_methods.include?(method.to_s) || instance_methods.include?(method.to_sym)
       $stderr.puts "WARNING: Possible conflict with Rake extension: #{self}##{method} already exists"
     else
       yield
@@ -936,7 +935,7 @@ module FileUtils
     unless block_given?
       show_command = cmd.join(" ")
       show_command = show_command[0,42] + "..."
-        # TODO code application logic heref show_command.length > 45
+      # TODO code application logic heref show_command.length > 45
       block = lambda { |ok, status|
         ok or fail "Command failed with status (#{status.exitstatus}): [#{show_command}]"
       }
@@ -959,7 +958,7 @@ module FileUtils
     if args.length > 1 then
       sh(*([RUBY] + args + [options]), &block)
     else
-      sh("#{RUBY} #{args}", options, &block)
+      sh("#{RUBY} #{args.first}", options, &block)
     end
   end
 
@@ -1472,14 +1471,14 @@ module Rake
     # Return a new file list that only contains file names from the current
     # file list that exist on the file system.
     def existing
-      select { |fn| File.exists?(fn) }
+      select { |fn| File.exist?(fn) }
     end
 
     # Modify the current file list so that it contains only file name that
     # exist on the file system.
     def existing!
       resolve
-      @items = @items.select { |fn| File.exists?(fn) }
+      @items = @items.select { |fn| File.exist?(fn) }
       self
     end
 
@@ -1817,7 +1816,11 @@ module Rake
         when String
           ext
         when Proc
-          ext.call(task_name)
+          if ext.arity == 1
+            ext.call(task_name)
+          else
+            ext.call
+          end
         else
           fail "Don't know how to handle rule dependent: #{ext.inspect}"
         end
@@ -2134,7 +2137,7 @@ module Rake
 
     # Read and handle the command line options.
     def handle_options
-      options.rakelib = 'rakelib'
+      options.rakelib = ['rakelib']
 
       opts = GetoptLong.new(*command_line_options)
       opts.each { |opt, value| do_option(opt, value) }

@@ -197,7 +197,7 @@ class TestFileList < Test::Unit::TestCase
 
   def test_to_s_pending
     fl = FileList['testdata/abc.*']
-    assert_equal  %{testdata/abc.c testdata/abc.h testdata/abc.x}.sort, fl.to_s.sort
+    assert_equal  %{testdata/abc.c testdata/abc.h testdata/abc.x}, fl.to_s
   end
 
   def test_inspect_pending
@@ -468,7 +468,7 @@ class TestFileList < Test::Unit::TestCase
     assert_equal FileList,  b[0].class
     assert_equal FileList,  b[1].class
 
-    b = a.zip(['x', 'y'])
+    b = a.zip(['x', 'y']).to_a
     assert_equal [['a', 'x'], ['b', 'y']], b
     assert_equal Array, b.class
     assert_equal Array, b[0].class
