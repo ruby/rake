@@ -182,15 +182,13 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_bad_run
-    Dir.chdir("test/data/no_files") do
-      @app.intern(Rake::Task, "default").enhance { fail }
-      ARGV.clear
-      ARGV << '-f' << '-s' <<  '--rakelib=""'
-      assert_raise(SystemExit) {
-        err = capture_stderr { @app.run }
-        assert_match(/see full trace/, err)
-      }
-    end
+    @app.intern(Rake::Task, "default").enhance { fail }
+    ARGV.clear
+    ARGV << '-f' << '-s' <<  '--rakelib=""'
+    assert_raise(SystemExit) {
+      err = capture_stderr { @app.run }
+      assert_match(/see full trace/, err)
+    }
   ensure
     ARGV.clear
   end
