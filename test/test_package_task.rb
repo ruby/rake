@@ -96,7 +96,7 @@ else
         p.package_files << "y"
       end
       assert_equal ["x", "y"], pkg.package_files
-      assert_equal "pkgr-1.2.3-mswin32.gem", pkg.gem_file
+      assert_match(/pkgr-1\.2\.3-.*mswin32.*\.gem/, pkg.gem_file)
     end
 
     def test_gem_package_with_current_platform

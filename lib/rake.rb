@@ -2039,7 +2039,7 @@ module Rake
       if options.full_description
         displayable_tasks.each do |t|
           puts "rake #{t.name_with_args}"
-          t.full_comment.each do |line|
+          t.full_comment.split("\n").each do |line|
             puts "    #{line}"
           end
           puts
@@ -2151,6 +2151,8 @@ module Rake
         $dryrun = options.dryrun
         $silent = options.silent
       end
+    rescue NoMethodError => ex
+      raise GetoptLong::InvalidOption, "While parsing options, error = #{ex.class}:#{ex.message}"
     end
 
     # Similar to the regular Ruby +require+ command, but will check

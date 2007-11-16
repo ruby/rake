@@ -8,8 +8,8 @@ end
 
 require 'test/unit'
 require 'rake'
+require 'test/rake_test_setup'
 require 'test/capture_stdout'
-require 'flexmock/test_unit'
 
 TESTING_REQUIRE = [ ]
 
@@ -19,6 +19,7 @@ class TestApplication < Test::Unit::TestCase
 
   def setup
     @app = Rake::Application.new
+    @app.options.rakelib = []
   end
 
   def test_constant_warning
@@ -140,6 +141,8 @@ class TestApplication < Test::Unit::TestCase
 
   def test_good_run
     ran = false
+    ARGV.clear
+    ARGV << '--rakelib=""'
     @app.options.silent = true
     @app.instance_eval do
       intern(Rake::Task, "default").enhance { ran = true }
@@ -151,7 +154,7 @@ class TestApplication < Test::Unit::TestCase
   def test_display_task_run
     ran = false
     ARGV.clear
-    ARGV << '-f' << '-s' << '--tasks'
+    ARGV << '-f' << '-s' << '--tasks' << '--rakelib=""'
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "default")
     out = capture_stdout { @app.run }
@@ -164,7 +167,7 @@ class TestApplication < Test::Unit::TestCase
   def test_display_prereqs
     ran = false
     ARGV.clear
-    ARGV << '-f' << '-s' << '--prereqs'
+    ARGV << '-f' << '-s' << '--prereqs' << '--rakelib=""'
     @app.last_description = "COMMENT"
     t = @app.define_task(Rake::Task, "default")
     t.enhance([:a, :b])
@@ -179,13 +182,15 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_bad_run
-    @app.intern(Rake::Task, "default").enhance { fail }
-    ARGV.clear
-    ARGV << '-f' << '-s'
-    assert_raise(SystemExit) {
-      err = capture_stderr { @app.run }
-      assert_match(/see full trace/, err)
-    }
+    Dir.chdir("test/data/no_files") do
+      @app.intern(Rake::Task, "default").enhance { fail }
+      ARGV.clear
+      ARGV << '-f' << '-s' <<  '--rakelib=""'
+      assert_raise(SystemExit) {
+        err = capture_stderr { @app.run }
+        assert_match(/see full trace/, err)
+      }
+    end
   ensure
     ARGV.clear
   end
@@ -394,8 +399,12 @@ class TestApplicationOptions < Test::Unit::TestCase
       ex = assert_raise(GetoptLong::InvalidOption) do
         flags('--bad-option') 
       end
-      assert_match(/unrecognized option/, ex.message)
-      assert_match(/--bad-option/, ex.message)
+      if ex.message =~ /^While/ # Ruby 1.9 error message
+        assert_match(/while parsing/i, ex.message)
+      else                      # Ruby 1.8 error message
+        assert_match(/unrecognized option/i, ex.message)
+        assert_match(/--bad-option/, ex.message)
+      end
     end
   end
 
@@ -410,7 +419,7 @@ class TestApplicationOptions < Test::Unit::TestCase
   end
   
   def test_environment_definition
-    ENV['TESTKEY'] = nil
+    ENV.delete('TESTKEY')
     command_line("a", "TESTKEY=12")
     assert_equal ["a"], @tasks.sort
     assert '12', ENV['TESTKEY']
