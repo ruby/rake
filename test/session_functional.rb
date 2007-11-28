@@ -66,15 +66,15 @@ class FunctionalTest < Test::Unit::TestCase
     assert_match %r{^rake a *# A / A2 *$}, @out
     assert_match %r{^rake b *# B *$}, @out
     assert_no_match %r{^rake c}, @out
-    assert_match %r{^rake d *# x{47}\.\.\.$}, @out
+    assert_match %r{^rake d *# x{65}\.\.\.$}, @out
   end
 
   def test_long_description
     Dir.chdir("test/data/multidesc") do rake "--describe" end
-    assert_match %r{^task a\n *A / A2 *$}m, @out
-    assert_match %r{^task b\n *B *$}m, @out
-    assert_match %r{^task d\n *x{80}}m, @out
-    assert_no_match %r{^task c\n}m, @out
+    assert_match %r{^rake a\n *A / A2 *$}m, @out
+    assert_match %r{^rake b\n *B *$}m, @out
+    assert_match %r{^rake d\n *x{80}}m, @out
+    assert_no_match %r{^rake c\n}m, @out
   end
 
   def test_rbext
@@ -239,9 +239,9 @@ class FunctionalTest < Test::Unit::TestCase
   end
   
   def rake(*option_list)
-    self.class.format_command = lambda { |ruby_options, rake_path, options|
-      "rcov --output=#{@rcov_dir} --aggregate=#{@coverage_aggregate_file} #{ruby_options} #{rake_path} -- #{options}"
-    }
+#     self.class.format_command = lambda { |ruby_options, rake_path, options|
+#       "rcov --output=#{@rcov_dir} --aggregate=#{@coverage_aggregate_file} #{ruby_options} #{rake_path} -- #{options}"
+#     }
 
     options = option_list.join(' ')
     shell = Session::Shell.new
