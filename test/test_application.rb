@@ -256,6 +256,13 @@ class TestApplicationOptions < Test::Unit::TestCase
     assert ! RakeFileUtils.nowrite_flag
   end
 
+  def test_bad_options
+    assert_raise GetoptLong::InvalidOption do
+      flags('--bad', '-t') do |opts|
+      end
+    end
+  end
+  
   def test_trace_option
     flags('--trace', '-t') do |opts|
       assert opts.trace
@@ -422,7 +429,7 @@ class TestApplicationOptions < Test::Unit::TestCase
     assert_equal ["a"], @tasks.sort
     assert '12', ENV['TESTKEY']
   end
-  
+
   private 
 
   def flags(*sets)

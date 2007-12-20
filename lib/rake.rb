@@ -495,16 +495,6 @@ module Rake
       @arg_names ? "[#{(arg_names || []).join(',')}]" : nil
     end
 
-    # Hash of argument names to argument positions (0 based).  (empty if no
-    # named arguments).
-    def arg_map
-      result = {}
-      arg_names.each_with_index do |n, i|
-        result[n] = i
-      end
-      result
-    end
-
     # Name of arguments for this task.
     def arg_names
       @arg_names || []
@@ -540,16 +530,6 @@ module Rake
         prereq.invoke_with_call_chain(prereq_args, invocation_chain)
       }
     end
-
-    # Setup the arguments to be passed to prerequesites.
-    def xsetup_arguments(prereq)   # :nodoc:
-      if ! arg_names.empty? && ! prereq.arg_names.empty?
-        prereq.args = prereq.arg_names.collect do |name|
-          arg_map[name] ? args[arg_map[name]] : nil
-        end
-      end
-    end
-    #private :setup_arguments
 
     # Format the trace flags for display.
     def format_trace_flags
@@ -2152,6 +2132,7 @@ module Rake
         $silent = options.silent
       end
     rescue NoMethodError => ex
+      puts "DBG: RESCUING xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
       raise GetoptLong::InvalidOption, "While parsing options, error = #{ex.class}:#{ex.message}"
     end
 
