@@ -312,8 +312,8 @@ task :release, :rel, :reuse, :reltest,
 end
 
 # Validate that everything is ready to go for a release.
-task :prerelease, :rel, :reuse, :reltest do |t, rel, reuse, reltest|
-  $package_version = rel
+task :prerelease, :rel, :reuse, :reltest do |t, args|
+  $package_version = args.rel
   announce 
   announce "**************************************************************"
   announce "* Making RubyGem Release #{$package_version}"
@@ -322,18 +322,18 @@ task :prerelease, :rel, :reuse, :reltest do |t, rel, reuse, reltest|
   announce  
 
   # Is a release number supplied?
-  unless rel
+  unless args.rel
     fail "Usage: rake release[X.Y.Z] [REUSE=tag_suffix]"
   end
 
   # Is the release different than the current release.
   # (or is REUSE set?)
-  if $package_version == CURRENT_VERSION && ! reuse
+  if $package_version == CURRENT_VERSION && ! args.reuse
     fail "Current version is #{$package_version}, must specify REUSE=tag_suffix to reuse version"
   end
 
   # Are all source files checked in?
-  if reltest
+  if args.reltest
     announce "Release Task Testing, skipping checked-in file test"
   else
     announce "Checking for unchecked-in files..."
@@ -346,16 +346,16 @@ task :prerelease, :rel, :reuse, :reltest do |t, rel, reuse, reltest|
 end
 
 task :update_version, :rel, :reuse, :reltest,
-  :needs => [:prerelease] do |t, rel, reuse, reltest|
-  if rel == CURRENT_VERSION
+  :needs => [:prerelease] do |t, args|
+  if args.rel == CURRENT_VERSION
     announce "No version change ... skipping version update"
   else
-    announce "Updating Rake version to #{rel}"
+    announce "Updating Rake version to #{args.rel}"
     open("lib/rake.rb") do |rakein|
       open("lib/rake.rb.new", "w") do |rakeout|
 	rakein.each do |line|
 	  if line =~ /^RAKEVERSION\s*=\s*/
-	    rakeout.puts "RAKEVERSION = '#{rel}'"
+	    rakeout.puts "RAKEVERSION = '#{args.rel}'"
 	  else
 	    rakeout.puts line
 	  end
@@ -363,21 +363,21 @@ task :update_version, :rel, :reuse, :reltest,
       end
     end
     mv "lib/rake.rb.new", "lib/rake.rb"
-    if reltest
+    if args.reltest
       announce "Release Task Testing, skipping commiting of new version"
     else
-      sh %{svn commit -m "Updated to version #{rel}" lib/rake.rb} # "
+      sh %{svn commit -m "Updated to version #{args.rel}" lib/rake.rb} # "
     end
   end
 end
 
 desc "Tag all the CVS files with the latest release number (REL=x.y.z)"
 task :tag, :rel, :reuse, :reltest,
-  :needs => [:prerelease] do |t, rel, reuse, reltest|
-  reltag = "REL_#{rel.gsub(/\./, '_')}"
-  reltag << reuse.gsub(/\./, '_') if reuse
+  :needs => [:prerelease] do |t, args|
+  reltag = "REL_#{args.rel.gsub(/\./, '_')}"
+  reltag << args.reuse.gsub(/\./, '_') if args.reuse
   announce "Tagging Repository with [#{reltag}]"
-  if reltest
+  if args.reltest
     announce "Release Task Testing, skipping CVS tagging"
   else
     sh %{svn copy svn+ssh://rubyforge.org/var/svn/rake/trunk svn+ssh://rubyforge.org/var/svn/rake/tags/#{reltag} -m 'Commiting release #{reltag}'} ###'
