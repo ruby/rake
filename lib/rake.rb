@@ -29,7 +29,7 @@
 # as a library via a require statement, but it can be distributed
 # independently as an application.
 
-RAKEVERSION = '0.7.99.3'
+RAKEVERSION = '0.7.99.4'
 
 require 'rbconfig'
 require 'ftools'
@@ -208,7 +208,7 @@ class String
         when '%x'
           result << $1 if self =~ /[^\/](\.[^.]+)$/
         when '%X'
-          if self =~ /^(.+[^\/])(\.[^.]+)$/
+          if self =~ /^(.*[^\/])(\.[^.]+)$/
             result << $1
           else
             result << self
@@ -289,11 +289,10 @@ module Rake
 
     def initialize(names, values, parent=nil)
       @names = names
-      @values = values
       @parent = parent
       @hash = {}
       names.each_with_index { |name, i|
-        @hash[name.to_s] = @values[i]
+        @hash[name.to_sym] = values[i]
       }
     end
 
@@ -306,33 +305,23 @@ module Rake
 
     # Find an argument value by name or index.
     def [](index)
-      case index
-      when Integer
-        @values[index]
-      else
-        lookup(index.to_s)
-      end
-    end
-
-    # Compare to an array
-    def ==(other)
-      to_ary == other
-    end
-
-    def to_ary
-      @values
+      lookup(index.to_sym)
     end
 
     def each(&block)
-      @values.each(&block)
+      @hash.each(&block)
     end
 
     def method_missing(sym, *args, &block)
-      lookup(sym.to_s)
+      lookup(sym.to_sym)
+    end
+
+    def to_hash
+      @hash
     end
 
     def to_s
-      "[" + @values.collect { |v| v.inspect }.join(', ') + "]"
+      @hash.inspect
     end
 
     def inspect
@@ -344,10 +333,10 @@ module Rake
     def lookup(name)
       if @hash.has_key?(name)
         @hash[name]
-      elsif ENV.has_key?(name)
-        ENV[name]
-      elsif ENV.has_key?(name.upcase)
-        ENV[name.upcase]
+      elsif ENV.has_key?(name.to_s)
+        ENV[name.to_s]
+      elsif ENV.has_key?(name.to_s.upcase)
+        ENV[name.to_s.upcase]
       elsif @parent
         @parent.lookup(name)
       end
@@ -575,13 +564,7 @@ module Rake
     # argument list (enclosed brackets) and an optional comment.
     def add_description(description)
       return if ! description
-      if description =~ %r{\A\s*(\[([^\]]*)\])\s*(.*)\Z}m
-        arg_string = $2
-        comment = $3.strip
-      else
-        comment = description.strip
-      end
-      set_arg_names(arg_string) if arg_string
+      comment = description.strip
       add_comment(comment) if comment && ! comment.empty?
     end
 
@@ -604,17 +587,14 @@ module Rake
       else
         @comment = @full_comment
       end
-#      if @comment.length > 50
-#        @comment = @comment[0, 47] + "..."
-#      end
     end
     private :add_comment
 
-    # Set the names of the arguments for this task.
-    def set_arg_names(arg_string)
-      @arg_names = arg_string.split(',').collect { |n| n.strip }
+    # Set the names of the arguments for this task. +args+ should be
+    # an array of symbols, one for each argument name.
+    def set_arg_names(args)
+      @arg_names = args.map { |a| a.to_sym }
     end
-    private :set_arg_names
 
     # Return a string describing the internal state of a task.  Useful for
     # debugging.
@@ -668,13 +648,13 @@ module Rake
       # Define a task given +args+ and an option block.  If a rule with the
       # given name already exists, the prerequisites and actions are added to
       # the existing task.  Returns the defined task.
-      def define_task(args, &block)
-        Rake.application.define_task(self, args, &block)
+      def define_task(*args, &block)
+        Rake.application.define_task(self, *args, &block)
       end
 
       # Define a rule for synthesizing tasks.
-      def create_rule(args, &block)
-        Rake.application.create_rule(args, &block)
+      def create_rule(*args, &block)
+        Rake.application.create_rule(*args, &block)
       end
 
       # Apply the scope to the task name according to the rules for
@@ -775,8 +755,8 @@ end # module Rake
 #     rm_rf "html"
 #   end
 #
-def task(args, &block)
-  Rake::Task.define_task(args, &block)
+def task(*args, &block)
+  Rake::Task.define_task(*args, &block)
 end
 
 
@@ -849,8 +829,8 @@ end
 #    sh %{cc -o #{t.name} #{t.source}}
 #  end
 #
-def rule(args, &block)
-  Rake::Task.create_rule(args, &block)
+def rule(*args, &block)
+  Rake::Task.create_rule(*args, &block)
 end
 
 # Describe the next rake task.
@@ -1166,7 +1146,7 @@ module Rake
 
     # List of array methods (that are not in +Object+) that need to be
     # delegated.
-    ARRAY_METHODS = Array.instance_methods - Object.instance_methods
+    ARRAY_METHODS = (Array.instance_methods - Object.instance_methods).map { |n| n.to_s }
 
     # List of additional methods that must be delegated.
     MUST_DEFINE = %w[to_a inspect]
@@ -1621,18 +1601,19 @@ module Rake
       @last_description = nil
     end
 
-    def create_rule(args, &block)
-      pattern, deps = resolve_args(args)
+    def create_rule(*args, &block)
+      pattern, arg_names, deps = resolve_args(args)
       pattern = Regexp.new(Regexp.quote(pattern) + '$') if String === pattern
       @rules << [pattern, deps, block]
     end
 
-    def define_task(task_class, args, &block)
-      task_name, deps = resolve_args(args)
+    def define_task(task_class, *args, &block)
+      task_name, arg_names, deps = resolve_args(args)
       task_name = task_class.scope_name(@scope, task_name)
       deps = [deps] unless deps.respond_to?(:to_ary)
       deps = deps.collect {|d| d.to_s }
       task = intern(task_class, task_name)
+      task.set_arg_names(arg_names) unless arg_names.empty?
       task.add_description(@last_description)
       @last_description = nil
       task.enhance(deps, &block)
@@ -1659,20 +1640,25 @@ module Rake
       define_task(Rake::FileTask, task_name)
     end
 
-    # Resolve the arguments for a task/rule.
+    # Resolve the arguments for a task/rule.  Returns a triplet of
+    # [task_name, arg_list, dependencies_list].
+    # TODO: Rework this to handle arguments
     def resolve_args(args)
-      case args
-      when Hash
-        fail "Too Many Task Names: #{args.keys.join(' ')}" if args.size > 1
-        fail "No Task Name Given" if args.size < 1
-        task_name = args.keys[0]
-        deps = args[task_name]
-        deps = [deps] if (String===deps) || (Regexp===deps) || (Proc===deps)
-      else
-        task_name = args
-        deps = []
+      task_name = args.shift
+      arg_names = args #.map { |a| a.to_sym }
+      needs = []
+      if task_name.is_a?(Hash)
+        hash = task_name
+        task_name = hash.keys[0]
+        needs = hash[task_name]
       end
-      [task_name, deps]
+      if arg_names.last.is_a?(Hash)
+        hash = arg_names.pop
+        needs = hash[:needs]
+        fail "Unrecognized keys in task hash: #{hash.keys.inspect}" if hash.size > 1
+      end
+      needs = [needs] unless needs.respond_to?(:to_ary)
+      [task_name, arg_names, needs]
     end
 
     # If a rule can be found that matches the task name, enhance the
@@ -2132,7 +2118,6 @@ module Rake
         $silent = options.silent
       end
     rescue NoMethodError => ex
-      puts "DBG: RESCUING xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
       raise GetoptLong::InvalidOption, "While parsing options, error = #{ex.class}:#{ex.message}"
     end
 

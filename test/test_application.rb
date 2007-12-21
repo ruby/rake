@@ -258,7 +258,9 @@ class TestApplicationOptions < Test::Unit::TestCase
 
   def test_bad_options
     assert_raise GetoptLong::InvalidOption do
-      flags('--bad', '-t') do |opts|
+      capture_stderr do
+        flags('--bad', '-t') do |opts|
+        end
       end
     end
   end

@@ -5,31 +5,30 @@ require 'rake'
 
 ######################################################################
 class TestTaskArguments < Test::Unit::TestCase
-  def test_empty_arg_list_is_empty
-    ta = Rake::TaskArguments.new([], [])
-    assert_equal [], ta
+  def teardown
+    ENV.delete('rev')
+    ENV.delete('VER')
   end
 
-  def test_one_arg_equals_array
-    ta = Rake::TaskArguments.new([], [:one])
-    assert_equal [:one], ta
-    assert_equal :one, ta[0]
+  def test_empty_arg_list_is_empty
+    ta = Rake::TaskArguments.new([], [])
+    assert_equal({}, ta.to_hash)
   end
 
   def test_multiple_values_in_args
-    ta = Rake::TaskArguments.new([], [:one, :two, :three])
-    assert_equal [:one, :two, :three], ta
+    ta = Rake::TaskArguments.new([:a, :b, :c], [:one, :two, :three])
+    assert_equal({:a => :one, :b => :two, :c => :three}, ta.to_hash)
   end
 
   def test_to_s
-    ta = Rake::TaskArguments.new([], [1, 2, 3])
-    assert_equal "[1, 2, 3]", ta.to_s
-    assert_equal "[1, 2, 3]", ta.inspect
+    ta = Rake::TaskArguments.new([:a, :b, :c], [1, 2, 3])
+    assert_equal ta.to_hash.inspect, ta.to_s
+    assert_equal ta.to_hash.inspect, ta.inspect
   end
 
   def test_enumerable_behavior
-    ta = Rake::TaskArguments.new([], [1, 2 ,3])
-    assert_equal [10, 20, 30], ta.collect { |n| n * 10 }
+    ta = Rake::TaskArguments.new([:a, :b, :c], [1, 2 ,3])
+    assert_equal [10, 20, 30], ta.collect { |k,v| v * 10 }.sort
   end
 
   def test_named_args
@@ -51,12 +50,6 @@ class TestTaskArguments < Test::Unit::TestCase
     assert_nil ta.cc
   end
 
-  def test_unamed_args_are_referenced_by_index
-    ta = Rake::TaskArguments.new(["aa"], [1, 2])
-    assert_equal [1, 2], ta
-    assert_equal 2, ta[1]
-  end
-
   def test_args_can_reference_env_values
     ta = Rake::TaskArguments.new(["aa"], [1])
     ENV['rev'] = "1.2"
@@ -68,7 +61,7 @@ class TestTaskArguments < Test::Unit::TestCase
   def test_creating_new_argument_scopes
     parent = Rake::TaskArguments.new(['p'], [1])
     child = parent.new_scope(['c', 'p'])
-    assert_equal [nil, 1], child
+    assert_equal({:c => nil, :p=>1}, child.to_hash)
     assert_equal 1, child.p
     assert_equal 1, child["p"]
     assert_equal 1, child[:p]

@@ -6,10 +6,20 @@ require 'rake'
 require 'test/filecreation'
 require 'test/capture_stdout'
 
+
+module Interning
+  private
+
+  def intern(name, *args)
+    Rake.application.define_task(Rake::Task, name, *args)
+  end
+end
+
 ######################################################################
 class TestTask < Test::Unit::TestCase
   include CaptureStdout
   include Rake
+  include Interning
 
   def setup
     Task.clear
@@ -154,158 +164,21 @@ class TestTask < Test::Unit::TestCase
     assert_match(/pre-requisites:\s*--t2/, out)
   end
 
-  def test_tasks_can_access_arguments
-    t = intern(:t).enhance do |t, args|
-      assert_equal [1, 2, 3], args
-    end
-    t.invoke(1, 2, 3)
-  end
-
-  def test_actions_of_various_arity_are_ok_with_args
-    notes = []
-    t = intern(:t).enhance do
-      notes << :a
-    end
-    t.enhance do ||
-        notes << :b
-    end
-    t.enhance do |task|
-      notes << :c
-      assert_kind_of Task, task
-    end
-    t.enhance do |t2, args|
-      notes << :d
-      assert_equal t, t2
-      assert_equal [1], args
-    end
-    assert_nothing_raised do t.invoke(1) end
-    assert_equal [:a, :b, :c, :d], notes
-  end
-
-  def test_arguments_are_passed_to_block
-    t = intern(:t).enhance { |t, args|
-      assert_equal [1, 2], args
-    }
-    t.invoke(1, 2)
-  end
-
-  def test_extra_parameters_are_nil
-    t = intern(:t).enhance { |t, args|
-      assert_equal [1, 2], args
-      assert_nil args[2]
-    }
-    t.invoke(1, 2)
-  end
-
-  def test_arguments_are_passed_to_all_blocks
-    counter = 0
-    t = intern(:t).enhance { |t, args|
-      assert_equal [1], args
-      counter += 1
-    }
-    intern(:t).enhance { |t, args|
-      assert_equal [1], args
-      counter += 1
-    }
-    t.invoke(1)
-    assert_equal 2, counter
-  end
-
-  def test_block_with_no_parameters_is_ok
-    t = intern(:t).enhance { }
-    t.invoke(1, 2)
-  end
-
-  def test_descriptions_with_no_args
-    desc "T"
-    t = intern(:tt).enhance { }
-    assert_equal "tt", t.name
-    assert_nil  t.arg_description
-    assert_equal "T", t.comment
-  end
-
-  def test_name_with_args
-    desc "[a, b] T"
-    t = intern(:tt)
-    assert_equal "tt", t.name
-    assert_equal "T", t.comment
-    assert_equal "[a,b]", t.arg_description
-    assert_equal "tt[a,b]", t.name_with_args
-    assert_equal ["a", "b"],t.arg_names
-  end
-
-  def test_task_args_can_be_named
-    desc "[aa,bb] T"
-    t = intern(:tt).enhance { |t, args|
-      assert_equal [1, 2], args
-      assert_equal 1, args.aa
-    }
-    t.invoke(1, 2)
-  end
-
-  def xtest_named_args_are_passed_to_prereqs
-    value = nil
-    desc "[rev] pre"
-    pre = intern(:pre).enhance { |t, rev| value = rev }
-    desc "[name,rev] t"
-    t = intern(:t).enhance([:pre])
-    t.invoke("bill", "1.2")
-    assert_equal "1.2", value
-  end
-
-  def test_args_not_passed_if_no_prereq_names
-    value = nil
-    desc "pre"
-    pre = intern(:pre).enhance { |t, args|
-      assert_equal [], args
-      assert_equal "bill", args.name
-    }
-    desc "[name,rev] t"
-    t = intern(:t).enhance([:pre])
-    t.invoke("bill", "1.2")
-    assert_nil value
-  end
-
-  def test_args_not_passed_if_no_arg_names
-    value = nil
-    desc "[rev] pre"
-    pre = intern(:pre).enhance { |t, args|
-      assert_equal [nil], args
-    }
-    desc "t"
-    t = intern(:t).enhance([:pre])
-    t.invoke("bill", "1.2")
-  end
-
-  def test_task_can_have_arg_names_but_no_comment
-    desc "[a,b]"
-    t = intern(:t)
-    assert_equal "[a,b]", t.arg_description
-    assert_nil t.comment
-    assert_nil t.full_comment
-  end
 
   def test_extended_comments
     desc %{
-      [name, rev]
       This is a comment.
 
       And this is the extended comment.
       name -- Name of task to execute.
       rev  -- Software revision to use.
     }
-    t = intern(:t)
+    t = intern(:t, :name, :rev)
     assert_equal "[name,rev]", t.arg_description
     assert_equal "This is a comment.", t.comment
     assert_match(/^\s*name -- Name/, t.full_comment)
     assert_match(/^\s*rev  -- Software/, t.full_comment)
     assert_match(/\A\s*This is a comment\.$/, t.full_comment)
-  end
-
-  def test_comments_below_limit_are_unchanged
-    desc %{12345678901234567890123456789012345678901234567890}
-    t = intern(:t)
-    assert_equal "12345678901234567890123456789012345678901234567890", t.comment
   end
 
   def test_multiple_comments
@@ -321,12 +194,163 @@ class TestTask < Test::Unit::TestCase
     t.comment = "HI"
     assert_equal "HI", t.comment
   end
-
-  private
-
-  def intern(name)
-    Rake.application.define_task(Rake::Task,name)
-  end
-
 end
 
+######################################################################
+class TestTaskWithArguments < Test::Unit::TestCase
+  include CaptureStdout
+  include Rake
+  include Interning
+
+  def setup
+    Task.clear
+  end
+
+  def test_no_args_given
+    t = task :t
+    assert_equal [], t.arg_names
+  end
+
+  def test_args_given
+    t = task :t, :a, :b
+    assert_equal [:a, :b], t.arg_names
+  end
+
+  def test_name_and_needs
+    t = task(:t => [:pre])
+    assert_equal "t", t.name
+    assert_equal [], t.arg_names
+    assert_equal ["pre"], t.prerequisites
+  end
+
+  def test_name_and_explicit_needs
+    t = task(:t, :needs => [:pre])
+    assert_equal "t", t.name
+    assert_equal [], t.arg_names
+    assert_equal ["pre"], t.prerequisites
+  end
+
+  def test_name_args_and_explicit_needs
+    t = task(:t, :x, :y, :needs => [:pre])
+    assert_equal "t", t.name
+    assert_equal [:x, :y], t.arg_names
+    assert_equal ["pre"], t.prerequisites
+  end
+
+  def test_illegal_keys_in_task_name_hash
+    assert_raise RuntimeError do
+      t = task(:t, :x, :y => 1, :needs => [:pre])
+    end
+  end
+
+  def test_arg_list_is_empty_if_no_args_given
+    t = intern(:t).enhance do |tt, args|
+      assert_equal({}, args.to_hash)
+    end
+    t.invoke(1, 2, 3)
+  end
+
+  def test_tasks_can_access_arguments_as_hash
+    t = task :t, :a, :b, :c do |tt, args|
+      assert_equal({:a => 1, :b => 2, :c => 3}, args.to_hash)
+      assert_equal 1, args[:a]
+      assert_equal 2, args[:b]
+      assert_equal 3, args[:c]
+      assert_equal 1, args.a
+      assert_equal 2, args.b
+      assert_equal 3, args.c
+    end
+    t.invoke(1, 2, 3)
+  end
+
+  def test_actions_of_various_arity_are_ok_with_args
+    notes = []
+    t = intern(:t, :x).enhance do
+      notes << :a
+    end
+    t.enhance do | |
+      notes << :b
+    end
+    t.enhance do |task|
+      notes << :c
+      assert_kind_of Task, task
+    end
+    t.enhance do |t2, args|
+      notes << :d
+      assert_equal t, t2
+      assert_equal({:x => 1}, args.to_hash)
+    end
+    assert_nothing_raised do t.invoke(1) end
+    assert_equal [:a, :b, :c, :d], notes
+  end
+
+  def test_arguments_are_passed_to_block
+    t = intern(:t, :a, :b).enhance { |tt, args|
+      assert_equal( { :a => 1, :b => 2 }, args.to_hash )
+    }
+    t.invoke(1, 2)
+  end
+
+  def test_extra_parameters_are_ignored
+    t = intern(:t, :a).enhance { |tt, args|
+      assert_equal 1, args.a
+      assert_nil args[2]
+    }
+    t.invoke(1, 2)
+  end
+
+  def test_arguments_are_passed_to_all_blocks
+    counter = 0
+    t = task :t, :a
+    task :t do |tt, args|
+      assert_equal 1, args.a
+      counter += 1
+    end
+    task :t do |tt, args|
+      assert_equal 1, args.a
+      counter += 1
+    end
+    t.invoke(1)
+    assert_equal 2, counter
+  end
+
+  def test_block_with_no_parameters_is_ok
+    t = intern(:t).enhance { }
+    t.invoke(1, 2)
+  end
+
+  def test_name_with_args
+    desc "T"
+    t = intern(:tt, :a, :b)
+    assert_equal "tt", t.name
+    assert_equal "T", t.comment
+    assert_equal "[a,b]", t.arg_description
+    assert_equal "tt[a,b]", t.name_with_args
+    assert_equal [:a, :b],t.arg_names
+  end
+
+  def test_named_args_are_passed_to_prereqs
+    value = nil
+    pre = intern(:pre, :rev).enhance { |t, args| value = args.rev }
+    t = intern(:t, :name, :rev).enhance([:pre])
+    t.invoke("bill", "1.2")
+    assert_equal "1.2", value
+  end
+
+  def test_args_not_passed_if_no_prereq_names
+    pre = intern(:pre).enhance { |t, args|
+      assert_equal({}, args.to_hash)
+      assert_equal "bill", args.name
+    }
+    t = intern(:t, :name, :rev).enhance([:pre])
+    t.invoke("bill", "1.2")
+  end
+
+  def test_args_not_passed_if_no_arg_names
+    pre = intern(:pre, :rev).enhance { |t, args|
+      assert_equal({ :rev => nil }, args.to_hash)
+    }
+    t = intern(:t).enhance([:pre])
+    t.invoke("bill", "1.2")
+  end
+end

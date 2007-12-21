@@ -293,15 +293,16 @@ end
 task :noop
 #plugin "release_manager"
 
-desc "[rel, reuse, reltest] Make a new release"
-task :release => [
-  :prerelease,
-  :clobber,
-  :test_all,
-  :update_version,
-  :package,
-  :tag] do
-  
+desc "Make a new release"
+task :release, :rel, :reuse, :reltest,
+  :needs => [
+    :prerelease,
+    :clobber,
+    :test_all,
+    :update_version,
+    :package,
+    :tag
+  ] do
   announce 
   announce "**************************************************************"
   announce "* Release #{$package_version} Complete."
@@ -311,8 +312,7 @@ task :release => [
 end
 
 # Validate that everything is ready to go for a release.
-desc "[rel, reuse, reltest]"
-task :prerelease do |t, rel, reuse, reltest|
+task :prerelease, :rel, :reuse, :reltest do |t, rel, reuse, reltest|
   $package_version = rel
   announce 
   announce "**************************************************************"
@@ -345,8 +345,8 @@ task :prerelease do |t, rel, reuse, reltest|
   end
 end
 
-desc "[rel, reuse, reltest]"
-task :update_version => [:prerelease] do |t, rel, reuse, reltest|
+task :update_version, :rel, :reuse, :reltest,
+  :needs => [:prerelease] do |t, rel, reuse, reltest|
   if rel == CURRENT_VERSION
     announce "No version change ... skipping version update"
   else
@@ -371,15 +371,16 @@ task :update_version => [:prerelease] do |t, rel, reuse, reltest|
   end
 end
 
-desc "[rel, reuse, reltest] Tag all the CVS files with the latest release number (REL=x.y.z)"
-task :tag => [:prerelease] do |t, rel, reuse, reltest|
+desc "Tag all the CVS files with the latest release number (REL=x.y.z)"
+task :tag, :rel, :reuse, :reltest,
+  :needs => [:prerelease] do |t, rel, reuse, reltest|
   reltag = "REL_#{rel.gsub(/\./, '_')}"
   reltag << reuse.gsub(/\./, '_') if reuse
   announce "Tagging Repository with [#{reltag}]"
   if reltest
     announce "Release Task Testing, skipping CVS tagging"
   else
-    sh %{svn copy svn+ssh://rubyforge.org/var/svn/rake/trunk svn+ssh://rubyforge.org/var/svn/rake/tags/#{reltag} -m 'Commiting release #{reltag}'}
+    sh %{svn copy svn+ssh://rubyforge.org/var/svn/rake/trunk svn+ssh://rubyforge.org/var/svn/rake/tags/#{reltag} -m 'Commiting release #{reltag}'} ###'
   end
 end
 

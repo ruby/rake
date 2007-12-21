@@ -18,6 +18,13 @@ class TestFileList < Test::Unit::TestCase
     FileUtils.rm_rf("testdata")
   end
 
+  def test_delgating_methods_do_not_include_to_a_or_to_ary
+    assert ! FileList::DELEGATING_METHODS.include?("to_a"), "should not include to_a"
+    assert ! FileList::DELEGATING_METHODS.include?(:to_a), "should not include to_a"
+    assert ! FileList::DELEGATING_METHODS.include?("to_ary"), "should not include to_ary"
+    assert ! FileList::DELEGATING_METHODS.include?(:to_ary), "should not include to_ary"
+  end
+
   def test_create
     fl = FileList.new
     assert_equal 0, fl.size
