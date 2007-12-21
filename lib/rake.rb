@@ -29,7 +29,7 @@
 # as a library via a require statement, but it can be distributed
 # independently as an application.
 
-RAKEVERSION = '0.7.99.4'
+RAKEVERSION = '0.7.99.5'
 
 require 'rbconfig'
 require 'ftools'
@@ -582,7 +582,7 @@ module Rake
         @full_comment = ''
       end
       @full_comment << comment
-      if @full_comment =~ /\A([^.]+?\.)/
+      if @full_comment =~ /\A([^.]+?\.)( |$)/
         @comment = $1
       else
         @comment = @full_comment
@@ -1641,8 +1641,7 @@ module Rake
     end
 
     # Resolve the arguments for a task/rule.  Returns a triplet of
-    # [task_name, arg_list, dependencies_list].
-    # TODO: Rework this to handle arguments
+    # [task_name, arg_name_list, prerequisites].
     def resolve_args(args)
       task_name = args.shift
       arg_names = args #.map { |a| a.to_sym }

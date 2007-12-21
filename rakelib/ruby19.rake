@@ -66,14 +66,14 @@ namespace "ruby19" do
       Ruby19.run_tests(test_files)
     end
 
-    desc "Run the unit tests in Ruby 1.9"
+    desc "Run the functional tests in Ruby 1.9"
     task :functionals => [:env19] do
       test_files = FileList['test/functional.rb']
       Ruby19.run_tests(test_files)
     end
 
-    desc "Run the unit tests in Ruby 1.9"
-    task :functionals => [:env19] do
+    desc "Run the all the tests in Ruby 1.9"
+    task :all => [:env19] do
       test_files = FileList['test/functional.rb', 'test/test_*.rb']
       Ruby19.run_tests(test_files)
     end
