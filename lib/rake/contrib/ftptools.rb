@@ -6,7 +6,6 @@
 # use.
 
 require 'date'
-require 'parsedate'
 require 'net/ftp'
 
 module Rake # :nodoc:
@@ -18,6 +17,10 @@ module Rake # :nodoc:
 
     def self.date
       @date_class ||= Date
+    end
+
+    def self.time
+      @time_class ||= Time
     end
 
     def initialize(path, entry)
@@ -54,17 +57,28 @@ module Rake # :nodoc:
     end
 
     def determine_time(d1, d2, d3)
-      elements = ParseDate.parsedate("#{d1} #{d2} #{d3}")
-      if elements[0].nil?
-        today = self.class.date.today
-        if elements[1] > today.month
-          elements[0] = today.year - 1
-        else
-          elements[0] = today.year
+      now = self.class.time.now
+      if /:/ =~ d3
+        h, m = d3.split(':')
+        result = Time.parse("#{d1} #{d2} #{now.year} #{d3}")
+        if result > now
+          result = Time.parse("#{d1} #{d2} #{now.year-1} #{d3}")
         end
+      else
+        result = Time.parse("#{d1} #{d2} #{d3}")
       end
-      elements = elements.collect { |el| el.nil? ? 0 : el }
-      Time.mktime(*elements[0,7])
+      result
+#       elements = ParseDate.parsedate("#{d1} #{d2} #{d3}")
+#       if elements[0].nil?
+#         today = self.class.date.today
+#         if elements[1] > today.month
+#           elements[0] = today.year - 1
+#         else
+#           elements[0] = today.year
+#         end
+#       end
+#       elements = elements.collect { |el| el.nil? ? 0 : el }
+#       Time.mktime(*elements[0,7])
     end
   end
 

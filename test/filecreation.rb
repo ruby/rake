@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'ftools'
-
 module FileCreation
   OLDFILE = "testdata/old"
   NEWFILE = "testdata/new"

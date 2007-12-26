@@ -261,7 +261,7 @@ class TestRules < Test::Unit::TestCase
 
   def test_rule_with_proc_dependent_will_trigger
     ran = false
-    File.makedirs("testdata/src/jw")
+    mkdir_p("testdata/src/jw")
     create_file("testdata/src/jw/X.java")
     rule %r(classes/.*\.class) => [
       proc { |fn| fn.pathmap("%{classes,testdata/src}d/%n.java") }
@@ -278,7 +278,7 @@ class TestRules < Test::Unit::TestCase
 
   def test_proc_returning_lists_are_flattened_into_prereqs
     ran = false
-    File.makedirs("testdata/flatten")
+    mkdir_p("testdata/flatten")
     create_file("testdata/flatten/a.txt")
     task 'testdata/flatten/b.data' do |t|
       ran = true

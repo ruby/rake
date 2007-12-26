@@ -1,6 +1,6 @@
 module Ruby19
   PROG = '/Users/jim/local/ruby19/bin/ruby'
-  GEM_HOME = '/Users/jim/local/ruby19/lib/ruby/gems/1.9'
+  GEM_HOME = '/Users/jim/local/ruby19.gems'
 
   RELEASE_FILES = FileList['bin/rake', 'lib/rake.rb', 'lib/rake/**/*']
   RELEASE_FILES.exclude('lib/rake/lib', 'project.rake', 'lib/rake/plugins', 'lib/rake/contrib')

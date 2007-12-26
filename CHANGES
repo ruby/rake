@@ -1,6 +1,11 @@
 = Rake Changelog
 
-== Pre-Version 0.7.4
+== Version 0.8.1
+
+* Removed requires on parsedate.rb (in Ftptools)
+* Removed ftools from rake.rb.  Made it options in sys.rb
+
+== Version 0.8.0
 
 * Added task parameters (e.g. "rake build[version7]")
 * Made task parameters passable to prerequisites.
