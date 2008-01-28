@@ -3,11 +3,11 @@
 == Pre-Version 0.8.2
 
 * Fixed bug in package task so that it will include the subdir
-  directory in the package for testing.
+  directory in the package for testing. (Bug found by Adam Majer)
 * Added ENV var to rakefile to prevent OS X from including extended
-  attribute junk in a tar file.
+  attribute junk in a tar file. (Bug found by Adam Majer)
 * Fixed filename dependency order bug in test_inspect_pending and
-  test_to_s_pending.
+  test_to_s_pending. (Bug found by Adam Majer)
 
 == Version 0.8.1
 
