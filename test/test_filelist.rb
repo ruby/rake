@@ -204,12 +204,20 @@ class TestFileList < Test::Unit::TestCase
 
   def test_to_s_pending
     fl = FileList['testdata/abc.*']
-    assert_equal  %{testdata/abc.c testdata/abc.h testdata/abc.x}, fl.to_s
+    result = fl.to_s
+    assert_match(%r{testdata/abc\.c}, result)
+    assert_match(%r{testdata/abc\.h}, result)
+    assert_match(%r{testdata/abc\.x}, result)
+    assert_match(%r{(testdata/abc\..\b ?){2}}, result)
   end
 
   def test_inspect_pending
     fl = FileList['testdata/abc.*']
-    assert_equal  %{["testdata/abc.c", "testdata/abc.h", "testdata/abc.x"]}, fl.inspect
+    result = fl.inspect
+    assert_match(%r{"testdata/abc\.c"}, result)
+    assert_match(%r{"testdata/abc\.h"}, result)
+    assert_match(%r{"testdata/abc\.x"}, result)
+    assert_match(%r|^\[("testdata/abc\..", ){2}"testdata/abc\.."\]$|, result)
   end
 
   def test_sub

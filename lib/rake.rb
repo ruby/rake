@@ -529,7 +529,8 @@ module Rake
     private :format_trace_flags
 
     # Execute the actions associated with this task.
-    def execute(args)
+    def execute(args=nil)
+      args ||= EMPTY_TASK_ARGS
       if application.options.dryrun
         puts "** Execute (dry run) #{name}"
         return
@@ -772,8 +773,8 @@ end
 #     end
 #  end
 #
-def file(args, &block)
-  Rake::FileTask.define_task(args, &block)
+def file(*args, &block)
+  Rake::FileTask.define_task(*args, &block)
 end
 
 # Declare a file creation task.

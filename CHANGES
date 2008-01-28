@@ -1,5 +1,14 @@
 = Rake Changelog
 
+== Pre-Version 0.8.2
+
+* Fixed bug in package task so that it will include the subdir
+  directory in the package for testing.
+* Added ENV var to rakefile to prevent OS X from including extended
+  attribute junk in a tar file.
+* Fixed filename dependency order bug in test_inspect_pending and
+  test_to_s_pending.
+
 == Version 0.8.1
 
 * Removed requires on parsedate.rb (in Ftptools)
@@ -9,7 +18,6 @@
 
 * Added task parameters (e.g. "rake build[version7]")
 * Made task parameters passable to prerequisites.
-* The 'desc' command will now document task argument names.
 * Comments are limited to 80 columns or so (suggested by Jamis Buck).
 * Added -D to display full comments (suggested by Jamis Buck).
 * The rake program will set the status value used in any explicit

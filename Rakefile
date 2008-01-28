@@ -25,6 +25,9 @@ CLOBBER.include('test/data/file_creation_task/src')
 CLOBBER.include('TAGS')
 CLOBBER.include('coverage', 'rcov_aggregate')
 
+# Prevent OS X from including extended attribute junk in the tar output
+ENV['COPY_EXTENDED_ATTRIBUTES_DISABLE'] = 'true'
+
 def announce(msg='')
   STDERR.puts msg
 end
@@ -148,6 +151,7 @@ PKG_FILES = FileList[
   'test/**/*.rf',
   'test/**/*.mf',
   'test/**/Rakefile',
+  'test/**/subdir',
   'doc/**/*'
 ]
 PKG_FILES.exclude('doc/example/*.o')
