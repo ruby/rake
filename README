@@ -13,7 +13,7 @@ Rake has the following features:
 
 * Users can specify tasks with prerequisites.
 
-* Rake supports rule patterns to sythesize implicit tasks.
+* Rake supports rule patterns to synthesize implicit tasks.
 
 *  Flexible FileLists that act like arrays but know about manipulating
    file names and paths.
