@@ -222,6 +222,22 @@ class TestRules < Test::Unit::TestCase
     assert_equal [], @runs
   end
 
+  def test_rule_with_two_sources_builds_both_sources
+    task 'x.aa'
+    task 'x.bb'
+    rule '.a' => '.aa' do
+      @runs << "A"
+    end
+    rule '.b' => '.bb' do
+      @runs << "B"
+    end
+    rule ".c" => ['.a', '.b'] do
+      @runs << "C"
+    end
+    Task["x.c"].invoke
+    assert_equal ["A", "B", "C"], @runs.sort
+  end
+
   def test_second_rule_runs_when_first_rule_doesnt
     create_timed_files(OBJFILE, SRCFILE)
     delete_file(SRCFILE2)

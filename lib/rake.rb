@@ -1756,15 +1756,23 @@ module Rake
       "_anon_#{@seed}"
     end
 
+    def trace_rule(level, message)
+      puts "#{"    "*level}#{message}" if Rake.application.options.trace_rules
+    end
+
     # Attempt to create a rule given the list of prerequisites.
     def attempt_rule(task_name, extensions, block, level)
       sources = make_sources(task_name, extensions)
       prereqs = sources.collect { |source|
+        trace_rule level, "Attempting Rule #{task_name} => #{source}"
         if File.exist?(source) || Rake::Task.task_defined?(source)
+          trace_rule level, "(#{task_name} => #{source} ... EXIST)"
           source
-        elsif parent = enhance_with_matching_rule(sources.first, level+1)
+        elsif parent = enhance_with_matching_rule(source, level+1)
+          trace_rule level, "(#{task_name} => #{source} ... ENHANCE)"
           parent.name
         else
+          trace_rule level, "(#{task_name} => #{source} ... FAIL)"
           return nil
         end
       }
@@ -1844,6 +1852,8 @@ module Rake
         "Require MODULE before executing rakefile."],
       ['--rakelibdir', '-R', GetoptLong::REQUIRED_ARGUMENT,
         "Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')"],
+      ['--rules', GetoptLong::NO_ARGUMENT,
+        "Trace the rules resolution"],
       ['--silent',   '-s', GetoptLong::NO_ARGUMENT,
         "Like --quiet, but also suppresses the 'in directory' announcement."],
       ['--tasks',    '-T', GetoptLong::OPTIONAL_ARGUMENT,
@@ -2085,6 +2095,8 @@ module Rake
             raise ex
           end
         end
+      when '--rules'
+        options.trace_rules = true
       when '--silent'
         verbose(false)
         options.silent = true

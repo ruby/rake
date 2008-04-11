@@ -14,6 +14,9 @@
 * Fixed check for file utils options to make them immune to the
   symbol/string differences. (Patch supplied by Edwin Pratomo)
 
+* Fixed bug with rules involving multiple source (Patch supplied by
+  Emanuel Indermühle)
+
 == Version 0.8.1
 
 * Removed requires on parsedate.rb (in Ftptools)
