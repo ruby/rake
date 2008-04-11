@@ -178,7 +178,16 @@ class TestFileUtils < Test::Unit::TestCase
     assert_match(/^test\/shellcommand\.rb$/, out)
   end
 
-  def test_sh_default_verbosity_is_false
+  def test_sh_no_verbose
+    out = redirect_stderr {
+      verbose(false) {
+        sh %{test/shellcommand.rb}, :noop=>true
+      }
+    }
+    assert_equal '', out
+  end
+
+  def test_sh_default_is_no_verbose
     out = redirect_stderr {
       sh %{test/shellcommand.rb}, :noop=>true
     }

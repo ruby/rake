@@ -900,6 +900,12 @@ module FileUtils
         ok or fail "Command failed with status (#{status.exitstatus}): [#{show_command}]"
       }
     end
+    if RakeFileUtils.verbose_flag == :default
+      options[:verbose] = false
+    else
+      options[:verbose] ||= RakeFileUtils.verbose_flag
+    end
+    options[:noop]    ||= RakeFileUtils.nowrite_flag
     rake_check_options options, :noop, :verbose
     rake_output_message cmd.join(" ") if options[:verbose]
     unless options[:noop]
@@ -962,7 +968,7 @@ module RakeFileUtils
   class << self
     attr_accessor :verbose_flag, :nowrite_flag
   end
-  RakeFileUtils.verbose_flag = true
+  RakeFileUtils.verbose_flag = :default
   RakeFileUtils.nowrite_flag = false
 
   $fileutils_verbose = true
@@ -970,10 +976,10 @@ module RakeFileUtils
 
   FileUtils::OPT_TABLE.each do |name, opts|
     default_options = []
-    if opts.include?('verbose')
+    if opts.include?(:verbose) || opts.include?("verbose")
       default_options << ':verbose => RakeFileUtils.verbose_flag'
     end
-    if opts.include?('noop')
+    if opts.include?(:noop) || opts.include?("noop")
       default_options << ':noop => RakeFileUtils.nowrite_flag'
     end
 
