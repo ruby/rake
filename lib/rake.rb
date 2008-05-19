@@ -29,7 +29,7 @@
 # as a library via a require statement, but it can be distributed
 # independently as an application.
 
-RAKEVERSION = '0.8.1.1'
+RAKEVERSION = '0.8.1.2'
 
 require 'rbconfig'
 require 'getoptlong'
@@ -1864,6 +1864,8 @@ module Rake
         "Log message to standard output (default)."],
       ['--version',  '-V', GetoptLong::NO_ARGUMENT,
         "Display the program version."],
+      ['--execute',  '-e', GetoptLong::REQUIRED_ARGUMENT,
+        "Execute some Ruby code and exit."],
     ]
 
     # Initialize a Rake::Application object.
@@ -2069,6 +2071,9 @@ module Rake
         nowrite(true)
         options.dryrun = true
         options.trace = true
+      when '--execute'
+        eval(value)
+        exit
       when '--help'
         help
         exit
