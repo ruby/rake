@@ -20,7 +20,6 @@ Rake has the following features:
 
 * A library of prepackaged tasks to make building rakefiles easier.
 
-
 == Download
 
 The latest version of rake can be found at
