@@ -1864,8 +1864,6 @@ module Rake
         "Log message to standard output (default)."],
       ['--version',  '-V', GetoptLong::NO_ARGUMENT,
         "Display the program version."],
-      ['--execute',  '-e', GetoptLong::REQUIRED_ARGUMENT,
-        "Execute some Ruby code and exit."],
     ]
 
     # Initialize a Rake::Application object.
@@ -2071,9 +2069,6 @@ module Rake
         nowrite(true)
         options.dryrun = true
         options.trace = true
-      when '--execute'
-        eval(value)
-        exit
       when '--help'
         help
         exit
