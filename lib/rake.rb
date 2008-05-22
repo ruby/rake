@@ -1866,6 +1866,10 @@ module Rake
         "Display the program version."],
       ['--execute',  '-e', GetoptLong::REQUIRED_ARGUMENT,
         "Execute some Ruby code and exit."],
+      ['--execute-print',  '-p', GetoptLong::REQUIRED_ARGUMENT,
+        "Execute some Ruby code, print, then exit."],
+      ['--execute-continue',  '-E', GetoptLong::REQUIRED_ARGUMENT,
+        "Execute some Ruby code, then run tasks."],
     ]
 
     # Initialize a Rake::Application object.
@@ -2074,6 +2078,11 @@ module Rake
       when '--execute'
         eval(value)
         exit
+      when '--execute-print'
+        puts eval(value)
+        exit
+      when '--execute-continue'
+        eval(value)
       when '--help'
         help
         exit
