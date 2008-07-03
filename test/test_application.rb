@@ -257,7 +257,7 @@ class TestApplicationOptions < Test::Unit::TestCase
   end
 
   def test_bad_options
-    assert_raise GetoptLong::InvalidOption do
+    assert_raise OptionParser::InvalidOption do
       capture_stderr do
         flags('--bad', '-t') do |opts|
         end
@@ -403,13 +403,13 @@ class TestApplicationOptions < Test::Unit::TestCase
 
   def test_bad_option
     capture_stderr do
-      ex = assert_raise(GetoptLong::InvalidOption) do
+      ex = assert_raise(OptionParser::InvalidOption) do
         flags('--bad-option') 
       end
       if ex.message =~ /^While/ # Ruby 1.9 error message
         assert_match(/while parsing/i, ex.message)
       else                      # Ruby 1.8 error message
-        assert_match(/unrecognized option/i, ex.message)
+        assert_match(/(invalid|unrecognized) option/i, ex.message)
         assert_match(/--bad-option/, ex.message)
       end
     end

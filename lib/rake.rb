@@ -36,6 +36,7 @@ require 'getoptlong'
 require 'fileutils'
 require 'singleton'
 require 'thread'
+require 'optparse'
 require 'ostruct'
 
 ######################################################################
@@ -1829,6 +1830,7 @@ module Rake
 
     DEFAULT_RAKEFILES = ['rakefile', 'Rakefile', 'rakefile.rb', 'Rakefile.rb'].freeze
 
+=begin
     OPTIONS = [     # :nodoc:
       ['--classic-namespace', '-C', GetoptLong::NO_ARGUMENT,
         "Put Task and FileTask in the top level namespace"],
@@ -1865,6 +1867,7 @@ module Rake
       ['--version',  '-V', GetoptLong::NO_ARGUMENT,
         "Display the program version."],
     ]
+=end
 
     # Initialize a Rake::Application object.
     def initialize
@@ -1966,7 +1969,8 @@ module Rake
       rescue SystemExit => ex
         # Exit silently with current status
         exit(ex.status)
-      rescue SystemExit, GetoptLong::InvalidOption => ex
+      rescue SystemExit, OptionParser::InvalidOption => ex
+#      rescue SystemExit, GetoptLong::InvalidOption => ex
         # Exit silently
         exit(1)
       rescue Exception => ex
@@ -1996,7 +2000,7 @@ module Rake
     end
 
     # Display the rake command line help.
-    def help
+    def _help
       puts "rake [-f rakefile] {options} targets..."
       puts
       puts "Options are ..."
@@ -2058,7 +2062,7 @@ module Rake
     end
 
     # Do the option defined by +opt+ and +value+.
-    def do_option(opt, value)
+    def _do_option(opt, value)
       case opt
       when '--describe'
         options.show_tasks = true
@@ -2120,10 +2124,115 @@ module Rake
 
     # Read and handle the command line options.
     def handle_options
+      # optparse version of OPTIONS
+      op_options = [
+        ['--classic-namespace', '-C', "Put Task and FileTask in the top level namespace",
+          proc { |value|
+            require 'rake/classic_namespace'
+            options.classic_namespace = true
+          }
+        ],
+        ['--describe', '-D [PATTERN]', "Describe the tasks (matching optional PATTERN), then exit.",
+          proc { |value|
+            options.show_tasks = true
+            options.full_description = true
+            options.show_task_pattern = Regexp.new(value || '')
+          }
+        ],
+        ['--rakefile', '-f [FILE]', "Use FILE as the rakefile.",
+          proc { |value| 
+            value ||= ''
+            @rakefiles.clear 
+            @rakefiles << value
+          }
+        ],
+        ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
+          proc { |value| $:.push(value) }
+        ],
+        ['--dry-run', '-n', "Do a dry run without executing actions.",
+          proc { |value|
+            verbose(true)
+            nowrite(true)
+            options.dryrun = true
+            options.trace = true
+          }
+        ],
+        ['--nosearch', '-N', "Do not search parent directories for the Rakefile.",
+          proc { |value| options.nosearch = true }
+        ],
+        ['--prereqs', '-P', "Display the tasks and dependencies, then exit.",
+          proc { |value| options.show_prereqs = true }
+        ],
+        ['--quiet', '-q', "Do not log messages to standard output.",
+          proc { |value| verbose(false) }
+        ],
+        ['--require', '-r MODULE', "Require MODULE before executing rakefile.",
+          proc { |value|
+            begin
+              require value
+            rescue LoadError => ex
+              begin
+                rake_require value
+              rescue LoadError => ex2
+                raise ex
+              end
+            end
+          }
+        ],
+        ['--rakelibdir', '--rakelib', '-R RAKELIBDIR', "Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')",
+          proc { |value| options.rakelib = value.split(':') }
+        ],
+        ['--rules', "Trace the rules resolution",
+          proc { |value| options.trace_rules = true }
+        ],
+        ['--silent', '-s', "Like --quiet, but also suppresses the 'in directory' announcement.",
+          proc { |value|
+            verbose(false)
+            options.silent = true
+          }
+        ],
+        ['--tasks', '-T [PATTERN]', "Display the tasks (matching optional PATTERN) with descriptions, then exit.",
+          proc { |value|
+            options.show_tasks = true
+            options.show_task_pattern = Regexp.new(value || '')
+            options.full_description = false
+          }
+        ],
+        ['--trace', '-t', "Turn on invoke/execute tracing, enable full backtrace.",
+          proc { |value|
+            options.trace = true
+            verbose(true)
+          }
+        ],
+        ['--verbose', '-v', "Log message to standard output (default).",
+          proc { |value| verbose(true) }
+        ],
+        ['--version', '-V', "Display the program version.",
+          proc { |value|
+            puts "rake, version #{RAKEVERSION}"
+            exit
+          }
+        ],
+      ]
+
       options.rakelib = ['rakelib']
 
-      opts = GetoptLong.new(*command_line_options)
-      opts.each { |opt, value| do_option(opt, value) }
+      # opts = GetoptLong.new(*command_line_options)
+      # opts.each { |opt, value| do_option(opt, value) }
+
+      opts = OptionParser.new do |opts|
+        opts.banner = "rake [-f rakefile] {options} targets..."
+        opts.separator ""
+        opts.separator "Options are ..."
+
+      	opts.on_tail("-h", "--help", "-H", "Display this help message.") do
+    	  	puts opts
+    		  exit
+      	end
+
+        op_options.each { |args| opts.on(*args) }
+      	opts.parse(ARGV)
+      end
 
       # If class namespaces are requested, set the global options
       # according to the values in the options structure.
@@ -2135,7 +2244,7 @@ module Rake
         $silent = options.silent
       end
     rescue NoMethodError => ex
-      raise GetoptLong::InvalidOption, "While parsing options, error = #{ex.class}:#{ex.message}"
+      raise OptionParser::InvalidOption, "While parsing options, error = #{ex.class}:#{ex.message}"
     end
 
     # Similar to the regular Ruby +require+ command, but will check
@@ -2181,7 +2290,7 @@ module Rake
         if arg =~ /^(\w+)=(.*)$/
           ENV[$1] = $2
         else
-          @top_level_tasks << arg
+          @top_level_tasks << arg unless arg =~ /^-/
         end
       end
       @top_level_tasks.push("default") if @top_level_tasks.size == 0
