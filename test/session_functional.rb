@@ -83,6 +83,7 @@ class FunctionalTest < Test::Unit::TestCase
   end
 
   def test_nosearch
+    mkdir_p "test/data/nosearch", :verbose => false rescue nil
     Dir.chdir("test/data/nosearch") do rake "-N" end
     assert_match %r{^No Rakefile found}, @err
   end
