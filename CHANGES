@@ -17,6 +17,9 @@
 * Fixed bug with rules involving multiple source (Patch supplied by
   Emanuel Indermühle)
 
+* Switched from getoptlong to optparse (patches supplied by Edwin
+  Pratomo (edpratomo@yahoo.co.id))
+
 == Version 0.8.1
 
 * Removed requires on parsedate.rb (in Ftptools)
