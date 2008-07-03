@@ -36,6 +36,7 @@ require 'getoptlong'
 require 'fileutils'
 require 'singleton'
 require 'thread'
+require 'optparse'
 require 'ostruct'
 
 ######################################################################
@@ -1829,49 +1830,6 @@ module Rake
 
     DEFAULT_RAKEFILES = ['rakefile', 'Rakefile', 'rakefile.rb', 'Rakefile.rb'].freeze
 
-    OPTIONS = [     # :nodoc:
-      ['--classic-namespace', '-C', GetoptLong::NO_ARGUMENT,
-        "Put Task and FileTask in the top level namespace"],
-      ['--describe',  '-D', GetoptLong::OPTIONAL_ARGUMENT,
-        "Describe the tasks (matching optional PATTERN), then exit."],
-      ['--rakefile', '-f', GetoptLong::OPTIONAL_ARGUMENT,
-        "Use FILE as the rakefile."],
-      ['--help',     '-h', '-H', GetoptLong::NO_ARGUMENT,
-        "Display this help message."],
-      ['--libdir',   '-I', GetoptLong::REQUIRED_ARGUMENT,
-        "Include LIBDIR in the search path for required modules."],
-      ['--dry-run',  '-n', GetoptLong::NO_ARGUMENT,
-        "Do a dry run without executing actions."],
-      ['--nosearch', '-N', GetoptLong::NO_ARGUMENT,
-        "Do not search parent directories for the Rakefile."],
-      ['--prereqs',  '-P', GetoptLong::NO_ARGUMENT,
-        "Display the tasks and dependencies, then exit."],
-      ['--quiet',    '-q', GetoptLong::NO_ARGUMENT,
-        "Do not log messages to standard output."],
-      ['--require',  '-r', GetoptLong::REQUIRED_ARGUMENT,
-        "Require MODULE before executing rakefile."],
-      ['--rakelibdir', '-R', GetoptLong::REQUIRED_ARGUMENT,
-        "Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')"],
-      ['--rules', GetoptLong::NO_ARGUMENT,
-        "Trace the rules resolution"],
-      ['--silent',   '-s', GetoptLong::NO_ARGUMENT,
-        "Like --quiet, but also suppresses the 'in directory' announcement."],
-      ['--tasks',    '-T', GetoptLong::OPTIONAL_ARGUMENT,
-        "Display the tasks (matching optional PATTERN) with descriptions, then exit."],
-      ['--trace',    '-t', GetoptLong::NO_ARGUMENT,
-        "Turn on invoke/execute tracing, enable full backtrace."],
-      ['--verbose',  '-v', GetoptLong::NO_ARGUMENT,
-        "Log message to standard output (default)."],
-      ['--version',  '-V', GetoptLong::NO_ARGUMENT,
-        "Display the program version."],
-      ['--execute',  '-e', GetoptLong::REQUIRED_ARGUMENT,
-        "Execute some Ruby code and exit."],
-      ['--execute-print',  '-p', GetoptLong::REQUIRED_ARGUMENT,
-        "Execute some Ruby code, print, then exit."],
-      ['--execute-continue',  '-E', GetoptLong::REQUIRED_ARGUMENT,
-        "Execute some Ruby code, then run tasks."],
-    ]
-
     # Initialize a Rake::Application object.
     def initialize
       super
@@ -1909,8 +1867,7 @@ module Rake
     def init(app_name='rake')
       standard_exception_handling do
         @name = app_name
-        handle_options
-        collect_tasks
+        collect_tasks handle_options
       end
     end
 
@@ -1972,7 +1929,8 @@ module Rake
       rescue SystemExit => ex
         # Exit silently with current status
         exit(ex.status)
-      rescue SystemExit, GetoptLong::InvalidOption => ex
+      rescue SystemExit, OptionParser::InvalidOption => ex
+#      rescue SystemExit, GetoptLong::InvalidOption => ex
         # Exit silently
         exit(1)
       rescue Exception => ex
@@ -1999,23 +1957,6 @@ module Rake
         end
       end
       return false
-    end
-
-    # Display the rake command line help.
-    def help
-      puts "rake [-f rakefile] {options} targets..."
-      puts
-      puts "Options are ..."
-      puts
-      OPTIONS.sort.each do |long, short, mode, desc|
-        if mode == GetoptLong::REQUIRED_ARGUMENT
-          if desc =~ /\b([A-Z]{2,})\b/
-            long = long + "=#{$1}"
-          end
-        end
-        printf "  %-20s (%s)\n", long, short
-        printf "      %s\n", desc
-      end
     end
 
     # Display the tasks and dependencies.
@@ -2063,81 +2004,133 @@ module Rake
       OPTIONS.collect { |lst| lst[0..-2] }
     end
 
-    # Do the option defined by +opt+ and +value+.
-    def do_option(opt, value)
-      case opt
-      when '--describe'
-        options.show_tasks = true
-        options.show_task_pattern = Regexp.new(value || '.')
-        options.full_description = true
-      when '--dry-run'
-        verbose(true)
-        nowrite(true)
-        options.dryrun = true
-        options.trace = true
-      when '--execute'
-        eval(value)
-        exit
-      when '--execute-print'
-        puts eval(value)
-        exit
-      when '--execute-continue'
-        eval(value)
-      when '--help'
-        help
-        exit
-      when '--libdir'
-        $:.push(value)
-      when '--nosearch'
-        options.nosearch = true
-      when '--prereqs'
-        options.show_prereqs = true
-      when '--quiet'
-        verbose(false)
-      when '--rakefile'
-        @rakefiles.clear
-        @rakefiles << value
-      when '--rakelibdir'
-        options.rakelib = value.split(':')
-      when '--require'
-        begin
-          require value
-        rescue LoadError => ex
-          begin
-            rake_require value
-          rescue LoadError => ex2
-            raise ex
-          end
-        end
-      when '--rules'
-        options.trace_rules = true
-      when '--silent'
-        verbose(false)
-        options.silent = true
-      when '--tasks'
-        options.show_tasks = true
-        options.show_task_pattern = Regexp.new(value || '.')
-        options.full_description = false
-      when '--trace'
-        options.trace = true
-        verbose(true)
-      when '--verbose'
-        verbose(true)
-      when '--version'
-        puts "rake, version #{RAKEVERSION}"
-        exit
-      when '--classic-namespace'
-        require 'rake/classic_namespace'
-        options.classic_namespace = true
-      end
-    end
-
     # Read and handle the command line options.
     def handle_options
+      # optparse version of OPTIONS
+      op_options = [
+        ['--classic-namespace', '-C', "Put Task and FileTask in the top level namespace",
+          lambda { |value|
+            require 'rake/classic_namespace'
+            options.classic_namespace = true
+          }
+        ],
+        ['--describe', '-D [PATTERN]', "Describe the tasks (matching optional PATTERN), then exit.",
+          lambda { |value|
+            options.show_tasks = true
+            options.full_description = true
+            options.show_task_pattern = Regexp.new(value || '')
+          }
+        ],
+        ['--execute',  '-e CODE', "Execute some Ruby code and exit.",
+          lambda { |value|
+            eval(value)
+            exit
+          }
+        ],
+        ['--execute-print',  '-p CODE', "Execute some Ruby code, print, then exit.",
+          lambda { |value|
+            puts eval(value)
+            exit
+          }
+        ],
+        ['--execute-continue',  '-E', "Execute some Ruby code, then run tasks.",
+          lambda { |value| eval(value) }            
+        ],
+        ['--rakefile', '-f [FILE]', "Use FILE as the rakefile.",
+          lambda { |value| 
+            value ||= ''
+            @rakefiles.clear 
+            @rakefiles << value
+          }
+        ],
+        ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
+          lambda { |value| $:.push(value) }
+        ],
+        ['--dry-run', '-n', "Do a dry run without executing actions.",
+          lambda { |value|
+            verbose(true)
+            nowrite(true)
+            options.dryrun = true
+            options.trace = true
+          }
+        ],
+        ['--nosearch', '-N', "Do not search parent directories for the Rakefile.",
+          lambda { |value| options.nosearch = true }
+        ],
+        ['--prereqs', '-P', "Display the tasks and dependencies, then exit.",
+          lambda { |value| options.show_prereqs = true }
+        ],
+        ['--quiet', '-q', "Do not log messages to standard output.",
+          lambda { |value| verbose(false) }
+        ],
+        ['--require', '-r MODULE', "Require MODULE before executing rakefile.",
+          lambda { |value|
+            begin
+              require value
+            rescue LoadError => ex
+              begin
+                rake_require value
+              rescue LoadError => ex2
+                raise ex
+              end
+            end
+          }
+        ],
+        ['--rakelibdir', '--rakelib', '-R RAKELIBDIR', "Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')",
+          lambda { |value| options.rakelib = value.split(':') }
+        ],
+        ['--rules', "Trace the rules resolution",
+          lambda { |value| options.trace_rules = true }
+        ],
+        ['--silent', '-s', "Like --quiet, but also suppresses the 'in directory' announcement.",
+          lambda { |value|
+            verbose(false)
+            options.silent = true
+          }
+        ],
+        ['--tasks', '-T [PATTERN]', "Display the tasks (matching optional PATTERN) with descriptions, then exit.",
+          lambda { |value|
+            options.show_tasks = true
+            options.show_task_pattern = Regexp.new(value || '')
+            options.full_description = false
+          }
+        ],
+        ['--trace', '-t', "Turn on invoke/execute tracing, enable full backtrace.",
+          lambda { |value|
+            options.trace = true
+            verbose(true)
+          }
+        ],
+        ['--verbose', '-v', "Log message to standard output (default).",
+          lambda { |value| verbose(true) }
+        ],
+        ['--version', '-V', "Display the program version.",
+          lambda { |value|
+            puts "rake, version #{RAKEVERSION}"
+            exit
+          }
+        ],
+      ]
+
       options.rakelib = ['rakelib']
 
-      opts = GetoptLong.new(*command_line_options)
-      opts.each { |opt, value| do_option(opt, value) }
+      # opts = GetoptLong.new(*command_line_options)
+      # opts.each { |opt, value| do_option(opt, value) }
+
+      parsed_argv = nil
+      opts = OptionParser.new do |opts|
+        opts.banner = "rake [-f rakefile] {options} targets..."
+        opts.separator ""
+        opts.separator "Options are ..."
+
+      	opts.on_tail("-h", "--help", "-H", "Display this help message.") do
+    	  	puts opts
+    		  exit
+      	end
+
+        op_options.each { |args| opts.on(*args) }
+      	parsed_argv = opts.parse(ARGV)
+      end
 
       # If class namespaces are requested, set the global options
       # according to the values in the options structure.
@@ -2148,8 +2141,9 @@ module Rake
         $dryrun = options.dryrun
         $silent = options.silent
       end
+      return parsed_argv
     rescue NoMethodError => ex
-      raise GetoptLong::InvalidOption, "While parsing options, error = #{ex.class}:#{ex.message}"
+      raise OptionParser::InvalidOption, "While parsing options, error = #{ex.class}:#{ex.message}"
     end
 
     # Similar to the regular Ruby +require+ command, but will check
@@ -2189,13 +2183,13 @@ module Rake
     # Collect the list of tasks on the command line.  If no tasks are
     # given, return a list containing only the default task.
     # Environmental assignments are processed at this time as well.
-    def collect_tasks
+    def collect_tasks(argv)
       @top_level_tasks = []
-      ARGV.each do |arg|
+      argv.each do |arg|
         if arg =~ /^(\w+)=(.*)$/
           ENV[$1] = $2
         else
-          @top_level_tasks << arg
+          @top_level_tasks << arg unless arg =~ /^-/
         end
       end
       @top_level_tasks.push("default") if @top_level_tasks.size == 0
