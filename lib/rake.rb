@@ -1830,45 +1830,6 @@ module Rake
 
     DEFAULT_RAKEFILES = ['rakefile', 'Rakefile', 'rakefile.rb', 'Rakefile.rb'].freeze
 
-=begin
-    OPTIONS = [     # :nodoc:
-      ['--classic-namespace', '-C', GetoptLong::NO_ARGUMENT,
-        "Put Task and FileTask in the top level namespace"],
-      ['--describe',  '-D', GetoptLong::OPTIONAL_ARGUMENT,
-        "Describe the tasks (matching optional PATTERN), then exit."],
-      ['--rakefile', '-f', GetoptLong::OPTIONAL_ARGUMENT,
-        "Use FILE as the rakefile."],
-      ['--help',     '-h', '-H', GetoptLong::NO_ARGUMENT,
-        "Display this help message."],
-      ['--libdir',   '-I', GetoptLong::REQUIRED_ARGUMENT,
-        "Include LIBDIR in the search path for required modules."],
-      ['--dry-run',  '-n', GetoptLong::NO_ARGUMENT,
-        "Do a dry run without executing actions."],
-      ['--nosearch', '-N', GetoptLong::NO_ARGUMENT,
-        "Do not search parent directories for the Rakefile."],
-      ['--prereqs',  '-P', GetoptLong::NO_ARGUMENT,
-        "Display the tasks and dependencies, then exit."],
-      ['--quiet',    '-q', GetoptLong::NO_ARGUMENT,
-        "Do not log messages to standard output."],
-      ['--require',  '-r', GetoptLong::REQUIRED_ARGUMENT,
-        "Require MODULE before executing rakefile."],
-      ['--rakelibdir', '-R', GetoptLong::REQUIRED_ARGUMENT,
-        "Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')"],
-      ['--rules', GetoptLong::NO_ARGUMENT,
-        "Trace the rules resolution"],
-      ['--silent',   '-s', GetoptLong::NO_ARGUMENT,
-        "Like --quiet, but also suppresses the 'in directory' announcement."],
-      ['--tasks',    '-T', GetoptLong::OPTIONAL_ARGUMENT,
-        "Display the tasks (matching optional PATTERN) with descriptions, then exit."],
-      ['--trace',    '-t', GetoptLong::NO_ARGUMENT,
-        "Turn on invoke/execute tracing, enable full backtrace."],
-      ['--verbose',  '-v', GetoptLong::NO_ARGUMENT,
-        "Log message to standard output (default)."],
-      ['--version',  '-V', GetoptLong::NO_ARGUMENT,
-        "Display the program version."],
-    ]
-=end
-
     # Initialize a Rake::Application object.
     def initialize
       super
