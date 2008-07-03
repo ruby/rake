@@ -1999,23 +1999,6 @@ module Rake
       return false
     end
 
-    # Display the rake command line help.
-    def _help
-      puts "rake [-f rakefile] {options} targets..."
-      puts
-      puts "Options are ..."
-      puts
-      OPTIONS.sort.each do |long, short, mode, desc|
-        if mode == GetoptLong::REQUIRED_ARGUMENT
-          if desc =~ /\b([A-Z]{2,})\b/
-            long = long + "=#{$1}"
-          end
-        end
-        printf "  %-20s (%s)\n", long, short
-        printf "      %s\n", desc
-      end
-    end
-
     # Display the tasks and dependencies.
     def display_tasks_and_comments
       displayable_tasks = tasks.select { |t|
@@ -2061,96 +2044,35 @@ module Rake
       OPTIONS.collect { |lst| lst[0..-2] }
     end
 
-    # Do the option defined by +opt+ and +value+.
-    def _do_option(opt, value)
-      case opt
-      when '--describe'
-        options.show_tasks = true
-        options.show_task_pattern = Regexp.new(value || '.')
-        options.full_description = true
-      when '--dry-run'
-        verbose(true)
-        nowrite(true)
-        options.dryrun = true
-        options.trace = true
-      when '--help'
-        help
-        exit
-      when '--libdir'
-        $:.push(value)
-      when '--nosearch'
-        options.nosearch = true
-      when '--prereqs'
-        options.show_prereqs = true
-      when '--quiet'
-        verbose(false)
-      when '--rakefile'
-        @rakefiles.clear
-        @rakefiles << value
-      when '--rakelibdir'
-        options.rakelib = value.split(':')
-      when '--require'
-        begin
-          require value
-        rescue LoadError => ex
-          begin
-            rake_require value
-          rescue LoadError => ex2
-            raise ex
-          end
-        end
-      when '--rules'
-        options.trace_rules = true
-      when '--silent'
-        verbose(false)
-        options.silent = true
-      when '--tasks'
-        options.show_tasks = true
-        options.show_task_pattern = Regexp.new(value || '.')
-        options.full_description = false
-      when '--trace'
-        options.trace = true
-        verbose(true)
-      when '--verbose'
-        verbose(true)
-      when '--version'
-        puts "rake, version #{RAKEVERSION}"
-        exit
-      when '--classic-namespace'
-        require 'rake/classic_namespace'
-        options.classic_namespace = true
-      end
-    end
-
     # Read and handle the command line options.
     def handle_options
       # optparse version of OPTIONS
       op_options = [
         ['--classic-namespace', '-C', "Put Task and FileTask in the top level namespace",
-          proc { |value|
+          lambda { |value|
             require 'rake/classic_namespace'
             options.classic_namespace = true
           }
         ],
         ['--describe', '-D [PATTERN]', "Describe the tasks (matching optional PATTERN), then exit.",
-          proc { |value|
+          lambda { |value|
             options.show_tasks = true
             options.full_description = true
             options.show_task_pattern = Regexp.new(value || '')
           }
         ],
         ['--rakefile', '-f [FILE]', "Use FILE as the rakefile.",
-          proc { |value| 
+          lambda { |value| 
             value ||= ''
             @rakefiles.clear 
             @rakefiles << value
           }
         ],
         ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
-          proc { |value| $:.push(value) }
+          lambda { |value| $:.push(value) }
         ],
         ['--dry-run', '-n', "Do a dry run without executing actions.",
-          proc { |value|
+          lambda { |value|
             verbose(true)
             nowrite(true)
             options.dryrun = true
@@ -2158,16 +2080,16 @@ module Rake
           }
         ],
         ['--nosearch', '-N', "Do not search parent directories for the Rakefile.",
-          proc { |value| options.nosearch = true }
+          lambda { |value| options.nosearch = true }
         ],
         ['--prereqs', '-P', "Display the tasks and dependencies, then exit.",
-          proc { |value| options.show_prereqs = true }
+          lambda { |value| options.show_prereqs = true }
         ],
         ['--quiet', '-q', "Do not log messages to standard output.",
-          proc { |value| verbose(false) }
+          lambda { |value| verbose(false) }
         ],
         ['--require', '-r MODULE', "Require MODULE before executing rakefile.",
-          proc { |value|
+          lambda { |value|
             begin
               require value
             rescue LoadError => ex
@@ -2180,35 +2102,35 @@ module Rake
           }
         ],
         ['--rakelibdir', '--rakelib', '-R RAKELIBDIR', "Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')",
-          proc { |value| options.rakelib = value.split(':') }
+          lambda { |value| options.rakelib = value.split(':') }
         ],
         ['--rules', "Trace the rules resolution",
-          proc { |value| options.trace_rules = true }
+          lambda { |value| options.trace_rules = true }
         ],
         ['--silent', '-s', "Like --quiet, but also suppresses the 'in directory' announcement.",
-          proc { |value|
+          lambda { |value|
             verbose(false)
             options.silent = true
           }
         ],
         ['--tasks', '-T [PATTERN]', "Display the tasks (matching optional PATTERN) with descriptions, then exit.",
-          proc { |value|
+          lambda { |value|
             options.show_tasks = true
             options.show_task_pattern = Regexp.new(value || '')
             options.full_description = false
           }
         ],
         ['--trace', '-t', "Turn on invoke/execute tracing, enable full backtrace.",
-          proc { |value|
+          lambda { |value|
             options.trace = true
             verbose(true)
           }
         ],
         ['--verbose', '-v', "Log message to standard output (default).",
-          proc { |value| verbose(true) }
+          lambda { |value| verbose(true) }
         ],
         ['--version', '-V', "Display the program version.",
-          proc { |value|
+          lambda { |value|
             puts "rake, version #{RAKEVERSION}"
             exit
           }
