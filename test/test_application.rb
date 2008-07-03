@@ -450,8 +450,7 @@ class TestApplicationOptions < Test::Unit::TestCase
       throw :system_exit, :exit
     end
     @app.instance_eval do
-      handle_options
-      collect_tasks
+      collect_tasks handle_options
     end
     @tasks = @app.top_level_tasks
     @app.options

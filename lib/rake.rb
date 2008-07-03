@@ -1867,8 +1867,7 @@ module Rake
     def init(app_name='rake')
       standard_exception_handling do
         @name = app_name
-        handle_options
-        collect_tasks
+        collect_tasks handle_options
       end
     end
 
@@ -2103,6 +2102,7 @@ module Rake
       # opts = GetoptLong.new(*command_line_options)
       # opts.each { |opt, value| do_option(opt, value) }
 
+      parsed_argv = nil
       opts = OptionParser.new do |opts|
         opts.banner = "rake [-f rakefile] {options} targets..."
         opts.separator ""
@@ -2114,7 +2114,7 @@ module Rake
       	end
 
         op_options.each { |args| opts.on(*args) }
-      	opts.parse(ARGV)
+      	parsed_argv = opts.parse(ARGV)
       end
 
       # If class namespaces are requested, set the global options
@@ -2126,6 +2126,7 @@ module Rake
         $dryrun = options.dryrun
         $silent = options.silent
       end
+      return parsed_argv
     rescue NoMethodError => ex
       raise OptionParser::InvalidOption, "While parsing options, error = #{ex.class}:#{ex.message}"
     end
@@ -2167,9 +2168,9 @@ module Rake
     # Collect the list of tasks on the command line.  If no tasks are
     # given, return a list containing only the default task.
     # Environmental assignments are processed at this time as well.
-    def collect_tasks
+    def collect_tasks(argv)
       @top_level_tasks = []
-      ARGV.each do |arg|
+      argv.each do |arg|
         if arg =~ /^(\w+)=(.*)$/
           ENV[$1] = $2
         else

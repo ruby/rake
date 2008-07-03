@@ -147,12 +147,12 @@ class FunctionalTest < Test::Unit::TestCase
   end
 
   def test_dash_f_with_no_arg_foils_rakefile_lookup
-    rake "-Itest/data/rakelib -rtest1 -f"
+    rake "-I test/data/rakelib -rtest1 -f"
     assert_match(/^TEST1$/, @out)
   end
 
   def test_dot_rake_files_can_be_laoded_with_dash_r
-    rake "-Itest/data/rakelib -rtest2 -f"
+    rake "-I test/data/rakelib -rtest2 -f"
     assert_match(/^TEST2$/, @out)
   end
 
