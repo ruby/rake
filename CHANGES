@@ -26,6 +26,11 @@
 * FileList#clone and FileList#dup have better sematics w.r.t. taint
   and freeze.
 
+* Added ability clear prerequisites, and/or actions from an existing
+  task.
+
+* Added the ability to reenable a task to be invoked a second time.
+
 == Version 0.8.1
 
 * Removed requires on parsedate.rb (in Ftptools)
