@@ -411,12 +411,40 @@ class TestFileList < Test::Unit::TestCase
       ['a', FileList['testdata/*.c']].flatten.sort
   end
 
-  def test_clone
+  def test_clone_and_dup
     a = FileList['a', 'b', 'c']
-    b = a.clone
+    c = a.clone
+    d = a.dup
     a << 'd'
     assert_equal ['a', 'b', 'c', 'd'], a
-    assert_equal ['a', 'b', 'c'], b
+    assert_equal ['a', 'b', 'c'], c
+    assert_equal ['a', 'b', 'c'], d
+  end
+
+  def test_dup_and_clone_replicate_taint
+    a = FileList['a', 'b', 'c']
+    a.taint
+    c = a.clone
+    d = a.dup
+    assert c.tainted?, "Clone should be tainted"
+    assert d.tainted?, "Dup should be tainted"
+  end
+
+  def test_duped_items_will_thaw
+    a = FileList['a', 'b', 'c']
+    a.freeze
+    d = a.dup
+    d << 'more'
+    assert_equal ['a', 'b', 'c', 'more'], d
+  end
+
+  def test_cloned_items_stay_frozen
+    a = FileList['a', 'b', 'c']
+    a.freeze
+    c = a.clone
+    assert_raise(TypeError) do
+      c << 'more'
+    end
   end
 
   def test_array_comparisons
