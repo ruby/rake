@@ -20,6 +20,9 @@
 * Switched from getoptlong to optparse (patches supplied by Edwin
   Pratomo (edpratomo@yahoo.co.id))
 
+* The -T option will now attempt to dynamically sense the size of the
+  terminal.  RAKE_COLUMNS will override any dynamic sensing.
+
 == Version 0.8.1
 
 * Removed requires on parsedate.rb (in Ftptools)
