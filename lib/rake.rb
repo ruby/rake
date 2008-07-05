@@ -416,6 +416,9 @@ module Rake
     # List of prerequisites for a task.
     attr_reader :prerequisites
 
+    # List of actions attached to a task.
+    attr_reader :actions
+
     # Application owning this task.
     attr_accessor :application
 
@@ -493,6 +496,30 @@ module Rake
     # Name of arguments for this task.
     def arg_names
       @arg_names || []
+    end
+
+    # Reenable the task, allowing it to be invoked again
+    def reenable
+      @already_invoked = false
+    end
+
+    # Clear an existing task of both prerequisites and actions
+    def clear
+      clear_prerequisites
+      clear_actions
+      self
+    end
+
+    # Clear the prerequisites of a task.
+    def clear_prerequisites
+      prerequisites.clear
+      self
+    end
+
+    # Clear the actions on a task.
+    def clear_actions
+      actions.clear
+      self
     end
 
     # Invoke the task if it is needed.  Prerequites are invoked first.
