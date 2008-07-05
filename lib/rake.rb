@@ -1930,7 +1930,6 @@ module Rake
         # Exit silently with current status
         exit(ex.status)
       rescue SystemExit, OptionParser::InvalidOption => ex
-#      rescue SystemExit, GetoptLong::InvalidOption => ex
         # Exit silently
         exit(1)
       rescue Exception => ex
