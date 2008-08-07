@@ -160,7 +160,7 @@ PKG_FILES.exclude(%r{doc/example/main$})
 if ! defined?(Gem)
   puts "Package Target requires RubyGEMs"
 else
-  spec = Gem::Specification.new do |s|
+  SPEC = Gem::Specification.new do |s|
     
     #### Basic information.
 
@@ -211,10 +211,17 @@ else
 #     end
   end
 
-  package_task = Rake::GemPackageTask.new(spec) do |pkg|
+  package_task = Rake::GemPackageTask.new(SPEC) do |pkg|
     pkg.need_zip = true
     pkg.need_tar = true
   end
+
+  file "rake.gemspec" => "Rakefile" do |t|
+    require 'yaml'
+    open(t.name, "w") { |f| f.puts SPEC.to_yaml }
+  end
+
+  task :gemspec => "rake.gemspec"
 end
 
 # Misc tasks =========================================================
