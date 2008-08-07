@@ -29,7 +29,7 @@
 # as a library via a require statement, but it can be distributed
 # independently as an application.
 
-RAKEVERSION = '0.8.1.4'
+RAKEVERSION = '0.8.1.5'
 
 require 'rbconfig'
 require 'getoptlong'
