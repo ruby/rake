@@ -35,7 +35,7 @@ require 'rbconfig'
 require 'getoptlong'
 require 'fileutils'
 require 'singleton'
-require 'thread'
+require 'monitor'
 require 'optparse'
 require 'ostruct'
 
@@ -461,7 +461,7 @@ module Rake
       @already_invoked = false
       @full_comment = nil
       @comment = nil
-      @lock = Mutex.new
+      @lock = Monitor.new
       @application = app
       @scope = app.current_scope
       @arg_names = nil
