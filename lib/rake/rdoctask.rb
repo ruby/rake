@@ -55,7 +55,7 @@ module Rake
     # RDoc. (default is none)
     attr_accessor :main
 
-    # Name of template to be used by rdoc. (default is 'html')
+    # Name of template to be used by rdoc. (defaults to rdoc's default)
     attr_accessor :template
 
     # List of files to be included in the rdoc generation. (default is [])
@@ -74,7 +74,7 @@ module Rake
       @rdoc_dir = 'html'
       @main = nil
       @title = nil
-      @template = 'html'
+      @template = nil
       @external = false
       @options = []
       yield self if block_given?
