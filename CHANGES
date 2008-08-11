@@ -23,6 +23,9 @@
 * The -T option will now attempt to dynamically sense the size of the
   terminal.  RAKE_COLUMNS will override any dynamic sensing.
 
+* FileList#clone and FileList#dup have better sematics w.r.t. taint
+  and freeze.
+
 == Version 0.8.1
 
 * Removed requires on parsedate.rb (in Ftptools)
