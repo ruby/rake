@@ -34,6 +34,9 @@
 * Changed RDoc test task to have no default template. This makes it
   easier for the tempate to pick up the template from the environment.
 
+* Changed from using Mutex to Monitor. Evidently Mutex causes thread
+  join errors when Ruby is compiled with -disable-pthreads.
+
 == Version 0.8.1
 
 * Removed requires on parsedate.rb (in Ftptools)
