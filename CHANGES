@@ -31,6 +31,9 @@
 
 * Added the ability to reenable a task to be invoked a second time.
 
+* Changed RDoc test task to have no default template. This makes it
+  easier for the tempate to pick up the template from the environment.
+
 == Version 0.8.1
 
 * Removed requires on parsedate.rb (in Ftptools)
