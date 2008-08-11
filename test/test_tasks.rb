@@ -20,7 +20,6 @@ class TestTask < Test::Unit::TestCase
     t = task(:name) { |task| arg = task; 1234 }
     assert_equal "name", t.name
     assert_equal [], t.prerequisites
-    assert t.prerequisites.is_a?(FileList)
     assert t.needed?
     t.execute(0)
     assert_equal t, arg

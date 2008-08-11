@@ -456,7 +456,7 @@ module Rake
     # +enhance+ to add actions and prerequisites.
     def initialize(task_name, app)
       @name = task_name.to_s
-      @prerequisites = FileList[]
+      @prerequisites = []
       @actions = []
       @already_invoked = false
       @full_comment = nil
