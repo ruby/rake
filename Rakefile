@@ -221,6 +221,7 @@ else
     open(t.name, "w") { |f| f.puts SPEC.to_yaml }
   end
 
+  desc "Create a stand-alone gemspec"
   task :gemspec => "rake.gemspec"
 end
 
