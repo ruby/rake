@@ -39,12 +39,15 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_display_tasks_with_long_comments
+    ENV['RAKE_COLUMNS'] = '80'
     @app.options.show_task_pattern = //
     @app.last_description = "12345678901234567890123456789012345678901234567890123456789012345678901234567890"
     @app.define_task(Rake::Task, "t")
     out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
     assert_match(/^rake t/, out)
     assert_match(/# 12345678901234567890123456789012345678901234567890123456789012345\.\.\./, out)
+  ensure
+    ENV['RAKE_COLUMNS'] = nil
   end
 
   def test_display_tasks_with_full_descriptions

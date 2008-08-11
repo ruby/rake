@@ -62,11 +62,14 @@ class FunctionalTest < Test::Unit::TestCase
   end
 
   def test_multi_desc
+    ENV['RAKE_COLUMNS'] = '80'
     Dir.chdir("test/data/multidesc") do rake "-T" end
     assert_match %r{^rake a *# A / A2 *$}, @out
     assert_match %r{^rake b *# B *$}, @out
     assert_no_match %r{^rake c}, @out
     assert_match %r{^rake d *# x{65}\.\.\.$}, @out
+  ensure
+    ENV['RAKE_COLUMNS'] = nil
   end
 
   def test_long_description
