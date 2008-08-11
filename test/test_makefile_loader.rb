@@ -7,7 +7,7 @@ require 'rake/loaders/makefile'
 class TestMakefileLoader < Test::Unit::TestCase
   include Rake
 
-  def test_create
+  def test_parse
     Task.clear
     loader = Rake::MakefileLoader.new
     loader.load("test/data/sample.mf")
