@@ -90,6 +90,35 @@ class TestTask < Test::Unit::TestCase
     assert_equal ["t3", "t2", "t1"], runlist
   end
 
+  def test_can_double_invoke_with_reenable
+    runlist = []
+    t1 = task(:t1) { |t| runlist << t.name }
+    t1.invoke
+    t1.reenable
+    t1.invoke
+    assert_equal ["t1", "t1"], runlist
+  end
+
+  def test_clear
+    t = task("t" => "a") { }
+    t.clear
+    assert t.prerequisites.empty?, "prerequisites should be empty"
+    assert t.actions.empty?, "actions should be empty"
+  end
+
+  def test_clear_prerequisites
+    t = task("t" => ["a", "b"])
+    assert_equal ['a', 'b'], t.prerequisites
+    t.clear_prerequisites
+    assert_equal [], t.prerequisites
+  end
+
+  def test_clear_actions
+    t = task("t") { }
+    t.clear_actions
+    assert t.actions.empty?, "actions should be empty"
+  end
+
   def test_find
     task :tfind
     assert_equal "tfind", Task[:tfind].name
