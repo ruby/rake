@@ -41,7 +41,56 @@ class TestApplication < Test::Unit::TestCase
   def test_display_tasks_with_long_comments
     ENV['RAKE_COLUMNS'] = '80'
     @app.options.show_task_pattern = //
-    @app.last_description = "12345678901234567890123456789012345678901234567890123456789012345678901234567890"
+    @app.last_description = "1234567890" * 8
+    @app.define_task(Rake::Task, "t")
+    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+    assert_match(/^rake t/, out)
+    assert_match(/# 12345678901234567890123456789012345678901234567890123456789012345\.\.\./, out)
+  ensure
+    ENV['RAKE_COLUMNS'] = nil
+  end
+
+  def test_display_tasks_with_task_name_wider_than_tty_display
+    ENV['RAKE_COLUMNS'] = '80'
+    @app.options.show_task_pattern = //
+    description = "something short"
+    task_name = "task name" * 80
+    @app.last_description = "something short"
+    @app.define_task(Rake::Task, task_name )
+    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+    # Ensure the entire task name is output and we end up showing no description
+    assert_match(/rake #{task_name}  # .../, out)
+  ensure
+    ENV['RAKE_COLUMNS'] = nil
+  end
+
+  def test_display_tasks_with_very_long_task_name_to_a_non_tty_shows_name_and_comment
+    @app.options.show_task_pattern = //
+    @app.tty_output = false
+    description = "something short"
+    task_name = "task name" * 80
+    @app.last_description = "something short"
+    @app.define_task(Rake::Task, task_name )
+    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+    # Ensure the entire task name is output and we end up showing no description
+    assert_match(/rake #{task_name}  # #{description}/, out)
+  end
+
+  def test_display_tasks_with_long_comments_to_a_non_tty_shows_entire_comment
+    @app.options.show_task_pattern = //
+    @app.tty_output = false
+    @app.last_description = "1234567890" * 8
+    @app.define_task(Rake::Task, "t")
+    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+    assert_match(/^rake t/, out)
+    assert_match(/# #{@app.last_description}/, out)
+  end
+
+  def test_display_tasks_with_long_comments_to_a_non_tty_with_columns_set_truncates_comments
+    ENV['RAKE_COLUMNS'] = '80'
+    @app.options.show_task_pattern = //
+    @app.tty_output = false
+    @app.last_description = "1234567890" * 8
     @app.define_task(Rake::Task, "t")
     out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
     assert_match(/^rake t/, out)

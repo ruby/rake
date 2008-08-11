@@ -1887,6 +1887,7 @@ module Rake
       @top_level_tasks = []
       add_loader('rf', DefaultLoader.new)
       add_loader('rake', DefaultLoader.new)
+      @tty_output = STDOUT.tty?
     end
 
     # Run the Rake application.  The run method performs the following three steps:
@@ -2001,6 +2002,22 @@ module Rake
       return false
     end
 
+    # True if we are outputting to TTY, false otherwise
+    def tty_output?
+      @tty_output
+    end
+
+    # Override the detected TTY output state (mostly for testing)
+    def tty_output=( tty_output_state )
+      @tty_output = tty_output_state
+    end
+
+    # We will truncate output if we are outputting to a TTY or if we've been
+    # given an explicit column width to honor
+    def truncate_output?
+      tty_output? || ENV['RAKE_COLUMNS']
+    end
+
     # Display the tasks and dependencies.
     def display_tasks_and_comments
       displayable_tasks = tasks.select { |t|
@@ -2016,10 +2033,10 @@ module Rake
         end
       else
         width = displayable_tasks.collect { |t| t.name_with_args.length }.max || 10
-        max_column = terminal_width - name.size - width - 7
+        max_column = truncate_output? ? terminal_width - name.size - width - 7 : nil
         displayable_tasks.each do |t|
           printf "#{name} %-#{width}s  # %s\n",
-            t.name_with_args, truncate(t.comment, max_column)
+            t.name_with_args, max_column ? truncate(t.comment, max_column) : t.comment
         end
       end
     end
@@ -2056,7 +2073,7 @@ module Rake
       if string.length <= width
         string
       else
-        string[0, width-3] + "..."
+        ( string[0, width-3] || "" ) + "..."
       end
     end
 

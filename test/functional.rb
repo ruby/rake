@@ -6,7 +6,7 @@ begin
   require 'session'
 rescue LoadError
   puts "UNABLE TO RUN FUNCTIONAL TESTS"
-  puts "No Session Found"
+  puts "No Session Found (gem install session)"
 end
 
 if defined?(Session)
