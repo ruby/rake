@@ -61,7 +61,7 @@ class TestTaskArguments < Test::Unit::TestCase
   def test_creating_new_argument_scopes
     parent = Rake::TaskArguments.new(['p'], [1])
     child = parent.new_scope(['c', 'p'])
-    assert_equal({:c => nil, :p=>1}, child.to_hash)
+    assert_equal({:p=>1}, child.to_hash)
     assert_equal 1, child.p
     assert_equal 1, child["p"]
     assert_equal 1, child[:p]
@@ -72,5 +72,18 @@ class TestTaskArguments < Test::Unit::TestCase
     parent = Rake::TaskArguments.new(['aa'], [1])
     child = Rake::TaskArguments.new(['aa'], [2], parent)
     assert_equal 2, child.aa
+  end
+  
+  def test_default_arguments_values_can_be_merged
+    ta = Rake::TaskArguments.new(["aa", "bb"], [nil, "original_val"])
+    ta.with_defaults({ :aa => 'default_val' })
+    assert_equal 'default_val', ta[:aa]
+    assert_equal 'original_val', ta[:bb]
+  end
+
+  def test_default_arguements_that_dont_match_names_are_ignored
+    ta = Rake::TaskArguments.new(["aa", "bb"], [nil, "original_val"])
+    ta.with_defaults({ "cc" => "default_val" })
+    assert_nil ta[:cc]
   end
 end

@@ -298,7 +298,7 @@ module Rake
       @parent = parent
       @hash = {}
       names.each_with_index { |name, i|
-        @hash[name.to_sym] = values[i]
+        @hash[name.to_sym] = values[i] unless values[i].nil?
       }
     end
 
@@ -312,6 +312,10 @@ module Rake
     # Find an argument value by name or index.
     def [](index)
       lookup(index.to_sym)
+    end
+
+    def with_defaults(defaults)
+      @hash = defaults.merge(@hash)
     end
 
     def each(&block)

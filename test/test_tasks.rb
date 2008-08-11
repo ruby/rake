@@ -363,7 +363,7 @@ class TestTaskWithArguments < Test::Unit::TestCase
 
   def test_args_not_passed_if_no_arg_names
     pre = task(:pre, :rev) { |t, args|
-      assert_equal({ :rev => nil }, args.to_hash)
+      assert_equal({}, args.to_hash)
     }
     t = task(:t, :needs => [:pre])
     t.invoke("bill", "1.2")
