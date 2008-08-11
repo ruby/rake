@@ -2091,6 +2091,21 @@ module Rake
             options.show_task_pattern = Regexp.new(value || '')
           }
         ],
+        ['--execute',  '-e CODE', "Execute some Ruby code and exit.",
+          lambda { |value|
+            eval(value)
+            exit
+          }
+        ],
+        ['--execute-print',  '-p CODE', "Execute some Ruby code, print, then exit.",
+          lambda { |value|
+            puts eval(value)
+            exit
+          }
+        ],
+        ['--execute-continue',  '-E', "Execute some Ruby code, then run tasks.",
+          lambda { |value| eval(value) }            
+        ],
         ['--rakefile', '-f [FILE]', "Use FILE as the rakefile.",
           lambda { |value| 
             value ||= ''
