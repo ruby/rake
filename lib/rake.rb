@@ -2002,6 +2002,12 @@ module Rake
       @tty_output = tty_output_state
     end
 
+    # We will truncate output if we are outputting to a TTY or if we've been
+    # given an explicit column width to honor
+    def truncate_output?
+      tty_output? || ENV['RAKE_COLUMNS']
+    end
+
     # Display the tasks and dependencies.
     def display_tasks_and_comments
       displayable_tasks = tasks.select { |t|
@@ -2017,7 +2023,7 @@ module Rake
         end
       else
         width = displayable_tasks.collect { |t| t.name_with_args.length }.max || 10
-        max_column = tty_output? ? terminal_width - name.size - width - 7 : nil
+        max_column = truncate_output? ? terminal_width - name.size - width - 7 : nil
         displayable_tasks.each do |t|
           printf "#{name} %-#{width}s  # %s\n",
             t.name_with_args, max_column ? truncate(t.comment, max_column) : t.comment

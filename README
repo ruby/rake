@@ -46,6 +46,7 @@ Download and install  rake with the following.
 
 If you wish to run the unit and functional tests that come with Rake:
 
+* Install the 'session' gem in order to run the functional tests.
 * CD into the top project directory of rake.
 * Type one of the following:
 
