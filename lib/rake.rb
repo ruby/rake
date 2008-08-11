@@ -1973,7 +1973,7 @@ module Rake
         end
       else
         width = displayable_tasks.collect { |t| t.name_with_args.length }.max || 10
-        max_column = 80 - name.size - width - 7
+        max_column = terminal_width - name.size - width - 7
         displayable_tasks.each do |t|
           printf "#{name} %-#{width}s  # %s\n",
             t.name_with_args, truncate(t.comment, max_column)
@@ -1981,6 +1981,34 @@ module Rake
       end
     end
 
+    def terminal_width
+      if ENV['RAKE_COLUMNS']
+        result = ENV['RAKE_COLUMNS'].to_i
+      else
+        result = unix? ? dynamic_width : 80
+      end
+      (result < 10) ? 80 : result
+    rescue
+      80
+    end
+
+    # Calculate the dynamic width of the 
+    def dynamic_width
+      @dynamic_width ||= (dynamic_width_stty.nonzero? || dynamic_width_tput)
+    end
+
+    def dynamic_width_stty
+      %x{stty size 2>/dev/null}.split[1].to_i
+    end
+
+    def dynamic_width_tput
+      %x{tput cols 2>/dev/null}.to_i
+    end
+
+    def unix?
+      RUBY_PLATFORM =~ /(aix|darwin|linux|(net|free|open)bsd|cygwin|solaris|irix|hpux|)/i
+    end
+    
     def truncate(string, width)
       if string.length <= width
         string
