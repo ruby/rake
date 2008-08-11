@@ -44,6 +44,10 @@
 * Added a performance patch for reading large makefile dependency
   files. (Patch supplied by Ittay Dror)
 
+* Default values for task arguments can easily be specified with the
+  :with_defaults method. (Idea for default argument merging supplied
+  by (Adam Q. Salter)
+
 == Version 0.8.1
 
 * Removed requires on parsedate.rb (in Ftptools)

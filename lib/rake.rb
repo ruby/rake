@@ -293,6 +293,9 @@ module Rake
 
     attr_reader :names
 
+    # Create a TaskArgument object with a list of named arguments
+    # (given by :names) and a set of associated values (given by
+    # :values).  :parent is the parent argument object.
     def initialize(names, values, parent=nil)
       @names = names
       @parent = parent
@@ -314,6 +317,9 @@ module Rake
       lookup(index.to_sym)
     end
 
+    # Specify a hash of default values for task arguments. Use the
+    # defaults only if there is no specific value for the given
+    # argument.
     def with_defaults(defaults)
       @hash = defaults.merge(@hash)
     end
