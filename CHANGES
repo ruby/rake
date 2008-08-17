@@ -48,6 +48,10 @@
   :with_defaults method. (Idea for default argument merging supplied
   by (Adam Q. Salter)
 
+* The -T output will only self-truncate if the output is a tty.
+  However, if RAKE_COLUMNS is explicitly set, it will be honored in
+  any case. (Patch provided by Gavin Stark).
+
 == Version 0.8.1
 
 * Removed requires on parsedate.rb (in Ftptools)
