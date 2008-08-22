@@ -1993,7 +1993,7 @@ module Rake
 
     # True if one of the files in RAKEFILES is in the current directory.
     # If a match is found, it is copied into @rakefile.
-    def have_rakefile
+    def have_curdir_rakefile
       @rakefiles.each do |fn|
         if File.exist?(fn) || fn == ''
           @rakefile = fn
@@ -2070,6 +2070,10 @@ module Rake
       RUBY_PLATFORM =~ /(aix|darwin|linux|(net|free|open)bsd|cygwin|solaris|irix|hpux|)/i
     end
     
+    def windows?
+      Config::CONFIG['host_os'] =~ /mswin/
+    end
+    
     def truncate(string, width)
       if string.length <= width
         string
@@ -2135,6 +2139,16 @@ module Rake
         ],
         ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
           lambda { |value| $:.push(value) }
+        ],
+        ['--system',  '-G', "Run tasks using global rakefiles (usually '~/.rake/*.rake'), even if a rakefile has been found in current directory.",
+          lambda { |value|
+            options.load_system = true
+          }
+        ],
+        ['--no-system',  '-g', "Run tasks using default rakefile search paths, ignoring global rakefiles.",
+          lambda { |value|
+            options.ignore_system = true
+          }
         ],
         ['--nosearch', '-N', "Do not search parent directories for the Rakefile.",
           lambda { |value| options.nosearch = true }
@@ -2237,7 +2251,7 @@ module Rake
     end
 
     # Similar to the regular Ruby +require+ command, but will check
-    # for .rake files in addition to .rb files.
+    # for *.rake files in addition to *.rb files.
     def rake_require(file_name, paths=$LOAD_PATH, loaded=$")
       return false if loaded.include?(file_name)
       paths.each do |path|
@@ -2254,20 +2268,49 @@ module Rake
 
     def raw_load_rakefile # :nodoc:
       here = Dir.pwd
-      while ! have_rakefile
-        Dir.chdir("..")
-        if Dir.pwd == here || options.nosearch
-          fail "No Rakefile found (looking for: #{@rakefiles.join(', ')})"
+      if (options.load_system || ! have_curdir_rakefile) && ! options.ignore_system && have_system_rakefiles
+        Dir["#{rake_home_path}/*.rake"].each do |name|
+          add_import name
         end
-        here = Dir.pwd
+      else
+        while ! have_curdir_rakefile
+          Dir.chdir("..")
+          if Dir.pwd == here || options.nosearch
+            fail "No Rakefile found (looking for: #{@rakefiles.join(', ')})"
+          end
+          here = Dir.pwd
+        end
       end
       puts "(in #{Dir.pwd})" unless options.silent
       $rakefile = @rakefile
-      load File.expand_path(@rakefile) if @rakefile != ''
+      load File.expand_path(@rakefile) if @rakefile
       options.rakelib.each do |rlib|
         Dir["#{rlib}/*.rake"].each do |name| add_import name end
       end
       load_imports
+    end
+
+    def have_system_rakefiles
+      Dir[File.join(rake_home_path, '*.rake')].size > 0
+    end
+    
+    # The platform-aware home_path
+    def rake_home_path
+      if ENV['RAKE_SYSTEM']
+        ENV['RAKE_SYSTEM']
+      elsif windows?
+        win32_home_path
+      else
+        File.join(File.expand_path('~'), '.rake')
+      end
+    end
+ 
+    def win32_rake_home_path #:nodoc:
+      unless File.exists?(win32home = File.join(ENV['APPDATA'], 'Rake'))
+        raise Win32HomeError, "# Unable to determine home path environment variable."
+      else
+        win32home
+      end
     end
 
     # Collect the list of tasks on the command line.  If no tasks are
