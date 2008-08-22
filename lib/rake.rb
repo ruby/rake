@@ -2109,31 +2109,6 @@ module Rake
             options.show_task_pattern = Regexp.new(value || '')
           }
         ],
-        ['--execute',  '-e CODE', "Execute some Ruby code and exit.",
-          lambda { |value|
-            eval(value)
-            exit
-          }
-        ],
-        ['--execute-print',  '-p CODE', "Execute some Ruby code, print, then exit.",
-          lambda { |value|
-            puts eval(value)
-            exit
-          }
-        ],
-        ['--execute-continue',  '-E', "Execute some Ruby code, then run tasks.",
-          lambda { |value| eval(value) }            
-        ],
-        ['--rakefile', '-f [FILE]', "Use FILE as the rakefile.",
-          lambda { |value| 
-            value ||= ''
-            @rakefiles.clear 
-            @rakefiles << value
-          }
-        ],
-        ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
-          lambda { |value| $:.push(value) }
-        ],
         ['--dry-run', '-n', "Do a dry run without executing actions.",
           lambda { |value|
             verbose(true)
@@ -2141,6 +2116,25 @@ module Rake
             options.dryrun = true
             options.trace = true
           }
+        ],
+        ['--execute',  '-e CODE', "Execute some Ruby code and exit.",
+          lambda { |value|
+            eval(value)
+            exit
+          }
+        ],
+        ['--execute-print',  '-p CODE', "Execute some Ruby code, print the result, then exit.",
+          lambda { |value|
+            puts eval(value)
+            exit
+          }
+        ],
+        ['--execute-continue',  '-E',
+          "Execute some Ruby code, then continue with normal task processing.",
+          lambda { |value| eval(value) }            
+        ],
+        ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
+          lambda { |value| $:.push(value) }
         ],
         ['--nosearch', '-N', "Do not search parent directories for the Rakefile.",
           lambda { |value| options.nosearch = true }
@@ -2150,6 +2144,17 @@ module Rake
         ],
         ['--quiet', '-q', "Do not log messages to standard output.",
           lambda { |value| verbose(false) }
+        ],
+        ['--rakefile', '-f [FILE]', "Use FILE as the rakefile.",
+          lambda { |value| 
+            value ||= ''
+            @rakefiles.clear 
+            @rakefiles << value
+          }
+        ],
+        ['--rakelibdir', '--rakelib', '-R RAKELIBDIR',
+          "Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')",
+          lambda { |value| options.rakelib = value.split(':') }
         ],
         ['--require', '-r MODULE', "Require MODULE before executing rakefile.",
           lambda { |value|
@@ -2164,10 +2169,7 @@ module Rake
             end
           }
         ],
-        ['--rakelibdir', '--rakelib', '-R RAKELIBDIR', "Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')",
-          lambda { |value| options.rakelib = value.split(':') }
-        ],
-        ['--rules', "Trace the rules resolution",
+        ['--rules', "Trace the rules resolution.",
           lambda { |value| options.trace_rules = true }
         ],
         ['--silent', '-s', "Like --quiet, but also suppresses the 'in directory' announcement.",
