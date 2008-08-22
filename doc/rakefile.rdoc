@@ -1,4 +1,4 @@
-= Rakefile Format
+= Rakefile Format (as of version 0.8.2)
 
 First of all, there is no special format for a Rakefile.  A Rakefile
 contains executable Ruby code.  Anything legal in a ruby script is
@@ -149,6 +149,124 @@ to the multitask parallel execution, so there is no need for the user
 to do extra synchronization for Rake's benefit.  However, if there are
 user data structures shared between the parallel prerequisites, the
 user must do whatever is necessary to prevent race conditions.
+
+== Tasks with Arguments
+
+Prior to version 0.8.0, rake was only able to handle command line
+arguments of the form NAME=VALUE that were passed into Rake via the
+ENV hash.  Many folks had asked for some kind of simple command line
+arguments, perhaps using "--" to separate regular task names from
+argument values on the command line.  The problem is that there was no
+easy way to associate positional arguments on the command line with
+different tasks.  Suppose both tasks :a and :b expect a command line
+argument: does the first value go with :a?  What if :b is run first?
+Should it then get the first command line argument.
+
+Rake 0.8.0 solves this problem by explicitly passing values directly
+to the tasks that need them.  For example, if I had a release task
+that required a version number, I could say:
+
+   rake release[0.8.2]
+
+And the string "0.8.2" will be passed to the :release task.  Multiple
+arguments can be passed by separating them with a comma, for example:
+
+   rake name[john,doe]
+
+Just a few words of caution.  The rake task name and its arguments
+need to be a single command line argument to rake.  This generally
+means no spaces.  If spaces are needed, then the entire rake +
+argument string should be quoted.  Something like this:
+
+   rake "name[billy bob, smith]"
+
+(Quoting rules vary between operating systems and shells, so make sure
+you consult the proper docs for your OS/shell).
+
+=== Tasks that Expect Parameters
+
+Parameters are only given to tasks that are setup to expect them.  In
+order to handle named parameters, the task declaration syntax for
+tasks has been extended slightly.
+
+For example, a task that needs a first name and last name might be
+declared as:
+
+   task :name, :first_name, :last_name
+
+The first argument is still the name of the task (:name in this case).
+The next to argumements are the names of the parameters expected by
+:name (:first_name and :last_name in the example).
+
+To access the values of the paramters, the block defining the task
+behaviour can now accept a second parameter:
+
+   task :name, :first_name, :last_name do |t, args|
+     puts "First name is #{args.first_name}"
+     puts "Last  name is #{args.last_name}"
+   end
+
+The first argument of the block "t" is always bound to the current
+task object.  The second argument "args" is an open-struct like object
+that allows access to the task arguments.  Extra command line
+arguments to a task are ignored.  Missing command line arguments are
+given the nil value.
+
+If you wish to specify default values for the arguments, you can use
+the with_defaults method in the task body.  Here is the above example
+where we specify default values for the first and last names:
+
+   task :name, :first_name, :last_name do |t, args|
+     args.with_defaults(:first_name => "John", :last_name => "Dough")
+     puts "First name is #{args.first_name}"
+     puts "Last  name is #{args.last_name}"
+   end
+
+=== Tasks that Expect Parameters and Have Prerequisites
+
+Tasks that use parameters have a slightly different format for
+prerequisites.  Use the <tt>:needs</tt> keyword to specify the
+prerequisites for tasks with arguments.  For example:
+
+   task :name, :first_name, :last_name, :needs => [:pre_name] do |t, args|
+     args.with_defaults(:first_name => "John", :last_name => "Dough")
+     puts "First name is #{args.first_name}"
+     puts "Last  name is #{args.last_name}"
+   end
+
+== Accessing Task Programatically
+
+Sometimes it is useful to manipulate tasks programatically in a
+Rakefile. To find a task object, use the <tt>:[]</tt> operator on the
+<tt>Rake::Task</tt>.
+
+=== Programmatic Task Example
+
+For example, the following Rakefile defines two tasks.  The :doit task
+simply prints a simple "DONE" message.  The :dont class will lookup
+the doit class and remove (clear) all of its prerequisites and
+actions.
+
+   task :doit do
+     puts "DONE"
+   end
+
+   task :dont do
+     Rake::Task[:doit].clear
+   end        
+
+Running this example:
+
+  $ rake doit
+  (in /Users/jim/working/git/rake/x)
+  DONE
+  $ rake dont doit
+  (in /Users/jim/working/git/rake/x)
+  $ 
+
+The ability to programmatically manipulate tasks gives rake very
+powerful meta-programming capabilities w.r.t. task execution, but
+should be used with cation.
 
 == Rules
 
@@ -371,8 +489,6 @@ Creating a file list is easy.  Just give it the list of file names:
 Or give it a glob pattern:
 
    fl = FileList['*.rb']
-
-   
 
 == Odds and Ends
 

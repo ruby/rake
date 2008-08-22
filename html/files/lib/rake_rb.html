@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>File: rake.rb</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+
+    <script language="JavaScript" type="text/javascript">
+    // <![CDATA[
+
+        function toggleSource( id )
+        {
+          var elem
+          var link
+
+          if( document.getElementById )
+          {
+            elem = document.getElementById( id )
+            link = document.getElementById( "l_" + id )
+          }
+          else if ( document.all )
+          {
+            elem = eval( "document.all." + id )
+            link = eval( "document.all.l_" + id )
+          }
+          else
+            return false;
+
+          if( elem.style.display == "block" )
+          {
+            elem.style.display = "none"
+            link.innerHTML = "show source"
+          }
+          else
+          {
+            elem.style.display = "block"
+            link.innerHTML = "hide source"
+          }
+        }
+
+        function openCode( url )
+        {
+          window.open( url, "SOURCE_CODE", "width=400,height=400,scrollbars=yes" )
+        }
+      // ]]>
+    </script>
+  </head>
+
+  <body>
+  <table border='0' cellpadding='0' cellspacing='0' width="100%" class='banner'>
+  <tr><td>
+    <table width="100%" border='0' cellpadding='0' cellspacing='0'><tr>
+      <td class="file-title" colspan="2"><span class="file-title-prefix">File</span><br />rake.rb</td>
+      <td align="right">
+        <table border='0' cellspacing="0" cellpadding="2">
+          <tr>
+            <td>Path:</td>
+            <td>lib/rake.rb
+            </td>
+          </tr>
+          <tr>
+            <td>Modified:</td>
+            <td>Thu Aug 21 22:15:44 -0400 2008</td>
+          </tr>
+        </table>
+      </td></tr>
+    </table>
+  </td></tr>
+</table><br>
+ <!-- banner header -->
+
+  <div id="bodyContent">
+      <div id="content">
+
+
+  <div class="sectiontitle">Required Files</div>
+  <ul>
+  <li>rbconfig</li>
+  <li>getoptlong</li>
+  <li>fileutils</li>
+  <li>singleton</li>
+  <li>monitor</li>
+  <li>optparse</li>
+  <li>ostruct</li>
+  <li>rake/classic_namespace</li>
+  </ul>
+
+
+  <div class="sectiontitle">Methods</div>
+  <ul>
+  <li><a href="#M000008">desc</a></li>
+  <li><a href="#M000004">directory</a></li>
+  <li><a href="#M000002">file</a></li>
+  <li><a href="#M000003">file_create</a></li>
+  <li><a href="#M000009">import</a></li>
+  <li><a href="#M000005">multitask</a></li>
+  <li><a href="#M000006">namespace</a></li>
+  <li><a href="#M000007">rule</a></li>
+  <li><a href="#M000001">task</a></li>
+  </ul>
+
+<div class="sectiontitle">Included Modules</div>
+<ul>
+  <li><a href="../../classes/RakeFileUtils.html">RakeFileUtils</a></li>
+</ul>
+
+
+
+  <div class="sectiontitle">Constants</div>
+  <table border='0' cellpadding='5'>
+  <tr valign='top'>
+    <td class="attr-name">RAKEVERSION</td>
+    <td>=</td>
+    <td class="attr-value">'0.8.1.6'</td>
+  </tr>
+  <tr valign='top'>
+    <td>&nbsp;</td>
+    <td colspan="2" class="attr-desc"><pre>
+ Copyright (c) 2003, 2004, 2005, 2006, 2007  Jim Weirich
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the &quot;Software&quot;), to
+ deal in the Software without restriction, including without limitation the
+ rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ sell copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ IN THE SOFTWARE.
+</pre>
+
+++
+
+<pre>
+ = Rake -- Ruby Make
+
+ This is the main file for the Rake application.  Normally it is referenced
+ as a library via a require statement, but it can be distributed
+ independently as an application.
+</pre>
+</td>
+  </tr>
+  <tr valign='top'>
+    <td class="attr-name">FileList</td>
+    <td>=</td>
+    <td class="attr-value">Rake::FileList</td>
+  </tr>
+  <tr valign='top'>
+    <td>&nbsp;</td>
+    <td colspan="2" class="attr-desc">
+Alias FileList to be available at the top level.
+
+</td>
+  </tr>
+  </table>
+
+
+<div class="sectiontitle">Public Instance methods</div>
+<div class="method">
+  <div class="title">
+    <a name="M000008"></a><b>desc</b>(description)
+  </div>
+  <div class="description">
+  <p>
+Describe the next rake <a href="rake_rb.html#M000001">task</a>.
+</p>
+<p>
+Example:
+</p>
+<pre>
+  desc &quot;Run the Unit Tests&quot;
+  task :test =&gt; [:build]
+    runtests
+  end
+</pre>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000008_source')" id="l_M000008_source">show source</a> ]</p>
+  <div id="M000008_source" class="dyn-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 889</span>
+889: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">desc</span>(<span class="ruby-identifier">description</span>)
+890:   <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>.<span class="ruby-identifier">last_description</span> = <span class="ruby-identifier">description</span>
+891: <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000004"></a><b>directory</b>(dir)
+  </div>
+  <div class="description">
+  <p>
+Declare a set of files tasks to create the given directories on demand.
+</p>
+<p>
+Example:
+</p>
+<pre>
+  directory &quot;testdata/doc&quot;
+</pre>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000004_source')" id="l_M000004_source">show source</a> ]</p>
+  <div id="M000004_source" class="dyn-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 836</span>
+836: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">directory</span>(<span class="ruby-identifier">dir</span>)
+837:   <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">each_dir_parent</span>(<span class="ruby-identifier">dir</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span>
+838:     <span class="ruby-identifier">file_create</span> <span class="ruby-identifier">d</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
+839:       <span class="ruby-identifier">mkdir_p</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">name</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">t</span>.<span class="ruby-identifier">name</span>)
+840:     <span class="ruby-keyword kw">end</span>
+841:   <span class="ruby-keyword kw">end</span>
+842: <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000002"></a><b>file</b>(*args, &amp;block)
+  </div>
+  <div class="description">
+  <p>
+Declare a <a href="rake_rb.html#M000002">file</a> <a
+href="rake_rb.html#M000001">task</a>.
+</p>
+<p>
+Example:
+</p>
+<pre>
+  file &quot;config.cfg&quot; =&gt; [&quot;config.template&quot;] do
+    open(&quot;config.cfg&quot;, &quot;w&quot;) do |outfile|
+      open(&quot;config.template&quot;) do |infile|
+        while line = infile.gets
+          outfile.puts line
+        end
+      end
+    end
+ end
+</pre>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000002_source')" id="l_M000002_source">show source</a> ]</p>
+  <div id="M000002_source" class="dyn-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 821</span>
+821: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">file</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+822:   <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">FileTask</span>.<span class="ruby-identifier">define_task</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+823: <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000003"></a><b>file_create</b>(args, &amp;block)
+  </div>
+  <div class="description">
+  <p>
+Declare a <a href="rake_rb.html#M000002">file</a> creation <a
+href="rake_rb.html#M000001">task</a>. (Mainly used for the <a
+href="rake_rb.html#M000004">directory</a> command).
+</p>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000003_source')" id="l_M000003_source">show source</a> ]</p>
+  <div id="M000003_source" class="dyn-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 827</span>
+827: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">file_create</span>(<span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+828:   <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">FileCreationTask</span>.<span class="ruby-identifier">define_task</span>(<span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+829: <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000009"></a><b>import</b>(*fns)
+  </div>
+  <div class="description">
+  <p>
+Import the partial Rakefiles <tt>fn</tt>. Imported files are loaded
+<em>after</em> the current <a href="rake_rb.html#M000002">file</a> is
+completely loaded. This allows the <a
+href="rake_rb.html#M000009">import</a> statement to appear anywhere in the
+importing <a href="rake_rb.html#M000002">file</a>, and yet allowing the
+imported files to depend on objects defined in the importing <a
+href="rake_rb.html#M000002">file</a>.
+</p>
+<p>
+A common use of the <a href="rake_rb.html#M000009">import</a> statement is
+to include files containing dependency declarations.
+</p>
+<p>
+See also the &#8212;rakelibdir command line option.
+</p>
+<p>
+Example:
+</p>
+<pre>
+  import &quot;.depend&quot;, &quot;my_rules&quot;
+</pre>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000009_source')" id="l_M000009_source">show source</a> ]</p>
+  <div id="M000009_source" class="dyn-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 906</span>
+906: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">import</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">fns</span>)
+907:   <span class="ruby-identifier">fns</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span>
+908:     <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>.<span class="ruby-identifier">add_import</span>(<span class="ruby-identifier">fn</span>)
+909:   <span class="ruby-keyword kw">end</span>
+910: <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000005"></a><b>multitask</b>(args, &amp;block)
+  </div>
+  <div class="description">
+  <p>
+Declare a <a href="rake_rb.html#M000001">task</a> that performs its
+prerequisites in parallel. Multitasks does <b>not</b> guarantee that its
+prerequisites will execute in any given order (which is obvious when you
+think about it)
+</p>
+<p>
+Example:
+</p>
+<pre>
+  multitask :deploy =&gt; [:deploy_gem, :deploy_rdoc]
+</pre>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000005_source')" id="l_M000005_source">show source</a> ]</p>
+  <div id="M000005_source" class="dyn-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 851</span>
+851: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">multitask</span>(<span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+852:   <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">MultiTask</span>.<span class="ruby-identifier">define_task</span>(<span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+853: <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000006"></a><b>namespace</b>(name=nil, &amp;block)
+  </div>
+  <div class="description">
+  <p>
+Create a new rake <a href="rake_rb.html#M000006">namespace</a> and use it
+for evaluating the given block. Returns a NameSpace object that can be used
+to lookup tasks defined in the <a
+href="rake_rb.html#M000006">namespace</a>.
+</p>
+<p>
+E.g.
+</p>
+<pre>
+  ns = namespace &quot;nested&quot; do
+    task :run
+  end
+  task_run = ns[:run] # find :run in the given namespace.
+</pre>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000006_source')" id="l_M000006_source">show source</a> ]</p>
+  <div id="M000006_source" class="dyn-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 866</span>
+866: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">namespace</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+867:   <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>.<span class="ruby-identifier">in_namespace</span>(<span class="ruby-identifier">name</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+868: <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000007"></a><b>rule</b>(*args, &amp;block)
+  </div>
+  <div class="description">
+  <p>
+Declare a <a href="rake_rb.html#M000007">rule</a> for auto-tasks.
+</p>
+<p>
+Example:
+</p>
+<pre>
+ rule '.o' =&gt; '.c' do |t|
+   sh %{cc -o #{t.name} #{t.source}}
+ end
+</pre>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000007_source')" id="l_M000007_source">show source</a> ]</p>
+  <div id="M000007_source" class="dyn-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 877</span>
+877: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">rule</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+878:   <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">Task</span>.<span class="ruby-identifier">create_rule</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+879: <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000001"></a><b>task</b>(*args, &amp;block)
+  </div>
+  <div class="description">
+  <p>
+Declare a basic <a href="rake_rb.html#M000001">task</a>.
+</p>
+<p>
+Example:
+</p>
+<pre>
+  task :clobber =&gt; [:clean] do
+    rm_rf &quot;html&quot;
+  end
+</pre>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000001_source')" id="l_M000001_source">show source</a> ]</p>
+  <div id="M000001_source" class="dyn-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 803</span>
+803: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">task</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+804:   <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">Task</span>.<span class="ruby-identifier">define_task</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+805: <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+</div>
+
+  </div>
+
+    </body>
+</html>

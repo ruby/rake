@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Class: Rake::NameSpace</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+
+    <script language="JavaScript" type="text/javascript">
+    // <![CDATA[
+
+        function toggleSource( id )
+        {
+          var elem
+          var link
+
+          if( document.getElementById )
+          {
+            elem = document.getElementById( id )
+            link = document.getElementById( "l_" + id )
+          }
+          else if ( document.all )
+          {
+            elem = eval( "document.all." + id )
+            link = eval( "document.all.l_" + id )
+          }
+          else
+            return false;
+
+          if( elem.style.display == "block" )
+          {
+            elem.style.display = "none"
+            link.innerHTML = "show source"
+          }
+          else
+          {
+            elem.style.display = "block"
+            link.innerHTML = "hide source"
+          }
+        }
+
+        function openCode( url )
+        {
+          window.open( url, "SOURCE_CODE", "width=400,height=400,scrollbars=yes" )
+        }
+      // ]]>
+    </script>
+  </head>
+
+  <body>
+  <table width="100%" border='0' cellpadding='0' cellspacing='0' class='banner'><tr>
+  <td class="file-title"><span class="file-title-prefix">Class</span><br />Rake::NameSpace</td>
+  <td align="right">
+    <table cellspacing=0 cellpadding=2>
+      <tr valign="top">
+        <td>In:</td>
+        <td>
+<a href="../../files/lib/rake_rb.html">lib/rake.rb</a>
+        </td>
+      </tr>
+    <tr>
+      <td>Parent:</td>
+      <td>
+Object
+     </td>
+   </tr>
+         </table>
+        </td>
+        </tr>
+      </table>
+ <!-- banner header -->
+
+  <div id="bodyContent">
+      <div id="content">
+
+  <div class="description"><p>
+The <a href="NameSpace.html">NameSpace</a> class will lookup task names in
+the the scope defined by a <tt>namespace</tt> command.
+</p>
+</div>
+
+
+
+  <div class="sectiontitle">Methods</div>
+  <ul>
+  <li><a href="#M000172">[]</a></li>
+  <li><a href="#M000171">new</a></li>
+  <li><a href="#M000173">tasks</a></li>
+  </ul>
+
+
+
+
+
+
+<div class="sectiontitle">Public Class methods</div>
+<div class="method">
+  <div class="title">
+    <a name="M000171"></a><b>new</b>(task_manager, scope_list)
+  </div>
+  <div class="description">
+  <p>
+Create a namespace lookup object using the given task manager and the list
+of scopes.
+</p>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000171_source')" id="l_M000171_source">show source</a> ]</p>
+  <div id="M000171_source" class="dyn-source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/rake.rb, line 1624</span>
+1624:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">task_manager</span>, <span class="ruby-identifier">scope_list</span>)
+1625:       <span class="ruby-ivar">@task_manager</span> = <span class="ruby-identifier">task_manager</span>
+1626:       <span class="ruby-ivar">@scope</span> = <span class="ruby-identifier">scope_list</span>.<span class="ruby-identifier">dup</span>
+1627:     <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="sectiontitle">Public Instance methods</div>
+<div class="method">
+  <div class="title">
+    <a name="M000172"></a><b>[]</b>(name)
+  </div>
+  <div class="description">
+  <p>
+Lookup a task named <tt>name</tt> in the namespace.
+</p>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000172_source')" id="l_M000172_source">show source</a> ]</p>
+  <div id="M000172_source" class="dyn-source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/rake.rb, line 1630</span>
+1630:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">name</span>)
+1631:       <span class="ruby-ivar">@task_manager</span>.<span class="ruby-identifier">lookup</span>(<span class="ruby-identifier">name</span>, <span class="ruby-ivar">@scope</span>)
+1632:     <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000173"></a><b>tasks</b>()
+  </div>
+  <div class="description">
+  <p>
+Return the list of <a href="NameSpace.html#M000173">tasks</a> defined in
+this namespace.
+</p>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000173_source')" id="l_M000173_source">show source</a> ]</p>
+  <div id="M000173_source" class="dyn-source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/rake.rb, line 1635</span>
+1635:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">tasks</span>
+1636:       <span class="ruby-ivar">@task_manager</span>.<span class="ruby-identifier">tasks</span>
+1637:     <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+</div>
+
+  </div>
+
+    </body>
+</html>

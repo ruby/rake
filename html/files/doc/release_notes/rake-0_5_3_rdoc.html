@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>File: rake-0.5.3.rdoc</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+
+    <script language="JavaScript" type="text/javascript">
+    // <![CDATA[
+
+        function toggleSource( id )
+        {
+          var elem
+          var link
+
+          if( document.getElementById )
+          {
+            elem = document.getElementById( id )
+            link = document.getElementById( "l_" + id )
+          }
+          else if ( document.all )
+          {
+            elem = eval( "document.all." + id )
+            link = eval( "document.all.l_" + id )
+          }
+          else
+            return false;
+
+          if( elem.style.display == "block" )
+          {
+            elem.style.display = "none"
+            link.innerHTML = "show source"
+          }
+          else
+          {
+            elem.style.display = "block"
+            link.innerHTML = "hide source"
+          }
+        }
+
+        function openCode( url )
+        {
+          window.open( url, "SOURCE_CODE", "width=400,height=400,scrollbars=yes" )
+        }
+      // ]]>
+    </script>
+  </head>
+
+  <body>
+  <table border='0' cellpadding='0' cellspacing='0' width="100%" class='banner'>
+  <tr><td>
+    <table width="100%" border='0' cellpadding='0' cellspacing='0'><tr>
+      <td class="file-title" colspan="2"><span class="file-title-prefix">File</span><br />rake-0.5.3.rdoc</td>
+      <td align="right">
+        <table border='0' cellspacing="0" cellpadding="2">
+          <tr>
+            <td>Path:</td>
+            <td>doc/release_notes/rake-0.5.3.rdoc
+            </td>
+          </tr>
+          <tr>
+            <td>Modified:</td>
+            <td>Fri Jul 04 22:22:31 -0400 2008</td>
+          </tr>
+        </table>
+      </td></tr>
+    </table>
+  </td></tr>
+</table><br>
+ <!-- banner header -->
+
+  <div id="bodyContent">
+      <div id="content">
+
+  <div class="description"><h1><a href="../../../classes/Rake.html">Rake</a> 0.5.0 Released</h1>
+<p>
+Although it has only been two weeks since the last release, we have enough
+updates to the <a href="../../../classes/Rake.html">Rake</a> program to
+make it time for another release.
+</p>
+<h2>Changes</h2>
+<p>
+Here are the changes for version 0.5.3 &#8230;
+</p>
+<ul>
+<li>FileLists have been extensively changed so that they mimic the behavior of
+real arrays even more closely. In particular, operations on FileLists that
+return a new collection (e.g. collect, reject) will now return a FileList
+rather than an array. In addition, several places where FileLists were not
+properly expanded before use have been fixed.
+
+</li>
+<li>A method (<tt>ext</tt>) to simplify the handling of file extensions was
+added to <a href="../../../classes/String.html">String</a> and to Array.
+
+</li>
+<li>The &#8216;testrb&#8217; script in test/unit tends to silently swallow
+syntax errors in test suites. Because of that, the default test loader is
+now a rake-provided script. You can still use &#8216;testrb&#8217; by
+setting the loader flag in the test task to :testrb. (See the API documents
+for TestTask for all the loader flag values).
+
+</li>
+<li>FileUtil methods (e.g. cp, mv, install) are now declared to be private.
+This will cut down on the interference with user defined methods of the
+same name.
+
+</li>
+<li>Fixed the verbose flag in the TestTask so that the test code is controlled
+by the flag. Also shortened up some failure messages. (Thanks to Tobias
+Luetke for the suggestion).
+
+</li>
+<li>Rules will now properly detect a task that can generate a source file.
+Previously rules would only consider source files that were already
+present.
+
+</li>
+<li>Added an <tt>import</tt> command that allows <a
+href="../../../classes/Rake.html">Rake</a> to dynamically import
+dependendencies into a running <a
+href="../../../classes/Rake.html">Rake</a> session. The <tt>import</tt>
+command can run tasks to update the dependency file before loading them.
+Dependency files can be in rake or make format, allowing rake to work with
+tools designed to generate dependencies for make.
+
+</li>
+</ul>
+<h2>What is <a href="../../../classes/Rake.html">Rake</a></h2>
+<p>
+<a href="../../../classes/Rake.html">Rake</a> is a build tool similar to
+the make program in many ways. But instead of cryptic make recipes, <a
+href="../../../classes/Rake.html">Rake</a> uses standard Ruby code to
+declare tasks and dependencies. You have the full power of a modern
+scripting language built right into your build tool.
+</p>
+<h2>Availability</h2>
+<p>
+The easiest way to get and install rake is via RubyGems &#8230;
+</p>
+<pre>
+  gem install rake    (you may need root/admin privileges)
+</pre>
+<p>
+Otherwise, you can get it from the more traditional places:
+</p>
+<table>
+<tr><td valign="top">Home Page:</td><td><a href="http://rake.rubyforge.org">rake.rubyforge.org</a>/
+
+</td></tr>
+<tr><td valign="top">Download:</td><td><a
+href="http://rubyforge.org/project/showfiles.php?group_id=50">rubyforge.org/project/showfiles.php?group_id=50</a>
+
+</td></tr>
+</table>
+<h2>Thanks</h2>
+<p>
+As usual, it was input from users that drove a alot of these changes.
+Thanks to &#8230;
+</p>
+<ul>
+<li>Brian Gernhardt for the rules fix (especially for the patience to explain
+the problem to me until I got what he was talking about).
+
+</li>
+<li>Stefan Lang for pointing out problems in the dark corners of the FileList
+implementation.
+
+</li>
+<li>Alexey Verkhovsky pointing out the silently swallows syntax errors in
+tests.
+
+</li>
+<li>Tobias Luetke for beautifying the test task output.
+
+</li>
+<li>Sam Roberts for some of the ideas behind dependency loading.
+
+</li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+  </div>
+
+    </body>
+</html>

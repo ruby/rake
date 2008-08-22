@@ -541,7 +541,7 @@ module Rake
 
     # Same as invoke, but explicitly pass a call chain to detect
     # circular dependencies.
-    def invoke_with_call_chain(task_args, invocation_chain)
+    def invoke_with_call_chain(task_args, invocation_chain) # :nodoc:
       new_chain = InvocationChain.append(self, invocation_chain)
       @lock.synchronize do
         if application.options.trace
@@ -556,7 +556,7 @@ module Rake
     protected :invoke_with_call_chain
 
     # Invoke all the prerequisites of a task.
-    def invoke_prerequisites(task_args, invocation_chain)
+    def invoke_prerequisites(task_args, invocation_chain) # :nodoc:
       @prerequisites.each { |n|
         prereq = application[n, @scope]
         prereq_args = task_args.new_scope(prereq.arg_names)

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Module: Rake</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+
+    <script language="JavaScript" type="text/javascript">
+    // <![CDATA[
+
+        function toggleSource( id )
+        {
+          var elem
+          var link
+
+          if( document.getElementById )
+          {
+            elem = document.getElementById( id )
+            link = document.getElementById( "l_" + id )
+          }
+          else if ( document.all )
+          {
+            elem = eval( "document.all." + id )
+            link = eval( "document.all.l_" + id )
+          }
+          else
+            return false;
+
+          if( elem.style.display == "block" )
+          {
+            elem.style.display = "none"
+            link.innerHTML = "show source"
+          }
+          else
+          {
+            elem.style.display = "block"
+            link.innerHTML = "hide source"
+          }
+        }
+
+        function openCode( url )
+        {
+          window.open( url, "SOURCE_CODE", "width=400,height=400,scrollbars=yes" )
+        }
+      // ]]>
+    </script>
+  </head>
+
+  <body>
+  <table width="100%" border='0' cellpadding='0' cellspacing='0' class='banner'><tr>
+  <td class="file-title"><span class="file-title-prefix">Module</span><br />Rake</td>
+  <td align="right">
+    <table cellspacing=0 cellpadding=2>
+      <tr valign="top">
+        <td>In:</td>
+        <td>
+<a href="../files/lib/rake/gempackagetask_rb.html">lib/rake/gempackagetask.rb</a>
+<a href="../files/lib/rake/loaders/makefile_rb.html">lib/rake/loaders/makefile.rb</a>
+<a href="../files/lib/rake/packagetask_rb.html">lib/rake/packagetask.rb</a>
+<a href="../files/lib/rake/rdoctask_rb.html">lib/rake/rdoctask.rb</a>
+<a href="../files/lib/rake/runtest_rb.html">lib/rake/runtest.rb</a>
+<a href="../files/lib/rake/tasklib_rb.html">lib/rake/tasklib.rb</a>
+<a href="../files/lib/rake/testtask_rb.html">lib/rake/testtask.rb</a>
+<a href="../files/lib/rake_rb.html">lib/rake.rb</a>
+        </td>
+      </tr>
+         </table>
+        </td>
+        </tr>
+      </table>
+ <!-- banner header -->
+
+  <div id="bodyContent">
+      <div id="content">
+
+  <div class="description"><p>
+###########################################################################
+</p>
+</div>
+
+
+
+  <div class="sectiontitle">Methods</div>
+  <ul>
+  <li><a href="#M000027">application</a></li>
+  <li><a href="#M000028">application=</a></li>
+  <li><a href="#M000030">each_dir_parent</a></li>
+  <li><a href="#M000029">original_dir</a></li>
+  <li><a href="#M000026">run_tests</a></li>
+  </ul>
+
+<div class="sectiontitle">Included Modules</div>
+<ul>
+  <li>Test::Unit::Assertions</li>
+</ul>
+
+
+  <div class="sectiontitle">Classes and Modules</div>
+  Module <a href="Rake/Cloneable.html" class="link">Rake::Cloneable</a><br />
+Module <a href="Rake/TaskManager.html" class="link">Rake::TaskManager</a><br />
+Class <a href="Rake/Application.html" class="link">Rake::Application</a><br />
+Class <a href="Rake/DefaultLoader.html" class="link">Rake::DefaultLoader</a><br />
+Class <a href="Rake/EarlyTime.html" class="link">Rake::EarlyTime</a><br />
+Class <a href="Rake/FileCreationTask.html" class="link">Rake::FileCreationTask</a><br />
+Class <a href="Rake/FileList.html" class="link">Rake::FileList</a><br />
+Class <a href="Rake/FileTask.html" class="link">Rake::FileTask</a><br />
+Class <a href="Rake/GemPackageTask.html" class="link">Rake::GemPackageTask</a><br />
+Class <a href="Rake/InvocationChain.html" class="link">Rake::InvocationChain</a><br />
+Class <a href="Rake/MakefileLoader.html" class="link">Rake::MakefileLoader</a><br />
+Class <a href="Rake/MultiTask.html" class="link">Rake::MultiTask</a><br />
+Class <a href="Rake/NameSpace.html" class="link">Rake::NameSpace</a><br />
+Class <a href="Rake/PackageTask.html" class="link">Rake::PackageTask</a><br />
+Class <a href="Rake/RDocTask.html" class="link">Rake::RDocTask</a><br />
+Class <a href="Rake/RuleRecursionOverflowError.html" class="link">Rake::RuleRecursionOverflowError</a><br />
+Class <a href="Rake/Task.html" class="link">Rake::Task</a><br />
+Class <a href="Rake/TaskArguments.html" class="link">Rake::TaskArguments</a><br />
+Class <a href="Rake/TaskLib.html" class="link">Rake::TaskLib</a><br />
+Class <a href="Rake/TestTask.html" class="link">Rake::TestTask</a><br />
+
+
+  <div class="sectiontitle">Constants</div>
+  <table border='0' cellpadding='5'>
+  <tr valign='top'>
+    <td class="attr-name">EARLY</td>
+    <td>=</td>
+    <td class="attr-value">EarlyTime.instance</td>
+  </tr>
+  </table>
+
+
+<div class="sectiontitle">Public Class methods</div>
+<div class="method">
+  <div class="title">
+    <a name="M000027"></a><b>application</b>()
+  </div>
+  <div class="description">
+  <p>
+Current <a href="Rake.html">Rake</a> <a
+href="Rake/Application.html">Application</a>
+</p>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000027_source')" id="l_M000027_source">show source</a> ]</p>
+  <div id="M000027_source" class="dyn-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 248</span>
+248:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">application</span>
+249:       <span class="ruby-ivar">@application</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">Application</span>.<span class="ruby-identifier">new</span>
+250:     <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000028"></a><b>application=</b>(app)
+  </div>
+  <div class="description">
+  <p>
+Set the current <a href="Rake.html">Rake</a> <a
+href="Rake.html#M000027">application</a> object.
+</p>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000028_source')" id="l_M000028_source">show source</a> ]</p>
+  <div id="M000028_source" class="dyn-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 253</span>
+253:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">application=</span>(<span class="ruby-identifier">app</span>)
+254:       <span class="ruby-ivar">@application</span> = <span class="ruby-identifier">app</span>
+255:     <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000030"></a><b>each_dir_parent</b>(dir) {|dir| ...}
+  </div>
+  <div class="description">
+  <p>
+Yield each file or directory component.
+</p>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000030_source')" id="l_M000030_source">show source</a> ]</p>
+  <div id="M000030_source" class="dyn-source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/rake.rb, line 1559</span>
+1559:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">each_dir_parent</span>(<span class="ruby-identifier">dir</span>)
+1560:       <span class="ruby-identifier">old_length</span> = <span class="ruby-keyword kw">nil</span>
+1561:       <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">dir</span> <span class="ruby-operator">!=</span> <span class="ruby-value str">'.'</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">dir</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">old_length</span>
+1562:         <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">dir</span>)
+1563:         <span class="ruby-identifier">old_length</span> = <span class="ruby-identifier">dir</span>.<span class="ruby-identifier">length</span>
+1564:         <span class="ruby-identifier">dir</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">dir</span>)
+1565:       <span class="ruby-keyword kw">end</span>
+1566:     <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000029"></a><b>original_dir</b>()
+  </div>
+  <div class="description">
+  <p>
+Return the original directory where the <a href="Rake.html">Rake</a> <a
+href="Rake.html#M000027">application</a> was started.
+</p>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000029_source')" id="l_M000029_source">show source</a> ]</p>
+  <div id="M000029_source" class="dyn-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 258</span>
+258:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">original_dir</span>
+259:       <span class="ruby-identifier">application</span>.<span class="ruby-identifier">original_dir</span>
+260:     <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="sectiontitle">Public Instance methods</div>
+<div class="method">
+  <div class="title">
+    <a name="M000026"></a><b>run_tests</b>(pattern='test/test*.rb', log_enabled=false)
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000026_source')" id="l_M000026_source">show source</a> ]</p>
+  <div id="M000026_source" class="dyn-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rake/runtest.rb, line 9</span>
+ 9:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">run_tests</span>(<span class="ruby-identifier">pattern</span>=<span class="ruby-value str">'test/test*.rb'</span>, <span class="ruby-identifier">log_enabled</span>=<span class="ruby-keyword kw">false</span>)
+10:     <span class="ruby-constant">Dir</span>[<span class="ruby-node">&quot;#{pattern}&quot;</span>].<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span>
+11:       <span class="ruby-identifier">puts</span> <span class="ruby-identifier">fn</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">log_enabled</span>
+12:       <span class="ruby-keyword kw">begin</span>
+13:         <span class="ruby-identifier">load</span> <span class="ruby-identifier">fn</span>
+14:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ex</span>
+15:         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Error in #{fn}: #{ex.message}&quot;</span>
+16:         <span class="ruby-identifier">puts</span> <span class="ruby-identifier">ex</span>.<span class="ruby-identifier">backtrace</span>
+17:         <span class="ruby-identifier">assert</span> <span class="ruby-keyword kw">false</span>
+18:       <span class="ruby-keyword kw">end</span>
+19:     }
+20:   <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+</div>
+
+  </div>
+
+    </body>
+</html>
