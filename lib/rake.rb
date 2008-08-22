@@ -508,25 +508,26 @@ module Rake
       @arg_names || []
     end
 
-    # Reenable the task, allowing it to be invoked again
+    # Reenable the task, allowing its tasks to be executed if the task
+    # is invoked again.
     def reenable
       @already_invoked = false
     end
 
-    # Clear an existing task of both prerequisites and actions
+    # Clear the existing prerequisites and actions of a rake task.
     def clear
       clear_prerequisites
       clear_actions
       self
     end
 
-    # Clear the prerequisites of a task.
+    # Clear the existing prerequisites of a rake task.
     def clear_prerequisites
       prerequisites.clear
       self
     end
 
-    # Clear the actions on a task.
+    # Clear the existing actions on a rake task.
     def clear_actions
       actions.clear
       self

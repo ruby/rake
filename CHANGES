@@ -1,6 +1,7 @@
+
 = Rake Changelog
 
-== Pre-Version 0.8.2
+== Version 0.8.2
 
 * Fixed bug in package task so that it will include the subdir
   directory in the package for testing. (Bug found by Adam Majer)
