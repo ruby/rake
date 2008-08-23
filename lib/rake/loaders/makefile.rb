@@ -21,11 +21,14 @@ module Rake
 
     # Process one logical line of makefile data.
     def process_line(line)
-      file_task, args = line.split(':')
+      file_tasks, args = line.split(':')
       return if args.nil?
-      file_task.strip!
       dependents = args.split
-      file file_task => dependents
+      file_tasks.strip.split.each do |file_task|
+        puts "DBG: file_task=#{file_task.inspect}"
+        puts "DBG: dependents=#{dependents.inspect}"
+        file file_task => dependents
+      end
     end
   end
 

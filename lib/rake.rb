@@ -359,6 +359,8 @@ module Rake
     end
   end
 
+  EMPTY_TASK_ARGS = TaskArguments.new([], [])
+
   ####################################################################
   # InvocationChain tracks the chain of task invocations to detect
   # circular dependencies.

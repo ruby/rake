@@ -18,6 +18,8 @@ class TestMakefileLoader < Test::Unit::TestCase
     assert_equal %w(b1 b2 b3 b4 b5 b6 b7).sort, Task['b'].prerequisites.sort
     assert_equal %w(c1).sort, Task['c'].prerequisites.sort
     assert_equal %w(d1 d2).sort, Task['d'].prerequisites.sort
-    assert_equal 4, Task.tasks.size
+    assert_equal %w(e1 f1).sort, Task['e'].prerequisites.sort
+    assert_equal %w(e1 f1).sort, Task['f'].prerequisites.sort
+    assert_equal 6, Task.tasks.size
   end
 end
