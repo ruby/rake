@@ -2142,15 +2142,11 @@ module Rake
         ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
           lambda { |value| $:.push(value) }
         ],
-        ['--system',  '-G', "Run tasks using global rakefiles (usually '~/.rake/*.rake'), even if a rakefile has been found in current directory.",
-          lambda { |value|
-            options.load_system = true
-          }
+        ['--system',  '-G', "Run tasks using system wide (global) rakefiles (usually '~/.rake/*.rake'). Project Rakefiles are ignored.",
+          lambda { |value| options.load_system = true }
         ],
-        ['--no-system',  '-g', "Run tasks using default rakefile search paths, ignoring global rakefiles.",
-          lambda { |value|
-            options.ignore_system = true
-          }
+        ['--no-system',  '-g', "Run tasks using standard project Rakefile search paths, ignoring system wide rakefiles.",
+          lambda { |value| options.ignore_system = true }
         ],
         ['--nosearch', '-N', "Do not search parent directories for the Rakefile.",
           lambda { |value| options.nosearch = true }
@@ -2285,7 +2281,8 @@ module Rake
       end
       puts "(in #{Dir.pwd})" unless options.silent
       $rakefile = @rakefile
-      load File.expand_path(@rakefile) if @rakefile
+      puts "DBG: @rakefile=#{@rakefile.inspect}"
+      load File.expand_path(@rakefile) if @rakefile != ''
       options.rakelib.each do |rlib|
         Dir["#{rlib}/*.rake"].each do |name| add_import name end
       end

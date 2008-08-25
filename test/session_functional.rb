@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
 require 'test/unit'
 require 'fileutils'
 require 'session'
@@ -154,7 +155,7 @@ class FunctionalTest < Test::Unit::TestCase
     assert_match(/^TEST1$/, @out)
   end
 
-  def test_dot_rake_files_can_be_laoded_with_dash_r
+  def test_dot_rake_files_can_be_loaded_with_dash_r
     rake "-I test/data/rakelib -rtest2 -f"
     assert_match(/^TEST2$/, @out)
   end
