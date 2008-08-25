@@ -150,37 +150,31 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_load_rakefile_not_found
-    original_dir = Dir.pwd
-    Dir.chdir("/")
-    @app.instance_eval do
-      handle_options
-      options.silent = true
-      options.ignore_system = true
+    in_environment("PWD" => "/") do
+      @app.instance_eval do
+        handle_options
+        options.silent = true
+        options.ignore_system = true
+      end
+      ex = assert_raise(RuntimeError) do 
+        @app.instance_eval do raw_load_rakefile end 
+      end
+      assert_match(/no rakefile found/i, ex.message)
     end
-    ex = assert_raise(RuntimeError) do 
-      @app.instance_eval do raw_load_rakefile end 
-    end
-    assert_match(/no rakefile found/i, ex.message)
-  ensure
-    Dir.chdir(original_dir)
   end
 
   def test_load_from_system_rakefile
-    original_dir = Dir.pwd
-    flexmock(@app, :home_path=>"test/data/unittest/subdir")
-    @app = Rake::Application.new
-    @app.options.rakelib = []
-    @app.instance_eval do
-      handle_options
-      options.silent = true
-      options.load_system = true
-      load_rakefile
+    in_environment('RAKE_SYSTEM' => 'test') do
+      @app.options.rakelib = []
+      @app.instance_eval do
+        handle_options
+        options.silent = true
+        options.load_system = true
+        load_rakefile
+      end
+      assert_equal "test", @app.system_dir
+      assert_nil @app.rakefile
     end
-    assert_equal "test", @app.home_path
-    assert_equal "rakefile", @app.rakefile.downcase
-    assert_match(%r(unittest$), Dir.pwd)
-  ensure
-    Dir.chdir(original_dir)
   end
 
   def test_not_caring_about_finding_rakefile
@@ -288,6 +282,29 @@ class TestApplication < Test::Unit::TestCase
     ARGV.clear
   end
 
+  private
+
+  def set_env(settings)
+    result = {}
+    settings.each do |k, v|
+      result[k] = ENV[k]
+      if k == 'PWD'
+        Dir.chdir(v)
+      else
+        ENV[k] = v
+      end
+    end
+    result
+  end
+
+  def in_environment(settings)
+    original_dir = Dir.pwd
+    original_settings = set_env(settings)
+    yield    
+  ensure
+    set_env(original_settings)
+  end
+
 end
 
 
@@ -299,6 +316,7 @@ class TestApplicationOptions < Test::Unit::TestCase
     clear_argv
     RakeFileUtils.verbose_flag = false
     RakeFileUtils.nowrite_flag = false
+    TESTING_REQUIRE.clear
   end
 
   def teardown
@@ -346,13 +364,13 @@ class TestApplicationOptions < Test::Unit::TestCase
   end
 
   def test_system_option
-    flags('--system', '-m') do |opts|
+    flags('--system', '-G') do |opts|
       assert opts.load_system
     end
   end
 
   def test_no_system_option
-    flags('--no-system', '-M') do |opts|
+    flags('--no-system', '-g') do |opts|
       assert opts.ignore_system
     end
   end

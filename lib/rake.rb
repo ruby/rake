@@ -2267,7 +2267,7 @@ module Rake
     def raw_load_rakefile # :nodoc:
       here = Dir.pwd
       if (options.load_system || ! have_curdir_rakefile) && ! options.ignore_system && have_system_rakefiles
-        Dir["#{rake_home_path}/*.rake"].each do |name|
+        Dir["#{system_dir}/*.rake"].each do |name|
           add_import name
         end
       else
@@ -2281,8 +2281,7 @@ module Rake
       end
       puts "(in #{Dir.pwd})" unless options.silent
       $rakefile = @rakefile
-      puts "DBG: @rakefile=#{@rakefile.inspect}"
-      load File.expand_path(@rakefile) if @rakefile != ''
+      load File.expand_path(@rakefile) if @rakefile && @rakefile != ''
       options.rakelib.each do |rlib|
         Dir["#{rlib}/*.rake"].each do |name| add_import name end
       end
@@ -2290,27 +2289,36 @@ module Rake
     end
 
     def have_system_rakefiles
-      Dir[File.join(rake_home_path, '*.rake')].size > 0
+      Dir[File.join(system_dir, '*.rake')].size > 0
     end
     
-    # The platform-aware home_path
-    def rake_home_path
+    # The directory path containing the system wide rakefiles.
+    def system_dir
       if ENV['RAKE_SYSTEM']
         ENV['RAKE_SYSTEM']
       elsif windows?
-        win32_home_path
+        win32_system_dir
       else
-        File.join(File.expand_path('~'), '.rake')
+        standard_system_dir
       end
     end
  
-    def win32_rake_home_path #:nodoc:
+    # The standard directory containing system wide rake files.
+    def standard_system_dir #:nodoc:
+      File.join(File.expand_path('~'), '.rake')
+    end
+    private :standard_system_dir
+
+    # The standard directory containing system wide rake files on Win
+    # 32 systems.
+    def win32_system_dir #:nodoc:
       unless File.exists?(win32home = File.join(ENV['APPDATA'], 'Rake'))
         raise Win32HomeError, "# Unable to determine home path environment variable."
       else
         win32home
       end
     end
+    private :win32_system_dir
 
     # Collect the list of tasks on the command line.  If no tasks are
     # given, return a list containing only the default task.
