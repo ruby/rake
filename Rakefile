@@ -216,7 +216,7 @@ else
     pkg.need_tar = true
   end
 
-  file "rake.gemspec" => "Rakefile" do |t|
+  file "rake.gemspec" => ["Rakefile", "lib/rake.rb"] do |t|
     require 'yaml'
     open(t.name, "w") { |f| f.puts SPEC.to_yaml }
   end
