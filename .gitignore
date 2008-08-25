@@ -2,4 +2,5 @@ TAGS
 temp_*
 pkg
 *.patch
+.#*
 x
