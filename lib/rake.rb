@@ -1995,7 +1995,7 @@ module Rake
 
     # True if one of the files in RAKEFILES is in the current directory.
     # If a match is found, it is copied into @rakefile.
-    def have_curdir_rakefile
+    def have_project_rakefile
       @rakefiles.each do |fn|
         if File.exist?(fn) || fn == ''
           @rakefile = fn
@@ -2266,12 +2266,12 @@ module Rake
 
     def raw_load_rakefile # :nodoc:
       here = Dir.pwd
-      if (options.load_system || ! have_curdir_rakefile) && ! options.ignore_system && have_system_rakefiles
+      if (options.load_system || ! have_project_rakefile) && ! options.ignore_system && have_system_rakefiles
         Dir["#{system_dir}/*.rake"].each do |name|
           add_import name
         end
       else
-        while ! have_curdir_rakefile
+        while ! have_project_rakefile
           Dir.chdir("..")
           if Dir.pwd == here || options.nosearch
             fail "No Rakefile found (looking for: #{@rakefiles.join(', ')})"

@@ -110,13 +110,13 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_finding_rakefile
-    assert @app.instance_eval { have_curdir_rakefile }
+    assert @app.instance_eval { have_project_rakefile }
     assert_equal "rakefile", @app.rakefile.downcase
   end
 
   def test_not_finding_rakefile
     @app.instance_eval { @rakefiles = ['NEVER_FOUND'] }
-    assert( ! @app.instance_eval do have_curdir_rakefile end )
+    assert( ! @app.instance_eval do have_project_rakefile end )
     assert_nil @app.rakefile
   end
 
@@ -179,7 +179,7 @@ class TestApplication < Test::Unit::TestCase
 
   def test_not_caring_about_finding_rakefile
     @app.instance_eval do @rakefiles = [''] end
-    assert(@app.instance_eval do have_curdir_rakefile end)
+    assert(@app.instance_eval do have_project_rakefile end)
     assert_equal '', @app.rakefile
   end
 
