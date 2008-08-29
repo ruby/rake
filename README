@@ -1,0 +1,75 @@
+
+= comptree.rb -- A Framework for Parallel Computations
+
+=== Synopsis
+  
+  CompTree::Driver.new { |driver|
+
+    # Define a function named 'area' taking these three arguments.
+    driver.define_area(:width, :height, :offset) { |width, height, offset|
+      width*height - offset
+    }
+    
+    # Define a function 'width' which takes a 'border' argument.
+    driver.define_width(:border) { |border|
+      2 + border
+    }
+    
+    # Ditto for 'height'.
+    driver.define_height(:border) { |border|
+      3 + border
+    }
+    
+    # Define a constant function 'border'.
+    driver.define_border {
+      5
+    }
+    
+    # Ditto for 'offset'.
+    driver.define_offset {
+      7
+    }
+    
+    # Compute the area using four parallel threads.
+    area = driver.compute(:area, :threads => 4)
+
+    # We've done this computation.
+    if area == (2 + 5)*(3 + 5) - 7
+      puts "It worked!"
+    else
+      puts "Send bug report to ..."
+    end
+  }
+
+==== Alternative Forms for Function Definitions
+
+This form evals a lambda, saving you the repeat parameter list:
+
+  driver.define_area :width, :height, :offset, %{
+    width*height - offset
+  }
+  
+  driver.define_width :border, %{
+    2 + border
+  }
+  
+Notice the '<code>%</code>' before the brace.  The lambda is created
+just once, during the time of definition.
+
+Finally there is the raw form which uses no +eval+ or
++method_missing+ tricks:
+
+  driver.define(:area, :width, :height, :offset) { |width, height, offset|
+    width*height - offset
+  }
+        
+  driver.define(:width, :border) { |border|
+    2 + border
+  }
+        
+== Rake
+
+An interesting offshoot of this project is comptree/rake.rb which
+parallelizes Rake tasks.  See the documentation in that file.
+
+Author: James M. Lawrence
