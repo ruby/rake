@@ -3,6 +3,8 @@
 
 === Synopsis
   
+  require 'comptree'
+  
   CompTree::Driver.new { |driver|
 
     # Define a function named 'area' taking these three arguments.
