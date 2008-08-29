@@ -1,7 +1,7 @@
 $LOAD_PATH.unshift "./contrib/quix/lib"
 
-#require 'quix/simple_installer'
-#require 'quix/subpackager'
+require 'quix/simple_installer'
+require 'quix/subpackager'
 
 require 'rake/packagetask'
 require 'rake/rdoctask'
