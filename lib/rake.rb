@@ -1996,11 +1996,10 @@ module Rake
     def have_rakefile
       @rakefiles.each do |fn|
         if File.exist?(fn) || fn == ''
-          @rakefile = fn
-          return true
+          return fn
         end
       end
-      return false
+      return nil
     end
 
     # True if we are outputting to TTY, false otherwise
@@ -2252,15 +2251,24 @@ module Rake
       fail LoadError, "Can't find #{file_name}"
     end
 
-    def raw_load_rakefile # :nodoc:
+    def find_rakefile_location
       here = Dir.pwd
-      while ! have_rakefile
+      while ! (fn = have_rakefile)
         Dir.chdir("..")
         if Dir.pwd == here || options.nosearch
           fail "No Rakefile found (looking for: #{@rakefiles.join(', ')})"
         end
         here = Dir.pwd
       end
+      [fn, here]
+    ensure
+      Dir.chdir(Rake.original_dir)
+    end
+
+    def raw_load_rakefile # :nodoc:
+      rakefile, location = find_rakefile_location
+      @rakefile = rakefile
+      Dir.chdir(location)
       puts "(in #{Dir.pwd})" unless options.silent
       $rakefile = @rakefile
       load File.expand_path(@rakefile) if @rakefile != ''

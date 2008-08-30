@@ -110,8 +110,7 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_finding_rakefile
-    assert @app.instance_eval { have_rakefile }
-    assert_equal "rakefile", @app.rakefile.downcase
+    assert_equal "rakefile", @app.instance_eval { have_rakefile }
   end
 
   def test_not_finding_rakefile
@@ -161,12 +160,6 @@ class TestApplication < Test::Unit::TestCase
     assert_match(/no rakefile found/i, ex.message)
   ensure
     Dir.chdir(original_dir)
-  end
-
-  def test_not_caring_about_finding_rakefile
-    @app.instance_eval do @rakefiles = [''] end
-    assert(@app.instance_eval do have_rakefile end)
-    assert_equal '', @app.rakefile
   end
 
   def test_loading_imports
