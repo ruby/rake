@@ -25,8 +25,6 @@ module Rake
       return if args.nil?
       dependents = args.split
       file_tasks.strip.split.each do |file_task|
-        puts "DBG: file_task=#{file_task.inspect}"
-        puts "DBG: dependents=#{dependents.inspect}"
         file file_task => dependents
       end
     end
