@@ -2248,7 +2248,7 @@ module Rake
     end
 
     # Similar to the regular Ruby +require+ command, but will check
-    # for .rake files in addition to .rb files.
+    # for *.rake files in addition to *.rb files.
     def rake_require(file_name, paths=$LOAD_PATH, loaded=$")
       return false if loaded.include?(file_name)
       paths.each do |path|
