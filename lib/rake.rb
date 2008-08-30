@@ -2213,9 +2213,6 @@ module Rake
 
       options.rakelib = ['rakelib']
 
-      # opts = GetoptLong.new(*command_line_options)
-      # opts.each { |opt, value| do_option(opt, value) }
-
       parsed_argv = nil
       opts = OptionParser.new do |opts|
         opts.banner = "rake [-f rakefile] {options} targets..."
@@ -2277,16 +2274,49 @@ module Rake
 
     def raw_load_rakefile # :nodoc:
       rakefile, location = find_rakefile_location
-      @rakefile = rakefile
-      Dir.chdir(location)
-      puts "(in #{Dir.pwd})" unless options.silent
-      $rakefile = @rakefile
-      load File.expand_path(@rakefile) if @rakefile != ''
+      if (! options.ignore_system) && (options.load_system || rakefile.nil?)
+        puts "(in #{Dir.pwd})" unless options.silent
+        puts "NO SYSTEM HERE"
+      else
+        @rakefile = rakefile
+        Dir.chdir(location)
+        puts "(in #{Dir.pwd})" unless options.silent
+        $rakefile = @rakefile
+        load File.expand_path(@rakefile) if @rakefile && @rakefile != ''
+      end
       options.rakelib.each do |rlib|
         Dir["#{rlib}/*.rake"].each do |name| add_import name end
       end
       load_imports
     end
+
+    # The directory path containing the system wide rakefiles.
+    def system_dir
+      if ENV['RAKE_SYSTEM']
+        ENV['RAKE_SYSTEM']
+      elsif windows?
+        win32_system_dir
+      else
+        standard_system_dir
+      end
+    end
+ 
+    # The standard directory containing system wide rake files.
+    def standard_system_dir #:nodoc:
+      File.join(File.expand_path('~'), '.rake')
+    end
+    private :standard_system_dir
+
+    # The standard directory containing system wide rake files on Win
+    # 32 systems.
+    def win32_system_dir #:nodoc:
+      unless File.exists?(win32home = File.join(ENV['APPDATA'], 'Rake'))
+        raise Win32HomeError, "# Unable to determine home path environment variable."
+      else
+        win32home
+      end
+    end
+    private :win32_system_dir
 
     # Collect the list of tasks on the command line.  If no tasks are
     # given, return a list containing only the default task.

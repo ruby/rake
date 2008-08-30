@@ -153,6 +153,20 @@ class TestApplication < Test::Unit::TestCase
     end
   end
 
+  def test_load_from_system_rakefile
+    in_environment('RAKE_SYSTEM' => 'test/data/sys') do
+      @app.options.rakelib = []
+      @app.instance_eval do
+        handle_options
+        options.silent = true
+        options.load_system = true
+        load_rakefile
+      end
+      assert_equal "test/data/sys", @app.system_dir
+      assert_nil @app.rakefile
+    end
+  end
+
   def test_loading_imports
     mock = flexmock("loader")
     mock.should_receive(:load).with("x.dummy").once
