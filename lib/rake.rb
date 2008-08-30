@@ -2179,6 +2179,14 @@ module Rake
             options.silent = true
           }
         ],
+        ['--system',  '-G',
+          "Using system wide (global) rakefiles (usually '~/.rake/*.rake').",
+          lambda { |value| options.load_system = true }
+        ],
+        ['--no-system',  '-g',
+          "Use standard project Rakefile search paths, ignore system wide rakefiles.",
+          lambda { |value| options.ignore_system = true }
+        ],
         ['--tasks', '-T [PATTERN]', "Display the tasks (matching optional PATTERN) with descriptions, then exit.",
           lambda { |value|
             options.show_tasks = true

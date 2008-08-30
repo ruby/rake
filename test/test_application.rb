@@ -318,6 +318,18 @@ class TestApplicationOptions < Test::Unit::TestCase
     end
   end
 
+  def test_system_option
+    flags('--system', '-G') do |opts|
+      assert opts.load_system
+    end
+  end
+
+  def test_no_system_option
+    flags('--no-system', '-g') do |opts|
+      assert opts.ignore_system
+    end
+  end
+
   def test_dry_run
     flags('--dry-run', '-n') do |opts|
       assert opts.dryrun
