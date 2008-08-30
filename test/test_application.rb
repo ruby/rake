@@ -39,29 +39,27 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_display_tasks_with_long_comments
-    ENV['RAKE_COLUMNS'] = '80'
-    @app.options.show_task_pattern = //
-    @app.last_description = "1234567890" * 8
-    @app.define_task(Rake::Task, "t")
-    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
-    assert_match(/^rake t/, out)
-    assert_match(/# 12345678901234567890123456789012345678901234567890123456789012345\.\.\./, out)
-  ensure
-    ENV['RAKE_COLUMNS'] = nil
+    in_environment('RAKE_COLUMNS' => '80') do
+      @app.options.show_task_pattern = //
+      @app.last_description = "1234567890" * 8
+      @app.define_task(Rake::Task, "t")
+      out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+      assert_match(/^rake t/, out)
+      assert_match(/# 12345678901234567890123456789012345678901234567890123456789012345\.\.\./, out)
+    end
   end
 
   def test_display_tasks_with_task_name_wider_than_tty_display
-    ENV['RAKE_COLUMNS'] = '80'
-    @app.options.show_task_pattern = //
-    description = "something short"
-    task_name = "task name" * 80
-    @app.last_description = "something short"
-    @app.define_task(Rake::Task, task_name )
-    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
-    # Ensure the entire task name is output and we end up showing no description
-    assert_match(/rake #{task_name}  # .../, out)
-  ensure
-    ENV['RAKE_COLUMNS'] = nil
+    in_environment('RAKE_COLUMNS' => '80') do
+      @app.options.show_task_pattern = //
+      description = "something short"
+      task_name = "task name" * 80
+      @app.last_description = "something short"
+      @app.define_task(Rake::Task, task_name )
+      out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+      # Ensure the entire task name is output and we end up showing no description
+      assert_match(/rake #{task_name}  # .../, out)
+    end
   end
 
   def test_display_tasks_with_very_long_task_name_to_a_non_tty_shows_name_and_comment
@@ -87,16 +85,15 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_display_tasks_with_long_comments_to_a_non_tty_with_columns_set_truncates_comments
-    ENV['RAKE_COLUMNS'] = '80'
-    @app.options.show_task_pattern = //
-    @app.tty_output = false
-    @app.last_description = "1234567890" * 8
-    @app.define_task(Rake::Task, "t")
-    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
-    assert_match(/^rake t/, out)
-    assert_match(/# 12345678901234567890123456789012345678901234567890123456789012345\.\.\./, out)
-  ensure
-    ENV['RAKE_COLUMNS'] = nil
+    in_environment("RAKE_COLUMNS" => '80') do
+      @app.options.show_task_pattern = //
+      @app.tty_output = false
+      @app.last_description = "1234567890" * 8
+      @app.define_task(Rake::Task, "t")
+      out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+      assert_match(/^rake t/, out)
+      assert_match(/# 12345678901234567890123456789012345678901234567890123456789012345\.\.\./, out)
+    end
   end
 
   def test_display_tasks_with_full_descriptions
@@ -120,46 +117,40 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_load_rakefile
-    original_dir = Dir.pwd
-    Dir.chdir("test/data/unittest")
-    @app.instance_eval do 
-      handle_options
-      options.silent = true
-      load_rakefile
+    in_environment("PWD" => "test/data/unittest") do
+      @app.instance_eval do 
+        handle_options
+        options.silent = true
+        load_rakefile
+      end
+      assert_equal "rakefile", @app.rakefile.downcase
+      assert_match(%r(unittest$), Dir.pwd)
     end
-    assert_equal "rakefile", @app.rakefile.downcase
-    assert_match(%r(unittest$), Dir.pwd)
-  ensure
-    Dir.chdir(original_dir)
   end
 
   def test_load_rakefile_from_subdir
-    original_dir = Dir.pwd
-    Dir.chdir("test/data/unittest/subdir")
-    @app.instance_eval do
-      handle_options
-      options.silent = true
-      load_rakefile
+    in_environment("PWD" => "test/data/unittest/subdir") do
+      @app.instance_eval do
+        handle_options
+        options.silent = true
+        load_rakefile
+      end
+      assert_equal "rakefile", @app.rakefile.downcase
+      assert_match(%r(unittest$), Dir.pwd)
     end
-    assert_equal "rakefile", @app.rakefile.downcase
-    assert_match(%r(unittest$), Dir.pwd)
-  ensure
-    Dir.chdir(original_dir)
   end
 
   def test_load_rakefile_not_found
-    original_dir = Dir.pwd
-    Dir.chdir("/")
-    @app.instance_eval do
-      handle_options
-      options.silent = true
+    in_environment("PWD" => "/") do
+      @app.instance_eval do
+        handle_options
+        options.silent = true
+      end
+      ex = assert_raise(RuntimeError) do 
+        @app.instance_eval do raw_load_rakefile end 
+      end
+      assert_match(/no rakefile found/i, ex.message)
     end
-    ex = assert_raise(RuntimeError) do 
-      @app.instance_eval do raw_load_rakefile end 
-    end
-    assert_match(/no rakefile found/i, ex.message)
-  ensure
-    Dir.chdir(original_dir)
   end
 
   def test_loading_imports
@@ -261,6 +252,29 @@ class TestApplication < Test::Unit::TestCase
     ARGV.clear
   end
 
+  private
+  
+  def set_env(settings)
+    result = {}
+    settings.each do |k, v|
+      result[k] = ENV[k]
+      if k == 'PWD'
+        Dir.chdir(v)
+      else
+        ENV[k] = v
+      end
+    end
+    result
+  end
+
+  def in_environment(settings)
+    original_dir = Dir.pwd
+    original_settings = set_env(settings)
+    yield    
+  ensure
+    set_env(original_settings)
+  end
+
 end
 
 
@@ -272,6 +286,7 @@ class TestApplicationOptions < Test::Unit::TestCase
     clear_argv
     RakeFileUtils.verbose_flag = false
     RakeFileUtils.nowrite_flag = false
+    TESTING_REQUIRE.clear
   end
 
   def teardown
