@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
+begin
+  require 'rubygems'
+rescue LoadError => ex
+end
 require 'test/unit'
 require 'fileutils'
 require 'session'
@@ -83,6 +87,22 @@ class FunctionalTest < Test::Unit::TestCase
   def test_rbext
     Dir.chdir("test/data/rbext") do rake "-N" end
     assert_match %r{^OK$}, @out
+  end
+
+  def test_system
+    ENV['RAKE_SYSTEM'] = 'test/data/sys'
+    rake '-g', "sys1"
+    assert_match %r{^SYS1}, @out
+  ensure
+    ENV['RAKE_SYSTEM'] = nil
+  end
+
+  def test_no_system
+    ENV['RAKE_SYSTEM'] = 'test/data/sys'
+    rake '-G', "sys1"
+    assert_match %r{^Don't know how to build task}, @err # emacs wart: '
+  ensure
+    ENV['RAKE_SYSTEM'] = nil
   end
 
   def test_nosearch

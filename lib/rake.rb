@@ -1888,6 +1888,7 @@ module Rake
       @default_loader = Rake::DefaultLoader.new
       @original_dir = Dir.pwd
       @top_level_tasks = []
+      add_loader('rb', DefaultLoader.new)
       add_loader('rf', DefaultLoader.new)
       add_loader('rake', DefaultLoader.new)
       @tty_output = STDOUT.tty?
@@ -2071,6 +2072,10 @@ module Rake
       RUBY_PLATFORM =~ /(aix|darwin|linux|(net|free|open)bsd|cygwin|solaris|irix|hpux|)/i
     end
     
+    def windows?
+      Config::CONFIG['host_os'] =~ /mswin/
+    end
+
     def truncate(string, width)
       if string.length <= width
         string
@@ -2179,11 +2184,11 @@ module Rake
             options.silent = true
           }
         ],
-        ['--system',  '-G',
+        ['--system',  '-g',
           "Using system wide (global) rakefiles (usually '~/.rake/*.rake').",
           lambda { |value| options.load_system = true }
         ],
-        ['--no-system',  '-g',
+        ['--no-system',  '-G',
           "Use standard project Rakefile search paths, ignore system wide rakefiles.",
           lambda { |value| options.ignore_system = true }
         ],
@@ -2276,7 +2281,9 @@ module Rake
       rakefile, location = find_rakefile_location
       if (! options.ignore_system) && (options.load_system || rakefile.nil?)
         puts "(in #{Dir.pwd})" unless options.silent
-        puts "NO SYSTEM HERE"
+        Dir["#{system_dir}/*.rake"].each do |name|
+          add_import name
+        end
       else
         @rakefile = rakefile
         Dir.chdir(location)
