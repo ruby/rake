@@ -29,7 +29,7 @@
 # as a library via a require statement, but it can be distributed
 # independently as an application.
 
-RAKEVERSION = '0.8.1.7'
+RAKEVERSION = '0.8.1.6'
 
 require 'rbconfig'
 require 'getoptlong'
@@ -1888,6 +1888,7 @@ module Rake
       @default_loader = Rake::DefaultLoader.new
       @original_dir = Dir.pwd
       @top_level_tasks = []
+      add_loader('rb', DefaultLoader.new)
       add_loader('rf', DefaultLoader.new)
       add_loader('rake', DefaultLoader.new)
       @tty_output = STDOUT.tty?
@@ -1995,14 +1996,13 @@ module Rake
 
     # True if one of the files in RAKEFILES is in the current directory.
     # If a match is found, it is copied into @rakefile.
-    def have_project_rakefile
+    def have_rakefile
       @rakefiles.each do |fn|
         if File.exist?(fn) || fn == ''
-          @rakefile = fn
-          return true
+          return fn
         end
       end
-      return false
+      return nil
     end
 
     # True if we are outputting to TTY, false otherwise
@@ -2075,7 +2075,7 @@ module Rake
     def windows?
       Config::CONFIG['host_os'] =~ /mswin/
     end
-    
+
     def truncate(string, width)
       if string.length <= width
         string
@@ -2190,6 +2190,14 @@ module Rake
             options.silent = true
           }
         ],
+        ['--system',  '-g',
+          "Using system wide (global) rakefiles (usually '~/.rake/*.rake').",
+          lambda { |value| options.load_system = true }
+        ],
+        ['--no-system',  '-G',
+          "Use standard project Rakefile search paths, ignore system wide rakefiles.",
+          lambda { |value| options.ignore_system = true }
+        ],
         ['--tasks', '-T [PATTERN]', "Display the tasks (matching optional PATTERN) with descriptions, then exit.",
           lambda { |value|
             options.show_tasks = true
@@ -2215,9 +2223,6 @@ module Rake
       ]
 
       options.rakelib = ['rakelib']
-
-      # opts = GetoptLong.new(*command_line_options)
-      # opts.each { |opt, value| do_option(opt, value) }
 
       parsed_argv = nil
       opts = OptionParser.new do |opts|
@@ -2264,34 +2269,40 @@ module Rake
       fail LoadError, "Can't find #{file_name}"
     end
 
-    def raw_load_rakefile # :nodoc:
+    def find_rakefile_location
       here = Dir.pwd
-      if (options.load_system || ! have_project_rakefile) && ! options.ignore_system && have_system_rakefiles
+      while ! (fn = have_rakefile)
+        Dir.chdir("..")
+        if Dir.pwd == here || options.nosearch
+          fail "No Rakefile found (looking for: #{@rakefiles.join(', ')})"
+        end
+        here = Dir.pwd
+      end
+      [fn, here]
+    ensure
+      Dir.chdir(Rake.original_dir)
+    end
+
+    def raw_load_rakefile # :nodoc:
+      rakefile, location = find_rakefile_location
+      if (! options.ignore_system) && (options.load_system || rakefile.nil?)
+        puts "(in #{Dir.pwd})" unless options.silent
         Dir["#{system_dir}/*.rake"].each do |name|
           add_import name
         end
       else
-        while ! have_project_rakefile
-          Dir.chdir("..")
-          if Dir.pwd == here || options.nosearch
-            fail "No Rakefile found (looking for: #{@rakefiles.join(', ')})"
-          end
-          here = Dir.pwd
-        end
+        @rakefile = rakefile
+        Dir.chdir(location)
+        puts "(in #{Dir.pwd})" unless options.silent
+        $rakefile = @rakefile
+        load File.expand_path(@rakefile) if @rakefile && @rakefile != ''
       end
-      puts "(in #{Dir.pwd})" unless options.silent
-      $rakefile = @rakefile
-      load File.expand_path(@rakefile) if @rakefile && @rakefile != ''
       options.rakelib.each do |rlib|
         Dir["#{rlib}/*.rake"].each do |name| add_import name end
       end
       load_imports
     end
 
-    def have_system_rakefiles
-      Dir[File.join(system_dir, '*.rake')].size > 0
-    end
-    
     # The directory path containing the system wide rakefiles.
     def system_dir
       if ENV['RAKE_SYSTEM']
