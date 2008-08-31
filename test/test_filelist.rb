@@ -442,7 +442,7 @@ class TestFileList < Test::Unit::TestCase
     a = FileList['a', 'b', 'c']
     a.freeze
     c = a.clone
-    assert_raise(TypeError) do
+    assert_raise(TypeError, RuntimeError) do
       c << 'more'
     end
   end

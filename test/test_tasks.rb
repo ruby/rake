@@ -309,7 +309,7 @@ class TestTaskWithArguments < Test::Unit::TestCase
   def test_extra_parameters_are_ignored
     t = task(:t, :a) { |tt, args|
       assert_equal 1, args.a
-      assert_nil args[2]
+      assert_nil args.b
     }
     t.invoke(1, 2)
   end
