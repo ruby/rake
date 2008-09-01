@@ -29,15 +29,23 @@ module Quix
 
     # execute a block with warnings turned off
     def no_warnings
-      Thread.exclusive {
-        previous_verbose = $VERBOSE
-        begin
-          $VERBOSE = nil
-          yield
-        ensure
-          $VERBOSE = previous_verbose
-        end
-      }
+      previous = $VERBOSE
+      begin
+        $VERBOSE = nil
+        yield
+      ensure
+        $VERBOSE = previous
+      end
+    end
+
+    def abort_on_exception(value = true)
+      previous = Thread.abort_on_exception
+      Thread.abort_on_exception = value
+      begin
+        yield
+      ensure
+        Thread.abort_on_exception = previous
+      end
     end
 
     extend self
