@@ -297,46 +297,21 @@ class TestApplicationOptions < Test::Unit::TestCase
 
   def test_default_options
     opts = command_line
-    assert_nil opts.show_task_pattern
-    assert_nil opts.dryrun
-    assert_nil opts.trace
-    assert_nil opts.nosearch
-    assert_nil opts.silent
-    assert_nil opts.show_prereqs
-    assert_nil opts.show_tasks
     assert_nil opts.classic_namespace
+    assert_nil opts.dryrun
+    assert_nil opts.full_description
+    assert_nil opts.ignore_system
+    assert_nil opts.load_system
+    assert_nil opts.nosearch
+    assert_equal ['rakelib'], opts.rakelib
+    assert_nil opts.show_prereqs
+    assert_nil opts.show_task_pattern
+    assert_nil opts.show_tasks
+    assert_nil opts.silent
+    assert_nil opts.trace
     assert_equal ['rakelib'], opts.rakelib
     assert ! RakeFileUtils.verbose_flag
     assert ! RakeFileUtils.nowrite_flag
-  end
-
-  def test_bad_options
-    assert_raise OptionParser::InvalidOption do
-      capture_stderr do
-        flags('--bad', '-t') do |opts|
-        end
-      end
-    end
-  end
-  
-  def test_trace_option
-    flags('--trace', '-t') do |opts|
-      assert opts.trace
-      assert RakeFileUtils.verbose_flag
-      assert ! RakeFileUtils.nowrite_flag
-    end
-  end
-
-  def test_system_option
-    flags('--system', '-G') do |opts|
-      assert opts.load_system
-    end
-  end
-
-  def test_no_system_option
-    flags('--no-system', '-g') do |opts|
-      assert opts.ignore_system
-    end
   end
 
   def test_dry_run
@@ -345,6 +320,50 @@ class TestApplicationOptions < Test::Unit::TestCase
       assert opts.trace
       assert RakeFileUtils.verbose_flag
       assert RakeFileUtils.nowrite_flag
+    end
+  end
+
+  def test_describe
+    flags('--describe') do |opts|
+      assert opts.full_description
+      assert opts.show_tasks
+      assert_equal(//.to_s, opts.show_task_pattern.to_s)
+    end
+  end
+
+  def test_describe_with_pattern
+    flags('--describe=X') do |opts|
+      assert opts.full_description
+      assert opts.show_tasks
+      assert_equal(/X/.to_s, opts.show_task_pattern.to_s)
+    end
+  end
+
+  def test_execute
+    $xyzzy = 0
+    flags('--execute=$xyzzy=1', '-e $xyzzy=1') do |opts|
+      assert_equal 1, $xyzzy
+      assert_equal :exit, @exit
+      $xyzzy = 0
+    end
+  end
+
+  def test_execute_and_continue
+    $xyzzy = 0
+    flags('--execute-continue=$xyzzy=1', '-E $xyzzy=1') do |opts|
+      assert_equal 1, $xyzzy
+      assert_not_equal :exit, @exit
+      $xyzzy = 0
+    end
+  end
+
+  def test_execute_and_print
+    $xyzzy = 0
+    flags('--execute-print=$xyzzy="pugh"', '-p $xyzzy="pugh"') do |opts|
+      assert_equal 'pugh', $xyzzy
+      assert_equal :exit, @exit
+      assert_match(/^pugh$/, @out)
+      $xyzzy = 0
     end
   end
 
@@ -358,46 +377,12 @@ class TestApplicationOptions < Test::Unit::TestCase
     end
   end
 
-  def test_describe
-    flags('--describe') do |opts|
-      assert opts.full_description
-      assert opts.show_tasks
-      assert_equal(//.to_s, opts.show_task_pattern.to_s)
-    end
-  end
-
   def test_libdir
     flags(['--libdir', 'xx'], ['-I', 'xx'], ['-Ixx']) do |opts|
       $:.include?('xx')
     end
   ensure
     $:.delete('xx')
-  end
-
-  def test_nosearch
-    flags('--nosearch', '-N') do |opts|
-      assert opts.nosearch
-    end
-  end
-
-  def test_show_prereqs
-    flags('--prereqs', '-P') do |opts|
-      assert opts.show_prereqs
-    end
-  end
-
-  def test_quiet
-    flags('--quiet', '-q') do |opts|
-      assert ! RakeFileUtils.verbose_flag
-      assert ! opts.silent
-    end
-  end
-
-  def test_silent
-    flags('--silent', '-s') do |opts|
-      assert ! RakeFileUtils.verbose_flag
-      assert opts.silent
-    end
   end
 
   def test_rakefile
@@ -428,6 +413,58 @@ class TestApplicationOptions < Test::Unit::TestCase
     end
     assert_match(/no such file/, ex.message)
     assert_match(/test\/missing/, ex.message)
+  end
+
+  def test_prereqs
+    flags('--prereqs', '-P') do |opts|
+      assert opts.show_prereqs
+    end
+  end
+
+  def test_quiet
+    flags('--quiet', '-q') do |opts|
+      assert ! RakeFileUtils.verbose_flag
+      assert ! opts.silent
+    end
+  end
+
+  def test_no_search
+    flags('--nosearch', '--no-search', '-N') do |opts|
+      assert opts.nosearch
+    end
+  end
+
+  def test_silent
+    flags('--silent', '-s') do |opts|
+      assert ! RakeFileUtils.verbose_flag
+      assert opts.silent
+    end
+  end
+
+  def test_system
+    flags('--system', '-g') do |opts|
+      assert opts.load_system
+    end
+  end
+
+  def test_no_system
+    flags('--no-system', '-G') do |opts|
+      assert opts.ignore_system
+    end
+  end
+
+  def test_trace
+    flags('--trace', '-t') do |opts|
+      assert opts.trace
+      assert RakeFileUtils.verbose_flag
+      assert ! RakeFileUtils.nowrite_flag
+    end
+  end
+
+  def test_trace_rules
+    flags('--rules') do |opts|
+      assert opts.trace_rules
+    end
   end
 
   def test_tasks
@@ -502,6 +539,7 @@ class TestApplicationOptions < Test::Unit::TestCase
 
   def flags(*sets)
     sets.each do |set|
+      ARGV.clear
       @out = capture_stdout { 
         @exit = catch(:system_exit) { opts = command_line(*set) }
       }

@@ -1707,10 +1707,6 @@ module Rake
       end
     end
 
-    def all_names(*args)
-      args.all? { |arg| arg.is_a?(String) || arg.is_a?(Symbol) }
-    end
-
     # Resolve task arguments for a task or rule when there are no
     # dependencies declared.
     #
@@ -2184,21 +2180,12 @@ module Rake
             exit
           }
         ],
-        ['--execute-continue',  '-E',
+        ['--execute-continue',  '-E CODE',
           "Execute some Ruby code, then continue with normal task processing.",
           lambda { |value| eval(value) }            
         ],
         ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
           lambda { |value| $:.push(value) }
-        ],
-        ['--system',  '-G', "Run tasks using system wide (global) rakefiles (usually '~/.rake/*.rake'). Project Rakefiles are ignored.",
-          lambda { |value| options.load_system = true }
-        ],
-        ['--no-system',  '-g', "Run tasks using standard project Rakefile search paths, ignoring system wide rakefiles.",
-          lambda { |value| options.ignore_system = true }
-        ],
-        ['--nosearch', '-N', "Do not search parent directories for the Rakefile.",
-          lambda { |value| options.nosearch = true }
         ],
         ['--prereqs', '-P', "Display the tasks and dependencies, then exit.",
           lambda { |value| options.show_prereqs = true }
@@ -2233,6 +2220,9 @@ module Rake
         ['--rules', "Trace the rules resolution.",
           lambda { |value| options.trace_rules = true }
         ],
+        ['--no-search', '--nosearch', '-N', "Do not search parent directories for the Rakefile.",
+          lambda { |value| options.nosearch = true }
+        ],
         ['--silent', '-s', "Like --quiet, but also suppresses the 'in directory' announcement.",
           lambda { |value|
             verbose(false)
@@ -2243,7 +2233,7 @@ module Rake
           "Using system wide (global) rakefiles (usually '~/.rake/*.rake').",
           lambda { |value| options.load_system = true }
         ],
-        ['--no-system',  '-G',
+        ['--no-system', '--nosystem', '-G',
           "Use standard project Rakefile search paths, ignore system wide rakefiles.",
           lambda { |value| options.ignore_system = true }
         ],

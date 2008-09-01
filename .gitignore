@@ -1,6 +1,7 @@
 TAGS
-temp_*
 pkg
+coverage
+temp_*
 x
 *.patch
 .#*
