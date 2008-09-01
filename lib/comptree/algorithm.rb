@@ -167,6 +167,9 @@ module CompTree
             node.trace_compute
             bucket.contents = node.compute
           }
+          if $?.exitstatus != 0
+            exit(1)
+          end
           bucket.contents
         else
           #
