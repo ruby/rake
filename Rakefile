@@ -413,3 +413,74 @@ desc "Where is the current directory.  This task displays\nthe current rake dire
 task :where_am_i do
   puts Rake.original_dir
 end
+
+######################################################################
+# repackage files from contrib/
+
+#$LOAD_PATH.unshift "./contrib/comptree/contrib/quix/lib"
+#require 'quix/subpackager'
+#require 'quix/fileutils'
+
+task :generate_rb do
+  packages = {
+    :rake => {
+      :name_in_ruby => "Rake",
+      :lib_dir => "./lib",
+      :subpackages => {
+        :comptree => {
+          :name_in_ruby => "CompTree",
+          :sources => [
+            "driver",
+            "node",
+            "task_node",
+            "error",
+            "bucket_ipc",
+            "algorithm",
+            "retriable_fork",
+            "quix/diagnostic",
+            "quix/kernel",
+            "quix/builtin/kernel/tap",
+          ],
+          :lib_dir => "./contrib/comptree/lib",
+          :ignore_root_rb => true,
+        },
+      },
+    },
+  }
+  Quix::Subpackager.run(packages)
+end
+
+###########################################
+# git
+
+def git(*args)
+  cmd = ["git"] + args
+  sh(*cmd)
+end
+
+task :add_contrib_first_time => :init_contrib do
+  git(*%w!merge --squash -s ours --no-commit comptree/master!)
+  git(*%w!read-tree --prefix=contrib/comptree -u comptree/master!)
+  git("commit", "-m", "add comptree package")
+end
+
+task :init_contrib do
+  unless `git remote`.split.include? "comptree"
+    git(*%w!remote add -f comptree git@github.com:quix/comptree.git!)
+  end
+end
+
+task :run_pull_contrib => :init_contrib do
+  git(*%w!pull --no-commit -s subtree comptree master!)
+end
+
+task :pull_mainline do
+  git(*%w!pull
+          git://github.com/jimweirich/rake.git
+          refs/heads/master:refs/heads/origin!)
+end
+
+######################################################################
+# toplevel
+
+task :pull_contrib => [ :init_contrib, :run_pull_contrib, :generate_rb ]
