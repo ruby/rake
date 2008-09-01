@@ -7,6 +7,7 @@ end
 require 'test/unit'
 require 'fileutils'
 require 'session'
+require 'test/in_environment'
 
 # Version 2.1.9 of session has a bug where the @debug instance
 # variable is not initialized, causing warning messages.  This snippet
@@ -22,6 +23,7 @@ module Session
 end
 
 class FunctionalTest < Test::Unit::TestCase
+  include InEnvironment
 
   RUBY_COMMAND = 'ruby'
 
@@ -66,18 +68,22 @@ class FunctionalTest < Test::Unit::TestCase
   end
 
   def test_multi_desc
-    ENV['RAKE_COLUMNS'] = '80'
-    Dir.chdir("test/data/multidesc") do rake "-T" end
+    in_environment(
+      'RAKE_COLUMNS' => "80",
+      "PWD" => "test/data/multidesc"
+      ) do
+      rake "-T"
+    end
     assert_match %r{^rake a *# A / A2 *$}, @out
     assert_match %r{^rake b *# B *$}, @out
     assert_no_match %r{^rake c}, @out
     assert_match %r{^rake d *# x{65}\.\.\.$}, @out
-  ensure
-    ENV['RAKE_COLUMNS'] = nil
   end
-
+  
   def test_long_description
-    Dir.chdir("test/data/multidesc") do rake "--describe" end
+    in_environment("PWD" => "test/data/multidesc") do
+      rake "--describe"
+    end
     assert_match %r{^rake a\n *A / A2 *$}m, @out
     assert_match %r{^rake b\n *B *$}m, @out
     assert_match %r{^rake d\n *x{80}}m, @out
@@ -85,34 +91,59 @@ class FunctionalTest < Test::Unit::TestCase
   end
 
   def test_rbext
-    Dir.chdir("test/data/rbext") do rake "-N" end
+    in_environment("PWD" => "test/data/rbext") do
+      rake "-N"
+    end
     assert_match %r{^OK$}, @out
   end
 
   def test_system
-    ENV['RAKE_SYSTEM'] = 'test/data/sys'
-    rake '-g', "sys1"
+    in_environment('RAKE_SYSTEM' => 'test/data/sys') do
+      rake '-g', "sys1"
+    end
     assert_match %r{^SYS1}, @out
-  ensure
-    ENV['RAKE_SYSTEM'] = nil
+  end
+
+  def test_implicit_system
+    in_environment('RAKE_SYSTEM' => File.expand_path('test/data/sys'), "PWD" => "/") do
+      rake "sys1", "--trace"
+    end
+    assert_match %r{^SYS1}, @out
   end
 
   def test_no_system
-    ENV['RAKE_SYSTEM'] = 'test/data/sys'
-    rake '-G', "sys1"
+    in_environment('RAKE_SYSTEM' => 'test/data/sys') do
+      rake '-G', "sys1"
+    end
     assert_match %r{^Don't know how to build task}, @err # emacs wart: '
-  ensure
-    ENV['RAKE_SYSTEM'] = nil
   end
 
-  def test_nosearch
-    mkdir_p "test/data/nosearch", :verbose => false rescue nil
-    Dir.chdir("test/data/nosearch") do rake "-N" end
+  def test_nosearch_with_rakefile_uses_local_rakefile
+    in_environment("PWD" => "test/data/default") do
+      rake "--nosearch"
+    end
+    assert_match %r{^DEFAULT}, @out
+  end
+
+  def test_nosearch_without_rakefile_finds_system
+    in_environment(
+      "PWD" => "test/data/nosearch",
+      "RAKE_SYSTEM" => File.expand_path("test/data/sys")
+      ) do
+      rake "--nosearch", "sys1"
+    end
+    assert_match %r{^SYS1}, @out
+  end
+
+  def test_nosearch_without_rakefile_and_no_system_fails
+    in_environment("PWD" => "test/data/nosearch", "RAKE_SYSTEM" => "not_exist") do
+      rake "--nosearch"
+    end
     assert_match %r{^No Rakefile found}, @err
   end
 
   def test_dry_run
-    Dir.chdir("test/data/default") do rake "-n", "other" end
+    in_environment("PWD" => "test/data/default") do rake "-n", "other" end
     assert_match %r{Execute \(dry run\) default}, @out
     assert_match %r{Execute \(dry run\) other}, @out
     assert_no_match %r{DEFAULT}, @out
@@ -121,18 +152,26 @@ class FunctionalTest < Test::Unit::TestCase
 
   # Test for the trace/dry_run bug found by Brian Chandler
   def test_dry_run_bug
-    Dir.chdir("test/data/dryrun") do rake end
+    in_environment("PWD" => "test/data/dryrun") do
+      rake
+    end
     FileUtils.rm_f "test/data/dryrun/temp_one"
-    Dir.chdir("test/data/dryrun") do rake "--dry-run" end
+    in_environment("PWD" => "test/data/dryrun") do
+      rake "--dry-run"
+    end
     assert_no_match(/No such file/, @out)
     assert_status
   end
 
   # Test for the trace/dry_run bug found by Brian Chandler
   def test_trace_bug
-    Dir.chdir("test/data/dryrun") do rake end
+    in_environment("PWD" => "test/data/dryrun") do
+      rake
+    end
     FileUtils.rm_f "test/data/dryrun/temp_one"
-    Dir.chdir("test/data/dryrun") do rake "--trace" end
+    in_environment("PWD" => "test/data/dryrun") do
+      rake "--trace"
+    end
     assert_no_match(/No such file/, @out)
     assert_status
   end
@@ -142,7 +181,9 @@ class FunctionalTest < Test::Unit::TestCase
       f.puts 'puts "STATIC"'
     end
     FileUtils.rm_f "test/data/imports/dynamic_deps"
-    Dir.chdir("test/data/imports") do rake end
+    in_environment("PWD" => "test/data/imports") do
+      rake
+    end
     assert File.exist?("test/data/imports/dynamic_deps"),
       "'dynamic_deps' file should exist"
     assert_match(/^FIRST$\s+^DYNAMIC$\s+^STATIC$\s+^OTHER$/, @out)
@@ -153,7 +194,9 @@ class FunctionalTest < Test::Unit::TestCase
 
   def test_rules_chaining_to_file_task
     remove_chaining_files
-    Dir.chdir("test/data/chains") do rake end
+    in_environment("PWD" => "test/data/chains") do
+      rake
+    end
     assert File.exist?("test/data/chains/play.app"),
       "'play.app' file should exist"
     assert_status
@@ -161,12 +204,12 @@ class FunctionalTest < Test::Unit::TestCase
   end
 
   def test_file_creation_task
-    Dir.chdir("test/data/file_creation_task") do
+    in_environment("PWD" => "test/data/file_creation_task") do
       rake "prep"
       rake "run"
       rake "run"
-      assert(@err !~ /^cp src/, "Should not recopy data")
     end
+    assert(@err !~ /^cp src/, "Should not recopy data")
   end
 
   def test_dash_f_with_no_arg_foils_rakefile_lookup
@@ -180,63 +223,63 @@ class FunctionalTest < Test::Unit::TestCase
   end
 
   def test_can_invoke_task_in_toplevel_namespace
-    Dir.chdir("test/data/namespace") do
+    in_environment("PWD" => "test/data/namespace") do
       rake "copy"
-      assert_match(/^COPY$/, @out)
     end
+    assert_match(/^COPY$/, @out)
   end
 
   def test_can_invoke_task_in_nested_namespace
-    Dir.chdir("test/data/namespace") do
+    in_environment("PWD" => "test/data/namespace") do
       rake "nest:copy"
       assert_match(/^NEST COPY$/, @out)
     end
   end
 
   def test_tasks_can_reference_task_in_same_namespace
-    Dir.chdir("test/data/namespace") do
+    in_environment("PWD" => "test/data/namespace") do
       rake "nest:xx"
       assert_match(/^NEST COPY$/m, @out)
     end
   end
 
   def test_tasks_can_reference_task_in_other_namespaces
-    Dir.chdir("test/data/namespace") do
+    in_environment("PWD" => "test/data/namespace") do
       rake "b:run"
       assert_match(/^IN A\nIN B$/m, @out)
     end
   end
 
   def test_anonymous_tasks_can_be_invoked_indirectly
-    Dir.chdir("test/data/namespace") do
+    in_environment("PWD" => "test/data/namespace") do
       rake "anon"
       assert_match(/^ANON COPY$/m, @out)
     end
   end
 
   def test_rake_namespace_refers_to_toplevel
-    Dir.chdir("test/data/namespace") do
+    in_environment("PWD" => "test/data/namespace") do
       rake "very:nested:run"
       assert_match(/^COPY$/m, @out)
     end
   end
 
   def test_file_task_are_not_scoped_by_namespaces
-    Dir.chdir("test/data/namespace") do
+    in_environment("PWD" => "test/data/namespace") do
       rake "xyz.rb"
       assert_match(/^XYZ1\nXYZ2$/m, @out)
     end
   end
   
   def test_rake_returns_status_error_values
-    Dir.chdir("test/data/statusreturn") do
+    in_environment("PWD" => "test/data/statusreturn") do
       rake "exit5"
       assert_status(5)
     end
   end
 
   def test_rake_returns_no_status_error_on_normal_exit
-    Dir.chdir("test/data/statusreturn") do
+    in_environment("PWD" => "test/data/statusreturn") do
       rake "normal"
       assert_status(0)
     end

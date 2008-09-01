@@ -10,12 +10,14 @@ require 'test/unit'
 require 'rake'
 require 'test/rake_test_setup'
 require 'test/capture_stdout'
+require 'test/in_environment'
 
 TESTING_REQUIRE = [ ]
 
 ######################################################################
 class TestApplication < Test::Unit::TestCase
   include CaptureStdout
+  include InEnvironment
 
   def setup
     @app = Rake::Application.new
@@ -141,7 +143,7 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_load_rakefile_not_found
-    in_environment("PWD" => "/") do
+    in_environment("PWD" => "/", "RAKE_SYSTEM" => 'not_exist') do
       @app.instance_eval do
         handle_options
         options.silent = true
@@ -265,30 +267,6 @@ class TestApplication < Test::Unit::TestCase
   ensure
     ARGV.clear
   end
-
-  private
-  
-  def set_env(settings)
-    result = {}
-    settings.each do |k, v|
-      result[k] = ENV[k]
-      if k == 'PWD'
-        Dir.chdir(v)
-      else
-        ENV[k] = v
-      end
-    end
-    result
-  end
-
-  def in_environment(settings)
-    original_dir = Dir.pwd
-    original_settings = set_env(settings)
-    yield    
-  ensure
-    set_env(original_settings)
-  end
-
 end
 
 

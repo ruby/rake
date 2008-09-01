@@ -2274,7 +2274,7 @@ module Rake
       while ! (fn = have_rakefile)
         Dir.chdir("..")
         if Dir.pwd == here || options.nosearch
-          fail "No Rakefile found (looking for: #{@rakefiles.join(', ')})"
+          return nil
         end
         here = Dir.pwd
       end
@@ -2285,12 +2285,16 @@ module Rake
 
     def raw_load_rakefile # :nodoc:
       rakefile, location = find_rakefile_location
-      if (! options.ignore_system) && (options.load_system || rakefile.nil?)
+      if (! options.ignore_system) &&
+          (options.load_system || rakefile.nil?) &&
+          File.directory?(system_dir)
         puts "(in #{Dir.pwd})" unless options.silent
         Dir["#{system_dir}/*.rake"].each do |name|
           add_import name
         end
       else
+        fail "No Rakefile found (looking for: #{@rakefiles.join(', ')})" if
+          rakefile.nil?
         @rakefile = rakefile
         Dir.chdir(location)
         puts "(in #{Dir.pwd})" unless options.silent
