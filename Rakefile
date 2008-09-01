@@ -417,9 +417,9 @@ end
 ######################################################################
 # repackage files from contrib/
 
-#$LOAD_PATH.unshift "./contrib/comptree/contrib/quix/lib"
-#require 'quix/subpackager'
-#require 'quix/fileutils'
+$LOAD_PATH.unshift "./contrib/comptree/contrib/quix/lib"
+require 'quix/subpackager'
+require 'quix/fileutils'
 
 task :generate_rb do
   packages = {
