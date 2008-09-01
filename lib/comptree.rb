@@ -1,5 +1,5 @@
 
-require 'comptree/comptree'
+require 'comptree/driver'
 
 if defined? Rake
   require 'comptree/rake'
