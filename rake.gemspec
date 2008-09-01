@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: rake
 version: !ruby/object:Gem::Version 
-  version: 0.8.1.9
+  version: 0.8.1.10
 platform: ruby
 authors: 
 - Jim Weirich
@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2008-08-31 00:00:00 -04:00
+date: 2008-09-01 00:00:00 -04:00
 default_executable: rake
 dependencies: []
 
@@ -68,7 +68,7 @@ files:
 - lib/rake/testtask.rb
 - lib/rake.rb
 - test/capture_stdout.rb
-- test/contrib/testsys.rb
+- test/contrib/test_sys.rb
 - test/data/rakelib/test1.rb
 - test/data/rbext/rakefile.rb
 - test/filecreation.rb
@@ -100,6 +100,7 @@ files:
 - test/test_rules.rb
 - test/test_task_arguments.rb
 - test/test_task_manager.rb
+- test/test_tasklib.rb
 - test/test_tasks.rb
 - test/test_test_task.rb
 - test/test_top_level_functions.rb
