@@ -53,7 +53,7 @@ class TestTaskManager < Test::Unit::TestCase
     assert_equal ["fn"], @tm.tasks.collect { |t| t.name }
   end
 
-  def testS_namespace_yields_same_namespace_as_returned
+  def test_namespace_yields_same_namespace_as_returned
     yielded_namespace = nil
     returned_namespace = @tm.in_namespace("x") do |ns|
       yielded_namespace = ns

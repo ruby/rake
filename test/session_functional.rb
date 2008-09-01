@@ -29,8 +29,6 @@ class FunctionalTest < Test::Unit::TestCase
 
   def setup
     @rake_path = File.expand_path("bin/rake")
-    @coverage_aggregate_file = File.expand_path("rcov_aggregate")
-    @rcov_dir = File.expand_path("coverage")
     lib_path = File.expand_path("lib")
     @ruby_options = "-I#{lib_path} -I."
     @verbose = ! ENV['VERBOSE'].nil?
@@ -306,10 +304,6 @@ class FunctionalTest < Test::Unit::TestCase
   end
   
   def rake(*option_list)
-#     self.class.format_command = lambda { |ruby_options, rake_path, options|
-#       "rcov --output=#{@rcov_dir} --aggregate=#{@coverage_aggregate_file} #{ruby_options} #{rake_path} -- #{options}"
-#     }
-
     options = option_list.join(' ')
     shell = Session::Shell.new
     command = self.class.format_command[@ruby_options, @rake_path, options]

@@ -199,7 +199,9 @@ class TestApplication < Test::Unit::TestCase
     @app.instance_eval do
       intern(Rake::Task, "default").enhance { ran = true }
     end
-    @app.run
+    in_environment("PWD" => "test/data/default") do
+      @app.run
+    end
     assert ran
   end
 

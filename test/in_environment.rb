@@ -18,6 +18,8 @@ module InEnvironment
       result[k] = ENV[k]
       if k == 'PWD'
         Dir.chdir(v)
+      elsif v.nil?
+        ENV.delete(k)
       else
         ENV[k] = v
       end
