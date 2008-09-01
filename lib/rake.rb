@@ -914,6 +914,24 @@ def import(*fns)
   end
 end
 
+#
+# seq -- Force tasks to be executed sequentially.
+#
+# use this form to cleanly hide the lambda
+#
+(class << self ; self ; end).class_eval {
+  seq_lambda = lambda { |*task_names|
+    (1...task_names.size).each { |n|
+      task task_names[n] => task_names[n - 1]
+    }
+    task_names.last
+  }
+  
+  define_method(:seq) {
+    seq_lambda
+  }
+}
+
 # ###########################################################################
 # This a FileUtils extension that defines several additional commands to be
 # added to the FileUtils utility functions.
@@ -1952,7 +1970,12 @@ module Rake
       standard_exception_handling do
         init
         load_rakefile
-        top_level
+        if options.threads and options.threads > 1
+          require 'rake/parallel'
+          top_level_parallel(options.threads, options.fork)
+        else
+          top_level
+        end   
       end
     end
 
@@ -2183,6 +2206,12 @@ module Rake
         ['--execute-continue',  '-E CODE',
           "Execute some Ruby code, then continue with normal task processing.",
           lambda { |value| eval(value) }            
+        ],
+        ['--threads', '-j N', "Specifies the number of threads to run simultaneously.",
+          lambda { |value| options.threads = value.to_i }
+        ],
+        ['--fork', '-k', "When --threads=N given, run each thread in a separate process.",
+          lambda { options.fork = true }
         ],
         ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
           lambda { |value| $:.push(value) }
