@@ -83,6 +83,7 @@ task :generate_rb do
           :name_in_ruby => "Quix",
           :sources => [
             "diagnostic",
+            "kernel",
             "builtin/kernel/tap",
           ],
           :lib_dir => "./contrib/quix/lib",

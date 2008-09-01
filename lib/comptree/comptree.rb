@@ -1,6 +1,7 @@
 
 require 'comptree/bucket_ipc'
 require 'comptree/quix/diagnostic'
+require 'comptree/quix/kernel'
 require 'comptree/algorithm'
 require 'thread'
 
@@ -184,6 +185,7 @@ module CompTree
     }
 
     include Quix::Diagnostic
+    include Quix::Kernel
 
     attr_reader :nodes
     
@@ -286,8 +288,16 @@ module CompTree
     def reset(name)
       @nodes[name].reset
     end
+
+    def compute(name, opts = {})
+      abort_on_exception {
+        compute_private(name, opts)
+      }
+    end
+
+    private
     
-    def compute(name, opts_in = {})
+    def compute_private(name, opts_in)
       opts = DEFAULTS.merge(opts_in)
       root = @nodes[name]
 
