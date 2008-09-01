@@ -75,7 +75,7 @@ namespace "ruby19" do
 
     desc "Run the all the tests in Ruby 1.9"
     task :all, :opts, :needs => [:env19] do |t, args|
-      test_files = FileList['test/functional.rb', 'test/test_*.rb']
+      test_files = FileList['test/functional.rb', 'test/**/test_*.rb']
       Ruby19.run_tests(test_files, args.opts)
     end
   end

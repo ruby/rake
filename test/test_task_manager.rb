@@ -148,7 +148,7 @@ class TestTaskManager < Test::Unit::TestCase
 end
 
 class TestTaskManagerArgumentResolution < Test::Unit::TestCase
-  def test_args
+  def test_good_arg_patterns
     assert_equal [:t, [], []],       task(:t)
     assert_equal [:t, [], [:x]],     task(:t => :x)
     assert_equal [:t, [], [:x, :y]], task(:t => [:x, :y])

@@ -285,6 +285,9 @@ module Rake
     end
   end
 
+  class TaskArgumentError < ArgumentError
+  end
+
   ####################################################################
   # TaskAguments manage the arguments passed to a task.
   #
@@ -1702,6 +1705,10 @@ module Rake
       else
         resolve_args_without_dependencies(args)
       end
+    end
+
+    def all_names(*args)
+      args.all? { |arg| arg.is_a?(String) || arg.is_a?(Symbol) }
     end
 
     # Resolve task arguments for a task or rule when there are no
