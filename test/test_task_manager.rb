@@ -146,3 +146,25 @@ class TestTaskManager < Test::Unit::TestCase
   end
   
 end
+
+class TestTaskManagerArgumentResolution < Test::Unit::TestCase
+  def test_args
+    assert_equal [:t, [], []],       task(:t)
+    assert_equal [:t, [], [:x]],     task(:t => :x)
+    assert_equal [:t, [], [:x, :y]], task(:t => [:x, :y])
+
+    assert_equal [:t, [:a, :b], []],       task(:t, :a, :b)
+    assert_equal [:t, [], [:x]],           task(:t, :needs => :x)
+    assert_equal [:t, [:a, :b], [:x]],     task(:t, :a, :b, :needs => :x)
+    assert_equal [:t, [:a, :b], [:x, :y]], task(:t, :a, :b, :needs => [:x, :y])
+
+    assert_equal [:t, [:a, :b], []],       task(:t, [:a, :b])
+    assert_equal [:t, [:a, :b], [:x]],     task(:t, [:a, :b] => :x)
+    assert_equal [:t, [:a, :b], [:x, :y]], task(:t, [:a, :b] => [:x, :y])
+  end
+
+  def task(*args)
+    tm = TaskManager.new
+    tm.resolve_args(args)
+  end
+end

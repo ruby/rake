@@ -1696,23 +1696,65 @@ module Rake
     # Resolve the arguments for a task/rule.  Returns a triplet of
     # [task_name, arg_name_list, prerequisites].
     def resolve_args(args)
-      task_name = args.shift
-      arg_names = args #.map { |a| a.to_sym }
-      needs = []
-      if task_name.is_a?(Hash)
-        hash = task_name
-        task_name = hash.keys[0]
-        needs = hash[task_name]
+      if args.last.is_a?(Hash)
+        deps = args.pop
+        resolve_args_with_dependencies(args, deps)
+      else
+        resolve_args_without_dependencies(args)
       end
-      if arg_names.last.is_a?(Hash)
-        hash = arg_names.pop
-        needs = hash[:needs]
-        fail "Unrecognized keys in task hash: #{hash.keys.inspect}" if hash.size > 1
-      end
-      needs = [needs] unless needs.respond_to?(:to_ary)
-      [task_name, arg_names, needs]
     end
 
+    # Resolve task arguments for a task or rule when there are no
+    # dependencies declared.
+    #
+    # The patterns recognized by this argument resolving function are:
+    #
+    #   task :t
+    #   task :t, [:a]
+    #   task :t, :a                 (deprecated)
+    #
+    def resolve_args_without_dependencies(args)
+      task_name = args.shift
+      if args.size == 1 && args.first.respond_to?(:to_ary)
+        arg_names = args.first.to_ary
+      else
+        arg_names = args
+      end
+      [task_name, arg_names, []]
+    end
+    private :resolve_args_without_dependencies
+    
+    # Resolve task arguments for a task or rule when there are
+    # dependencies declared.
+    #
+    # The patterns recognized by this argument resolving function are:
+    #
+    #   task :t => [:d]
+    #   task :t, [a] => [:d]
+    #   task :t, :needs => [:d]                 (deprecated)
+    #   task :t, :a, :needs => [:d]             (deprecated)
+    #
+    def resolve_args_with_dependencies(args, hash) # :nodoc:
+      fail "Task Argument Error" if hash.size != 1
+      key, value = hash.map { |k, v| [k,v] }.first
+      if args.empty?
+        task_name = key
+        arg_names = []
+        deps = value
+      elsif key == :needs
+        task_name = args.shift
+        arg_names = args
+        deps = value
+      else
+        task_name = args.shift
+        arg_names = key
+        deps = value
+      end
+      deps = [deps] unless deps.respond_to?(:to_ary)
+      [task_name, arg_names, deps]
+    end
+    private :resolve_args_with_dependencies
+    
     # If a rule can be found that matches the task name, enhance the
     # task with the prerequisites and actions from the rule.  Set the
     # source attribute of the task appropriately for the rule.  Return
