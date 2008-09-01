@@ -95,10 +95,13 @@ begin
 
   Rcov::RcovTask.new do |t|
     t.libs << "test"
+    dot_rakes = 
     t.rcov_opts = [
-      '-x/Library', '-xRakefile', '-xrakefile', '-xpublish.rf',
+      '-xRakefile', '-xrakefile', '-xpublish.rf',
+      '-xlib/rake/contrib', '-x/Library', 
       '--text-report',
-    ]
+      '--sort coverage'
+    ] + FileList['rakelib/*.rake'].pathmap("-x%p")
     t.test_files = FileList[
       'test/test*.rb', 'test/functional.rb'
     ]

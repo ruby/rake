@@ -240,6 +240,33 @@ end # class String
 ##############################################################################
 module Rake
 
+  # Errors -----------------------------------------------------------
+
+  # Error indicating an ill-formed task declaration.
+  class TaskArgumentError < ArgumentError
+  end
+
+  # Error indicating a recursion overflow error in task selection.
+  class RuleRecursionOverflowError < StandardError
+    def initialize(*args)
+      super
+      @targets = []
+    end
+
+    def add_target(target)
+      @targets << target
+    end
+
+    def message
+      super + ": [" + @targets.reverse.join(' => ') + "]"
+    end
+  end
+
+  # Error indicating a problem in locating the home directory on a
+  # Win32 system.
+  class Win32HomeError < RuntimeError
+  end
+
   # --------------------------------------------------------------------------
   # Rake module singleton methods.
   #
@@ -283,9 +310,6 @@ module Rake
       sibling.freeze if frozen?
       sibling
     end
-  end
-
-  class TaskArgumentError < ArgumentError
   end
 
   ####################################################################
@@ -1150,21 +1174,6 @@ private(*RakeFileUtils.instance_methods(false))
 
 ######################################################################
 module Rake
-
-  class RuleRecursionOverflowError < StandardError
-    def initialize(*args)
-      super
-      @targets = []
-    end
-
-    def add_target(target)
-      @targets << target
-    end
-
-    def message
-      super + ": [" + @targets.reverse.join(' => ') + "]"
-    end
-  end
 
   # #########################################################################
   # A FileList is essentially an array with a few helper methods defined to
@@ -2137,16 +2146,10 @@ module Rake
       end
     end
 
-    # Return a list of the command line options supported by the
-    # program.
-    def command_line_options
-      OPTIONS.collect { |lst| lst[0..-2] }
-    end
-
-    # Read and handle the command line options.
-    def handle_options
-      # optparse version of OPTIONS
-      op_options = [
+    # A list of all the standard options used in rake, suitable for
+    # passing to OptionParser.
+    def standard_rake_options
+      [
         ['--classic-namespace', '-C', "Put Task and FileTask in the top level namespace",
           lambda { |value|
             require 'rake/classic_namespace'
@@ -2258,25 +2261,26 @@ module Rake
             puts "rake, version #{RAKEVERSION}"
             exit
           }
-        ],
+        ]
       ]
+    end
 
+    # Read and handle the command line options.
+    def handle_options
       options.rakelib = ['rakelib']
 
-      parsed_argv = nil
-      opts = OptionParser.new do |opts|
-        opts.banner = "rake [-f rakefile] {options} targets..."
-        opts.separator ""
-        opts.separator "Options are ..."
-
-      	opts.on_tail("-h", "--help", "-H", "Display this help message.") do
-    	  	puts opts
-    		  exit
-      	end
-
-        op_options.each { |args| opts.on(*args) }
-      	parsed_argv = opts.parse(ARGV)
+      opts = OptionParser.new
+      opts.banner = "rake [-f rakefile] {options} targets..."
+      opts.separator ""
+      opts.separator "Options are ..."
+      
+      opts.on_tail("-h", "--help", "-H", "Display this help message.") do
+        puts opts
+        exit
       end
+      
+      standard_rake_options.each { |args| opts.on(*args) }
+      parsed_argv = opts.parse(ARGV)
 
       # If class namespaces are requested, set the global options
       # according to the values in the options structure.
@@ -2287,9 +2291,7 @@ module Rake
         $dryrun = options.dryrun
         $silent = options.silent
       end
-      return parsed_argv
-    rescue NoMethodError => ex
-      raise OptionParser::InvalidOption, "While parsing options, error = #{ex.class}:#{ex.message}"
+      parsed_argv
     end
 
     # Similar to the regular Ruby +require+ command, but will check
@@ -2326,7 +2328,7 @@ module Rake
       rakefile, location = find_rakefile_location
       if (! options.ignore_system) &&
           (options.load_system || rakefile.nil?) &&
-          File.directory?(system_dir)
+          directory?(system_dir)
         puts "(in #{Dir.pwd})" unless options.silent
         Dir["#{system_dir}/*.rake"].each do |name|
           add_import name
@@ -2337,7 +2339,7 @@ module Rake
         @rakefile = rakefile
         Dir.chdir(location)
         puts "(in #{Dir.pwd})" unless options.silent
-        $rakefile = @rakefile
+        $rakefile = @rakefile if options.classic_namespace
         load File.expand_path(@rakefile) if @rakefile && @rakefile != ''
       end
       options.rakelib.each do |rlib|
@@ -2366,13 +2368,19 @@ module Rake
     # The standard directory containing system wide rake files on Win
     # 32 systems.
     def win32_system_dir #:nodoc:
-      unless File.exists?(win32home = File.join(ENV['APPDATA'], 'Rake'))
-        raise Win32HomeError, "# Unable to determine home path environment variable."
+      win32home = File.join(ENV['APPDATA'], 'Rake')
+      unless directory?(win32home)
+        raise Win32HomeError, "Unable to determine home path environment variable."
       else
         win32home
       end
     end
     private :win32_system_dir
+
+    def directory?(path)
+      File.directory?(path)
+    end
+    private :directory?
 
     # Collect the list of tasks on the command line.  If no tasks are
     # given, return a list containing only the default task.
