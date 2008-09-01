@@ -192,16 +192,16 @@ tasks has been extended slightly.
 For example, a task that needs a first name and last name might be
 declared as:
 
-   task :name, :first_name, :last_name
+   task :name, [:first_name, :last_name]
 
 The first argument is still the name of the task (:name in this case).
 The next to argumements are the names of the parameters expected by
-:name (:first_name and :last_name in the example).
+:name in an array (:first_name and :last_name in the example).
 
 To access the values of the paramters, the block defining the task
 behaviour can now accept a second parameter:
 
-   task :name, :first_name, :last_name do |t, args|
+   task :name, [:first_name, :last_name] do |t, args|
      puts "First name is #{args.first_name}"
      puts "Last  name is #{args.last_name}"
    end
@@ -216,7 +216,7 @@ If you wish to specify default values for the arguments, you can use
 the with_defaults method in the task body.  Here is the above example
 where we specify default values for the first and last names:
 
-   task :name, :first_name, :last_name do |t, args|
+   task :name, [:first_name, :last_name] do |t, args|
      args.with_defaults(:first_name => "John", :last_name => "Dough")
      puts "First name is #{args.first_name}"
      puts "Last  name is #{args.last_name}"
@@ -228,11 +228,18 @@ Tasks that use parameters have a slightly different format for
 prerequisites.  Use the <tt>:needs</tt> keyword to specify the
 prerequisites for tasks with arguments.  For example:
 
-   task :name, :first_name, :last_name, :needs => [:pre_name] do |t, args|
+   task :name, [:first_name, :last_name] => [:pre_name] do |t, args|
      args.with_defaults(:first_name => "John", :last_name => "Dough")
      puts "First name is #{args.first_name}"
      puts "Last  name is #{args.last_name}"
    end
+
+=== Deprecated Task Parameters Format
+
+There is an older format for declaring task parameters that omitted
+the task array and used the :needs keyword to introduce the
+dependencies.  That format is still supported for compatibility, but
+is not recommended for use.
 
 == Accessing Task Programatically
 
