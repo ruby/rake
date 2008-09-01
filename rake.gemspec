@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: rake
 version: !ruby/object:Gem::Version 
-  version: 0.8.1.8
+  version: 0.8.1.9
 platform: ruby
 authors: 
 - Jim Weirich
@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2008-08-30 00:00:00 -04:00
+date: 2008-08-31 00:00:00 -04:00
 default_executable: rake
 dependencies: []
 
@@ -73,6 +73,7 @@ files:
 - test/data/rbext/rakefile.rb
 - test/filecreation.rb
 - test/functional.rb
+- test/in_environment.rb
 - test/rake_test_setup.rb
 - test/reqfile.rb
 - test/reqfile2.rb
