@@ -2004,12 +2004,13 @@ module Rake
           display_prerequisites
         else
           if options.threads and options.threads > 1
-            parsed_tasks = top_level_tasks.inject(Hash.new) {
+            tasks_with_args = top_level_tasks.inject(Hash.new) {
               |acc, task_string|
               name, args = parse_task_string(task_string)
-              acc.merge(name => args)
+              acc.merge(
+                name => TaskArguments.new(Rake::Task[name].arg_names, args))
             }
-            invoke_tasks_parallel(parsed_tasks, options.threads, options.fork)
+            invoke_tasks_parallel(tasks_with_args, options.threads, options.fork)
           else
             top_level_tasks.each { |task_name| invoke_task(task_name) }
           end
