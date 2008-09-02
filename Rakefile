@@ -68,14 +68,16 @@ all_test_files = FileList[
   'test/fun*.rb'
 ]
 
+task :test_all => [:test_single_threaded, :test_parallel]
+
 Rake::TestTask.new(:test_parallel) do |t|
   t.test_files = FileList['test/parallel.rb'] + all_test_files
   t.warning = true
   t.verbose = false
 end
 
-Rake::TestTask.new(:test_all) do |t|
-  t.test_files = all_test_files
+Rake::TestTask.new(:test_single_threaded) do |t|
+  t.test_files = FileList['test/single_threaded.rb'] + all_test_files
   t.warning = true
   t.verbose = false
 end
