@@ -99,7 +99,7 @@ Rake::TestTask.new(:test_contribs) do |t|
 end
 
 Rake::TestTask.new(:test_current) do |t|
-  t.test_files = FileList['test/parallel.rb', 'test/test_tasks.rb']
+  t.test_files = FileList['test/parallel.rb', 'test/test_rules.rb']
   t.warning = true
   t.verbose = false
 end
