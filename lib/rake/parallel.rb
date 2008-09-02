@@ -37,7 +37,10 @@ module Rake
                 child.to_sym
               }
               driver.define(node_name, *children_names) {
-                task.execute(task_args)
+                unless task.already_invoked
+                  task.already_invoked = true
+                  task.execute(task_args)
+                end
               }
             end
           end

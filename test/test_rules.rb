@@ -27,17 +27,15 @@ class TestRules < Test::Unit::TestCase
   end
 
   def test_multiple_rules1
-    if Rake.application.options.threads == 1
-      create_file(FTNFILE)
-      delete_file(SRCFILE)
-      delete_file(OBJFILE)
-      rule(/\.o$/ => ['.c']) do @runs << :C end
-      rule(/\.o$/ => ['.f']) do @runs << :F end
-      t = Task[OBJFILE]
-      t.invoke
-      Task[OBJFILE].invoke
-      assert_equal [:F], @runs
-    end
+    create_file(FTNFILE)
+    delete_file(SRCFILE)
+    delete_file(OBJFILE)
+    rule(/\.o$/ => ['.c']) do @runs << :C end
+    rule(/\.o$/ => ['.f']) do @runs << :F end
+    t = Task[OBJFILE]
+    t.invoke
+    Task[OBJFILE].invoke
+    assert_equal [:F], @runs
   end
 
   def test_multiple_rules2

@@ -487,6 +487,8 @@ module Rake
       @sources ||= []
     end
 
+    attr_accessor :already_invoked #:nodoc:
+
     # First source from a rule (nil if no sources)
     def source
       @sources.first if defined?(@sources)
