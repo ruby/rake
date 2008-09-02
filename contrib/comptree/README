@@ -69,9 +69,7 @@ Finally there is the raw form which uses no +eval+ or
     2 + border
   }
         
-== Rake
-
-An interesting offshoot of this project is comptree/rake.rb which
-parallelizes Rake tasks.  See the documentation in that file.
-
+=== Credits
 Author: James M. Lawrence
+License: MIT License
+
