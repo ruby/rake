@@ -27,23 +27,26 @@ class TestRules < Test::Unit::TestCase
   end
 
   def test_multiple_rules1
-    create_file(FTNFILE)
-    delete_file(SRCFILE)
-    delete_file(OBJFILE)
-    rule(/\.o$/ => ['.c']) do @runs << :C end
-    rule(/\.o$/ => ['.f']) do @runs << :F end
-    t = Task[OBJFILE]
-    t.invoke
-    Task[OBJFILE].invoke
-    assert_equal [:F], @runs
+    if Rake.application.options.threads == 1
+      create_file(FTNFILE)
+      delete_file(SRCFILE)
+      delete_file(OBJFILE)
+      rule(/\.o$/ => ['.c']) do @runs << :C end
+      rule(/\.o$/ => ['.f']) do @runs << :F end
+      t = Task[OBJFILE]
+      t.invoke
+      Task[OBJFILE].invoke
+      assert_equal [:F], @runs
+    end
   end
 
   def test_multiple_rules2
+    mutex = Mutex.new
     create_file(FTNFILE)
     delete_file(SRCFILE)
     delete_file(OBJFILE)
-    rule(/\.o$/ => ['.f']) do @runs << :F end
-    rule(/\.o$/ => ['.c']) do @runs << :C end
+    rule(/\.o$/ => ['.f']) do mutex.synchronize { @runs << :F } end
+    rule(/\.o$/ => ['.c']) do mutex.synchronize { @runs << :C } end
     Task[OBJFILE].invoke
     assert_equal [:F], @runs
   end
