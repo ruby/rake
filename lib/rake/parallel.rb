@@ -1,4 +1,7 @@
 
+module Rake
+end
+
 require 'rake/comptree/driver'
 
 module Rake
@@ -12,21 +15,11 @@ module Rake
       
       top_level
       
-      invoke_parallel(num_threads, use_fork, parent_tasks)
+      invoke_parallel(parent_tasks, num_threads, use_fork)
     end
     
     # :nodoc:
-    def invoke_parallel(num_threads, use_fork, parent_tasks)
-      #
-      # MultiTask ignores the dependency tree --- nuke it.
-      #
-      # We happen to not be calling this anyway, however this is an
-      # accident waiting to happen.
-      #
-      MultiTask.class_eval {
-        remove_method :invoke_prerequisites
-      }
-      
+    def invoke_parallel(parent_tasks, num_threads, use_fork)
       parent_args = parent_tasks.inject(Hash.new) { |acc, task_string|
         name, args = parse_task_string(task_string)
         acc.update(name => args)

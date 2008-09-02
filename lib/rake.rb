@@ -38,6 +38,7 @@ require 'singleton'
 require 'monitor'
 require 'optparse'
 require 'ostruct'
+require 'rake/parallel'
 
 ######################################################################
 # Rake extensions to Module.
@@ -540,8 +541,12 @@ module Rake
 
     # Invoke the task if it is needed.  Prerequites are invoked first.
     def invoke(*args)
-      task_args = TaskArguments.new(arg_names, args)
-      invoke_with_call_chain(task_args, InvocationChain::EMPTY)
+      if (threads = application.options.threads) and threads > 1
+        application.invoke_parallel(args, threads, application.options.fork)
+      else
+        task_args = TaskArguments.new(arg_names, args)
+        invoke_with_call_chain(task_args, InvocationChain::EMPTY)
+      end
     end
 
     # Same as invoke, but explicitly pass a call chain to detect
@@ -782,16 +787,10 @@ module Rake
   end
 
   # #########################################################################
-  # Same as a regular task, but the immediate prerequisites are done in
-  # parallel using Ruby threads.
+  # DEPRECATED: use command-line option '--threads N' or
+  # Rake.application.options.threads = N
   #
   class MultiTask < Task
-    def invoke_prerequisites(args, invocation_chain)
-      threads = @prerequisites.collect { |p|
-        Thread.new(p) { |r| application[r].invoke_with_call_chain(args, invocation_chain) }
-      }
-      threads.each { |t| t.join }
-    end
   end
 end # module Rake
 
@@ -846,12 +845,9 @@ def directory(dir)
   end
 end
 
-# Declare a task that performs its prerequisites in parallel. Multitasks does
-# *not* guarantee that its prerequisites will execute in any given order
-# (which is obvious when you think about it)
-#
-# Example:
-#   multitask :deploy => [:deploy_gem, :deploy_rdoc]
+# 
+# DEPRECATED: use command-line option '--threads N' or
+# Rake.application.options.threads = N
 #
 def multitask(args, &block)
   Rake::MultiTask.define_task(args, &block)
@@ -1971,7 +1967,6 @@ module Rake
         init
         load_rakefile
         if options.threads and options.threads > 1
-          require 'rake/parallel'
           top_level_parallel(options.threads, options.fork)
         else
           top_level

@@ -62,12 +62,20 @@ task :tu => :test_units
 task :tc => :test_contribs
 task :test => :test_units
 
+all_test_files = FileList[
+  'test/test*.rb',
+  'test/contrib/test*.rb',
+  'test/fun*.rb'
+]
+
+Rake::TestTask.new(:test_parallel) do |t|
+  t.test_files = FileList['test/parallel.rb'] + all_test_files
+  t.warning = true
+  t.verbose = false
+end
+
 Rake::TestTask.new(:test_all) do |t|
-  t.test_files = FileList[
-    'test/test*.rb',
-    'test/contrib/test*.rb',
-    'test/fun*.rb'
-  ]
+  t.test_files = all_test_files
   t.warning = true
   t.verbose = false
 end
