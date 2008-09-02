@@ -179,9 +179,6 @@ module Rake::CompTree
             node.trace_compute
             bucket.contents = node.compute
           }
-          if $?.exitstatus != 0
-            exit(1)
-          end
           bucket.contents
         else
           #
@@ -213,6 +210,10 @@ module Rake::CompTree
       trace "Waiting for process #{process_id}"
       Process.wait(process_id)
       trace "Process #{process_id} finished"
+      if $?.exitstatus != 0
+        trace "Process #{process_id} returned bad exit status; exiting."
+        exit(1)
+      end
     end
     
     extend self
