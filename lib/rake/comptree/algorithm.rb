@@ -210,8 +210,9 @@ module Rake::CompTree
       trace "Waiting for process #{process_id}"
       Process.wait(process_id)
       trace "Process #{process_id} finished"
-      if $?.exitstatus != 0
-        trace "Process #{process_id} returned bad exit status; exiting."
+      exitstatus = $?.exitstatus
+      if exitstatus != 0
+        trace "Process #{process_id} returned #{exitstatus}; exiting."
         exit(1)
       end
     end
