@@ -7,29 +7,12 @@ require 'rake/comptree/driver'
 module Rake
   class Application
     # :nodoc:
-    def top_level_parallel(num_threads, use_fork)
-      parent_tasks = @top_level_tasks
-      
-      # Trick top_level into not invoking tasks
-      @top_level_tasks = []
-      
-      top_level
-      
-      invoke_parallel(parent_tasks, num_threads, use_fork)
-    end
-    
-    # :nodoc:
-    def invoke_parallel(parent_tasks, num_threads, use_fork)
-      parent_args = parent_tasks.inject(Hash.new) { |acc, task_string|
-        name, args = parse_task_string(task_string)
-        acc.update(name => args)
-      }
-
-      parent_names = parent_args.keys.map { |name|
+    def invoke_tasks_parallel(parsed_tasks, num_threads, use_fork)
+      parent_names = parsed_tasks.keys.map { |name|
         name.to_sym
       }
 
-      root_name = :"computation_root__#{Process.pid}"
+      root_name = "computation_root__#{Process.pid}".to_sym
          
       CompTree::Driver.new(:discard_result => true) { |driver|
 
@@ -51,7 +34,7 @@ module Rake
             }
             
             task_args =
-              if args = parent_args[task.name]
+              if args = parsed_tasks[task.name]
                 TaskArguments.new(task.arg_names, args)
               else
                 []

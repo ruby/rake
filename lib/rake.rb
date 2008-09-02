@@ -566,7 +566,8 @@ module Rake
     # Invoke the task if it is needed.  Prerequites are invoked first.
     def invoke(*args)
       if (threads = application.options.threads) and threads > 1
-        application.invoke_parallel(args, threads, application.options.fork)
+        application.invoke_tasks_parallel(
+          {name => args}, threads, application.options.fork)
       else
         task_args = TaskArguments.new(arg_names, args)
         invoke_with_call_chain(task_args, InvocationChain::EMPTY)
@@ -1975,11 +1976,7 @@ module Rake
       standard_exception_handling do
         init
         load_rakefile
-        if options.threads and options.threads > 1
-          top_level_parallel(options.threads, options.fork)
-        else
-          top_level
-        end   
+        top_level
       end
     end
 
@@ -2006,7 +2003,16 @@ module Rake
         elsif options.show_prereqs
           display_prerequisites
         else
-          top_level_tasks.each { |task_name| invoke_task(task_name) }
+          if options.threads and options.threads > 1
+            parsed_tasks = top_level_tasks.inject(Hash.new) {
+              |acc, task_string|
+              name, args = parse_task_string(task_string)
+              acc.merge(name => args)
+            }
+            invoke_tasks_parallel(parsed_tasks, options.threads, options.fork)
+          else
+            top_level_tasks.each { |task_name| invoke_task(task_name) }
+          end
         end
       end
     end
