@@ -1,3 +1,48 @@
+= DRAKE -- Distributed Rake
+
+A branch of Rake supporting parallel task execution.
+
+== Synopsis
+
+Execute tasks with three simultaneous threads:
+
+   $ rake --threads 3
+
+Run three threads, with each task forked into a new process:
+
+   $ rake --threads 3 --fork
+
+== Important Note
+
+In a given Rakefile, it is possible (even likely) that the
+dependency tree has not been properly defined.  Consider
+
+   task :a => [:x, :y, :z]
+
+With single-threaded +rake+, _x_,_y_,_z_ will be invoked <em>in that
+order</em> before _a_ is invoked.  However with <code>rake -r
+comptree N</code>, one should not expect any particular order of
+execution.  Since there is no dependency specified between
+_x_,_y_,_z_ above, <code>comptree</code> is free to execute them in
+any order.
+
+If you wish _x_,_y_,_z_ to be invoked sequentially, then write
+
+   task :a => seq[:x, :y, :z]
+
+This is shorthand for
+
+   task :a => :z
+   task :z => :y
+   task :y => :x
+
+Upon invoking _a_, the above rules say: "Can't do _a_ until _z_ is
+complete; can't do _z_ until _y_ is complete; can't do _y_ until _x_
+is complete; therefore do _x_."  In this fashion the sequence
+_x_,_y_,_z_ is enforced.
+
+The original Rake README follows.
+
 = RAKE -- Ruby Make 
 
 Supporting Rake version: 0.8.2
