@@ -43,16 +43,18 @@ class TestTask < Test::Unit::TestCase
   end
 
   def test_invoke_with_circular_dependencies
-    runlist = []
-    t1 = task(:t1 => [:t2]) { |t| runlist << t.name; 3321 }
-    t2 = task(:t2 => [:t1]) { |t| runlist << t.name }
-    assert_equal ["t2"], t1.prerequisites
-    assert_equal ["t1"], t2.prerequisites
-    ex = assert_raise RuntimeError do
-      t1.invoke
+    if Rake.application.options.threads == 1
+      runlist = []
+      t1 = task(:t1 => [:t2]) { |t| runlist << t.name; 3321 }
+      t2 = task(:t2 => [:t1]) { |t| runlist << t.name }
+      assert_equal ["t2"], t1.prerequisites
+      assert_equal ["t1"], t2.prerequisites
+      ex = assert_raise RuntimeError do
+        t1.invoke
+      end
+      assert_match(/circular dependency/i, ex.message)
+      assert_match(/t1 => t2 => t1/, ex.message)
     end
-    assert_match(/circular dependency/i, ex.message)
-    assert_match(/t1 => t2 => t1/, ex.message)
   end
 
   def test_dry_run_prevents_actions
@@ -69,15 +71,19 @@ class TestTask < Test::Unit::TestCase
   end
 
   def test_tasks_can_be_traced
-    Rake.application.options.trace = true
-    t1 = task(:t1)
-    out = capture_stdout {
-      t1.invoke
-    }
-    assert_match(/invoke t1/i, out)
-    assert_match(/execute t1/i, out)
-  ensure
-    Rake.application.options.trace = false
+    if Rake.application.options.threads == 1
+      begin
+        Rake.application.options.trace = true
+        t1 = task(:t1)
+        out = capture_stdout {
+          t1.invoke
+        }
+        assert_match(/invoke t1/i, out)
+        assert_match(/execute t1/i, out)
+      ensure
+        Rake.application.options.trace = false
+      end
+    end
   end
 
   def test_no_double_invoke
