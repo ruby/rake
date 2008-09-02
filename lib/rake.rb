@@ -2233,9 +2233,9 @@ module Rake
         ['--threads', '-j N', "Specifies the number of threads to run simultaneously.",
           lambda { |value| options.threads = value.to_i }
         ],
-        ['--fork', '-k', "When --threads=N given, run each thread in a separate process.",
-          lambda { options.fork = true }
-        ],
+        #['--fork', '-k', "When --threads=N given, run each thread in a separate process.",
+        #  lambda { options.fork = true }
+        #],
         ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
           lambda { |value| $:.push(value) }
         ],
