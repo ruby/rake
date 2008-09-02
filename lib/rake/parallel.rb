@@ -30,6 +30,7 @@ module Rake
         tasks.each { |task|
           if task.needed?
             children_names = task.prerequisites.map { |child|
+              Task[child] # check if child exists
               child.to_sym
             }
             
@@ -37,7 +38,7 @@ module Rake
               if args = parsed_tasks[task.name]
                 TaskArguments.new(task.arg_names, args)
               else
-                []
+                {}
               end
             
             driver.define(task.name.to_sym, *children_names) {
