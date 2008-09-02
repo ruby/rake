@@ -486,7 +486,7 @@ task :run_pull_contrib => :init_contrib do
 end
 
 task :pull_mainline do
-  git(*%w!pull
+  git(*%w!pull --no-commit
           git://github.com/jimweirich/rake.git
           refs/heads/master:refs/heads/origin!)
 end
