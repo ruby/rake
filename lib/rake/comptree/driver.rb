@@ -146,10 +146,6 @@ module Rake::CompTree
       }
     end
 
-    def node(name)
-      @nodes[name]
-    end
-
     private
     
     def compute_private(name, opts_in)

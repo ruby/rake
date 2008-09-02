@@ -565,11 +565,11 @@ module Rake
 
     # Invoke the task if it is needed.  Prerequites are invoked first.
     def invoke(*args)
+      task_args = TaskArguments.new(arg_names, args)
       if (threads = application.options.threads) and threads > 1
         application.invoke_tasks_parallel(
-          {name => args}, threads, application.options.fork)
+          {name => task_args}, threads, application.options.fork)
       else
-        task_args = TaskArguments.new(arg_names, args)
         invoke_with_call_chain(task_args, InvocationChain::EMPTY)
       end
     end
@@ -2497,3 +2497,4 @@ class Module
     end
   end
 end
+
