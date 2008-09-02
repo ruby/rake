@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 N = 2
 
 task :default => :run
@@ -17,7 +19,7 @@ FileList['src/*'].each do |src|
   target = File.join TARGET_DIR, File.basename(src)
   file target => [src, TARGET_DIR] do
     cp src, target
-    sleep 3 if src !~ /foo#{N-1}$/
+    # sleep 3 if src !~ /foo#{N-1}$/   # I'm commenting out this sleep, it doesn't seem to do anything.
   end
   task :run => target
 end
@@ -25,6 +27,7 @@ end
 task :prep => :clean do
   mkdir_p 'src'
   N.times do |n|
+    puts "DBG: Touching src/foo#{n}"
     touch "src/foo#{n}"
   end
 end

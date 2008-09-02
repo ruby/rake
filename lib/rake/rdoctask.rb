@@ -91,14 +91,14 @@ module Rake
       task name
       
       desc "Force a rebuild of the RDOC files"
-      task paste("re", name) => [paste("clobber_", name), name]
+      task "re#{name}" => ["clobber_#{name}", name]
       
       desc "Remove rdoc products" 
-      task paste("clobber_", name) do
+      task "clobber_#{name}" do
         rm_r rdoc_dir rescue nil
       end
-
-      task :clobber => [paste("clobber_", name)]
+      
+      task :clobber => ["clobber_#{name}"]
       
       directory @rdoc_dir
       task name => [rdoc_target]

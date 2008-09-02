@@ -169,6 +169,66 @@ class TestApplication < Test::Unit::TestCase
     end
   end
 
+  def test_load_from_system_rakefile_on_unix
+    flexmock(@app, :windows? => false,
+      :win32_system_dir => nil,
+      :load => nil)
+    flexmock(File).should_receive(:expand_path).with("~").and_return("/HOME")
+    flexmock(File).should_receive(:expand_path).and_return { |fn| fn }
+    
+    in_environment('RAKE_SYSTEM' => nil) do
+      @app.options.rakelib = []
+      @app.instance_eval do
+        handle_options
+        options.silent = true
+        options.load_system = true
+        load_rakefile
+      end
+      assert_equal "/HOME/.rake", @app.system_dir
+    end
+  end
+
+  def test_windows
+    assert ! (@app.windows? && @app.unix?)
+  end
+
+  def test_load_from_system_rakefile_on_windows
+    flexmock(@app, :windows? => true,
+      :standard_system_dir => "XX")
+    flexmock(@app).should_receive(:directory?).with("/AD/Rake").and_return(true)
+    flexmock(@app).should_receive(:load).and_return { |fn| puts "LOADING #{fn}" }
+    in_environment('RAKE_SYSTEM' => nil, 'APPDATA' => '/AD') do
+      @app.options.rakelib = []
+      @app.instance_eval do
+        handle_options
+        options.silent = true
+        options.load_system = true
+        load_rakefile
+      end
+      assert_equal "/AD/Rake", @app.system_dir
+    end
+  end
+
+  def test_load_from_system_rakefile_on_windows_with_no_appdata
+    flexmock(@app, :windows? => true,
+      :standard_system_dir => "XX"
+      )
+    flexmock(File).should_receive(:exists?).with("/AD/Rake").and_return(false)
+    out = capture_stderr do
+      assert_raise(SystemExit) do
+        in_environment('RAKE_SYSTEM' => nil, 'APPDATA' => "/AD") do
+          @app.options.rakelib = []
+          @app.instance_eval do
+            handle_options
+            options.silent = true
+            options.load_system = true
+            load_rakefile
+          end
+        end
+      end
+    end
+  end
+
   def test_loading_imports
     mock = flexmock("loader")
     mock.should_receive(:load).with("x.dummy").once
@@ -602,4 +662,53 @@ class TestTaskArgumentParsing < Test::Unit::TestCase
     assert_equal ["a one ana", "two"], args
   end
 
+end
+
+class TestTaskArgumentParsing < Test::Unit::TestCase
+  include InEnvironment
+
+  def test_terminal_width_using_env
+    app = Rake::Application.new
+    in_environment('RAKE_COLUMNS' => '1234') do
+      assert_equal 1234, app.terminal_width
+    end
+  end
+
+  def test_terminal_width_using_stty
+    app = Rake::Application.new
+    flexmock(app,
+      :unix? => true,
+      :dynamic_width_stty => 1235,
+      :dynamic_width_tput => 0)
+    in_environment('RAKE_COLUMNS' => nil) do
+      assert_equal 1235, app.terminal_width
+    end
+  end
+
+  def test_terminal_width_using_tput
+    app = Rake::Application.new
+    flexmock(app,
+      :unix? => true,
+      :dynamic_width_stty => 0,
+      :dynamic_width_tput => 1236)
+    in_environment('RAKE_COLUMNS' => nil) do
+      assert_equal 1236, app.terminal_width
+    end
+  end
+
+  def test_terminal_width_using_hardcoded_80
+    app = Rake::Application.new
+    flexmock(app, :unix? => false)
+    in_environment('RAKE_COLUMNS' => nil) do
+      assert_equal 80, app.terminal_width
+    end
+  end
+
+  def test_terminal_width_with_failure
+    app = Rake::Application.new
+    flexmock(app).should_receive(:unix?).and_throw(RuntimeError)
+    in_environment('RAKE_COLUMNS' => nil) do
+      assert_equal 80, app.terminal_width
+    end
+  end
 end
