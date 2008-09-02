@@ -1,0 +1,20 @@
+
+require 'thread'
+
+task_names = (1...100).map { |n| n.to_s }
+order_invoked = []
+mutex = Mutex.new
+
+task_names.each { |task_name|
+  task task_name do
+    mutex.synchronize {
+      order_invoked.push(task_name)
+    }
+  end
+}
+
+task :default => seq[*task_names] do
+  unless order_invoked == task_names
+    raise "seq failed"
+  end
+end
