@@ -43,18 +43,20 @@ class TestTask < Test::Unit::TestCase
   end
 
   def test_invoke_with_circular_dependencies
-    if Rake.application.options.threads == 1
-      runlist = []
-      t1 = task(:t1 => [:t2]) { |t| runlist << t.name; 3321 }
-      t2 = task(:t2 => [:t1]) { |t| runlist << t.name }
-      assert_equal ["t2"], t1.prerequisites
-      assert_equal ["t1"], t2.prerequisites
-      ex = assert_raise RuntimeError do
-        t1.invoke
+    runlist = []
+    t1 = task(:t1 => [:t2]) { |t| runlist << t.name; 3321 }
+    t2 = task(:t2 => [:t1]) { |t| runlist << t.name }
+    assert_equal ["t2"], t1.prerequisites
+    assert_equal ["t1"], t2.prerequisites
+    ex = assert_raise RuntimeError do
+      if Rake.application.options.threads > 1
+        # must check manually for parallel mode
+        Rake.application.check_circular(t1.name)
       end
-      assert_match(/circular dependency/i, ex.message)
-      assert_match(/t1 => t2 => t1/, ex.message)
+      t1.invoke
     end
+    assert_match(/circular dependency/i, ex.message)
+    assert_match(/t1 => t2 => t1/, ex.message)
   end
 
   def test_dry_run_prevents_actions
@@ -71,6 +73,7 @@ class TestTask < Test::Unit::TestCase
   end
 
   def test_tasks_can_be_traced
+    # invocation chain unavailable for parallel mode
     if Rake.application.options.threads == 1
       begin
         Rake.application.options.trace = true

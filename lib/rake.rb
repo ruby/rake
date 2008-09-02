@@ -1965,6 +1965,22 @@ module Rake
       @tty_output = STDOUT.tty?
     end
 
+    #
+    # Check for circular dependencies, without invoking.
+    # 
+    def check_circular(task_name)
+      helper = lambda { |name, chain|
+        if chain.include? name
+          raise "Circular dependency detected: " +
+            "#{name} => #{chain.last} => #{name}"
+        end
+        Rake::Task[name].prerequisites.each { |prereq_name|
+          helper.call(prereq_name, chain + [name])
+        }
+      }
+      helper.call(task_name, [])
+    end
+
     # Run the Rake application.  The run method performs the following three steps:
     #
     # * Initialize the command line options (+init+).
