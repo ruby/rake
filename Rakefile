@@ -98,6 +98,12 @@ Rake::TestTask.new(:test_contribs) do |t|
   t.verbose = false
 end
 
+Rake::TestTask.new(:test_current) do |t|
+  t.test_files = FileList['test/parallel.rb', 'test/test_tasks.rb']
+  t.warning = true
+  t.verbose = false
+end
+
 begin
   require 'rcov/rcovtask'
 
