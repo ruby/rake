@@ -124,6 +124,10 @@ module CompTree
       @nodes[name].reset
     end
 
+    def node(name)
+      @nodes[name]
+    end
+
     def compute(name, opts = {})
       abort_on_exception {
         compute_private(name, opts)
