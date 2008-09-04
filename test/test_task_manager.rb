@@ -3,8 +3,6 @@
 require 'test/unit'
 require 'rake'
 
-Rake.application.num_threads = 8
-
 class TaskManager
   include Rake::TaskManager
 end
