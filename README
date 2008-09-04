@@ -4,15 +4,13 @@ A branch of Rake supporting parallel task execution.
 
 == Synopsis
 
-Execute tasks with three simultaneous threads:
+Run up to three tasks in parallel:
 
    $ rake --threads 3
 
-Run three threads, with each task forked into a new process:
+== Important Notes
 
-   $ rake --threads 3 --fork
-
-== Important Note
+=== Dependencies
 
 In a given Rakefile, it is possible (even likely) that the
 dependency tree has not been properly defined.  Consider
@@ -40,6 +38,12 @@ Upon invoking _a_, the above rules say: "Can't do _a_ until _z_ is
 complete; can't do _z_ until _y_ is complete; can't do _y_ until _x_
 is complete; therefore do _x_."  In this fashion the sequence
 _x_,_y_,_z_ is enforced.
+
+=== MultiTask
+
+The use of 'multitask' is now deprecated.  Tasks which may properly be
+run in parallel will be run in parallel; those which cannot, will not.
+It is not the user's job to decide.
 
 The original Rake README follows.
 
