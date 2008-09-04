@@ -590,11 +590,11 @@ module Rake
         @already_invoked = true
         invoke_prerequisites(task_args, new_chain)
         if needed?
-          if application.num_threads > 1
+          if application.num_threads == 1
+            execute(task_args) 
+          else
             # gather tasks for batch execution
             application.parallel_tasks[name] = task_args
-          else
-            execute(task_args) 
           end
         end
       end
