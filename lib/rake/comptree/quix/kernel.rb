@@ -27,7 +27,7 @@ require 'thread'
 
 module Rake::CompTree::Quix
   module Kernel
-    def scope
+    def let
       yield self
     end
 
@@ -37,29 +37,37 @@ module Rake::CompTree::Quix
       end
     end
 
-    def gensym(prefix = nil)
-      count = Rake::CompTree::Quix::Kernel.instance_eval {
-        Thread.exclusive {
-          @private__gensym_count ||= 0
-          @private__gensym_count += 1
+    module Gensym
+      @mutex = Mutex.new
+      @count = 0
+
+      def gensym(prefix = nil)
+        count = Gensym.module_eval {
+          @mutex.synchronize {
+            @count += 1
+          }
         }
-      }
-      :"#{prefix || :G}_#{count}_#{rand}"
+        "#{prefix || :G}_#{count}_#{rand}".to_sym
+      end
     end
+    include Gensym
 
     def call_private(method, *args, &block)
       instance_eval { send(method, *args, &block) }
     end
 
-    # execute a block with warnings turned off
-    def no_warnings
+    def with_warnings(value = true)
       previous = $VERBOSE
+      $VERBOSE = value
       begin
-        $VERBOSE = nil
         yield
       ensure
         $VERBOSE = previous
       end
+    end
+
+    def no_warnings(&block)
+      with_warnings(false, &block)
     end
 
     def abort_on_exception(value = true)
