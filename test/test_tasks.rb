@@ -74,7 +74,9 @@ class TestTask < Test::Unit::TestCase
     out = capture_stdout {
       t1.invoke
     }
-    assert_match(/invoke t1/i, out)
+    if Rake.application.num_threads == 1
+      assert_match(/invoke t1/i, out)
+    end
     assert_match(/execute t1/i, out)
   ensure
     Rake.application.options.trace = false
