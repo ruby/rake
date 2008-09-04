@@ -18,11 +18,11 @@ dependency tree has not been properly defined.  Consider
    task :a => [:x, :y, :z]
 
 With single-threaded +rake+, _x_,_y_,_z_ will be invoked <em>in that
-order</em> before _a_ is invoked.  However with <code>rake -r
-comptree N</code>, one should not expect any particular order of
-execution.  Since there is no dependency specified between
-_x_,_y_,_z_ above, <code>comptree</code> is free to execute them in
-any order.
+order</em> before _a_ is invoked.  However with <code>rake
+--threads=N</code> (N > 1), one should not expect any particular order
+of execution.  Since there is no dependency specified between
+_x_,_y_,_z_ above, <code>rake</code> is free to execute them in any
+order.
 
 If you wish _x_,_y_,_z_ to be invoked sequentially, then write
 
