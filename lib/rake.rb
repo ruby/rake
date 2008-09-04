@@ -583,7 +583,7 @@ module Rake
     def invoke_with_call_chain(task_args, invocation_chain) # :nodoc:
       new_chain = InvocationChain.append(self, invocation_chain)
       @lock.synchronize do
-        if application.options.trace
+        if application.options.trace and application.num_threads == 1
           puts "** Invoke #{name} #{format_trace_flags}"
         end
         return if @already_invoked
