@@ -3,17 +3,15 @@ module Rake ; end
 
 require 'rake/comptree/driver'
 
-require 'pp'
-
 module Rake
-  class Application
+  module TaskManager
     # :nodoc:
-    def invoke_tasks_parallel(task_manager, tasks, num_threads, use_fork)
-      parent_names = tasks.keys.map { |name|
+    def invoke_parallel_tasks
+      parent_names = parallel_tasks.keys.map { |name|
         name.to_sym
       }
 
-      root_name = "computation_root__#{Process.pid}".to_sym
+      root_name = "computation_root__#{Process.pid}__#{rand}".to_sym
          
       CompTree::Driver.new(:discard_result => true) { |driver|
         #
@@ -27,8 +25,8 @@ module Rake
         #
         # build the rest of the computation tree from task prereqs
         #
-        tasks.each_pair { |task_name, task_args|
-          task = task_manager[task_name]
+        parallel_tasks.each_pair { |task_name, task_args|
+          task = self[task_name]
           children_names = task.prerequisites.map { |child|
             child.to_sym
           }
@@ -49,10 +47,7 @@ module Rake
         #
         # launch the computation
         #
-        driver.compute(
-          root_name,
-          :threads => num_threads,
-          :fork => use_fork)
+        driver.compute(root_name, :threads => num_threads, :fork => false)
       }
     end
   end

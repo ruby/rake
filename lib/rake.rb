@@ -574,11 +574,7 @@ module Rake
       invoke_with_call_chain(task_args, InvocationChain::EMPTY)
 
       if application.num_threads > 1
-        application.invoke_tasks_parallel(
-          application,
-          application.parallel_tasks,
-          application.num_threads,
-          application.options.fork)
+        application.invoke_parallel_tasks
       end
     end
 
@@ -595,8 +591,8 @@ module Rake
         invoke_prerequisites(task_args, new_chain)
         if needed?
           if application.num_threads > 1
-            application.parallel_tasks[name] =
-              task_args
+            # gather tasks for batch execution
+            application.parallel_tasks[name] = task_args
           else
             execute(task_args) 
           end
@@ -1689,6 +1685,7 @@ module Rake
     alias :last_comment :last_description    # Backwards compatibility
 
     attr_accessor :num_threads
+    attr_accessor :parallel_tasks #:nodoc:
 
     def initialize
       super
@@ -2056,8 +2053,6 @@ module Rake
 
     # private ----------------------------------------------------------------
 
-    attr_accessor :parallel_tasks
-    
     def invoke_task(task_string)
       name, args = parse_task_string(task_string)
       t = self[name]
