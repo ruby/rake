@@ -1,4 +1,10 @@
 
+here = File.dirname(__FILE__)
+$LOAD_PATH.unshift "#{here}/../lib"
+$LOAD_PATH.unshift "#{here}/../contrib/quix/lib"
+
+require 'comptree'
+require 'quix/config'
 require 'test/unit'
 
 module CompTree
@@ -19,7 +25,7 @@ module CompTree
         puts "skipping #{File.basename(__FILE__)}."
       else
         [true, false].each { |use_fork|
-          assert(!system(Quix::Config.ruby_executable, "-e", code(use_fork)))
+          assert(!system(::Quix::Config.ruby_executable, "-e", code(use_fork)))
           assert_match(%r!CompTreeTestError!, File.read(OUTPUT_FILE))
           File.unlink(OUTPUT_FILE) # leave when exception raised above
         }
