@@ -16,6 +16,7 @@ module Rake::CompTree
   class AssertionFailed < Error ; end
   class ArgumentError < Error ; end
   class RedefinitionError < Error ; end
+  class CircularError < Error ; end
 end
 
 

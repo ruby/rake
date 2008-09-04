@@ -136,8 +136,17 @@ module Rake::CompTree
       @nodes[name].reset
     end
 
-    def node(name)
-      @nodes[name]
+    def check_circular(root)
+      helper = lambda { |name, chain|
+        if chain.include? name
+          raise CircularError,
+            "Circular dependency detected: #{name} => #{chain.last} => #{name}"
+        end
+        @nodes[name].children.each { |child|
+          helper.call(child.name, chain + [name])
+        }
+      }
+      helper.call(root, [])
     end
 
     def compute(name, opts = {})
