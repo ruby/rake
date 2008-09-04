@@ -487,8 +487,6 @@ module Rake
       @sources ||= []
     end
 
-    attr_accessor :already_invoked #:nodoc:
-
     # First source from a rule (nil if no sources)
     def source
       @sources.first if defined?(@sources)
@@ -568,11 +566,19 @@ module Rake
     # Invoke the task if it is needed.  Prerequites are invoked first.
     def invoke(*args)
       task_args = TaskArguments.new(arg_names, args)
-      if (threads = application.options.threads) and threads > 1
+
+      if application.num_threads > 1
+        application.parallel_tasks = Hash.new
+      end
+
+      invoke_with_call_chain(task_args, InvocationChain::EMPTY)
+
+      if application.num_threads > 1
         application.invoke_tasks_parallel(
-          {name => task_args}, threads, application.options.fork)
-      else
-        invoke_with_call_chain(task_args, InvocationChain::EMPTY)
+          application,
+          application.parallel_tasks,
+          application.num_threads,
+          application.options.fork)
       end
     end
 
@@ -587,7 +593,14 @@ module Rake
         return if @already_invoked
         @already_invoked = true
         invoke_prerequisites(task_args, new_chain)
-        execute(task_args) if needed?
+        if needed?
+          if application.num_threads > 1
+            application.parallel_tasks[name] =
+              task_args
+          else
+            execute(task_args) 
+          end
+        end
       end
     end
     protected :invoke_with_call_chain
@@ -815,7 +828,7 @@ module Rake
 
   # #########################################################################
   # DEPRECATED: use command-line option '--threads N' or
-  # Rake.application.options.threads = N
+  # Rake.application.num_threads = N
   #
   class MultiTask < Task
   end
@@ -874,7 +887,7 @@ end
 
 # 
 # DEPRECATED: use command-line option '--threads N' or
-# Rake.application.options.threads = N
+# Rake.application.num_threads = N
 #
 def multitask(args, &block)
   Rake::MultiTask.define_task(args, &block)
@@ -1675,12 +1688,15 @@ module Rake
     attr_accessor :last_description
     alias :last_comment :last_description    # Backwards compatibility
 
+    attr_accessor :num_threads
+
     def initialize
       super
       @tasks = Hash.new
       @rules = Array.new
       @scope = Array.new
       @last_description = nil
+      @num_threads = 1
     end
 
     def create_rule(*args, &block)
@@ -2021,17 +2037,7 @@ module Rake
         elsif options.show_prereqs
           display_prerequisites
         else
-          if options.threads and options.threads > 1
-            tasks_with_args = top_level_tasks.inject(Hash.new) {
-              |acc, task_string|
-              name, args = parse_task_string(task_string)
-              acc.merge(
-                name => TaskArguments.new(Rake::Task[name].arg_names, args))
-            }
-            invoke_tasks_parallel(tasks_with_args, options.threads, options.fork)
-          else
-            top_level_tasks.each { |task_name| invoke_task(task_name) }
-          end
+          top_level_tasks.each { |task_name| invoke_task(task_name) }
         end
       end
     end
@@ -2050,6 +2056,8 @@ module Rake
 
     # private ----------------------------------------------------------------
 
+    attr_accessor :parallel_tasks
+    
     def invoke_task(task_string)
       name, args = parse_task_string(task_string)
       t = self[name]
@@ -2231,7 +2239,7 @@ module Rake
           lambda { |value| eval(value) }            
         ],
         ['--threads', '-j N', "Specifies the number of threads to run simultaneously.",
-          lambda { |value| options.threads = value.to_i }
+          lambda { |value| self.num_threads = value.to_i }
         ],
         #['--fork', '-k', "When --threads=N given, run each thread in a separate process.",
         #  lambda { options.fork = true }
@@ -2516,4 +2524,3 @@ class Module
     end
   end
 end
-

@@ -49,10 +49,6 @@ class TestTask < Test::Unit::TestCase
     assert_equal ["t2"], t1.prerequisites
     assert_equal ["t1"], t2.prerequisites
     ex = assert_raise RuntimeError do
-      if Rake.application.options.threads > 1
-        # must check manually for parallel mode
-        Rake.application.check_circular(t1.name)
-      end
       t1.invoke
     end
     assert_match(/circular dependency/i, ex.message)
@@ -73,20 +69,15 @@ class TestTask < Test::Unit::TestCase
   end
 
   def test_tasks_can_be_traced
-    # invocation chain unavailable for parallel mode
-    if Rake.application.options.threads == 1
-      begin
-        Rake.application.options.trace = true
-        t1 = task(:t1)
-        out = capture_stdout {
-          t1.invoke
-        }
-        assert_match(/invoke t1/i, out)
-        assert_match(/execute t1/i, out)
-      ensure
-        Rake.application.options.trace = false
-      end
-    end
+    Rake.application.options.trace = true
+    t1 = task(:t1)
+    out = capture_stdout {
+      t1.invoke
+    }
+    assert_match(/invoke t1/i, out)
+    assert_match(/execute t1/i, out)
+  ensure
+    Rake.application.options.trace = false
   end
 
   def test_no_double_invoke

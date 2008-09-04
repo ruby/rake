@@ -1,2 +1,2 @@
 require 'rake'
-Rake.application.options.threads = 1
+Rake.application.num_threads = 1

@@ -2,7 +2,7 @@
 require 'rbconfig'
 require 'test/unit'
 
-if Rake.application.options.threads > 1
+if Rake.application.num_threads > 1
   class TestSimpleParallel < Test::Unit::TestCase
     def test_1
       here = File.dirname(__FILE__)

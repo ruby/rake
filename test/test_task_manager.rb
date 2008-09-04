@@ -3,6 +3,8 @@
 require 'test/unit'
 require 'rake'
 
+Rake.application.num_threads = 8
+
 class TaskManager
   include Rake::TaskManager
 end
@@ -10,6 +12,7 @@ end
 class TestTaskManager < Test::Unit::TestCase
   def setup
     @tm = TaskManager.new
+    @tm.num_threads = Rake.application.num_threads
   end
 
   def test_create_task_manager
@@ -135,6 +138,7 @@ class TestTaskManager < Test::Unit::TestCase
   def test_correctly_scoped_prerequisites_are_invoked
     values = []
     @tm = Rake::Application.new
+    @tm.num_threads = Rake.application.num_threads
     @tm.define_task(Rake::Task, :z) do values << "top z" end
     @tm.in_namespace("a") do
       @tm.define_task(Rake::Task, :z) do values << "next z" end
