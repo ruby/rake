@@ -949,9 +949,8 @@ end
 #
 # seq -- Force tasks to be executed sequentially.
 #
-# use this form to cleanly hide the lambda
-#
 (class << self ; self ; end).class_eval {
+  # use this form to cleanly hide the lambda
   seq_lambda = lambda { |*task_names|
     (1...task_names.size).each { |n|
       task task_names[n] => task_names[n - 1]
