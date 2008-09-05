@@ -13,7 +13,7 @@ module Quix
 
     def trim!
       result_left = trim_left!
-      result_right = trim_left!
+      result_right = trim_right!
       result_left || result_right
     end
 
