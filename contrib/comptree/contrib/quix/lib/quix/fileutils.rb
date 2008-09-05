@@ -4,13 +4,6 @@ require 'quix/builtin/kernel/tap'
 
 module Quix
   module FileUtils
-    #::FileUtils.methods(false).each { |method|
-    #  begin
-    #    public method.to_sym
-    #  rescue
-    #  end
-    #}
-
     def rename_file(file, new_name)
       #
       # For case-insensitive systems, we must move the file elsewhere
