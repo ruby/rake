@@ -436,7 +436,7 @@ end
 ######################################################################
 # repackage files from contrib/
 
-$LOAD_PATH.unshift "./contrib/comptree/contrib/quix/lib"
+$LOAD_PATH.unshift "./contrib/comp_tree/contrib/quix/lib"
 require 'quix/subpackager'
 require 'quix/fileutils'
 
@@ -446,7 +446,7 @@ task :generate_rb do
       :name_in_ruby => "Rake",
       :lib_dir => "./lib",
       :subpackages => {
-        :comptree => {
+        :comp_tree => {
           :name_in_ruby => "CompTree",
           :sources => [
             "driver",
@@ -460,7 +460,7 @@ task :generate_rb do
             "quix/kernel",
             "quix/builtin/kernel/tap",
           ],
-          :lib_dir => "./contrib/comptree/lib",
+          :lib_dir => "./contrib/comp_tree/lib",
           :ignore_root_rb => true,
         },
       },
@@ -478,19 +478,19 @@ def git(*args)
 end
 
 task :add_contrib_first_time => :init_contrib do
-  git(*%w!merge --squash -s ours --no-commit comptree/master!)
-  git(*%w!read-tree --prefix=contrib/comptree -u comptree/master!)
-  git("commit", "-m", "add comptree package")
+  git(*%w!merge --squash -s ours --no-commit comp_tree/master!)
+  git(*%w!read-tree --prefix=contrib/comp_tree -u comp_tree/master!)
+  git("commit", "-m", "add comp_tree package")
 end
 
 task :init_contrib do
-  unless `git remote`.split.include? "comptree"
-    git(*%w!remote add -f comptree git@github.com:quix/comptree.git!)
+  unless `git remote`.split.include? "comp_tree"
+    git(*%w!remote add -f comp_tree git@github.com:quix/comp_tree.git!)
   end
 end
 
 task :run_pull_contrib => :init_contrib do
-  git(*%w!pull --no-commit -s subtree comptree master!)
+  git(*%w!pull --no-commit -s subtree comp_tree master!)
 end
 
 task :pull_mainline do
