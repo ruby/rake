@@ -1001,7 +1001,7 @@ module FileUtils
     if cmd.size == 1
       system("call #{cmd}")
     else
-      system(cmd.join(" "))
+      system(*cmd)
     end
   end
   private :rake_win32_system
