@@ -1,7 +1,9 @@
 TAGS
+html
 pkg
 coverage
 temp_*
 x
 *.patch
 .#*
+*.rbc

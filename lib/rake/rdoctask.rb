@@ -102,7 +102,7 @@ module Rake
       
       directory @rdoc_dir
       task name => [rdoc_target]
-      file rdoc_target => @rdoc_files + [$rakefile] do
+      file rdoc_target => @rdoc_files + [Rake.application.rakefile] do
         rm_r @rdoc_dir rescue nil
         args = option_list + @rdoc_files
         if @external
