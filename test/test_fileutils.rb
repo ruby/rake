@@ -125,7 +125,7 @@ class TestFileUtils < Test::Unit::TestCase
 
   def test_sh_multiple_arguments
     ENV['RAKE_TEST_SH'] = 'someval'
-    expanded = File::ALT_SEPARATOR ? '%RAKE_TEST_SH' : '$RAKE_TEST_SH'
+    expanded = File::ALT_SEPARATOR ? '%RAKE_TEST_SH%' : '$RAKE_TEST_SH'
     # This one gets expanded by the shell
     verbose(false) { sh %{ruby test/check_expansion.rb #{expanded} someval} }
     assert true, "should not fail"
