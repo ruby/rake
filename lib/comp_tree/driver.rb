@@ -9,9 +9,6 @@ require 'comp_tree/error'
 
 require 'thread'
 
-#
-# Computation Tree module.
-#
 module CompTree
   #
   # The Driver is the main interface to the computation tree, as it is
@@ -46,7 +43,7 @@ module CompTree
     def initialize(opts = nil)
       if opts and opts[:node_class] and opts[:discard_result]
         raise(
-          ArgumentError,
+          Error::ArgumentError,
           "#{self.class.name}.new: :discard_result and :node_class " +
           "are mutually exclusive")
       end
@@ -100,7 +97,7 @@ module CompTree
       children_names = args[1..-1]
       
       unless parent_name
-        raise ArgumentError, "No name given for node"
+        raise Error::ArgumentError, "No name given for node"
       end
       
       #
@@ -114,7 +111,7 @@ module CompTree
         end
 
       if parent.function
-        raise RedefinitionError, "Node #{parent.name} already defined."
+        raise Error::RedefinitionError, "Node #{parent.name} already defined."
       end
       parent.function = block
       
@@ -179,24 +176,28 @@ module CompTree
     end
 
     #
-    # Check for a cyclic graph.  Raises CompTree::CircularError if
-    # found.
+    # Check for a cyclic graph below the node +name+.  Raises
+    # CompTree::CircularError if found.
     #
-    def check_circular(root)
-      helper = lambda { |name, chain|
-        if chain.include? name
-          raise CircularError,
-            "Circular dependency detected: #{name} => #{chain.last} => #{name}"
+    def check_circular(name)
+      helper = lambda { |root, chain|
+        if chain.include? root
+          raise Error::CircularError,
+            "Circular dependency detected: #{root} => #{chain.last} => #{root}"
         end
-        @nodes[name].children.each { |child|
-          helper.call(child.name, chain + [name])
+        @nodes[root].children.each { |child|
+          helper.call(child.name, chain + [root])
         }
       }
-      helper.call(root, [])
+      helper.call(name, [])
     end
 
     #
     # Compute a node.
+    #
+    # Arguments:
+    #
+    # +name+ -- (Symbol) The name of this node.
     #
     # Options:
     #
@@ -226,7 +227,7 @@ module CompTree
       root = @nodes[name]
 
       if opts[:threads] < 1
-        raise ArgumentError, "threads is #{opts[:threads]}"
+        raise Error::ArgumentError, "threads is #{opts[:threads]}"
       end
 
       if opts[:threads] == 1

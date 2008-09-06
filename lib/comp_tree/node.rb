@@ -100,9 +100,9 @@ module CompTree
       debug {
         # --- own mutex
         trace "Computing #{@name}"
-        raise AssertionFailed if @result
-        raise AssertionFailed unless @mutex.locked?
-        raise AssertionFailed unless @children_results
+        raise Error::AssertionFailed if @result
+        raise Error::AssertionFailed unless @mutex.locked?
+        raise Error::AssertionFailed unless @children_results
       }
     end
 
@@ -131,7 +131,7 @@ module CompTree
     def unlock
       # --- shared tree mutex and own mutex
       debug {
-        raise AssertionFailed unless @mutex.locked?
+        raise Error::AssertionFailed unless @mutex.locked?
         trace "Unlocking #{@name}"
       }
       each_upward { |node|

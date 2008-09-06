@@ -31,8 +31,8 @@ Rake::RDocTask.new { |t|
   t.rdoc_files = [
     readme,
     "lib/comp_tree/driver.rb",
+    "lib/comp_tree/error.rb",
   ]
-  p t.rdoc_files 
 }
 
 task :install do
