@@ -2,7 +2,7 @@
 $LOAD_PATH.unshift(File.expand_path("#{File.dirname(__FILE__)}/../lib"))
 
 require 'test/unit'
-require 'comptree/bucket_ipc'
+require 'comp_tree/bucket_ipc'
 
 Thread.abort_on_exception = true
 

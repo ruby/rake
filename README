@@ -1,9 +1,9 @@
 
-= comptree.rb -- A Framework for Parallel Computations
+= comp_tree -- Parallel Computation Tree
 
 === Synopsis
   
-  require 'comptree'
+  require 'comp_tree'
   
   CompTree::Driver.new { |driver|
 

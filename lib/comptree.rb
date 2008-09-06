@@ -1,2 +1,2 @@
 
-require 'comptree/driver'
+require 'comp_tree'

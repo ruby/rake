@@ -10,7 +10,7 @@ require 'rake/rdoctask'
 require 'fileutils'
 include FileUtils
 
-package_name = "comptree"
+package_name = "comp_tree"
 package_name_in_ruby = "CompTree"
 
 version = File.open("VERSION") { |f| f.read }.gsub(%r!\s!, "")
@@ -75,7 +75,7 @@ end
 
 task :generate_rb do
   packages = {
-    :comptree => {
+    :comp_tree => {
       :name_in_ruby => "CompTree",
       :lib_dir => "./lib",
       :subpackages => {
