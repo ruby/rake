@@ -1,6 +1,6 @@
 = RAKE -- Ruby Make 
 
-Supporting Rake version: 0.8.2
+Supporting Rake version: 0.8.3
 
 This package contains Rake, a simple ruby build program with
 capabilities similar to make.
@@ -53,7 +53,8 @@ Download and install  rake with the following.
 
 If you wish to run the unit and functional tests that come with Rake:
 
-* Install the 'session' gem in order to run the functional tests.
+* Install the 'session' gem in order to run the functional tests. adf
+  asdf asdf
 * CD into the top project directory of rake.
 * Type one of the following:
 
@@ -208,10 +209,10 @@ Options are:
     Do not echo commands from FileUtils.
 
 [<tt>--rakefile</tt> _filename_ (-f)]
-    Use _filename_ as the name of the rakefile.  The default rakefile
+    Use _filename_ as the name of the rakefile. The default rakefile
     names are +rakefile+ and +Rakefile+ (with +rakefile+ taking
-    precedence).  If the rakefile is not found in the current
-    directory, +rake+ will search parent directories for a match.  The
+    precedence). If the rakefile is not found in the current
+    directory, +rake+ will search parent directories for a match. The
     directory where the Rakefile is found will become the current
     directory for the actions executed in the Rakefile.
 
@@ -227,12 +228,24 @@ Options are:
 [<tt>--silent (-s)]
     Like --quiet, but also suppresses the 'in directory' announcement.
 
+[<tt>--system</tt> (-g)]
+    Use the system wide (global) rakefiles. The project Rakefile is
+    ignored. By default, the system wide rakefiles are used only if no
+    project Rakefile is found. On Unix-like system, the system wide
+    rake files are located in $HOME/.rake. On a windows system they
+    are stored in $APPDATA/Rake.
+
+[<tt>--no-system</tt> (-G)]
+    Use the project level Rakefile, ignoring the system-wide (global)
+    rakefiles.
+
 [<tt>--tasks</tt> (-T)]
     Display a list of the major tasks and their comments.  Comments
     are defined using the "desc" command.
 
 [<tt>--trace</tt> (-t)]
-    Turn on invoke/execute tracing.  Also enable full backtrace on errors.
+    Turn on invoke/execute tracing. Also enable full backtrace on
+    errors.
 
 [<tt>--usage</tt> (-h)]
     Display a usage message and exit.
