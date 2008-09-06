@@ -137,7 +137,7 @@ class TestFileUtils < Test::Unit::TestCase
 
   def test_sh_failure
     assert_raises(RuntimeError) { 
-      verbose(false) { sh %{test/shellcommand.rb 1} }
+      verbose(false) { sh %{ruby test/shellcommand.rb 1} }
     }
   end
 
