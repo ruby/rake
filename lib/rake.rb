@@ -983,10 +983,19 @@ module FileUtils
     rake_check_options options, :noop, :verbose
     rake_output_message cmd.join(" ") if options[:verbose]
     unless options[:noop]
-      res = system(*cmd)
+      res = rake_system(*cmd)
       block.call(res, $?)
     end
   end
+
+  def rake_system(*cmd)
+    if Rake.application.windows? && cmd.size == 1
+      system "call #{cmd.first}"
+    else
+      system(*cmd)
+    end
+  end
+  private :rake_system
 
   # Run a Ruby interpreter with the given arguments.
   #
