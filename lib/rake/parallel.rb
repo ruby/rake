@@ -1,7 +1,7 @@
 
 module Rake ; end
 
-require 'rake/comptree/driver'
+require 'rake/comp_tree/driver'
 
 module Rake
   module TaskManager
