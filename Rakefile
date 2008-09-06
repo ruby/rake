@@ -5,7 +5,6 @@ require 'quix/subpackager'
 
 require 'rake/packagetask'
 require 'rake/rdoctask'
-require 'rake/rdoctask'
 
 require 'fileutils'
 include FileUtils
@@ -26,11 +25,14 @@ Rake::PackageTask.new(package_name, version) { |t|
 }
 
 Rake::RDocTask.new { |t|
-  rake_rb = "lib/#{package_name}/rake.rb"
   readme = "README"
   t.main = readme
   t.rdoc_dir = "doc"
-  t.rdoc_files = [readme, rake_rb]
+  t.rdoc_files = [
+    readme,
+    "lib/comp_tree/driver.rb",
+  ]
+  p t.rdoc_files 
 }
 
 task :install do
