@@ -200,8 +200,8 @@ class TestFileUtils < Test::Unit::TestCase
       ENV['RAKE_TEST_RUBY'] = "123"
       block_run = false
       # This one gets expanded by the shell
-      cmd = windows? ? '%RAKE_TEST_RUBY%' : '$RAKE_TEST_RUBY'
-      ruby %{-e "exit #{cmd}"} do |ok, status| # " (emacs wart)
+      env_var = windows? ? '%RAKE_TEST_RUBY%' : '$RAKE_TEST_RUBY'
+      ruby %{-e "exit #{env_var}"} do |ok, status| # " (emacs wart)
         assert(!ok)
         assert_equal 123, status.exitstatus
         block_run = true
@@ -210,7 +210,7 @@ class TestFileUtils < Test::Unit::TestCase
 
       # This one does not get expanded
       block_run = false
-      ruby '-e', 'exit "$RAKE_TEST_RUBY".length' do |ok, status|
+      ruby '-e', %{exit "#{env_var}".length} do |ok, status| # " (emacs wart)
         assert(!ok)
         assert_equal 15, status.exitstatus
         block_run = true
