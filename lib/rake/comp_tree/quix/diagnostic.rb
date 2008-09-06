@@ -23,7 +23,7 @@
 
 
 
-require 'rake/comptree/quix/builtin/kernel/tap'
+require 'rake/comp_tree/quix/builtin/kernel/tap'
 
 module Rake::CompTree::Quix
   module Diagnostic

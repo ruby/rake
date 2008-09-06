@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(File.expand_path("#{File.dirname(__FILE__)}/../lib"))
 require 'test/unit'
 require 'benchmark'
 
-require 'comptree'
+require 'comp_tree'
 
 srand(22)
 
@@ -155,7 +155,7 @@ module CompTree
       }
     end
 
-    def generate_comptree(num_levels, num_children, drain_iterations)
+    def generate_comp_tree(num_levels, num_children, drain_iterations)
       CompTree::Driver.new { |driver|
         root = :aaa
         last_name = root
@@ -194,7 +194,7 @@ module CompTree
           trace {%{num_levels}}
           trace {%{num_children}}
           trace {%{use_fork?}}
-          driver = generate_comptree(
+          driver = generate_comp_tree(
             num_levels,
             num_children,
             args[:drain_iterations])

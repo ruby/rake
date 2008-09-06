@@ -1,11 +1,11 @@
 
-require 'comptree/bucket_ipc'
-require 'comptree/quix/diagnostic'
-require 'comptree/quix/kernel'
-require 'comptree/algorithm'
-require 'comptree/node'
-require 'comptree/task_node'
-require 'comptree/error'
+require 'comp_tree/bucket_ipc'
+require 'comp_tree/quix/diagnostic'
+require 'comp_tree/quix/kernel'
+require 'comp_tree/algorithm'
+require 'comp_tree/node'
+require 'comp_tree/task_node'
+require 'comp_tree/error'
 
 require 'thread'
 

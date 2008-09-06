@@ -2,9 +2,9 @@
 require 'drb'
 require 'thread'
 
-require 'comptree/retriable_fork'
-require 'comptree/quix/diagnostic'
-require 'comptree/quix/builtin/kernel/tap'
+require 'comp_tree/retriable_fork'
+require 'comp_tree/quix/diagnostic'
+require 'comp_tree/quix/builtin/kernel/tap'
 
 module CompTree
   module BucketIPC

@@ -11,7 +11,7 @@
 
 
 
-require 'rake/comptree/quix/diagnostic'
+require 'rake/comp_tree/quix/diagnostic'
 require 'thread'
 
 module Rake::CompTree

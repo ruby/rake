@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift(File.expand_path("#{File.dirname(__FILE__)}/../lib"))
 
-require 'comptree'
+require 'comp_tree'
 require 'test/unit'
 
 module CompTree

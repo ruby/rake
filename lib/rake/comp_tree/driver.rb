@@ -11,13 +11,13 @@
 
 
 
-require 'rake/comptree/bucket_ipc'
-require 'rake/comptree/quix/diagnostic'
-require 'rake/comptree/quix/kernel'
-require 'rake/comptree/algorithm'
-require 'rake/comptree/node'
-require 'rake/comptree/task_node'
-require 'rake/comptree/error'
+require 'rake/comp_tree/bucket_ipc'
+require 'rake/comp_tree/quix/diagnostic'
+require 'rake/comp_tree/quix/kernel'
+require 'rake/comp_tree/algorithm'
+require 'rake/comp_tree/node'
+require 'rake/comp_tree/task_node'
+require 'rake/comp_tree/error'
 
 require 'thread'
 

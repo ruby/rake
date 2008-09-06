@@ -1,6 +1,6 @@
 
-require 'comptree/quix/diagnostic'
-require 'comptree/retriable_fork'
+require 'comp_tree/quix/diagnostic'
+require 'comp_tree/retriable_fork'
 
 module CompTree
   module Algorithm

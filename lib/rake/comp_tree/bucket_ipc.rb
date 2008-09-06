@@ -14,9 +14,9 @@
 require 'drb'
 require 'thread'
 
-require 'rake/comptree/retriable_fork'
-require 'rake/comptree/quix/diagnostic'
-require 'rake/comptree/quix/builtin/kernel/tap'
+require 'rake/comp_tree/retriable_fork'
+require 'rake/comp_tree/quix/diagnostic'
+require 'rake/comp_tree/quix/builtin/kernel/tap'
 
 module Rake::CompTree
   module BucketIPC

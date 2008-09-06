@@ -1,5 +1,5 @@
 
-require 'comptree/quix/diagnostic'
+require 'comp_tree/quix/diagnostic'
 require 'thread'
 
 module CompTree

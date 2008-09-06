@@ -11,8 +11,8 @@
 
 
 
-require 'rake/comptree/quix/diagnostic'
-require 'rake/comptree/retriable_fork'
+require 'rake/comp_tree/quix/diagnostic'
+require 'rake/comp_tree/retriable_fork'
 
 module Rake::CompTree
   module Algorithm

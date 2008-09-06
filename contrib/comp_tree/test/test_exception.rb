@@ -3,7 +3,7 @@ here = File.dirname(__FILE__)
 $LOAD_PATH.unshift "#{here}/../lib"
 $LOAD_PATH.unshift "#{here}/../contrib/quix/lib"
 
-require 'comptree'
+require 'comp_tree'
 require 'quix/config'
 require 'test/unit'
 
@@ -35,7 +35,7 @@ module CompTree
     def code(use_fork)
       %Q{ 
         $LOAD_PATH.unshift '#{LIB_DIR}'
-        require 'comptree'
+        require 'comp_tree'
         require 'open3'
         
         class CompTreeTestError < Exception ; end

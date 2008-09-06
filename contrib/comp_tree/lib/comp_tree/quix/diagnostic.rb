@@ -11,7 +11,7 @@
 
 
 
-require 'comptree/quix/builtin/kernel/tap'
+require 'comp_tree/quix/builtin/kernel/tap'
 
 module CompTree::Quix
   module Diagnostic
