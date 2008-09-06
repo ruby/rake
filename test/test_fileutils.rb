@@ -143,12 +143,12 @@ class TestFileUtils < Test::Unit::TestCase
   def test_sh_special_handling
     count = 0
     verbose(false) {
-      sh(%{test/shellcommand.rb}) do |ok, res|
+      sh(%{ruby test/shellcommand.rb}) do |ok, res|
         assert(ok)
         assert_equal 0, res.exitstatus
         count += 1
       end
-      sh(%{test/shellcommand.rb 1}) do |ok, res|
+      sh(%{ruby test/shellcommand.rb 1}) do |ok, res|
         assert(!ok)
         assert_equal 1, res.exitstatus
         count += 1
