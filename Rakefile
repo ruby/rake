@@ -32,6 +32,8 @@ Rake::RDocTask.new { |t|
     readme,
     "lib/comp_tree/driver.rb",
     "lib/comp_tree/error.rb",
+    "lib/comp_tree/node.rb",
+    "lib/comp_tree/task_node.rb",
   ]
 }
 

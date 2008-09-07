@@ -4,13 +4,18 @@ module CompTree
     # Base class for CompTree errors.
     class Base < StandardError ; end
     
-    # Internal error inside CompTree.
+    # Internal error inside CompTree.  Please send a bug report.
     class AssertionFailed < Base ; end
     
-    # Encountered bad arguments to a method.
+    # Bad arguments were passed to a method.
     class ArgumentError < Base ; end
     
-    # Node was already defined.
+    #
+    # Attempt to redefine a Node.
+    #
+    # If you wish to only replace the function, set
+    #   driver.nodes[name].function = some_new_lambda
+    #
     class RedefinitionError < Base ; end
     
     # A Cyclic graph was detected.
