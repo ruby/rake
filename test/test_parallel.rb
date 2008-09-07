@@ -2,6 +2,11 @@
 require 'rbconfig'
 require 'test/unit'
 
+ENV["PATH"] =
+  File.expand_path(File.dirname(__FILE__) + "/../bin") +
+  ":" +
+  ENV["PATH"]
+
 if Rake.application.num_threads > 1
   class TestSimpleParallel < Test::Unit::TestCase
     def test_1
