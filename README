@@ -6,7 +6,11 @@ A branch of Rake supporting parallel task execution.
 
 Run up to three tasks in parallel:
 
-   $ rake --threads 3
+  % drake --threads 3
+
+== Installation
+
+  % gem install drake
 
 == Important Notes
 
@@ -18,11 +22,11 @@ dependency tree has not been properly defined.  Consider
    task :a => [:x, :y, :z]
 
 With single-threaded +rake+, _x_,_y_,_z_ will be invoked <em>in that
-order</em> before _a_ is invoked.  However with <code>rake
---threads=N</code> (for N > 1), one should not expect any particular order
-of execution.  Since there is no dependency specified between
-_x_,_y_,_z_ above, <code>rake</code> is free to execute them in any
-order.
+order</em> before _a_ is invoked.  However with
+<code>drake --threads=N</code> (for N > 1), one should not expect any
+particular order of execution.  Since there is no dependency specified
+between _x_,_y_,_z_ above, <code>drake</code> is free to execute them
+in any order.
 
 If you wish _x_,_y_,_z_ to be invoked sequentially, then write
 
@@ -45,9 +49,64 @@ The use of 'multitask' is now deprecated.  Tasks which may properly be
 run in parallel will be run in parallel; those which cannot, will not.
 It is not the user's job to decide.
 
-The original Rake README follows.
+=== Compatibility
 
-= RAKE -- Ruby Make 
+Except for the addition of 'seq' and the removal of 'multitask'
+described above, Drake is codewise identical to Rake when
+<tt>--threads=1</tt>.  No new code is executed unless threads > 1.
+
+=== Installation Notes
+
+Despite outward appearances, Drake is internally the same as Rake,
+down to using the same file names with top-level module named 'Rake'.
+This is to make a mainline merge easier, if Jim decides to do so.  The
+fork stems from the latest Rake repository.
+
+Since Rubygems installs each gem in separate directory, it it safe to
+have Rake and Drake installed at the same time.  You can check this
+with a test Rakefile,
+
+  task :default do
+    puts $LOAD_PATH
+  end
+
+When +rake+ is executed, it will list the lib directory inside the
+rake gem.  When +drake+ is executed, the drake lib will appear.
+
+== Download
+
+* http://rubyforge.org/frs/?group_id=6530
+
+== Repository
+
+* http://github.com/quix/rake
+
+== License
+
+Copyright (c) 2003, 2004 Jim Weirich
+
+Copyright (c) 2008 James M. Lawrence
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+= RAKE -- Ruby Make -- <em>master branch</em>
 
 Supporting Rake version: 0.8.3
 

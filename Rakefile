@@ -221,10 +221,10 @@ else
 
     #### Author and project details.
 
-    s.author = "Jim Weirich"
-    s.email = "jim@weirichhouse.org"
-    s.homepage = "http://rake.rubyforge.org"
-    s.rubyforge_project = "rake"
+    s.author = "Jim Weirich, James M. Lawrence"
+    s.email = "quixoticsycophant@gmail.com"
+    s.homepage = "http://drake.rubyforge.org"
+    s.rubyforge_project = "drake"
 #     if ENV['CERT_DIR']
 #       s.signing_key = File.join(ENV['CERT_DIR'], 'gem-private_key.pem')
 #       s.cert_chain  = [File.join(ENV['CERT_DIR'], 'gem-public_cert.pem')]
@@ -236,13 +236,13 @@ else
     pkg.need_tar = true
   end
 
-  file "rake.gemspec" => ["Rakefile", "lib/rake.rb"] do |t|
+  file "drake.gemspec" => ["Rakefile", "lib/rake.rb"] do |t|
     require 'yaml'
     open(t.name, "w") { |f| f.puts SPEC.to_yaml }
   end
 
   desc "Create a stand-alone gemspec"
-  task :gemspec => "rake.gemspec"
+  task :gemspec => "drake.gemspec"
 end
 
 # Misc tasks =========================================================
