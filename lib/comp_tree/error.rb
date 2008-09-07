@@ -20,5 +20,8 @@ module CompTree
     
     # A Cyclic graph was detected.
     class CircularError < Base ; end
+
+    # No function was defined for this node.
+    class NoFunctionError < Base ; end
   end
 end

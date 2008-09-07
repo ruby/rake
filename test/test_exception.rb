@@ -7,6 +7,11 @@ require 'comp_tree'
 require 'quix/config'
 require 'test/unit'
 
+#
+# Mean workaround using separate processes due to assert_raise causing
+# problems with threads.
+#
+
 module CompTree
   class TestRaises < Test::Unit::TestCase
     HERE = File.dirname(__FILE__)
@@ -25,15 +30,29 @@ module CompTree
         puts "skipping #{File.basename(__FILE__)}."
       else
         [true, false].each { |use_fork|
-          assert(!system(::Quix::Config.ruby_executable, "-e", code(use_fork)))
-          assert_match(%r!CompTreeTestError!, File.read(OUTPUT_FILE))
-          File.unlink(OUTPUT_FILE) # leave when exception raised above
+          [true, false].each { |define_all|
+            assert(
+              !system(
+                ::Quix::Config.ruby_executable,
+                "-e",
+                code(use_fork, define_all)))
+            
+            output = File.read(OUTPUT_FILE)
+
+            if define_all
+              assert_match(%r!CompTreeTestError!, output)
+            else
+              assert_match(%r!NoFunctionError!, output)
+            end
+            
+            File.unlink(OUTPUT_FILE) # leave when exception raised above
+          }
         }
       end
     end
 
-    def code(use_fork)
-      %Q{ 
+    def code(use_fork, define_all)
+      %Q( 
         $LOAD_PATH.unshift '#{LIB_DIR}'
         require 'comp_tree'
         require 'open3'
@@ -45,19 +64,25 @@ module CompTree
             |width, height, offset|
             width*height - offset
           }
-          
+
           driver.define(:width, :border) { |border|
             2 + border
           }
-          
+
           driver.define(:height, :border) { |border|
             3 + border
           }
-          
+      ) +    
+      if define_all
+        %Q(
           driver.define(:border) {
             raise CompTreeTestError
           }
-              
+        )
+      else
+        ""
+      end +
+      %Q(        
           driver.define(:offset) {
             7
           }
@@ -68,7 +93,7 @@ module CompTree
               :area, :threads => 99, :fork => #{use_fork.inspect})
           }
         }
-      }
+      )
     end
   end
 end 

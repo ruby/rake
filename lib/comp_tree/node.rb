@@ -113,6 +113,10 @@ module CompTree
     # already acquired.
     #
     def compute #:nodoc:
+      unless defined?(@function) and @function
+        raise Error::NoFunctionError,
+          "No function was defined for node '#{@name.inspect}'"
+      end
       @function.call(*@children_results)
     end
 

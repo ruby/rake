@@ -214,15 +214,19 @@ module CompTree
     # <tt>:fork</tt> -- (boolean) Whether to fork each computation
     # node into its own process.
     #
-    # <tt>:wait_interval</tt> -- (seconds) (Obscure) How long to
-    # wait after an IPC failure.
-    #
-    # <tt>:timeout</tt> -- (seconds) (Obscure) Give up after this
-    # period of persistent IPC failures.
-    #
     # Defaults options are taken from Driver::DEFAULTS.
     #
     def compute(name, opts = nil)
+      #
+      # Undocumented options:
+      #
+      # <tt>:wait_interval</tt> -- (seconds) (Obscure) How long to
+      # wait after an IPC failure.
+      #
+      # <tt>:timeout</tt> -- (seconds) (Obscure) Give up after this
+      # period of persistent IPC failures.
+      #
+
       abort_on_exception {
         compute_private(name, opts || Hash.new)
       }
