@@ -110,6 +110,10 @@ thread-safe, the result will be even worse.
 
 * gem install comp_tree
 
+Or for the regular (non-gem) .tgz package,
+
+* ruby install.rb [--uninstall]
+
 === Repository
 
 * http://github.com/quix/comp_tree

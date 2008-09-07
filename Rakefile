@@ -36,6 +36,8 @@ end
 ######################################################################
 # gem
 
+task :package => :clean
+
 Rake::GemPackageTask.new(gemspec) {
 }
 
@@ -118,4 +120,4 @@ end
 ######################################################################
 # release
 
-task :release => [:clean, :gem, :publish]
+task :release => [:package, :publish]
