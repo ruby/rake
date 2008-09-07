@@ -69,10 +69,6 @@ Finally there is the raw form which uses no +eval+ or
     2 + border
   }
 
-=== Installing
-
-* gem install comp_tree
-
 === Important Notes
 
 The user should have a basic understanding of <em>functional
@@ -109,6 +105,10 @@ effect</em>).
 Given a tree where nodes are modifying _ACCUMULATOR_, the end state of
 _ACCUMULATOR_ is not well-defined.  Moreover if _ACCUMULATOR_ is not
 thread-safe, the result will be even worse.
+
+=== Installing
+
+* gem install comp_tree
 
 === Repository
 
