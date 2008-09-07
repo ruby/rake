@@ -1,73 +1,64 @@
-$LOAD_PATH.unshift "./contrib/quix/lib"
+$LOAD_PATH.unshift "contrib/quix/lib"
 
-require 'quix/simple_installer'
+require 'rake/gempackagetask'
+require 'rake/contrib/rubyforgepublisher'
 require 'quix/subpackager'
 
-require 'rake/packagetask'
-require 'rake/rdoctask'
-require 'rake/rdoctask'
+$VERBOSE = nil
+require 'rdoc/rdoc'
+$VERBOSE = true
 
 require 'fileutils'
 include FileUtils
 
-package_name = "comp_tree"
+gemspec = eval(File.read("comp_tree.gemspec"))
+package_name = gemspec.name 
 package_name_in_ruby = "CompTree"
 
-version = File.open("VERSION") { |f| f.read }.gsub(%r!\s!, "")
+# I would prefer "doc", but "html" is hard-coded for rubyforgepublisher
+doc_dir = "html"
 
-package_files =
-  %w(README VERSION Rakefile test/Rakefile) +
-  Dir["**/*.rb"] +
-  Dir["doc/**/*"]
+######################################################################
+# clean
 
-Rake::PackageTask.new(package_name, version) { |t|
-  t.need_tar_bz2 = true
-  t.package_files = package_files
-}
-
-Rake::RDocTask.new { |t|
-  rake_rb = "lib/#{package_name}/rake.rb"
-  readme = "README"
-  t.main = readme
-  t.rdoc_dir = "doc"
-  t.rdoc_files = [readme, rake_rb]
-}
-
-task :install do
-  Quix::SimpleInstaller.new.install
+task :clean => [:clobber, :clean_doc] do
 end
 
-task :uninstall do
-  Quix::SimpleInstaller.new.uninstall
+task :clean_doc do
+  rm_rf(doc_dir)
 end
 
-task :distclean do
-  rm_rf(["pkg", ".config", "doc"])
-end
+######################################################################
+# test
 
 task :test do
   require 'test/all'
 end
 
-begin
-  require 'rake/gempackagetask'
-  gem_spec = Gem::Specification.new { |t|
-    t.author = "James M. Lawrence"
-    t.email = "quixoticsycophant@gmail.com"
-    t.platform = Gem::Platform::RUBY
-    t.summary = "Parallel computation tree."
-    t.name = package_name
-    t.version = version
-    t.requirements << 'none'
-    t.require_path = 'lib'
-    t.files = package_files
-    t.description = t.summary
-    t.has_rdoc = true
+######################################################################
+# package
+
+task :package => :clean
+
+Rake::GemPackageTask.new(gemspec) { |t|
+  t.need_tar = true
+}
+
+######################################################################
+# doc
+
+task :doc => :clean_doc do 
+  files = %w(README) + %w(driver error node task_node).map { |name|
+    "lib/comp_tree/#{name}.rb"
   }
-  Rake::GemPackageTask.new(gem_spec) { |t|
-    t.need_tar_bz2 = true
-  }
-rescue LoadError
+
+  options = [
+    "-o", doc_dir,
+    "--title", "comp_tree: #{gemspec.summary}",
+    "--main", "README"
+  ]
+
+  RDoc::RDoc.new.document(files + options)
 end
 
 ######################################################################
@@ -119,7 +110,17 @@ task :run_pull_contrib do
   git(*%w!pull --no-commit -s subtree quix master!)
 end
 
-######################################################################
-# toplevel
-
 task :pull_contrib => [ :init_contrib, :run_pull_contrib, :generate_rb ]
+
+
+######################################################################
+# publisher
+
+task :publish => :doc do
+  Rake::RubyForgePublisher.new('comptree', 'quix').upload
+end
+
+######################################################################
+# release
+
+task :release => [:package, :publish]

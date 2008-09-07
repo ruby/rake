@@ -27,7 +27,7 @@ module CompTree
           7
         }
 
-        assert_raises(CircularError) {
+        assert_raises(Error::CircularError) {
           driver.check_circular(:area)
         }
       }

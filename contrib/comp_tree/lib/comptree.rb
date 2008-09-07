@@ -1,2 +1,0 @@
-
-require 'comp_tree'
