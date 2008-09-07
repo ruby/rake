@@ -77,7 +77,7 @@ module Quix
     def run(args = ARGV)
       if args.empty? or (args.size == 1 and args.first == "install")
         install
-      elsif args.size == 1 and args.first == "uninstall"
+      elsif args.size == 1 and args.first == "--uninstall"
         uninstall
       else
         raise "unrecognized arguments: #{args.inspect}"
