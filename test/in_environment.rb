@@ -4,7 +4,6 @@ module InEnvironment
   # Create an environment for a test. At the completion of the yielded
   # block, the environment is restored to its original conditions.
   def in_environment(settings)
-    original_dir = Dir.pwd
     original_settings = set_env(settings)
     yield    
   ensure
@@ -17,6 +16,7 @@ module InEnvironment
     settings.each do |k, v|
       result[k] = ENV[k]
       if k == 'PWD'
+        result[k] = Dir.pwd
         Dir.chdir(v)
       elsif v.nil?
         ENV.delete(k)

@@ -1008,10 +1008,28 @@ module FileUtils
     rake_check_options options, :noop, :verbose
     rake_output_message cmd.join(" ") if options[:verbose]
     unless options[:noop]
-      res = system(*cmd)
+      res = rake_system(*cmd)
       block.call(res, $?)
     end
   end
+
+  def rake_system(*cmd)
+    if Rake.application.windows?
+      rake_win32_system(*cmd)
+    else
+      system(*cmd)
+    end
+  end
+  private :rake_system
+
+  def rake_win32_system(*cmd)
+    if cmd.size == 1
+      system("call #{cmd}")
+    else
+      system(*cmd)
+    end
+  end
+  private :rake_win32_system
 
   # Run a Ruby interpreter with the given arguments.
   #
@@ -2168,7 +2186,7 @@ module Rake
     end
 
     def unix?
-      RUBY_PLATFORM =~ /(aix|darwin|linux|(net|free|open)bsd|cygwin|solaris|irix|hpux|)/i
+      RUBY_PLATFORM =~ /(aix|darwin|linux|(net|free|open)bsd|cygwin|solaris|irix|hpux)/i
     end
     
     def windows?

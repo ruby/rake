@@ -119,36 +119,37 @@ class TestFileUtils < Test::Unit::TestCase
   end
 
   def test_sh
-    verbose(false) { sh %{test/shellcommand.rb} }
+    verbose(false) { sh %{ruby test/shellcommand.rb} }
     assert true, "should not fail"
   end
 
   def test_sh_multiple_arguments
     ENV['RAKE_TEST_SH'] = 'someval'
+    expanded = windows? ? '%RAKE_TEST_SH%' : '$RAKE_TEST_SH'
     # This one gets expanded by the shell
-    verbose(false) { sh %{test $RAKE_TEST_SH = someval} }
+    verbose(false) { sh %{ruby test/check_expansion.rb #{expanded} someval} }
     assert true, "should not fail"
     assert_raises(RuntimeError) {
       # This one does not get expanded
-      verbose(false) { sh 'test','$RAKE_TEST_SH', '=', 'someval' }
+      verbose(false) { sh 'ruby', 'test/check_expansion.rb', expanded, 'someval' }
     }
   end
 
   def test_sh_failure
     assert_raises(RuntimeError) { 
-      verbose(false) { sh %{test/shellcommand.rb 1} }
+      verbose(false) { sh %{ruby test/shellcommand.rb 1} }
     }
   end
 
   def test_sh_special_handling
     count = 0
     verbose(false) {
-      sh(%{test/shellcommand.rb}) do |ok, res|
+      sh(%{ruby test/shellcommand.rb}) do |ok, res|
         assert(ok)
         assert_equal 0, res.exitstatus
         count += 1
       end
-      sh(%{test/shellcommand.rb 1}) do |ok, res|
+      sh(%{ruby test/shellcommand.rb 1}) do |ok, res|
         assert(!ok)
         assert_equal 1, res.exitstatus
         count += 1
@@ -199,21 +200,26 @@ class TestFileUtils < Test::Unit::TestCase
       ENV['RAKE_TEST_RUBY'] = "123"
       block_run = false
       # This one gets expanded by the shell
-      ruby %{-e "exit $RAKE_TEST_RUBY"} do |ok, status|
+      env_var = windows? ? '%RAKE_TEST_RUBY%' : '$RAKE_TEST_RUBY'
+      ruby %{-e "exit #{env_var}"} do |ok, status| # " (emacs wart)
         assert(!ok)
         assert_equal 123, status.exitstatus
         block_run = true
       end
       assert block_run, "The block must be run"
 
-      # This one does not get expanded
-      block_run = false
-      ruby '-e', 'exit "$RAKE_TEST_RUBY".length' do |ok, status|
-        assert(!ok)
-        assert_equal 15, status.exitstatus
-        block_run = true
+      if windows?
+        puts "SKIPPING test_ruby/part 2 when in windows"
+      else
+        # This one does not get expanded
+        block_run = false
+        ruby '-e', %{exit "#{env_var}".length} do |ok, status| # " (emacs wart)
+          assert(!ok)
+          assert_equal 15, status.exitstatus
+          block_run = true
+        end
+        assert block_run, "The block must be run"
       end
-      assert block_run, "The block must be run"
     end
   end
 
@@ -236,4 +242,9 @@ class TestFileUtils < Test::Unit::TestCase
   ensure
     $stderr = old_err
   end
+
+  def windows?
+    ! File::ALT_SEPARATOR.nil?
+  end
+
 end
