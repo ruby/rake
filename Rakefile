@@ -1,15 +1,10 @@
 
-$LOAD_PATH.unshift "contrib/quix/lib"
-
 require 'rake/gempackagetask'
 require 'rake/contrib/rubyforgepublisher'
 
-require 'quix/kernel'
-
-# sigh
-Quix::Kernel.no_warnings {
-  require 'rdoc/rdoc'
-}
+$VERBOSE = nil
+require 'rdoc/rdoc'
+$VERBOSE = true
 
 require 'fileutils'
 include FileUtils
