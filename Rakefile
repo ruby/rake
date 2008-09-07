@@ -36,11 +36,12 @@ task :test do
 end
 
 ######################################################################
-# gem
+# package
 
 task :package => :clean
 
-Rake::GemPackageTask.new(gemspec) {
+Rake::GemPackageTask.new(gemspec) { |t|
+  t.need_tar = true
 }
 
 ######################################################################

@@ -10,7 +10,9 @@ Gem::Specification.new { |t|
   t.description = "Build a computation tree and execute it with N " +
     "parallel threads.  Optionally fork computation nodes into new processes."
 
-  t.files = %w{README} + Dir["lib/**/*.rb"] + Dir["test/**/*.rb"]
+  t.files = %w{README comp_tree.gemspec} +
+    Dir["./**/*.rb"] +
+    Dir["./**/Rakefile"]
 
   rdoc_exclude = %w{
     test
