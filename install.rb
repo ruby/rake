@@ -85,4 +85,4 @@ end
 
 # and the executable
 
-installBIN("bin/rake", "rake")
+installBIN("bin/drake", "drake")

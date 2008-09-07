@@ -10,13 +10,13 @@ bindir: bin
 cert_chain: []
 
 date: 2008-09-01 00:00:00 -04:00
-default_executable: rake
+default_executable: drake
 dependencies: []
 
 description: Rake is a Make-like program implemented in Ruby. Tasks and dependencies are specified in standard Ruby syntax.
 email: jim@weirichhouse.org
 executables: 
-- rake
+- drake
 extensions: []
 
 extra_rdoc_files: 
@@ -48,7 +48,7 @@ files:
 - README
 - TAGS
 - TODO
-- bin/rake
+- bin/drake
 - lib/rake/classic_namespace.rb
 - lib/rake/clean.rb
 - lib/rake/contrib/compositepublisher.rb

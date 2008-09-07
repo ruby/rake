@@ -34,7 +34,7 @@ end
 
 # Determine the current version of the software
 
-if `ruby -Ilib ./bin/rake --version` =~ /rake, version ([0-9.]+)$/
+if `ruby -Ilib ./bin/drake --version` =~ /rake, version ([0-9.]+)$/
   CURRENT_VERSION = $1
 else
   CURRENT_VERSION = "0.0.0"
@@ -184,7 +184,7 @@ else
     
     #### Basic information.
 
-    s.name = 'rake'
+    s.name = 'drake'
     s.version = $package_version
     s.summary = "Ruby based make-like utility."
     s.description = <<-EOF
@@ -210,8 +210,8 @@ else
     s.require_path = 'lib'                         # Use these for libraries.
 
     s.bindir = "bin"                               # Use these for applications.
-    s.executables = ["rake"]
-    s.default_executable = "rake"
+    s.executables = ["drake"]
+    s.default_executable = "drake"
 
     #### Documentation and testing.
 
