@@ -56,7 +56,7 @@ described above, Drake is codewise identical to Rake when
 <tt>--threads=1</tt>.  No new code is executed unless threads > 1.
 
 Drake passes all of Rake's unit tests for any number of threads
-(presumably; I tested 1000 threads).
+(presumably; I tested various numbers up to 1000).
 
 === Installation Notes
 
