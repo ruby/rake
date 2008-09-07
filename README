@@ -106,6 +106,10 @@ Given a tree where nodes are modifying _ACCUMULATOR_, the end state of
 _ACCUMULATOR_ is not well-defined.  Moreover if _ACCUMULATOR_ is not
 thread-safe, the result will be even worse.
 
+Note however it is OK affect a state as long as <em>no other function
+depends on that state</em>.  This is the principle under which
++comp_tree+ parallelizes Rake tasks (http://drake.rubyforge.org).
+
 === Installing
 
 * gem install comp_tree
