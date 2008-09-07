@@ -2,7 +2,7 @@
 Gem::Specification.new { |t|
   t.author = "James M. Lawrence"
   t.email = "quixoticsycophant@gmail.com"
-  t.summary = "Parallel computation tree"
+  t.summary = "Parallel Computation Tree"
   t.name = "comp_tree"
   t.rubyforge_project = "comptree"
   t.homepage = "comptree.rubyforge.org"
@@ -21,7 +21,6 @@ Gem::Specification.new { |t|
     diagnostic
     algorithm
     bucket
-    comptree
     comp_tree\.rb
   }
   t.has_rdoc = true
@@ -29,6 +28,8 @@ Gem::Specification.new { |t|
   t.rdoc_options += [
     "--main",
     "README",
+    "--title",
+    "comp_tree: #{t.summary}",
   ] + rdoc_exclude.inject(Array.new) { |acc, pattern|
     acc + ["--exclude", pattern]
   }

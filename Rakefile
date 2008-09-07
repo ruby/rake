@@ -1,18 +1,65 @@
 
+$LOAD_PATH.unshift "contrib/quix/lib"
+
 require 'rake/gempackagetask'
+require 'rake/contrib/rubyforgepublisher'
+
+require 'quix/kernel'
+
+# sigh
+Quix::Kernel.no_warnings {
+  require 'rdoc/rdoc'
+}
+
+require 'fileutils'
+include FileUtils
 
 gemspec = eval(File.read("comp_tree.gemspec"))
 package_name = gemspec.name 
 package_name_in_ruby = "CompTree"
 
-task :clean => :clobber
+# I would prefer "doc", but "html" is hard-coded for rubyforgepublisher
+doc_dir = "html"
+
+######################################################################
+# clean
+
+task :clean => [:clobber, :clean_doc] do
+end
+
+task :clean_doc do
+  rm_rf(doc_dir)
+end
+
+######################################################################
+# test
 
 task :test do
   require 'test/all'
 end
 
+######################################################################
+# gem
+
 Rake::GemPackageTask.new(gemspec) {
 }
+
+######################################################################
+# doc
+
+task :doc => :clean_doc do 
+  files = %w(README) + %w(driver error node task_node).map { |name|
+    "lib/comp_tree/#{name}.rb"
+  }
+
+  options = [
+    "-o", doc_dir,
+    "--title", "comp_tree: #{gemspec.summary}",
+    "--main", "README"
+  ]
+
+  RDoc::RDoc.new.document(files + options)
+end
 
 ######################################################################
 # repackage files from contrib/
@@ -65,16 +112,15 @@ end
 
 task :pull_contrib => [ :init_contrib, :run_pull_contrib, :generate_rb ]
 
+
 ######################################################################
 # publisher
 
-require 'rake/contrib/rubyforgepublisher'
-
-task :publish => :rdoc do
+task :publish => :doc do
   Rake::RubyForgePublisher.new('comptree', 'quix').upload
 end
 
 ######################################################################
 # release
 
-task :release => [:gem, :publish]
+task :release => [:clean, :gem, :publish]
