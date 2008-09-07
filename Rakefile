@@ -1,6 +1,8 @@
+$LOAD_PATH.unshift "contrib/quix/lib"
 
 require 'rake/gempackagetask'
 require 'rake/contrib/rubyforgepublisher'
+require 'quix/subpackager'
 
 $VERBOSE = nil
 require 'rdoc/rdoc'
