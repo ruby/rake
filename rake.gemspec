@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: rake
 version: !ruby/object:Gem::Version 
-  version: 0.8.1.10
+  version: 0.8.1.11
 platform: ruby
 authors: 
 - Jim Weirich
@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2008-09-01 00:00:00 -04:00
+date: 2008-09-08 00:00:00 -04:00
 default_executable: rake
 dependencies: []
 
@@ -46,7 +46,6 @@ files:
 - MIT-LICENSE
 - Rakefile
 - README
-- TAGS
 - TODO
 - bin/rake
 - lib/rake/classic_namespace.rb
@@ -68,6 +67,7 @@ files:
 - lib/rake/testtask.rb
 - lib/rake.rb
 - test/capture_stdout.rb
+- test/check_expansion.rb
 - test/contrib/test_sys.rb
 - test/data/rakelib/test1.rb
 - test/data/rbext/rakefile.rb
