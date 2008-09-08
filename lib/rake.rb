@@ -2348,7 +2348,7 @@ module Rake
           (options.load_system || rakefile.nil?) &&
           directory?(system_dir)
         puts "(in #{Dir.pwd})" unless options.silent
-        Dir["#{system_dir}/*.rake"].each do |name|
+        glob("#{system_dir}/*.rake") do |name|
           add_import name
         end
       else
@@ -2359,12 +2359,19 @@ module Rake
         puts "(in #{Dir.pwd})" unless options.silent
         $rakefile = @rakefile if options.classic_namespace
         load File.expand_path(@rakefile) if @rakefile && @rakefile != ''
-      end
-      options.rakelib.each do |rlib|
-        Dir["#{rlib}/*.rake"].each do |name| add_import name end
+        options.rakelib.each do |rlib|
+          glob("#{rlib}/*.rake") do |name|
+            add_import name
+          end
+        end
       end
       load_imports
     end
+
+    def glob(path, &block)
+      Dir[path.gsub("\\", '/')].each(&block)
+    end
+    private :glob
 
     # The directory path containing the system wide rakefiles.
     def system_dir
