@@ -110,13 +110,13 @@ Note however it is OK affect a state as long as <em>no other function
 depends on that state</em>.  This is the principle under which
 +comp_tree+ parallelizes Rake tasks (http://drake.rubyforge.org).
 
-=== Installing
+=== Install
 
-* gem install comp_tree
+  % gem install comp_tree
 
 Or for the regular (non-gem) .tgz package,
 
-* ruby install.rb [--uninstall]
+  % ruby install.rb [--uninstall]
 
 === Repository
 
