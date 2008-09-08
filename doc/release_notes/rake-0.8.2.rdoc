@@ -159,5 +159,7 @@ otherwise helpful comments.  Thanks to ...
 * Adam Majer
 * Emanuel Indermühle
 * Ittay Dror
+* Bheeshmar Redheendran (for spending an afternoon with me debugging
+  windows issues)
 
 -- Jim Weirich
