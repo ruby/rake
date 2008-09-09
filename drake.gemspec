@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2008-09-08 00:00:00 -04:00
+date: 2008-09-09 00:00:00 -04:00
 default_executable: drake
 dependencies: []
 

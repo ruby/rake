@@ -526,7 +526,7 @@ end
 
 task :drake_upload do
   sh("rubyforge",
-     (index == 0 ? "add_release" : "add_file"), 
+     "add_release", 
      SPEC.rubyforge_project,
      SPEC.rubyforge_project,
      SPEC.version.to_s,
@@ -537,7 +537,6 @@ task :drake_release =>
   [
    :drake_prerelease,
    :test_all,
-   :gemspec,
    :drake_publish,
    :gem,
    :drake_upload,
