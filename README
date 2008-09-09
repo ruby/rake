@@ -36,7 +36,7 @@ With single-threaded Rake, _x_,_y_,_z_ will be invoked <em>in that
 order</em> before _a_ is invoked.  However with
 <code>drake --threads=N</code> (for N > 1), one should not expect any
 particular order of execution.  Since there is no dependency specified
-between _x_,_y_,_z_ above, Drake is free to execute them in any order.
+between _x_,_y_,_z_ above, Drake is free to run them in any order.
 
 If you wish _x_,_y_,_z_ to be invoked sequentially, then write
 
@@ -64,21 +64,23 @@ is not the user's job to decide.
 
 Drake's +multitask+ is an alias of +task+.
 
-=== Cannot call Task#invoke inside Task#invoke
+=== Task#invoke inside Task#invoke
 
 Parallelizing code means surrendering control over the
 micro-management of its execution.  Manually invoking tasks inside
 other tasks is rather contrary to this notion, throwing a monkey
 wrench into the system.  An exception will be raised when this is
-attempted.
+attempted in non-single-threaded mode.
 
-== Download
+== Links
 
-* http://rubyforge.org/frs/?group_id=6530
+* Download: * http://rubyforge.org/frs/?group_id=6530
+* Rubyforge home: http://rubyforge.org/projects/drake
+* Repository: http://github.com/quix/rake
 
-== Repository
+== Author
 
-* http://github.com/quix/rake
+* James M. Lawrence <quixoticsycophant@gmail.com>
 
 == License
 
