@@ -139,7 +139,7 @@ task :finish_release do
        gemspec.version.to_s,
        "pkg/#{gemspec.name}-#{gemspec.version}.#{ext}")
   }
-  git("tag", "comp_tree" + gemspec.version.to_s)
+  git("tag", "comp_tree-" + gemspec.version.to_s)
   git("push", "--tags")
 end
 
