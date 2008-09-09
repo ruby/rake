@@ -102,6 +102,20 @@ class FunctionalTest < Test::Unit::TestCase
     assert_match %r{^SYS1}, @out
   end
 
+  def test_system_excludes_rakelib_files_too
+    in_environment('RAKE_SYSTEM' => 'test/data/sys') do
+      rake '-g', "sys1", '-T', 'extra'
+    end
+    assert_no_match %r{extra:extra}, @out
+  end
+
+  def test_by_default_rakelib_files_are_include
+    in_environment('RAKE_SYSTEM' => 'test/data/sys') do
+      rake '-T', 'extra'
+    end
+    assert_match %r{extra:extra}, @out
+  end
+
   def test_implicit_system
     in_environment('RAKE_SYSTEM' => File.expand_path('test/data/sys'), "PWD" => "/") do
       rake "sys1", "--trace"
@@ -320,5 +334,4 @@ class FunctionalTest < Test::Unit::TestCase
   def assert_status(expected_status=0)
     assert_equal expected_status, @status
   end
-
 end

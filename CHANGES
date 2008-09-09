@@ -53,6 +53,10 @@
   However, if RAKE_COLUMNS is explicitly set, it will be honored in
   any case. (Patch provided by Gavin Stark).
 
+* Numerous fixes for running under windows. A big thanks to Bheeshmar
+  Redheendran for spending a good part of the afternoon at the
+  Lonestar Ruby Conference to help me work out these issues.
+
 == Version 0.8.1
 
 * Removed requires on parsedate.rb (in Ftptools)

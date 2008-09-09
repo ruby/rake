@@ -16,7 +16,7 @@ require 'rake/clean'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
-CLEAN.include('**/*.o', '*.dot', '**/*.rbc')
+CLEAN.include('**/*.o', '*.dot', '**/.*.rbc')
 CLOBBER.include('doc/example/main', 'testdata')
 CLOBBER.include('test/data/**/temp_*')
 CLOBBER.include('test/data/chains/play.*')
