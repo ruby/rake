@@ -29,7 +29,7 @@
 # as a library via a require statement, but it can be distributed
 # independently as an application.
 
-RAKEVERSION = '0.8.1.10.0'
+RAKEVERSION = '0.8.1.10.0.1'
 
 require 'rbconfig'
 require 'getoptlong'
@@ -823,7 +823,7 @@ module Rake
   end
 
   # #########################################################################
-  # DEPRECATED: use command-line option '--threads N' or
+  # REMOVED: use command-line option '--threads N' or
   # Rake.application.num_threads = N
   #
   class MultiTask < Task
@@ -882,7 +882,7 @@ def directory(dir)
 end
 
 # 
-# DEPRECATED: use command-line option '--threads N' or
+# REMOVED: use command-line option '--threads N' or
 # Rake.application.num_threads = N
 #
 def multitask(args, &block)

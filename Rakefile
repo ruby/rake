@@ -469,7 +469,7 @@ task :generate_rb do
   Quix::Subpackager.run(packages)
 end
 
-###########################################
+######################################################################
 # git
 
 def git(*args)
@@ -499,7 +499,40 @@ task :pull_mainline do
           refs/heads/master:refs/heads/origin!)
 end
 
-######################################################################
-# toplevel
-
 task :pull_contrib => [ :init_contrib, :run_pull_contrib, :generate_rb ]
+
+######################################################################
+# drake_release
+
+require 'fileutils'
+
+task :drake_prerelease do
+  rm_rf("html")
+  rm_rf("pkg")
+end
+
+task :drake_publish => :rdoc do
+  Dir.chdir(rd.rdoc_dir) {
+    sh(*%w(scp -r . quix@rubyforge.org:/var/www/gforge-projects/drake))
+  }
+end
+
+task :drake_upload do
+  %w(gem tgz).each_with_index { |ext, index|
+    sh("rubyforge",
+       (index == 0 ? "add_release" : "add_file"), 
+       SPEC.rubyforge_project,
+       SPEC.rubyforge_project,
+       SPEC.version.to_s,
+       "pkg/#{SPEC.name}-#{SPEC.version}.#{ext}")
+  }
+end
+
+task :drake_release =>
+  [
+   :test_all,
+   :drake_prerelease,
+   :drake_publish,
+   :package,
+   :drake_upload,
+  ]
