@@ -1,10 +1,12 @@
 
-######################################################################
-# repackage files from contrib/
-
 $LOAD_PATH.unshift "./contrib/comp_tree/contrib/quix/lib"
+
 require 'quix/subpackager'
 require 'quix/fileutils'
+require 'fileutils'
+
+######################################################################
+# repackage files from contrib/
 
 task :generate_rb do
   packages = {
@@ -67,14 +69,8 @@ end
 
 task :pull_contrib => [ :init_contrib, :run_pull_contrib, :generate_rb ]
 
-task :push do
-  git "push"
-end
-
 ######################################################################
 # drake_release
-
-require 'fileutils'
 
 task :drake_prerelease => :clean do
   rm_rf("html")
@@ -90,13 +86,15 @@ task :drake_publish => :rdoc do
   }
 end
 
-task :drake_upload do
+task :drake_finish_release do
   sh("rubyforge",
      "add_release", 
      SPEC.rubyforge_project,
      SPEC.rubyforge_project,
      SPEC.version.to_s,
      "pkg/#{SPEC.name}-#{SPEC.version}.gem")
+  git("tag", SPEC.version.to_s)
+  git("push")
 end
 
 task :drake_release =>
@@ -105,7 +103,6 @@ task :drake_release =>
    :test_all,
    :drake_publish,
    :gem,
-   :drake_upload,
-   :push,
+   :drake_finish_release,
   ]
 
