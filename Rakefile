@@ -513,7 +513,7 @@ require 'fileutils'
 task :drake_prerelease => :clean do
   rm_rf("html")
   rm_rf("pkg")
-  unless `git status` =~ %r!working directory clean!
+  unless `git status` =~ %r!nothing to commit \(working directory clean\)!
     raise "Directory not clean"
   end
 end
