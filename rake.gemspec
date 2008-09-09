@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: rake
 version: !ruby/object:Gem::Version 
-  version: 0.8.1.10
+  version: 0.8.1.11
 platform: ruby
 authors: 
 - Jim Weirich
@@ -9,14 +9,14 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2008-09-01 00:00:00 -04:00
-default_executable: drake
+date: 2008-09-08 00:00:00 -04:00
+default_executable: rake
 dependencies: []
 
 description: Rake is a Make-like program implemented in Ruby. Tasks and dependencies are specified in standard Ruby syntax.
 email: jim@weirichhouse.org
 executables: 
-- drake
+- rake
 extensions: []
 
 extra_rdoc_files: 
@@ -46,9 +46,8 @@ files:
 - MIT-LICENSE
 - Rakefile
 - README
-- TAGS
 - TODO
-- bin/drake
+- bin/rake
 - lib/rake/classic_namespace.rb
 - lib/rake/clean.rb
 - lib/rake/contrib/compositepublisher.rb
@@ -68,6 +67,7 @@ files:
 - lib/rake/testtask.rb
 - lib/rake.rb
 - test/capture_stdout.rb
+- test/check_expansion.rb
 - test/contrib/test_sys.rb
 - test/data/rakelib/test1.rb
 - test/data/rbext/rakefile.rb
