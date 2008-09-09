@@ -223,7 +223,7 @@ else
 
     #### Author and project details.
 
-    s.author = "Jim Weirich, James M. Lawrence"
+    s.author = "James M. Lawrence"
     s.email = "quixoticsycophant@gmail.com"
     s.homepage = "http://drake.rubyforge.org"
     s.rubyforge_project = "drake"
