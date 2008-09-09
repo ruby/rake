@@ -1,10 +1,10 @@
 --- !ruby/object:Gem::Specification 
 name: drake
 version: !ruby/object:Gem::Version 
-  version: 0.8.1.10.0.1
+  version: 0.8.1.11.0.1
 platform: ruby
 authors: 
-- Jim Weirich, James M. Lawrence
+- James M. Lawrence
 autorequire: 
 bindir: bin
 cert_chain: []
@@ -43,9 +43,12 @@ extra_rdoc_files:
 files: 
 - install.rb
 - CHANGES
+- CHANGES.drake
 - MIT-LICENSE
 - README
+- README.text
 - Rakefile
+- Rakefile.drake
 - TODO
 - bin/drake
 - bin/rake
@@ -164,7 +167,7 @@ rdoc_options:
 - --main
 - README
 - --title
-- Rake -- Ruby Make
+- "Drake: Distributed Rake"
 require_paths: 
 - lib
 required_ruby_version: !ruby/object:Gem::Requirement 

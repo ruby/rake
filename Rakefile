@@ -151,10 +151,10 @@ rd = Rake::RDocTask.new("rdoc") { |rdoc|
 #  rdoc.template = 'kilmer'
 #  rdoc.template = 'css2'
   rdoc.template = 'doc/jamis.rb'
-  rdoc.title    = "Rake -- Ruby Make"
+  rdoc.title    = "Drake: Distributed Rake"
   rdoc.options << '--line-numbers' << '--inline-source' <<
     '--main' << 'README' <<
-    '--title' <<  'Rake -- Ruby Make' 
+    '--title' <<  'Drake: Distributed Rake' 
   rdoc.rdoc_files.include('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
   rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
   rdoc.rdoc_files.exclude(/\bcontrib\b/)
