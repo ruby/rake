@@ -100,9 +100,9 @@ end
 task :drake_release =>
   [
    :drake_prerelease,
+   :gem,
    :test_all,
    :drake_publish,
-   :gem,
    :drake_finish_release,
   ]
 
