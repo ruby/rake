@@ -93,7 +93,7 @@ task :drake_finish_release do
      SPEC.rubyforge_project,
      SPEC.version.to_s,
      "pkg/#{SPEC.name}-#{SPEC.version}.gem")
-  git("tag", SPEC.version.to_s)
+  git("tag", "drake-" + SPEC.version.to_s)
   git("push")
 end
 
