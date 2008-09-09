@@ -565,16 +565,23 @@ module Rake
 
     # Invoke the task if it is needed.  Prerequites are invoked first.
     def invoke(*args)
-      task_args = TaskArguments.new(arg_names, args)
+      run_invoke = lambda {
+        invoke_with_call_chain(
+          TaskArguments.new(arg_names, args),
+          InvocationChain::EMPTY)
+      }
 
-      if application.num_threads > 1
-        application.parallel_tasks = Hash.new
-      end
-
-      invoke_with_call_chain(task_args, InvocationChain::EMPTY)
-
-      if application.num_threads > 1
-        application.invoke_parallel_tasks
+      if application.num_threads == 1
+        run_invoke.call
+      else
+        if application.parallel_lock.locked?
+          raise "Calling Task#invoke within a task is not allowed."
+        end
+        application.parallel_lock.synchronize {
+          application.parallel_tasks.clear
+          run_invoke.call
+          application.invoke_parallel_tasks
+        }
       end
     end
 
@@ -1702,7 +1709,8 @@ module Rake
     alias :last_comment :last_description    # Backwards compatibility
 
     attr_accessor :num_threads
-    attr_accessor :parallel_tasks #:nodoc:
+    attr_reader :parallel_tasks #:nodoc:
+    attr_reader :parallel_lock #:nodoc:
 
     def initialize
       super
@@ -1710,7 +1718,10 @@ module Rake
       @rules = Array.new
       @scope = Array.new
       @last_description = nil
+
       @num_threads = 1
+      @parallel_tasks = Hash.new
+      @parallel_lock = Mutex.new
     end
 
     def create_rule(*args, &block)
