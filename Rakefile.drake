@@ -85,7 +85,7 @@ task :drake_prerelease => :clean do
 end
 
 task :drake_publish => :rdoc do
-  Dir.chdir(rd.rdoc_dir) {
+  Dir.chdir("html") {
     sh(*%w(scp -r . quix@rubyforge.org:/var/www/gforge-projects/drake))
   }
 end
