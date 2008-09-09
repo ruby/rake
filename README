@@ -6,13 +6,24 @@ A branch of Rake supporting parallel task execution.
 
 Run up to three tasks in parallel:
 
+  % drake -j3
+
+or equivalently,
+
   % drake --threads 3
 
 == Installation
 
   % gem install drake
 
-== Important Notes
+== Notes
+
+=== Compatibility
+
+Drake is 100% compatible with Rake.  The code path for
+<tt>--threads=1</tt> is effectively identical to that of Rake's.
+Drake passes all of Rake's unit tests, with any number of threads from
+1 to 1000 (that's the most I tested).
 
 === Dependencies
 
@@ -21,12 +32,11 @@ dependency tree has not been properly defined.  Consider
 
    task :a => [:x, :y, :z]
 
-With single-threaded +rake+, _x_,_y_,_z_ will be invoked <em>in that
+With single-threaded Rake, _x_,_y_,_z_ will be invoked <em>in that
 order</em> before _a_ is invoked.  However with
 <code>drake --threads=N</code> (for N > 1), one should not expect any
 particular order of execution.  Since there is no dependency specified
-between _x_,_y_,_z_ above, <code>drake</code> is free to execute them
-in any order.
+between _x_,_y_,_z_ above, Drake is free to execute them in any order.
 
 If you wish _x_,_y_,_z_ to be invoked sequentially, then write
 
@@ -43,38 +53,24 @@ complete; can't do _z_ until _y_ is complete; can't do _y_ until _x_
 is complete; therefore do _x_."  In this fashion the sequence
 _x_,_y_,_z_ is enforced.
 
+The problem of insufficient dependencies plagues Makefiles as well.
+Package maintainers affectionately call it "not j-safe."
+
 === MultiTask
 
-The use of 'multitask' is now deprecated.  Tasks which may properly be
-run in parallel will be run in parallel; those which cannot, will not.
-It is not the user's job to decide.
+The use of +multitask+ is deprecated.  Tasks which may properly be run
+in parallel will be run in parallel; those which cannot, will not.  It
+is not the user's job to decide.
 
-=== Compatibility
+Drake's +multitask+ is an alias of +task+.
 
-Except for the addition of 'seq' and the removal of 'multitask'
-described above, Drake is codewise identical to Rake when
-<tt>--threads=1</tt>.  No new code is executed unless threads > 1.
+=== Cannot call Task#invoke inside Task#invoke
 
-Drake passes all of Rake's unit tests for any number of threads
-(presumably; I tested various numbers up to 1000).
-
-=== Installation Notes
-
-Despite outward appearances, Drake is internally the same as Rake,
-down to using the same file names with top-level module named 'Rake'.
-This is to make a mainline merge easier, if Jim decides to do so.  The
-fork stems from the latest Rake repository.
-
-Since Rubygems installs each gem in separate directory, it it safe to
-have Rake and Drake installed at the same time.  You can check this
-with a test Rakefile,
-
-  task :default do
-    puts $LOAD_PATH
-  end
-
-When +rake+ is executed, it will list the lib directory inside the
-rake gem.  When +drake+ is executed, the drake lib will appear.
+Parallelizing code means surrendering control over the
+micro-management of its execution.  Manually invoking tasks inside
+other tasks is rather contrary to this notion, throwing a monkey
+wrench into the system.  An exception will be raised when this is
+attempted.
 
 == Download
 

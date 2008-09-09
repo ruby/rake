@@ -828,13 +828,6 @@ module Rake
       Rake::EARLY
     end
   end
-
-  # #########################################################################
-  # REMOVED: use command-line option '--threads N' or
-  # Rake.application.num_threads = N
-  #
-  class MultiTask < Task
-  end
 end # module Rake
 
 # ###########################################################################
@@ -849,6 +842,13 @@ end # module Rake
 #
 def task(*args, &block)
   Rake::Task.define_task(*args, &block)
+end
+
+#
+# DEPRECATED: Do not use 'multitask'
+#
+def multitask(*args, &block)
+  task(*args, &block)
 end
 
 
@@ -886,14 +886,6 @@ def directory(dir)
       mkdir_p t.name if ! File.exist?(t.name)
     end
   end
-end
-
-# 
-# REMOVED: use command-line option '--threads N' or
-# Rake.application.num_threads = N
-#
-def multitask(args, &block)
-  Rake::MultiTask.define_task(args, &block)
 end
 
 # Create a new rake namespace and use it for evaluating the given block.

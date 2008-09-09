@@ -1,15 +1,15 @@
 --- !ruby/object:Gem::Specification 
 name: drake
 version: !ruby/object:Gem::Version 
-  version: 0.8.1.10
+  version: 0.8.1.10.0.1
 platform: ruby
 authors: 
-- Jim Weirich; James M. Lawrence
+- Jim Weirich, James M. Lawrence
 autorequire: 
 bindir: bin
 cert_chain: []
 
-date: 2008-09-07 00:00:00 -04:00
+date: 2008-09-08 00:00:00 -04:00
 default_executable: drake
 dependencies: []
 

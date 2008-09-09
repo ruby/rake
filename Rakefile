@@ -501,14 +501,21 @@ end
 
 task :pull_contrib => [ :init_contrib, :run_pull_contrib, :generate_rb ]
 
+task :push do
+  git "push"
+end
+
 ######################################################################
 # drake_release
 
 require 'fileutils'
 
-task :drake_prerelease do
+task :drake_prerelease => :clean do
   rm_rf("html")
   rm_rf("pkg")
+  unless `git status` =~ %r!working directory clean!
+    raise "Directory not clean"
+  end
 end
 
 task :drake_publish => :rdoc do
@@ -518,21 +525,22 @@ task :drake_publish => :rdoc do
 end
 
 task :drake_upload do
-  %w(gem tgz).each_with_index { |ext, index|
-    sh("rubyforge",
-       (index == 0 ? "add_release" : "add_file"), 
-       SPEC.rubyforge_project,
-       SPEC.rubyforge_project,
-       SPEC.version.to_s,
-       "pkg/#{SPEC.name}-#{SPEC.version}.#{ext}")
-  }
+  sh("rubyforge",
+     (index == 0 ? "add_release" : "add_file"), 
+     SPEC.rubyforge_project,
+     SPEC.rubyforge_project,
+     SPEC.version.to_s,
+     "pkg/#{SPEC.name}-#{SPEC.version}.gem")
 end
 
 task :drake_release =>
   [
-   :test_all,
    :drake_prerelease,
+   :test_all,
+   :gemspec,
    :drake_publish,
-   :package,
+   :gem,
    :drake_upload,
+   :push,
   ]
+
