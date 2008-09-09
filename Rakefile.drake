@@ -94,7 +94,7 @@ task :drake_finish_release do
      SPEC.version.to_s,
      "pkg/#{SPEC.name}-#{SPEC.version}.gem")
   git("tag", "drake-" + SPEC.version.to_s)
-  git("push")
+  git("push", "--tags")
 end
 
 task :drake_release =>
