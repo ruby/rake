@@ -1,0 +1,111 @@
+
+######################################################################
+# repackage files from contrib/
+
+$LOAD_PATH.unshift "./contrib/comp_tree/contrib/quix/lib"
+require 'quix/subpackager'
+require 'quix/fileutils'
+
+task :generate_rb do
+  packages = {
+    :rake => {
+      :name_in_ruby => "Rake",
+      :lib_dir => "./lib",
+      :subpackages => {
+        :comp_tree => {
+          :name_in_ruby => "CompTree",
+          :sources => [
+            "driver",
+            "node",
+            "task_node",
+            "error",
+            "bucket_ipc",
+            "algorithm",
+            "retriable_fork",
+            "quix/diagnostic",
+            "quix/kernel",
+            "quix/builtin/kernel/tap",
+          ],
+          :lib_dir => "./contrib/comp_tree/lib",
+          :ignore_root_rb => true,
+        },
+      },
+    },
+  }
+  Quix::Subpackager.run(packages)
+end
+
+######################################################################
+# git
+
+def git(*args)
+  cmd = ["git"] + args
+  sh(*cmd)
+end
+
+task :add_contrib_first_time => :init_contrib do
+  git(*%w!merge --squash -s ours --no-commit comp_tree/master!)
+  git(*%w!read-tree --prefix=contrib/comp_tree -u comp_tree/master!)
+  git("commit", "-m", "add comp_tree package")
+end
+
+task :init_contrib do
+  unless `git remote`.split.include? "comp_tree"
+    git(*%w!remote add -f comp_tree git@github.com:quix/comp_tree.git!)
+  end
+end
+
+task :run_pull_contrib => :init_contrib do
+  git(*%w!pull --no-commit -s subtree comp_tree master!)
+end
+
+task :pull_mainline do
+  git(*%w!pull --no-commit
+          git://github.com/jimweirich/rake.git
+          refs/heads/master:refs/heads/origin!)
+end
+
+task :pull_contrib => [ :init_contrib, :run_pull_contrib, :generate_rb ]
+
+task :push do
+  git "push"
+end
+
+######################################################################
+# drake_release
+
+require 'fileutils'
+
+task :drake_prerelease => :clean do
+  rm_rf("html")
+  rm_rf("pkg")
+  unless `git status` =~ %r!nothing to commit \(working directory clean\)!
+    raise "Directory not clean"
+  end
+end
+
+task :drake_publish => :rdoc do
+  Dir.chdir(rd.rdoc_dir) {
+    sh(*%w(scp -r . quix@rubyforge.org:/var/www/gforge-projects/drake))
+  }
+end
+
+task :drake_upload do
+  sh("rubyforge",
+     "add_release", 
+     SPEC.rubyforge_project,
+     SPEC.rubyforge_project,
+     SPEC.version.to_s,
+     "pkg/#{SPEC.name}-#{SPEC.version}.gem")
+end
+
+task :drake_release =>
+  [
+   :drake_prerelease,
+   :test_all,
+   :drake_publish,
+   :gem,
+   :drake_upload,
+   :push,
+  ]
+
