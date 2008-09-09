@@ -112,7 +112,6 @@ end
 
 task :pull_contrib => [ :init_contrib, :run_pull_contrib, :generate_rb ]
 
-
 ######################################################################
 # publisher
 
@@ -123,13 +122,31 @@ end
 ######################################################################
 # release
 
-task :release => [:package, :publish] do
-  %w(gem tgz).each { |ext|
+task :prerelease => :clean do
+  rm_rf(doc_dir)
+  rm_rf("pkg")
+  unless `git status` =~ %r!nothing to commit \(working directory clean\)!
+    raise "Directory not clean"
+  end
+end
+
+task :finish_release do
+  %w(gem tgz).each_with_index { |ext, index|
     sh("rubyforge",
-       "add_release", 
+       (index == 0 ? "add_release" : "add_file"), 
        gemspec.rubyforge_project,
        gemspec.rubyforge_project,
-       gemspec.version,
+       gemspec.version.to_s,
        "pkg/#{gemspec.name}-#{gemspec.version}.#{ext}")
   }
+  git("tag", gemspec.version.to_s)
+  git("push")
 end
+
+task :release =>
+  [
+   :prerelease,
+   :package,
+   :publish,
+   :finish_release,
+  ]
