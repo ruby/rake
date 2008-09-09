@@ -1,7 +1,7 @@
 
 = CompTree -- Parallel Computation Tree
 
-=== Synopsis
+== Synopsis
   
   require 'comp_tree'
   
@@ -43,7 +43,7 @@
     end
   }
 
-==== Alternative Forms for Function Definitions
+=== Alternative Forms for Function Definitions
 
 This form evals a lambda, saving you the repeat parameter list:
 
@@ -69,15 +69,15 @@ Finally there is the raw form which uses no +eval+ or
     2 + border
   }
 
-=== Important Notes
+== Important Notes
 
 The user should have a basic understanding of <em>functional
 programming</em> (see for example
 http://en.wikipedia.org/wiki/Functional_programming) and the meaning
 of <em>side effects</em>.
 
-CompTree requires a functional style.  Every function you define must
-explicitly depend on the data it uses.
+CompTree requires the user to adopt a functional style.  Every
+function you define must explicitly depend on the data it uses.
 
   #
   # BAD example: depending on state -- offset not listed as a parameter
@@ -90,9 +90,8 @@ Unless <em>offset</em> is really a constant, the result of
 <tt>driver.compute(:area, :num_threads => n)</tt> is not well-defined
 for _n_ > 1.
 
-Just as depending on some external changeable state is bad, it is
-likewise bad to affect an external state (to produce a <em>side
-effect</em>).
+Just as depending on some changeable state is bad, it is likewise bad
+to affect a state (to produce a <em>side effect</em>).
 
   #
   # BAD example: affecting state
@@ -110,7 +109,7 @@ Note however it is OK affect a state as long as <em>no other function
 depends on that state</em>.  This is the principle under which
 +comp_tree+ parallelizes Rake tasks (http://drake.rubyforge.org).
 
-=== Install
+== Install
 
   % gem install comp_tree
 
@@ -118,15 +117,17 @@ Or for the regular (non-gem) .tgz package,
 
   % ruby install.rb [--uninstall]
 
-=== Repository
+== Links
 
-* http://github.com/quix/comp_tree
+* Download: http://rubyforge.org/frs/?group_id=6917
+* Rubyforge home: http://rubyforge.org/projects/comptree
+* Repository: http://github.com/quix/comp_tree
 
-=== Credits
+== Author
 
-* Author: James M. Lawrence <quixoticsycophant@gmail.com>
+* James M. Lawrence <quixoticsycophant@gmail.com>
 
-=== License
+== License
   
   Copyright (c) 2008 James M. Lawrence.  All rights reserved.
   

@@ -85,7 +85,7 @@ module CompTree
     #  driver.define_area :width, :height, :offset, %{
     #    width*height - offset
     #  }
-    # Note the '%' before the brace.  The eval form creates a lambda for you.
+    # (Note the '%' before the brace.)
     #
     # The raw form:
     #  driver.define(:area, :width, :height, :offset) { |width, height, offset|
