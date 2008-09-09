@@ -123,4 +123,13 @@ end
 ######################################################################
 # release
 
-task :release => [:package, :publish]
+task :release => [:package, :publish] do
+  %w(gem tgz).each { |ext|
+    sh("rubyforge",
+       "add_release", 
+       gemspec.rubyforge_project,
+       gemspec.rubyforge_project,
+       gemspec.version,
+       "pkg/#{gemspec.name}-#{gemspec.version}.#{ext}")
+  }
+end
