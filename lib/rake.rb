@@ -765,6 +765,10 @@ module Rake
     end # class << Rake::Task
   end # class Rake::Task
 
+  #
+  # DEPRECATED: do not use MultiTask
+  #
+  MultiTask = Task
 
   # #########################################################################
   # A FileTask is a task that includes time based dependencies.  If any of a
@@ -850,7 +854,6 @@ end
 def multitask(*args, &block)
   task(*args, &block)
 end
-
 
 # Declare a file task.
 #
@@ -946,7 +949,7 @@ def import(*fns)
 end
 
 #
-# seq -- Force tasks to be executed sequentially.
+# +seq+ : Force tasks to be executed sequentially.
 #
 (class << self ; self ; end).class_eval {
   # use this form to cleanly hide the lambda
