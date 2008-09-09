@@ -117,13 +117,15 @@ Or for the regular (non-gem) .tgz package,
 
   % ruby install.rb [--uninstall]
 
-== Repository
+== Links
 
-* http://github.com/quix/comp_tree
+* Download: http://rubyforge.org/frs/?group_id=6917
+* Rubyforge home: http://rubyforge.org/projects/comptree
+* Repository: http://github.com/quix/comp_tree
 
-== Credits
+== Author
 
-* Author: James M. Lawrence <quixoticsycophant@gmail.com>
+* James M. Lawrence <quixoticsycophant@gmail.com>
 
 == License
   
