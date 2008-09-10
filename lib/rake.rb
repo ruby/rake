@@ -29,7 +29,7 @@
 # as a library via a require statement, but it can be distributed
 # independently as an application.
 
-RAKEVERSION = '0.8.2'
+RAKEVERSION = '0.8.2.1'
 
 require 'rbconfig'
 require 'getoptlong'
@@ -1587,7 +1587,7 @@ module Rake
   class << self
 
     # Yield each file or directory component.
-    def each_dir_parent(dir)
+    def each_dir_parent(dir)    # :nodoc:
       old_length = nil
       while dir != '.' && dir.length != old_length
         yield(dir)
