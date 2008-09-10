@@ -74,7 +74,8 @@ attempted in non-single-threaded mode.
 
 == Links
 
-* Download: * http://rubyforge.org/frs/?group_id=6530
+* Download: http://rubyforge.org/frs/?group_id=6530
+* Documentation: http://drake.rubyforge.org
 * Rubyforge home: http://rubyforge.org/projects/drake
 * Repository: http://github.com/quix/rake
 
