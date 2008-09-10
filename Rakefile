@@ -167,12 +167,12 @@ rd = Rake::RDocTask.new("rdoc") { |rdoc|
 PKG_FILES = FileList[
   'install.rb',
   '[A-Z]*',
-  'bin/**/*', 
+  'bin/drake', 
   'lib/**/*.rb', 
   'test/**/*.rb',
   'test/**/*.rf',
   'test/**/*.mf',
-  'test/**/Rakefile',
+  'test/**/Rakefile*',
   'test/**/subdir',
   'doc/**/*'
 ]

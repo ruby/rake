@@ -50,7 +50,6 @@ files:
 - Rakefile.drake
 - TODO
 - bin/drake
-- bin/rake
 - lib/rake/classic_namespace.rb
 - lib/rake/clean.rb
 - lib/rake/comp_tree/algorithm.rb
@@ -122,6 +121,8 @@ files:
 - test/test_top_level_functions.rb
 - test/data/imports/deps.mf
 - test/data/sample.mf
+- test/Rakefile.seq
+- test/Rakefile.simple
 - test/data/chains/Rakefile
 - test/data/default/Rakefile
 - test/data/dryrun/Rakefile
