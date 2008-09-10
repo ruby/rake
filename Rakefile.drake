@@ -86,13 +86,24 @@ task :drake_publish => :rdoc do
   }
 end
 
-task :drake_finish_release do
+def rubyforge(command, file)
   sh("rubyforge",
      "add_release", 
      SPEC.rubyforge_project,
      SPEC.rubyforge_project,
      SPEC.version.to_s,
-     "pkg/#{SPEC.name}-#{SPEC.version}.gem")
+     file)
+end
+
+task :drake_finish_release do
+  Dir.chdir("pkg") {
+    gem = "#{SPEC.name}-#{SPEC.version}.gem"
+    md5 = "#{gem}.md5"
+    sh("md5sum #{gem} > #{md5}")
+    rubyforge("add_release", gem)
+    rubyforge("add_file", md5)
+  }
+
   git("tag", "drake-" + SPEC.version.to_s)
   git("push", "--tags")
 end
