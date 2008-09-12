@@ -11,18 +11,6 @@
 
 
 
-
-
-######################################################
-# 
-# **** DO NOT EDIT ****
-# 
-# **** THIS IS A GENERATED FILE *****
-# 
-######################################################
-
-
-
 require 'rake/comp_tree/quix/builtin/kernel/tap'
 
 module Rake::CompTree::Quix
@@ -65,18 +53,6 @@ module Rake::CompTree::Quix
     extend self
   end
 end
-
-
-
-
-######################################################
-# 
-# **** DO NOT EDIT ****
-# 
-# **** THIS IS A GENERATED FILE *****
-# 
-######################################################
-
 
 
 

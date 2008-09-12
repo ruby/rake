@@ -1,7 +1,7 @@
 
-require 'quix/builtin/kernel/tap'
+require 'comp_tree/quix/builtin/kernel/tap'
 
-module Quix
+module CompTree::Quix
   module Diagnostic
     def show(desc = nil, stream = STDOUT, &block)
       if desc

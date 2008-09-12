@@ -11,18 +11,6 @@
 
 
 
-
-
-######################################################
-# 
-# **** DO NOT EDIT ****
-# 
-# **** THIS IS A GENERATED FILE *****
-# 
-######################################################
-
-
-
 require 'thread'
 
 module Rake::CompTree::Quix
@@ -47,7 +35,7 @@ module Rake::CompTree::Quix
             @count += 1
           }
         }
-        "#{prefix || :G}_#{count}_#{rand}".to_sym
+        "#{prefix || :G}_#{count}".to_sym
       end
     end
     include Gensym
@@ -83,18 +71,6 @@ module Rake::CompTree::Quix
     extend self
   end
 end
-
-
-
-######################################################
-# 
-# **** DO NOT EDIT ****
-# 
-# **** THIS IS A GENERATED FILE *****
-# 
-######################################################
-
-
 
 
 

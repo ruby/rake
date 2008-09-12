@@ -1,7 +1,7 @@
 
 require 'thread'
 
-module Quix
+module CompTree::Quix
   module Kernel
     def let
       yield self
@@ -23,7 +23,7 @@ module Quix
             @count += 1
           }
         }
-        "#{prefix || :G}_#{count}_#{rand}".to_sym
+        "#{prefix || :G}_#{count}".to_sym
       end
     end
     include Gensym
