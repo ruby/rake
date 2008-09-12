@@ -28,7 +28,11 @@ module Rake
         parallel_tasks.each_pair { |task_name, task_args|
           task = self[task_name]
           children_names = task.prerequisites.map { |child|
-            child.to_sym
+            if child_name = (lookup(child) or lookup(child, task.scope))
+              child_name.name.to_sym
+            else
+              raise "couldn't resolve #{task_name} prereq: #{child_name}"
+            end
           }
           driver.define(task_name.to_sym, *children_names) {
             task.execute(task_args)
