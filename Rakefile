@@ -62,31 +62,6 @@ task :doc => :clean_doc do
 end
 
 ######################################################################
-# repackage files from contrib/
-
-task :generate_rb do
-  packages = {
-    :comp_tree => {
-      :name_in_ruby => "CompTree",
-      :lib_dir => "./lib",
-      :subpackages => {
-        :quix => {
-          :name_in_ruby => "Quix",
-          :sources => [
-            "diagnostic",
-            "kernel",
-            "builtin/kernel/tap",
-          ],
-          :lib_dir => "./contrib/quix/lib",
-          :ignore_root_rb => true,
-        },
-      },
-    },
-  }
-  Quix::Subpackager.run(packages)
-end
-
-######################################################################
 # git
 
 def git(*args)
@@ -110,7 +85,7 @@ task :run_pull_contrib do
   git(*%w!pull --no-commit -s subtree quix master!)
 end
 
-task :pull_contrib => [ :init_contrib, :run_pull_contrib, :generate_rb ]
+task :pull_contrib => [ :init_contrib, :run_pull_contrib ]
 
 ######################################################################
 # publisher
