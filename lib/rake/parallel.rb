@@ -31,7 +31,7 @@ module Rake
             if child_task = (lookup(child) or lookup(child, task.scope))
               child_task.name.to_sym
             else
-              raise "couldn't resolve #{task_name} prereq: #{child_name}"
+              raise "couldn't resolve #{task_name} prereq: #{child}"
             end
           }
           driver.define(task_name.to_sym, *children_names) {
