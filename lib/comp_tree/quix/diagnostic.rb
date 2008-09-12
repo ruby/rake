@@ -1,0 +1,1 @@
+../../../contrib/quix/lib/quix/diagnostic.rb

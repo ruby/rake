@@ -1,7 +1,7 @@
 
 require 'thread'
 
-module Quix
+module CompTree::Quix
   module Kernel
     def let
       yield self
