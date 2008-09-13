@@ -4,9 +4,9 @@ require 'quix/thread_local'
 require 'quix/builtin/kernel/tap'
 require 'ostruct'
 
-module Quix
+module CompTree
   module Vars
-    include Quix::Kernel
+    include CompTree::Misc
 
     def eval_locals(code_with_locals, &block)
       code_with_locals.call.split(",").map { |name|

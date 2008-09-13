@@ -5,9 +5,9 @@ require 'find'
 require 'fileutils'
 require 'quix/vars'
   
-module Quix
+module CompTree
   class SimpleInstaller
-    include Quix::Vars
+    include CompTree::Vars
 
     def initialize
       dest_root = Config::CONFIG["sitelibdir"]
