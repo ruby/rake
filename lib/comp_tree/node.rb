@@ -1,5 +1,5 @@
 
-require 'comp_tree/quix/diagnostic'
+require 'comp_tree/diagnostic'
 require 'thread'
 
 module CompTree
@@ -7,7 +7,7 @@ module CompTree
   # Base class for nodes in the computation tree.
   # 
   class Node
-    include Quix::Diagnostic #:nodoc:
+    include Diagnostic
 
     attr_reader :name                   #:nodoc:
 

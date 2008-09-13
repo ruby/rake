@@ -14,7 +14,7 @@ module CompTree
   DO_FORK = (HAVE_FORK and not ARGV.include?("--no-fork"))
 
   module TestCommon
-    include Quix::Diagnostic
+    include Diagnostic
 
     if  ARGV.include?("--bench")
       def separator
