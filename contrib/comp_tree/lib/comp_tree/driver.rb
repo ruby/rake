@@ -1,7 +1,7 @@
 
 require 'rake/comp_tree/bucket_ipc'
-require 'rake/comp_tree/quix/diagnostic'
-require 'rake/comp_tree/quix/kernel'
+require 'rake/comp_tree/diagnostic'
+require 'rake/comp_tree/misc'
 require 'rake/comp_tree/algorithm'
 require 'rake/comp_tree/node'
 require 'rake/comp_tree/task_node'
@@ -22,8 +22,8 @@ module Rake::CompTree
       :wait_interval => 0.02,
     }
 
-    include Quix::Diagnostic #:nodoc:
-    include Quix::Kernel #:nodoc:
+    include Diagnostic
+    include Misc
     
     #
     # Begin a new computation tree.

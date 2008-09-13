@@ -3,13 +3,13 @@ require 'drb'
 require 'thread'
 
 require 'rake/comp_tree/retriable_fork'
-require 'rake/comp_tree/quix/diagnostic'
-require 'rake/comp_tree/quix/builtin/kernel/tap'
+require 'rake/comp_tree/diagnostic'
+require 'rake/comp_tree/tap'
 
 module Rake::CompTree
   module BucketIPC
     class Bucket
-      include Quix::Diagnostic
+      include Diagnostic
       include RetriableFork
 
       def initialize(address, timeout, wait_interval)

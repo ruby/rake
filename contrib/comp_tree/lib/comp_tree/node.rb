@@ -1,5 +1,5 @@
 
-require 'rake/comp_tree/quix/diagnostic'
+require 'rake/comp_tree/diagnostic'
 require 'thread'
 
 module Rake::CompTree
@@ -7,7 +7,7 @@ module Rake::CompTree
   # Base class for nodes in the computation tree.
   # 
   class Node
-    include Quix::Diagnostic #:nodoc:
+    include Diagnostic
 
     attr_reader :name                   #:nodoc:
 

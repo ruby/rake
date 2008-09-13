@@ -1,7 +1,7 @@
 
-require 'rake/comp_tree/quix/builtin/kernel/tap'
+require 'rake/comp_tree/tap'
 
-module Rake::CompTree::Quix
+module Rake::CompTree
   module Diagnostic
     def show(desc = nil, stream = STDOUT, &block)
       if desc

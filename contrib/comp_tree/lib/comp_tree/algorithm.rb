@@ -1,10 +1,10 @@
 
-require 'rake/comp_tree/quix/diagnostic'
+require 'rake/comp_tree/diagnostic'
 require 'rake/comp_tree/retriable_fork'
 
 module Rake::CompTree
   module Algorithm
-    include Quix::Diagnostic
+    include Diagnostic
 
     def compute_multithreaded(root, num_threads, use_fork, buckets)
       trace "Computing #{root.name} with #{num_threads} threads"

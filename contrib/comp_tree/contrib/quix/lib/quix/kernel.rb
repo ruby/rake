@@ -1,8 +1,8 @@
 
 require 'thread'
 
-module Rake::CompTree::Quix
-  module Kernel
+module Rake::CompTree
+  module Misc
     def let
       yield self
     end
