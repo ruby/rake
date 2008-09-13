@@ -56,7 +56,7 @@ end
 
 def rubyforge(command, file)
   sh("rubyforge",
-     "add_release", 
+     command,
      SPEC.rubyforge_project,
      SPEC.rubyforge_project,
      SPEC.version.to_s,
@@ -64,6 +64,7 @@ def rubyforge(command, file)
 end
 
 task :drake_finish_release do
+  sh("rubyforge", "login")
   Dir.chdir("pkg") {
     gem = "#{SPEC.name}-#{SPEC.version}.gem"
     md5 = "#{gem}.md5"
