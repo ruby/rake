@@ -1,6 +1,10 @@
 
 = Drake Changelog
 
+== Version 0.8.2.1.0.5
+
+* Restored original 'multitask' behavior when -j1 (default)
+
 == Version 0.8.2.1.0.4
 
 * Fix 21922: prereqs were not namespace-qualified
