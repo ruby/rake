@@ -91,20 +91,21 @@ closer to saying what you mean.
 
   % drake --rand[=SEED]
 
-This will randomize the order in which prerequisites are invoked.
-When given the optional SEED integer, it will call srand(SEED) to
-produce the same permutation each time.
+This will randomize the order of sibling prerequisites for each task.
+When given the optional SEED integer, it will call
+<tt>srand(SEED)</tt> to produce the same permutation each time.  The
+randomize option also disables +multitask+.
 
-Though this may produce an error due to an unspecified dependency, at
-least it will be an error which is exactly the same on each run.  In
-addition, you'll have the major debugging advantage of using a single
-thread.
+Though this option may produce an error due to an unspecified
+dependency, at least it will be an error which is exactly the same on
+each run (with SEED).  In addition, you'll have the major debugging
+advantage of using a single thread.
 
-The randomize option will also work in multi-threaded mode.  After
-all, once <tt>-jN</tt> is running smoothly there is <em>still</em> no
-guarantee that you have it right.  However with each successful
-execution of <tt>-jN --rand</tt>, the probability of correctness gets
-closer to 1 (though asymptotically so).
+This option will also work in multi-threaded mode.  After all, once
+<tt>-jN</tt> is running smoothly there is <em>still</em> no guarantee
+that you have it right.  However with each successful execution of
+<tt>drake -jN --rand</tt>, the probability of correctness approaches 1
+(though asymptotically so).
 
 (The only way to <em>prove</em> correctness is to test <em>all</em>
 such permutations, which for any non-trivial project would be
