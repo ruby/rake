@@ -1,6 +1,11 @@
 
 = Drake Changelog
 
+== Version 0.8.2.1.0.7
+
+* new --rand option, suggested by Thomas Sawyer.
+* merged latest cleaned-up comp_tree
+
 == Version 0.8.2.1.0.6
 
 * Restored original 'multitask' behavior when -j1 (default)
