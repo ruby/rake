@@ -77,7 +77,7 @@ task :drake_finish_release do
   }
 
   git("tag", "drake-" + SPEC.version.to_s)
-  git("push", "--tags")
+  git(*%w(push --tags origin master))
 end
 
 task :drake_release =>
