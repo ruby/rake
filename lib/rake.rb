@@ -595,13 +595,14 @@ module Rake
         end
         return if @already_invoked
         @already_invoked = true
-        invoke_prerequisites(task_args, new_chain)
+        prereqs = application.num_threads == 1 ? nil : Array.new
+        invoke_prerequisites(task_args, new_chain, prereqs)
         if needed?
           if application.num_threads == 1
             execute(task_args) 
           else
             # gather tasks for batch execution
-            application.parallel_tasks[name] = task_args
+            application.parallel_tasks[name] = [task_args, prereqs]
           end
         end
       end
@@ -609,11 +610,12 @@ module Rake
     protected :invoke_with_call_chain
 
     # Invoke all the prerequisites of a task.
-    def invoke_prerequisites(task_args, invocation_chain) # :nodoc:
+    def invoke_prerequisites(task_args, invocation_chain, accum=nil) #:nodoc:
       @prerequisites.each { |n|
         prereq = application[n, @scope]
         prereq_args = task_args.new_scope(prereq.arg_names)
         prereq.invoke_with_call_chain(prereq_args, invocation_chain)
+        accum << prereq if accum
       }
     end
 

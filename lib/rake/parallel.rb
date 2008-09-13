@@ -25,14 +25,11 @@ module Rake
         #
         # build the rest of the computation tree from task prereqs
         #
-        parallel_tasks.each_pair { |task_name, task_args|
+        parallel_tasks.each_pair { |task_name, cache|
           task = self[task_name]
-          children_names = task.prerequisites.map { |child|
-            if child_task = (lookup(child) or lookup(child, task.scope))
-              child_task.name.to_sym
-            else
-              raise "couldn't resolve #{task_name} prereq: #{child}"
-            end
+          task_args, prereqs = cache
+          children_names = prereqs.map { |child|
+            child.name.to_sym
           }
           driver.define(task_name.to_sym, *children_names) {
             task.execute(task_args)
