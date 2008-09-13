@@ -57,13 +57,14 @@ task :drake_publish => :rdoc do
   }
 end
 
-def rubyforge(command, file)
+def rubyforge(command, file, *args)
   sh("rubyforge",
      command,
      SPEC.rubyforge_project,
      SPEC.rubyforge_project,
      SPEC.version.to_s,
-     file)
+     file,
+     *args)
 end
 
 task :drake_finish_release do
@@ -72,7 +73,8 @@ task :drake_finish_release do
     gem = "#{SPEC.name}-#{SPEC.version}.gem"
     md5 = "#{gem}.md5"
     sh("md5sum #{gem} > #{md5}")
-    rubyforge("add_release", gem)
+    rubyforge(
+      *%W(add_release #{gem} --release_changes CHANGES.drake --preformatted))
     rubyforge("add_file", md5)
   }
 
