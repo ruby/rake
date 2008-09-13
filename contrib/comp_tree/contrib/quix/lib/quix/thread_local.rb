@@ -2,9 +2,9 @@
 require 'thread'
 require 'quix/kernel'
 
-module Quix
+module CompTree
   class ThreadLocal
-    include Quix::Kernel
+    include Misc
 
     def initialize(prefix = nil, &default)
       @name = gensym(prefix)
