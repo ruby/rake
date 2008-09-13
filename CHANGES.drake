@@ -1,6 +1,10 @@
 
 = Drake Changelog
 
+== Version 0.8.2.1.0.8
+
+* --randomize takes a string (seeds with String#hash).
+
 == Version 0.8.2.1.0.7
 
 * new --rand option, suggested by Thomas Sawyer.
