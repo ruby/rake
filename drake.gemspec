@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: drake
 version: !ruby/object:Gem::Version 
-  version: 0.8.2.1.0.8
+  version: 0.8.2.1.0.9
 platform: ruby
 authors: 
 - James M. Lawrence

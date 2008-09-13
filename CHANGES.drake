@@ -1,7 +1,7 @@
 
 = Drake Changelog
 
-== Version 0.8.2.1.0.8
+== Version 0.8.2.1.0.9
 
 * --randomize takes a string (seeds with String#hash).
 
