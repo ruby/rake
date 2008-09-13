@@ -563,23 +563,23 @@ module Rake
       self
     end
 
+    def base_invoke(*args) #:nodoc:
+      invoke_with_call_chain(
+        TaskArguments.new(arg_names, args),
+        InvocationChain::EMPTY)
+    end
+
     # Invoke the task if it is needed.  Prerequites are invoked first.
     def invoke(*args)
-      run_invoke = lambda {
-        invoke_with_call_chain(
-          TaskArguments.new(arg_names, args),
-          InvocationChain::EMPTY)
-      }
-
       if application.num_threads == 1
-        run_invoke.call
+        base_invoke(*args)
       else
         if application.parallel_lock.locked?
           raise "Calling Task#invoke within a task is not allowed."
         end
         application.parallel_lock.synchronize {
           application.parallel_tasks.clear
-          run_invoke.call
+          base_invoke(*args)
           application.invoke_parallel_tasks
         }
       end
@@ -595,8 +595,13 @@ module Rake
         end
         return if @already_invoked
         @already_invoked = true
-        prereqs = application.num_threads == 1 ? nil : Array.new
-        invoke_prerequisites(task_args, new_chain, prereqs)
+        prereqs = 
+          if application.num_threads == 1
+            invoke_prerequisites(task_args, new_chain)
+            nil
+          else
+            invoke_prerequisites_parallel(task_args, new_chain)
+          end
         if needed?
           if application.num_threads == 1
             execute(task_args) 
@@ -609,16 +614,28 @@ module Rake
     end
     protected :invoke_with_call_chain
 
+    def invoke_prerequisite(prereq_name, task_args, invocation_chain) #:nodoc:
+      prereq = application[prereq_name, @scope]
+      prereq_args = task_args.new_scope(prereq.arg_names)
+      prereq.invoke_with_call_chain(prereq_args, invocation_chain)
+      prereq
+    end
+
     # Invoke all the prerequisites of a task.
-    def invoke_prerequisites(task_args, invocation_chain, accum=nil) #:nodoc:
+    def invoke_prerequisites(task_args, invocation_chain) # :nodoc:
       @prerequisites.each { |n|
-        prereq = application[n, @scope]
-        prereq_args = task_args.new_scope(prereq.arg_names)
-        prereq.invoke_with_call_chain(prereq_args, invocation_chain)
-        accum << prereq if accum
+        invoke_prerequisite(n, task_args, invocation_chain)
       }
     end
 
+    # Parallel dry-run accumulator.
+    # This also serves to circumvent MultiTask#invoke_prerequisites.
+    def invoke_prerequisites_parallel(task_args, invocation_chain) #:nodoc:
+      @prerequisites.map { |n|
+        invoke_prerequisite(n, task_args, invocation_chain)
+      }
+    end
+      
     # Format the trace flags for display.
     def format_trace_flags
       flags = []
@@ -767,10 +784,6 @@ module Rake
     end # class << Rake::Task
   end # class Rake::Task
 
-  #
-  # DEPRECATED: do not use MultiTask
-  #
-  MultiTask = Task
 
   # #########################################################################
   # A FileTask is a task that includes time based dependencies.  If any of a
@@ -834,6 +847,19 @@ module Rake
       Rake::EARLY
     end
   end
+
+  # #########################################################################
+  # Same as a regular task, but the immediate prerequisites are done in
+  # parallel using Ruby threads.
+  #
+  class MultiTask < Task
+    def invoke_prerequisites(args, invocation_chain)
+      threads = @prerequisites.collect { |p|
+        Thread.new(p) { |r| application[r].invoke_with_call_chain(args, invocation_chain) }
+      }
+      threads.each { |t| t.join }
+    end
+  end
 end # module Rake
 
 # ###########################################################################
@@ -850,12 +876,6 @@ def task(*args, &block)
   Rake::Task.define_task(*args, &block)
 end
 
-#
-# DEPRECATED: Do not use 'multitask'
-#
-def multitask(*args, &block)
-  task(*args, &block)
-end
 
 # Declare a file task.
 #
@@ -891,6 +911,17 @@ def directory(dir)
       mkdir_p t.name if ! File.exist?(t.name)
     end
   end
+end
+
+# Declare a task that performs its prerequisites in parallel. Multitasks does
+# *not* guarantee that its prerequisites will execute in any given order
+# (which is obvious when you think about it)
+#
+# Example:
+#   multitask :deploy => [:deploy_gem, :deploy_rdoc]
+#
+def multitask(args, &block)
+  Rake::MultiTask.define_task(args, &block)
 end
 
 # Create a new rake namespace and use it for evaluating the given block.
@@ -2001,22 +2032,6 @@ module Rake
       add_loader('rf', DefaultLoader.new)
       add_loader('rake', DefaultLoader.new)
       @tty_output = STDOUT.tty?
-    end
-
-    #
-    # Check for circular dependencies, without invoking.
-    # 
-    def check_circular(task_name)
-      helper = lambda { |name, chain|
-        if chain.include? name
-          raise "Circular dependency detected: " +
-            "#{name} => #{chain.last} => #{name}"
-        end
-        Rake::Task[name].prerequisites.each { |prereq_name|
-          helper.call(prereq_name, chain + [name])
-        }
-      }
-      helper.call(task_name, [])
     end
 
     # Run the Rake application.  The run method performs the following three steps:

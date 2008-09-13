@@ -34,10 +34,10 @@ dependency tree has not been properly defined.  Consider
 
 With single-threaded Rake, _x_,_y_,_z_ will be invoked <em>in that
 order</em> before _a_ is invoked (assuming there are no other rules
-involving these tasks).  However with <code>drake --threads=N</code>
-(for N > 1), one should not expect any particular order of execution.
-Since there is no dependency specified between _x_,_y_,_z_ above,
-Drake is free to run them in any order.
+involving these tasks).  However with <code>drake -jN</code> (for +N+
+> 1), one should not expect any particular order of execution.  Since
+there is no dependency specified between _x_,_y_,_z_ above, Drake is
+free to run them in any order.
 
 If you wish _x_,_y_,_z_ to be invoked sequentially, then write
 
@@ -59,11 +59,13 @@ Package maintainers affectionately call it "not j-safe."
 
 === MultiTask
 
-The use of +multitask+ is deprecated.  Tasks which may properly be run
-in parallel will be run in parallel; those which cannot, will not.  It
-is not the user's job to decide.
+When more than one thread is given, +multitask+ behaves just like
++task+.  Those tasks which may properly be run in parallel will be run
+in parallel; those which cannot, will not.  It is not the user's job
+to decide.  In other words, for <tt>-jN</tt> (+N+ > 1), +multitask+ is
+an alias of +task+.
 
-Drake's +multitask+ is an alias of +task+.
+For <tt>-j1</tt> (default), +multitask+ behaves as the original.
 
 === Task#invoke inside Task#invoke
 
@@ -71,7 +73,7 @@ Parallelizing code means surrendering control over the
 micro-management of its execution.  Manually invoking tasks inside
 other tasks is rather contrary to this notion, throwing a monkey
 wrench into the system.  An exception will be raised when this is
-attempted in non-single-threaded mode.
+attempted in multi-threaded mode.
 
 == Links
 
