@@ -85,7 +85,7 @@ If on the other hand your build takes twenty minutes to complete, you
 may be interested in investing some time getting the full dependency
 tree correct in order to take advantage of multiple CPUs or cores.
 
-Though is no way for Drake to fathom what <em>you</em> mean by a
+Though there is no way for Drake to fathom what <em>you</em> mean by a
 correct dependency, there is a tool available which helps you get
 closer to saying what you mean.
 
