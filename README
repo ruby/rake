@@ -33,10 +33,11 @@ dependency tree has not been properly defined.  Consider
    task :a => [:x, :y, :z]
 
 With single-threaded Rake, _x_,_y_,_z_ will be invoked <em>in that
-order</em> before _a_ is invoked.  However with
-<code>drake --threads=N</code> (for N > 1), one should not expect any
-particular order of execution.  Since there is no dependency specified
-between _x_,_y_,_z_ above, Drake is free to run them in any order.
+order</em> before _a_ is invoked (assuming there are no other rules
+involving these tasks).  However with <code>drake --threads=N</code>
+(for N > 1), one should not expect any particular order of execution.
+Since there is no dependency specified between _x_,_y_,_z_ above,
+Drake is free to run them in any order.
 
 If you wish _x_,_y_,_z_ to be invoked sequentially, then write
 
