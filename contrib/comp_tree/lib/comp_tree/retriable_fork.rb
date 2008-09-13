@@ -1,5 +1,6 @@
 
-module CompTree
+module Rake ; end
+module Rake::CompTree
   module RetriableFork
     HAVE_FORK = lambda {
       begin

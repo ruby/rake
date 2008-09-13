@@ -6,38 +6,6 @@ require 'quix/fileutils'
 require 'fileutils'
 
 ######################################################################
-# repackage files from contrib/
-
-task :generate_rb do
-  packages = {
-    :rake => {
-      :name_in_ruby => "Rake",
-      :lib_dir => "./lib",
-      :subpackages => {
-        :comp_tree => {
-          :name_in_ruby => "CompTree",
-          :sources => [
-            "driver",
-            "node",
-            "task_node",
-            "error",
-            "bucket_ipc",
-            "algorithm",
-            "retriable_fork",
-            "quix/diagnostic",
-            "quix/kernel",
-            "quix/builtin/kernel/tap",
-          ],
-          :lib_dir => "./contrib/comp_tree/lib",
-          :ignore_root_rb => true,
-        },
-      },
-    },
-  }
-  Quix::Subpackager.run(packages)
-end
-
-######################################################################
 # git
 
 def git(*args)
@@ -67,7 +35,7 @@ task :pull_mainline do
           refs/heads/master:refs/heads/origin!)
 end
 
-task :pull_contrib => [ :init_contrib, :run_pull_contrib, :generate_rb ]
+task :pull_contrib => [ :init_contrib, :run_pull_contrib ]
 
 ######################################################################
 # drake_release

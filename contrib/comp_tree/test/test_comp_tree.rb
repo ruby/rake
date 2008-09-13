@@ -8,13 +8,13 @@ require 'comp_tree'
 
 srand(22)
 
-module CompTree
+module Rake::CompTree
   Thread.abort_on_exception = true
   HAVE_FORK = RetriableFork::HAVE_FORK
   DO_FORK = (HAVE_FORK and not ARGV.include?("--no-fork"))
 
   module TestCommon
-    include Quix::Diagnostic
+    include Rake::CompTree::Quix::Diagnostic
 
     if  ARGV.include?("--bench")
       def separator
@@ -31,7 +31,7 @@ module CompTree
     include TestCommon
 
     def test_1_syntax
-      CompTree::Driver.new { |driver|
+      Rake::CompTree::Driver.new { |driver|
         driver.define(:area, :width, :height, :offset) { |width, height, offset|
           width*height - offset
         }
@@ -58,7 +58,7 @@ module CompTree
     end
 
     def test_2_syntax
-      CompTree::Driver.new { |driver|
+      Rake::CompTree::Driver.new { |driver|
         driver.define_area(:width, :height, :offset) { |width, height, offset|
           width*height - offset
         }
@@ -85,7 +85,7 @@ module CompTree
     end
 
     def test_3_syntax
-      CompTree::Driver.new { |driver|
+      Rake::CompTree::Driver.new { |driver|
         driver.define_area :width, :height, :offset, %{
           width*height - offset
         }
@@ -119,7 +119,7 @@ module CompTree
           200
         end
       (1..max).each { |threads|
-        CompTree::Driver.new { |driver|
+        Rake::CompTree::Driver.new { |driver|
           drain = lambda {
             1.times { }
           }
@@ -131,23 +131,23 @@ module CompTree
     end
 
     def test_malformed
-      CompTree::Driver.new { |driver|
-        assert_raise(CompTree::Error::ArgumentError) {
+      Rake::CompTree::Driver.new { |driver|
+        assert_raise(Rake::CompTree::Error::ArgumentError) {
           driver.define {
           }
         }
-        assert_raise(CompTree::Error::RedefinitionError) {
+        assert_raise(Rake::CompTree::Error::RedefinitionError) {
           driver.define(:a) {
           }
           driver.define(:a) {
           }
         }
-        assert_raise(CompTree::Error::ArgumentError) {
+        assert_raise(Rake::CompTree::Error::ArgumentError) {
           driver.define(:b) {
           }
           driver.compute(:b, :threads => 0)
         }
-        assert_raise(CompTree::Error::ArgumentError) {
+        assert_raise(Rake::CompTree::Error::ArgumentError) {
           driver.define(:c) {
           }
           driver.compute(:c, :threads => -1)
@@ -156,7 +156,7 @@ module CompTree
     end
 
     def generate_comp_tree(num_levels, num_children, drain_iterations)
-      CompTree::Driver.new { |driver|
+      Rake::CompTree::Driver.new { |driver|
         root = :aaa
         last_name = root
         pick_names = lambda {
@@ -265,7 +265,7 @@ module CompTree
 
   class Test_Task < Test::Unit::TestCase
     def test_task
-      CompTree::Driver.new(:discard_result => true) { |driver|
+      Rake::CompTree::Driver.new(:discard_result => true) { |driver|
         visit = 0
         mutex = Mutex.new
         func = lambda {
@@ -321,7 +321,7 @@ module CompTree
     end
     
     def run_drain(opts)
-      CompTree::Driver.new { |driver|
+      Rake::CompTree::Driver.new { |driver|
         func = lambda {
           drain(opts)
         }

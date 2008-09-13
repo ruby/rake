@@ -1,5 +1,5 @@
 
-module CompTree
+module Rake::CompTree
   #
   # TaskNode is a Node which discards its results
   #

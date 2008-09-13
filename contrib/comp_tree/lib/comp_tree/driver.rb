@@ -1,15 +1,15 @@
 
-require 'comp_tree/bucket_ipc'
-require 'comp_tree/quix/diagnostic'
-require 'comp_tree/quix/kernel'
-require 'comp_tree/algorithm'
-require 'comp_tree/node'
-require 'comp_tree/task_node'
-require 'comp_tree/error'
+require 'rake/comp_tree/bucket_ipc'
+require 'rake/comp_tree/quix/diagnostic'
+require 'rake/comp_tree/quix/kernel'
+require 'rake/comp_tree/algorithm'
+require 'rake/comp_tree/node'
+require 'rake/comp_tree/task_node'
+require 'rake/comp_tree/error'
 
 require 'thread'
 
-module CompTree
+module Rake::CompTree
   #
   # Driver is the main interface to the computation tree.  It is
   # responsible for defining nodes and running computations.
@@ -30,13 +30,13 @@ module CompTree
     #
     # Options hash:
     #
-    # <tt>:node_class</tt> -- (Class) CompTree::Node subclass from
+    # <tt>:node_class</tt> -- (Class) Rake::CompTree::Node subclass from
     # which nodes are created.
     #
     # <tt>:discard_result</tt> -- (boolean) If you are <em>not</em>
     # interested in the final answer, but only in the actions which
     # complete the computation, then set this to +true+.  This is
-    # equivalent to saying <tt>:node_class => CompTree::TaskNode</tt>.
+    # equivalent to saying <tt>:node_class => Rake::CompTree::TaskNode</tt>.
     # (If you are forking processes, it is good to know that IPC is
     # not needed to communicate the result.)
     #
@@ -181,7 +181,7 @@ module CompTree
 
     #
     # Check for a cyclic graph below the given node.  Raises
-    # CompTree::Error::CircularError if found.
+    # Rake::CompTree::Error::CircularError if found.
     #
     # Arguments:
     #

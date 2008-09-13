@@ -57,7 +57,7 @@ module CompTree
         
         class CompTreeTestError < Exception ; end
         
-        CompTree::Driver.new { |driver|
+        Rake::CompTree::Driver.new { |driver|
           driver.define(:area, :width, :height, :offset) {
             |width, height, offset|
             width*height - offset

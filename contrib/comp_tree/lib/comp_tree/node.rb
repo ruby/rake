@@ -1,8 +1,8 @@
 
-require 'comp_tree/quix/diagnostic'
+require 'rake/comp_tree/quix/diagnostic'
 require 'thread'
 
-module CompTree
+module Rake::CompTree
   #
   # Base class for nodes in the computation tree.
   # 

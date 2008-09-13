@@ -7,11 +7,11 @@ require 'comp_tree/bucket_ipc'
 Thread.abort_on_exception = true
 
 class BucketTest < Test::Unit::TestCase
-  include CompTree::RetriableFork
+  include Rake::CompTree::RetriableFork
 
   def each_bucket(num_buckets, &block)
     if HAVE_FORK
-      CompTree::BucketIPC::Driver.new(num_buckets) { |buckets|
+      Rake::CompTree::BucketIPC::Driver.new(num_buckets) { |buckets|
         buckets.each { |bucket|
           yield bucket
         }
