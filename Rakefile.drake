@@ -40,7 +40,7 @@ task :pull_contrib => [ :init_contrib, :run_pull_contrib ]
 ######################################################################
 # drake_release
 
-task :drake_prerelease => :clean do
+task :drake_prerelease => [:clean, :gemspec] do
   rm_rf("html")
   rm_rf("pkg")
   unless `git status` =~ %r!nothing to commit \(working directory clean\)!

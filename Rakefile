@@ -169,6 +169,7 @@ PKG_FILES = FileList[
   '[A-Z]*',
   'bin/drake', 
   'lib/**/*.rb', 
+  'lib/rake/comp_tree/**/*.rb', 
   'test/**/*.rb',
   'test/**/*.rf',
   'test/**/*.mf',

@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: drake
 version: !ruby/object:Gem::Version 
-  version: 0.8.2.0.0.2
+  version: 0.8.2.1.0.5
 platform: ruby
 authors: 
 - James M. Lawrence
@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2008-09-10 00:00:00 -04:00
+date: 2008-09-13 00:00:00 -04:00
 default_executable: drake
 dependencies: []
 
@@ -52,16 +52,6 @@ files:
 - bin/drake
 - lib/rake/classic_namespace.rb
 - lib/rake/clean.rb
-- lib/rake/comp_tree/algorithm.rb
-- lib/rake/comp_tree/bucket_ipc.rb
-- lib/rake/comp_tree/driver.rb
-- lib/rake/comp_tree/error.rb
-- lib/rake/comp_tree/node.rb
-- lib/rake/comp_tree/quix/builtin/kernel/tap.rb
-- lib/rake/comp_tree/quix/diagnostic.rb
-- lib/rake/comp_tree/quix/kernel.rb
-- lib/rake/comp_tree/retriable_fork.rb
-- lib/rake/comp_tree/task_node.rb
 - lib/rake/contrib/compositepublisher.rb
 - lib/rake/contrib/ftptools.rb
 - lib/rake/contrib/publisher.rb
@@ -79,6 +69,16 @@ files:
 - lib/rake/tasklib.rb
 - lib/rake/testtask.rb
 - lib/rake.rb
+- lib/rake/comp_tree/algorithm.rb
+- lib/rake/comp_tree/bucket_ipc.rb
+- lib/rake/comp_tree/driver.rb
+- lib/rake/comp_tree/error.rb
+- lib/rake/comp_tree/node.rb
+- lib/rake/comp_tree/quix/builtin/kernel/tap.rb
+- lib/rake/comp_tree/quix/diagnostic.rb
+- lib/rake/comp_tree/quix/kernel.rb
+- lib/rake/comp_tree/retriable_fork.rb
+- lib/rake/comp_tree/task_node.rb
 - test/capture_stdout.rb
 - test/check_expansion.rb
 - test/contrib/test_sys.rb
@@ -106,6 +106,7 @@ files:
 - test/test_ftp.rb
 - test/test_invocation_chain.rb
 - test/test_makefile_loader.rb
+- test/test_multitask.rb
 - test/test_namespace.rb
 - test/test_package_task.rb
 - test/test_parallel.rb
