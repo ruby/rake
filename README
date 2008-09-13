@@ -92,9 +92,11 @@ closer to saying what you mean.
   % drake --rand[=SEED]
 
 This will randomize the order of sibling prerequisites for each task.
-When given the optional SEED integer, it will call
-<tt>srand(SEED)</tt> to produce the same permutation each time.  The
-randomize option also disables +multitask+.
+When given the optional SEED string, it will call
+<tt>srand(SEED.hash)</tt> to produce the same permutation each time
+(String#hash produces the integer which is the seed).  The randomize
+option also disables +multitask+, making it a regular unthreaded
++task+.
 
 Though this option may produce an error due to an unspecified
 dependency, at least it will be an error which is exactly the same on

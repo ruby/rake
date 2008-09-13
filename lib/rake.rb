@@ -2282,12 +2282,12 @@ module Rake
         ['--threads', '-j N', "Specifies the number of threads to run simultaneously.",
           lambda { |value| self.num_threads = value.to_i }
         ],
-        ['--rand[=SEED]', "Randomize task prerequisite orders",
+        ['--randomize[=SEED]', "Randomize task prerequisite orders",
           lambda { |value|
             MultiTask.class_eval { remove_method(:invoke_prerequisites) }
             options.randomize = true
             if value
-              srand(value.to_i)
+              srand(value.hash)
             end
           }
         ],
