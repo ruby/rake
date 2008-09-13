@@ -1,6 +1,11 @@
 
 = Drake Changelog
 
+== Version 0.8.2.1.0.4
+
+* Fix 21922: prereqs were not namespace-qualified
+* Removed subpackager: no more generated files
+
 == Version 0.8.11.0.1
 
 * Initial release.
