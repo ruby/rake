@@ -595,6 +595,11 @@ module Rake
         end
         return if @already_invoked
         @already_invoked = true
+
+        if application.options.randomize
+          @prerequisites = @prerequisites.sort_by { rand }
+        end
+
         prereqs = 
           if application.num_threads == 1
             invoke_prerequisites(task_args, new_chain)
@@ -602,6 +607,7 @@ module Rake
           else
             invoke_prerequisites_parallel(task_args, new_chain)
           end
+
         if needed?
           if application.num_threads == 1
             execute(task_args) 
@@ -2276,9 +2282,15 @@ module Rake
         ['--threads', '-j N', "Specifies the number of threads to run simultaneously.",
           lambda { |value| self.num_threads = value.to_i }
         ],
-        #['--fork', '-k', "When --threads=N given, run each thread in a separate process.",
-        #  lambda { options.fork = true }
-        #],
+        ['--rand[=SEED]', "Randomize task prerequisite orders",
+          lambda { |value|
+            MultiTask.class_eval { remove_method(:invoke_prerequisites) }
+            options.randomize = true
+            if value
+              srand(value.to_i)
+            end
+          }
+        ],
         ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
           lambda { |value| $:.push(value) }
         ],

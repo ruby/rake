@@ -75,6 +75,42 @@ other tasks is rather contrary to this notion, throwing a monkey
 wrench into the system.  An exception will be raised when this is
 attempted in multi-threaded mode.
 
+=== Migrating to -j
+
+First of all, do you want to bother with <tt>-j</tt>?  If you are
+satisfied with your build time, then there is really no reason to use
+it.
+
+If on the other hand your build takes twenty minutes to complete, you
+may be interested in investing some time getting the full dependency
+tree correct in order to take advantage of multiple CPUs or cores.
+
+Though is no way for Drake to fathom what <em>you</em> mean by a
+correct dependency, there is a tool available which helps you get
+closer to saying what you mean.
+
+  % drake --rand[=SEED]
+
+This will randomize the order in which prerequisites are invoked.
+When given the optional SEED integer, it will call srand(SEED) to
+produce the same permutation each time.
+
+Though this may produce an error due to an unspecified dependency, at
+least it will be an error which is exactly the same on each run.  In
+addition, you'll have the major debugging advantage of using a single
+thread.
+
+The randomize option will also work in multi-threaded mode.  After
+all, once <tt>-jN</tt> is running smoothly there is <em>still</em> no
+guarantee that you have it right.  However with each successful
+execution of <tt>-jN --rand</tt>, the probability of correctness gets
+closer to 1 (though asymptotically so).
+
+(The only way to <em>prove</em> correctness is to test <em>all</em>
+such permutations, which for any non-trivial project would be
+prohibitively large, especially those which meaningfully benefit from
+<tt>-j</tt>.)
+
 == Links
 
 * Download: http://rubyforge.org/frs/?group_id=6530
