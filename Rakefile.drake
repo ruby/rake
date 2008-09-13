@@ -46,9 +46,14 @@ task :drake_prerelease => [:clean, :gemspec] do
   unless `git status` =~ %r!nothing to commit \(working directory clean\)!
     raise "Directory not clean"
   end
-  unless `ping -c2 github.com` =~ %r!0% packet loss!i
-    raise "No ping for github.com"
+  unless `git pull` =~ %r!Already up-to-date!
+    raise "New stuff from remote repository"
   end
+  %w[github.com rubyforge.org].each { |server|
+    unless `ping -c2 #{server}` =~ %r!0% packet loss!
+      raise "No ping for #{server}"
+    end
+  }
 end
 
 task :drake_publish => :rdoc do
