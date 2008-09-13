@@ -46,6 +46,9 @@ task :drake_prerelease => :clean do
   unless `git status` =~ %r!nothing to commit \(working directory clean\)!
     raise "Directory not clean"
   end
+  unless `ping -c2 github.com` =~ %r!0% packet loss!i
+    raise "No ping for github.com"
+  end
 end
 
 task :drake_publish => :rdoc do
