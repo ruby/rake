@@ -6,7 +6,7 @@ module Quix
     CONFIG = ::Config::CONFIG
 
     def ruby_executable
-      File.join(CONFIG["bindir"], CONFIG["RUBY_INSTALL_NAME"])
+      ::File.join(CONFIG["bindir"], CONFIG["RUBY_INSTALL_NAME"])
     end
     
     def version_gt(version) ; version_compare( :>, version) ; end

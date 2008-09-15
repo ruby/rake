@@ -17,13 +17,14 @@ Dir["#{root}/#{pkgname}/**/*.rb"].map { |file|
 
 require 'quix/builtin/kernel/tap'
 
-%w(Config Enumerable FileUtils String).each { |name|
+%w(Config Enumerable FileUtils String File).each { |name|
   Kernel.const_get(name).module_eval {
     include Quix.const_get(name)
   }
 }
 
 Config.extend(Quix::Config)
+File.extend(Quix::File)
 
 class Object
   include Quix::Kernel
