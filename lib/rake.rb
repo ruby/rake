@@ -398,6 +398,8 @@ module Rake
       @tail = tail
     end
 
+    attr_reader :value # :nodoc:
+
     def member?(obj)
       @value == obj || @tail.member?(obj)
     end
@@ -614,6 +616,20 @@ module Rake
           else
             # gather tasks for batch execution
             application.parallel_tasks[name] = [task_args, prereqs]
+            
+            #
+            # Since this is a dry run, parents must be manually marked
+            # as needed.  Files are not created or modified, so the
+            # the 'needed?' flag does not propagate.
+            #
+            unless invocation_chain == InvocationChain::EMPTY or
+                invocation_chain.value.needed?
+              invocation_chain.value.instance_eval {
+                def needed?
+                  true
+                end
+              }
+            end
           end
         end
       end
