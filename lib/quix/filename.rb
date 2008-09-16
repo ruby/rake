@@ -23,7 +23,7 @@ module Quix
 
     # File.size?(self)
     def read_size?
-      File.size(self)
+      File.size?(self)
     end
 
     # See Quix::FileUtils#rename_file
