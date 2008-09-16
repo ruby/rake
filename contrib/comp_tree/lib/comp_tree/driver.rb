@@ -1,5 +1,4 @@
 
-require 'rake/comp_tree/bucket_ipc'
 require 'rake/comp_tree/diagnostic'
 require 'rake/comp_tree/misc'
 require 'rake/comp_tree/algorithm'

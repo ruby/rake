@@ -27,7 +27,7 @@ module CompTree
       if RUBY_PLATFORM =~ %r!java!
         puts "skipping #{File.basename(__FILE__)}."
       else
-        [true, false].each { |use_fork|
+        [false].each { |use_fork|
           [true, false].each { |define_all|
             assert(
               !system(

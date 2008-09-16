@@ -1,6 +1,7 @@
 
 require 'thread'
 
+module Rake ; end
 module Rake::CompTree
   module Misc
     def let

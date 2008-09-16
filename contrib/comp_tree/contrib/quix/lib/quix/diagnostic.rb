@@ -1,6 +1,7 @@
 
 require 'rake/comp_tree/tap'
 
+module Rake ; end
 module Rake::CompTree
   module Diagnostic
     def show(desc = nil, stream = STDOUT, &block)

@@ -9,6 +9,10 @@ require 'comp_tree'
 srand(22)
 
 module Rake::CompTree
+  module RetriableFork
+    HAVE_FORK = false
+  end
+
   Thread.abort_on_exception = true
   HAVE_FORK = RetriableFork::HAVE_FORK
   DO_FORK = (HAVE_FORK and not ARGV.include?("--no-fork"))
