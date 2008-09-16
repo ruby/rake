@@ -73,13 +73,14 @@ def rubyforge(command, file, *args)
 end
 
 task :drake_finish_release do
+  changes = File.expand_path("CHANGES.drake")
   sh("rubyforge", "login")
   Dir.chdir("pkg") {
     gem = "#{SPEC.name}-#{SPEC.version}.gem"
     md5 = "#{gem}.md5"
     sh("md5sum #{gem} > #{md5}")
     rubyforge(
-      *%W(add_release #{gem} --release_changes CHANGES.drake --preformatted))
+      *%W(add_release #{gem} --release_changes #{changes} --preformatted))
     rubyforge("add_file", md5)
   }
 
