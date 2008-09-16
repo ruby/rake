@@ -1,6 +1,10 @@
 
 = Drake Changelog
 
+== Version 0.8.2.1.0.11
+
+* Remove drb code from this CompTree branch (reduce load time).
+
 == Version 0.8.2.1.0.10
 
 * Parents must be marked as needed during dry run for parallel tasks.

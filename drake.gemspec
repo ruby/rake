@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: drake
 version: !ruby/object:Gem::Version 
-  version: 0.8.2.1.0.10
+  version: 0.8.2.1.0.11
 platform: ruby
 authors: 
 - James M. Lawrence
@@ -70,13 +70,11 @@ files:
 - lib/rake/testtask.rb
 - lib/rake.rb
 - lib/rake/comp_tree/algorithm.rb
-- lib/rake/comp_tree/bucket_ipc.rb
 - lib/rake/comp_tree/diagnostic.rb
 - lib/rake/comp_tree/driver.rb
 - lib/rake/comp_tree/error.rb
 - lib/rake/comp_tree/misc.rb
 - lib/rake/comp_tree/node.rb
-- lib/rake/comp_tree/retriable_fork.rb
 - lib/rake/comp_tree/tap.rb
 - lib/rake/comp_tree/task_node.rb
 - test/capture_stdout.rb
