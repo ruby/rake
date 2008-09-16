@@ -2,6 +2,8 @@
 # Convience only -- include most everything
 #
 
+require 'quix/builtin/kernel/tap'
+
 root = File.dirname(__FILE__)
 pkgname = File.basename(__FILE__).sub(%r!\.rb\Z!, "")
  
@@ -15,9 +17,13 @@ Dir["#{root}/#{pkgname}/**/*.rb"].map { |file|
   require file
 }
 
-require 'quix/builtin/kernel/tap'
-
-%w(Config Enumerable FileUtils String).each { |name|
+%w[
+  Config
+  Enumerable
+  FileUtils 
+  String 
+  Pathname
+].each { |name|
   Kernel.const_get(name).module_eval {
     include Quix.const_get(name)
   }
