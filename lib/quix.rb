@@ -2,20 +2,20 @@
 # Convience only -- include most everything
 #
 
-require 'quix/builtin/kernel/tap'
-
-root = File.dirname(__FILE__)
-pkgname = File.basename(__FILE__).sub(%r!\.rb\Z!, "")
- 
-Dir["#{root}/#{pkgname}/**/*.rb"].map { |file|
-  # change to relative paths
-  file.sub(%r!\A#{root}/!, "").sub(%r!\.rb\Z!, "")
-}.reject { |file|
-  (file =~ %r!cygwin! and RUBY_PLATFORM !~ %r!cygwin!) or
-  file =~ %r!builtin!
-}.each { |file|
-  require file
-}
+require 'quix/builtin/kernel/tap.rb'
+require 'quix/config.rb'
+require 'quix/diagnostic.rb'
+require 'quix/enumerable.rb'
+require 'quix/fileutils.rb'
+require 'quix/hash_struct.rb'
+require 'quix/kernel.rb'
+require 'quix/lazy_struct.rb'
+require 'quix/pathname.rb'
+require 'quix/simple_installer.rb'
+require 'quix/string.rb'
+require 'quix/subpackager.rb'
+require 'quix/thread_local.rb'
+require 'quix/vars.rb'
 
 %w[
   Config
