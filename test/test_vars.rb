@@ -109,6 +109,21 @@ class TestVars < Test::Unit::TestCase
     assert_nothing_raised { hash_to_ivs { nil } }
   end
 
+  class A
+    def initialize
+      @x = 22
+      @y = 33
+    end
+  end
+
+  def test_pull_ivs
+    assert_equal(nil, @x)
+    assert_equal(nil, @y)
+    pull_ivs { A.new }
+    assert_equal(22, @x)
+    assert_equal(33, @y)
+  end
+
   def test_config_to_hash
     config = %q{
       a = 33

@@ -50,24 +50,26 @@ module Quix
       }
     end
 
-    def hash_to_ivs(opts = nil, &block)
+    def pull_ivs(&block)
+      source = block.call
+      hash = block.call.instance_variables.inject(Hash.new) { |acc, iv|
+        acc.update(iv.sub(%r!\A@!, "") => source.instance_variable_get(iv))
+      }
+      private__hash_to_ivs(hash, eval("self", block.binding))
+    end
+
+    def hash_to_ivs(&block)
       if hash = block.call
-        private__hash_to_ivs(
-          hash,
-          eval("self", block.binding),
-          opts && opts[:force])
+        private__hash_to_ivs(hash, eval("self", block.binding))
       end
     end
 
-    def locals_to_ivs(opts = nil, &block)
+    def locals_to_ivs(&block)
       hash = Hash.new
       eval_locals(block) { |name, value|
         hash[name] = value
       }
-      private__hash_to_ivs(
-        hash,
-        eval("self", block.binding), 
-        opts && opts[:force])
+      private__hash_to_ivs(hash, eval("self", block.binding))
     end
 
     def with_readers(hash, *args, &block)
@@ -115,17 +117,15 @@ module Quix
       }
     end
 
-    def private__hash_to_ivs(hash, target, force)
+    def private__hash_to_ivs(hash, target)
       target.instance_eval {
         hash.each_pair { |name, value|
           ivar = "@#{name}"
-          unless force
-            existing_value = no_warnings {
-              instance_variable_get(ivar)
-            }
-            unless existing_value.nil?
-              raise "instance variable already set: #{name}"
-            end
+          existing_value = no_warnings {
+            instance_variable_get(ivar)
+          }
+          unless existing_value.nil?
+            raise "instance variable already set: #{name}"
           end
           instance_variable_set(ivar, value)
         }
