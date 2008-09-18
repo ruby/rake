@@ -32,7 +32,6 @@
 RAKEVERSION = '0.8.2.1'
 
 require 'rbconfig'
-require 'getoptlong'
 require 'fileutils'
 require 'singleton'
 require 'monitor'

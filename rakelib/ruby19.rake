@@ -5,7 +5,7 @@ module Ruby19
   RELEASE_FILES = FileList['bin/rake', 'lib/rake.rb', 'lib/rake/**/*']
   RELEASE_FILES.exclude('lib/rake/lib', 'project.rake', 'lib/rake/plugins', 'lib/rake/contrib')
 
-  SVN = "../thirdparty/ruby"
+  SVN = "#{ENV['HOME']}/working/svn/software/thirdparty/ruby"
 
   def run_tests(files, opts='')
     sh "#{PROG} -Ilib lib/rake/rake_test_loader.rb #{opts} #{files}"
@@ -15,6 +15,12 @@ module Ruby19
 end
 
 namespace "ruby19" do
+  desc "Generate a diff file between the primary repo and Ruby 1.9"
+  task :diff => [:check_svn] do
+    sh %{diff -u #{Ruby19::SVN}/lib/rake.rb lib/rake.rb}
+    sh %{diff -u -x .svn -x contrib -x lib #{Ruby19::SVN}/lib/rake lib/rake}
+  end
+
   desc "Ruby Release Files"
   task :release_files do
     puts Ruby19::RELEASE_FILES
