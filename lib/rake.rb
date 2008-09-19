@@ -2392,12 +2392,11 @@ module Rake
     # The standard directory containing system wide rake files on Win
     # 32 systems.
     def win32_system_dir #:nodoc:
-      win32home = File.join(ENV['APPDATA'], 'Rake')
-      unless directory?(win32home)
-        raise Win32HomeError, "Unable to determine home path environment variable."
-      else
-        win32home
-      end
+      win32_shared_path = ENV['APPDATA']
+      win32_shared_path ||= ENV['HOMEDRIVE'] + ENV['HOMEPATH']
+      win32_shared_path ||= ENV['USERPROFILE']
+      raise Win32HomeError, "Unable to determine home path environment variable." if win32_shared_path.nil? or win32_shared_path.empty?
+      File.join(win32_shared_path, 'Rake')
     end
     private :win32_system_dir
 
