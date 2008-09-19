@@ -29,7 +29,7 @@
 # as a library via a require statement, but it can be distributed
 # independently as an application.
 
-RAKEVERSION = '0.8.2.1.0.11'
+RAKEVERSION = '0.8.2.1.0.12'
 
 require 'rbconfig'
 require 'fileutils'
