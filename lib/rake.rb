@@ -581,6 +581,7 @@ module Rake
         end
         application.parallel_lock.synchronize {
           application.parallel_tasks.clear
+          application.parallel_parent_flags.clear
           base_invoke(*args)
           application.invoke_parallel_tasks
         }
@@ -610,10 +611,21 @@ module Rake
             invoke_prerequisites_parallel(task_args, new_chain)
           end
 
-        if needed?
-          if application.num_threads == 1
+        if application.num_threads == 1
+          #
+          # single-threaded mode
+          #
+          if needed?
             execute(task_args) 
-          else
+          end
+        else
+          #
+          # parallel mode
+          #
+          # Either the task knows it's needed or we've marked it as
+          # such.  See next comments.
+          #
+          if application.parallel_parent_flags[self] or needed?
             # gather tasks for batch execution
             application.parallel_tasks[name] = [task_args, prereqs]
             
@@ -622,13 +634,9 @@ module Rake
             # as needed.  Files are not created or modified, so the
             # the 'needed?' flag does not propagate.
             #
-            unless invocation_chain == InvocationChain::EMPTY or
-                invocation_chain.value.needed?
-              invocation_chain.value.instance_eval {
-                def needed?
-                  true
-                end
-              }
+            unless invocation_chain == InvocationChain::EMPTY
+              application.
+                parallel_parent_flags[invocation_chain.value] = true
             end
           end
         end
@@ -1761,6 +1769,7 @@ module Rake
     attr_accessor :num_threads
     attr_reader :parallel_tasks #:nodoc:
     attr_reader :parallel_lock #:nodoc:
+    attr_reader :parallel_parent_flags #:nodoc:
 
     def initialize
       super
@@ -1772,6 +1781,7 @@ module Rake
       @num_threads = 1
       @parallel_tasks = Hash.new
       @parallel_lock = Mutex.new
+      @parallel_parent_flags = Hash.new
     end
 
     def create_rule(*args, &block)
