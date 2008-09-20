@@ -582,7 +582,7 @@ module Rake
           application.parallel_tasks.clear
           application.parallel_parent_flags.clear
           base_invoke(*args)
-          application.invoke_parallel_tasks
+          application.invoke_parallel(self.name)
         }
       end
     end

@@ -5,25 +5,10 @@ require 'rake/comp_tree/driver'
 
 module Rake
   module TaskManager
-    # :nodoc:
-    def invoke_parallel_tasks
-      parent_names = parallel_tasks.keys.map { |name|
-        name.to_sym
-      }
-
-      root_name = "computation_root__#{Process.pid}__#{rand}".to_sym
-         
+    def invoke_parallel(root_task_name) # :nodoc:
       CompTree::Driver.new(:discard_result => true) { |driver|
         #
-        # Define the root computation node.
-        #
-        # Top-level tasks are immediate children of the root.
-        #
-        driver.define(root_name, *parent_names) {
-        }
-
-        #
-        # build the rest of the computation tree from task prereqs
+        # Build the computation tree from task prereqs.
         #
         parallel_tasks.each_pair { |task_name, cache|
           task = self[task_name]
@@ -36,19 +21,29 @@ module Rake
           }
         }
 
+        root_node = driver.nodes[root_task_name.to_sym]
+
         #
-        # Mark computation nodes without a function as computed.
+        # If there were nothing to do, there would be no root node.
         #
-        driver.nodes[root_name].each_downward { |node|
-          unless node.function
-            node.result = true
-          end
-        }
-        
-        #
-        # launch the computation
-        #
-        driver.compute(root_name, :threads => num_threads, :fork => false)
+        if root_node
+          #
+          # Mark computation nodes without a function as computed.
+          #
+          root_node.each_downward { |node|
+            unless node.function
+              node.result = true
+            end
+          }
+
+          #
+          # Launch the computation.
+          #
+          driver.compute(
+            root_node.name,
+            :threads => num_threads,
+            :fork => false)
+        end
       }
     end
   end
