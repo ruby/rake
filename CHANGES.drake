@@ -1,6 +1,10 @@
 
 = Drake Changelog
 
+== Version 0.8.2.1.0.13
+
+* Optimized construction of computation tree.
+
 == Version 0.8.2.1.0.12
 
 * Handle multiple manual invocations of Task#invoke better.
