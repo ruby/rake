@@ -1,6 +1,12 @@
 
 = Rake Changelog
 
+== Version 0.8.3
+
+* Enhanced the system directory detection in windows.  We now check
+  HOMEDRIVE/HOMEPATH and USERPROFILE if APPDATA isn't found.  (Patch
+  supplied by James Tucker).
+
 == Version 0.8.2
 
 * Fixed bug in package task so that it will include the subdir
