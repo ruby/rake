@@ -2345,7 +2345,7 @@ module Rake
       rakefile, location = find_rakefile_location
       if (! options.ignore_system) &&
           (options.load_system || rakefile.nil?) &&
-          directory?(system_dir)
+          system_dir && File.directory?(system_dir)
         puts "(in #{Dir.pwd})" unless options.silent
         glob("#{system_dir}/*.rake") do |name|
           add_import name
@@ -2374,15 +2374,18 @@ module Rake
 
     # The directory path containing the system wide rakefiles.
     def system_dir
-      if ENV['RAKE_SYSTEM']
-        ENV['RAKE_SYSTEM']
-      elsif windows?
-        win32_system_dir
-      else
-        standard_system_dir
-      end
+      @system_dir ||=
+        begin
+          if ENV['RAKE_SYSTEM']
+            ENV['RAKE_SYSTEM']
+          elsif windows?
+            win32_system_dir
+          else
+            standard_system_dir
+          end
+        end
     end
- 
+    
     # The standard directory containing system wide rake files.
     def standard_system_dir #:nodoc:
       File.join(File.expand_path('~'), '.rake')
@@ -2393,17 +2396,21 @@ module Rake
     # 32 systems.
     def win32_system_dir #:nodoc:
       win32_shared_path = ENV['APPDATA']
-      win32_shared_path ||= ENV['HOMEDRIVE'] + ENV['HOMEPATH']
+      if win32_shared_path.nil? && ENV['HOMEDRIVE'] && ENV['HOMEPATH']
+        win32_shared_path = ENV['HOMEDRIVE'] + ENV['HOMEPATH']
+      end
       win32_shared_path ||= ENV['USERPROFILE']
-      raise Win32HomeError, "Unable to determine home path environment variable." if win32_shared_path.nil? or win32_shared_path.empty?
-      File.join(win32_shared_path, 'Rake')
+      raise Win32HomeError, "Unable to determine home path environment variable." if
+        win32_shared_path.nil? or win32_shared_path.empty?
+      win32_normalize(File.join(win32_shared_path, 'Rake'))
     end
     private :win32_system_dir
 
-    def directory?(path)
-      File.directory?(path)
+    # Normalize a win32 path so that the slashes are all forward slashes.
+    def win32_normalize(path)
+      path.gsub(/\\/, '/')
     end
-    private :directory?
+    private :win32_normalize
 
     # Collect the list of tasks on the command line.  If no tasks are
     # given, return a list containing only the default task.
