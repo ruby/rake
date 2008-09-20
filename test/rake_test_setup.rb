@@ -1,5 +1,10 @@
 # Common setup for all test files.
 
-require 'rubygems'
-gem 'flexmock'
+begin
+  require 'rubygems'
+  gem 'flexmock'
+rescue LoadError
+  # got no gems
+end
+
 require 'flexmock/test_unit'

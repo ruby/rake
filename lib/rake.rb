@@ -38,6 +38,8 @@ require 'monitor'
 require 'optparse'
 require 'ostruct'
 
+require 'rake/win32'
+
 ######################################################################
 # Rake extensions to Module.
 #
@@ -259,11 +261,6 @@ module Rake
     def message
       super + ": [" + @targets.reverse.join(' => ') + "]"
     end
-  end
-
-  # Error indicating a problem in locating the home directory on a
-  # Win32 system.
-  class Win32HomeError < RuntimeError
   end
 
   # --------------------------------------------------------------------------
@@ -988,22 +985,13 @@ module FileUtils
   end
 
   def rake_system(*cmd)
-    if Rake.application.windows?
-      rake_win32_system(*cmd)
+    if Rake::Win32.windows?
+      Rake::Win32.rake_system(*cmd)
     else
       system(*cmd)
     end
   end
   private :rake_system
-
-  def rake_win32_system(*cmd)
-    if cmd.size == 1
-      system("call #{cmd}")
-    else
-      system(*cmd)
-    end
-  end
-  private :rake_win32_system
 
   # Run a Ruby interpreter with the given arguments.
   #
@@ -2144,7 +2132,7 @@ module Rake
     end
     
     def windows?
-      Config::CONFIG['host_os'] =~ /mswin/
+      Win32.windows?
     end
 
     def truncate(string, width)
@@ -2378,8 +2366,8 @@ module Rake
         begin
           if ENV['RAKE_SYSTEM']
             ENV['RAKE_SYSTEM']
-          elsif windows?
-            win32_system_dir
+          elsif Win32.windows?
+            Win32.win32_system_dir
           else
             standard_system_dir
           end
@@ -2391,26 +2379,6 @@ module Rake
       File.join(File.expand_path('~'), '.rake')
     end
     private :standard_system_dir
-
-    # The standard directory containing system wide rake files on Win
-    # 32 systems.
-    def win32_system_dir #:nodoc:
-      win32_shared_path = ENV['APPDATA']
-      if win32_shared_path.nil? && ENV['HOMEDRIVE'] && ENV['HOMEPATH']
-        win32_shared_path = ENV['HOMEDRIVE'] + ENV['HOMEPATH']
-      end
-      win32_shared_path ||= ENV['USERPROFILE']
-      raise Win32HomeError, "Unable to determine home path environment variable." if
-        win32_shared_path.nil? or win32_shared_path.empty?
-      win32_normalize(File.join(win32_shared_path, 'Rake'))
-    end
-    private :win32_system_dir
-
-    # Normalize a win32 path so that the slashes are all forward slashes.
-    def win32_normalize(path)
-      path.gsub(/\\/, '/')
-    end
-    private :win32_normalize
 
     # Collect the list of tasks on the command line.  If no tasks are
     # given, return a list containing only the default task.

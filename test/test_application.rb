@@ -193,8 +193,8 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_load_from_system_rakefile_on_windows
-    flexmock(@app, :windows? => true,
-      :standard_system_dir => "XX")
+    flexmock(Rake::Win32, :windows? => true)
+    flexmock(@app, :standard_system_dir => "XX")
     flexmock(@app).should_receive(:directory?).with("/AD/Rake").and_return(true)
     flexmock(@app).should_receive(:load).and_return(nil)
     in_environment('RAKE_SYSTEM' => nil, 'APPDATA' => '/AD') do
@@ -206,49 +206,6 @@ class TestApplication < Test::Unit::TestCase
         load_rakefile
       end
       assert_equal "/AD/Rake", @app.system_dir
-    end
-  end
-
-  def test_win32_system_dir_uses_appdata_if_defined
-    in_environment('RAKE_SYSTEM' => nil, 'APPDATA' => '\\AD') do
-      assert_equal "/AD/Rake", @app.instance_eval { win32_system_dir }
-    end
-  end
-
-  def test_win32_system_dir_uses_homedrive_otherwise
-    in_environment(
-      'RAKE_SYSTEM' => nil,
-      'APPDATA' => nil,
-      'HOMEDRIVE' => "C:",
-      "HOMEPATH" => "\\HP"
-      ) do
-      assert_equal "C:/HP/Rake", @app.instance_eval { win32_system_dir }
-    end
-  end
-
-  def test_win32_system_dir_uses_userprofile_otherwise
-    in_environment(
-      'RAKE_SYSTEM' => nil,
-      'APPDATA' => nil,
-      'HOMEDRIVE' => nil,
-      "HOMEPATH" => nil,
-      "USERPROFILE" => '\\UP'
-      ) do
-      assert_equal "/UP/Rake", @app.instance_eval { win32_system_dir }
-    end
-  end
-
-  def test_win32_system_dir_nil_of_no_env_vars
-    in_environment(
-      'RAKE_SYSTEM' => nil,
-      'APPDATA' => nil,
-      'HOMEDRIVE' => nil,
-      "HOMEPATH" => nil,
-      "USERPROFILE" => nil
-      ) do
-      assert_raise(Rake::Win32HomeError) do
-        @app.instance_eval { win32_system_dir }
-      end
     end
   end
 
