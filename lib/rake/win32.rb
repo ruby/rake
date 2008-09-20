@@ -1,5 +1,7 @@
-# Win 32 interface methods for Rake.
 module Rake
+  
+  # Win 32 interface methods for Rake. Windows specific functionality
+  # will be placed here to collect that knowledge in one spot.
   module Win32
     
     # Error indicating a problem in locating the home directory on a
@@ -22,8 +24,15 @@ module Rake
         end
       end
       
-      # The standard directory containing system wide rake files on Win
-      # 32 systems.
+      # The standard directory containing system wide rake files on
+      # Win 32 systems. Try the following environment variables (in
+      # order):
+      #
+      # * APPDATA
+      # * HOMEDRIVE + HOMEPATH
+      # * USERPROFILE
+      #
+      # If the above are not defined, the return nil.
       def win32_system_dir #:nodoc:
         win32_shared_path = ENV['APPDATA']
         if win32_shared_path.nil? && ENV['HOMEDRIVE'] && ENV['HOMEPATH']
