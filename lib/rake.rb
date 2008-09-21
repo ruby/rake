@@ -939,7 +939,8 @@ end
 # added to the FileUtils utility functions.
 #
 module FileUtils
-  RUBY = File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name'])
+  RUBY = File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name']).
+    sub(/.*\s.*/m, '"\&"')
 
   OPT_TABLE['sh']  = %w(noop verbose)
   OPT_TABLE['ruby'] = %w(noop verbose)
