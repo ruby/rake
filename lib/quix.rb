@@ -29,6 +29,7 @@ require 'quix/vars.rb'
   }
 }
 
+Pathname.extend(Quix::Pathname::Meta)
 Config.extend(Quix::Config)
 
 class Object
