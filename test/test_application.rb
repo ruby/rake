@@ -109,7 +109,7 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_finding_rakefile
-    assert_equal "rakefile", @app.instance_eval { have_rakefile }
+    assert_equal "Rakefile", @app.instance_eval { have_rakefile }
   end
 
   def test_not_finding_rakefile
