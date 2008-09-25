@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: rake
 version: !ruby/object:Gem::Version 
-  version: 0.8.2.99
+  version: 0.8.3
 platform: ruby
 authors: 
 - Jim Weirich
@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2008-09-21 00:00:00 -04:00
+date: 2008-09-24 00:00:00 -04:00
 default_executable: rake
 dependencies: []
 
