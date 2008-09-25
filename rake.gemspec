@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: rake
 version: !ruby/object:Gem::Version 
-  version: 0.8.3
+  version: 0.8.3.1
 platform: ruby
 authors: 
 - Jim Weirich
@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2008-09-24 00:00:00 -04:00
+date: 2008-09-25 00:00:00 -04:00
 default_executable: rake
 dependencies: []
 
@@ -40,13 +40,13 @@ extra_rdoc_files:
 - doc/release_notes/rake-0.7.3.rdoc
 - doc/release_notes/rake-0.8.0.rdoc
 - doc/release_notes/rake-0.8.2.rdoc
+- doc/release_notes/rake-0.8.3.rdoc
 files: 
 - install.rb
 - CHANGES
 - MIT-LICENSE
 - Rakefile
 - README
-- TAGS
 - TODO
 - bin/rake
 - lib/rake/classic_namespace.rb
@@ -144,6 +144,7 @@ files:
 - doc/release_notes/rake-0.7.3.rdoc
 - doc/release_notes/rake-0.8.0.rdoc
 - doc/release_notes/rake-0.8.2.rdoc
+- doc/release_notes/rake-0.8.3.rdoc
 has_rdoc: true
 homepage: http://rake.rubyforge.org
 post_install_message: 
