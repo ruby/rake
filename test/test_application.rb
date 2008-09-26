@@ -109,7 +109,7 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_finding_rakefile
-    assert_equal "rakefile", @app.instance_eval { have_rakefile }.downcase
+    assert_match(/[Rr]akefile/, @app.instance_eval { have_rakefile })
   end
 
   def test_not_finding_rakefile
@@ -193,10 +193,10 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_load_from_system_rakefile_on_windows
-    flexmock(@app, :windows? => true,
-      :standard_system_dir => "XX")
+    flexmock(Rake::Win32, :windows? => true)
+    flexmock(@app, :standard_system_dir => "XX")
     flexmock(@app).should_receive(:directory?).with("/AD/Rake").and_return(true)
-    flexmock(@app).should_receive(:load).and_return { |fn| puts "LOADING #{fn}" }
+    flexmock(@app).should_receive(:load).and_return(nil)
     in_environment('RAKE_SYSTEM' => nil, 'APPDATA' => '/AD') do
       @app.options.rakelib = []
       @app.instance_eval do
@@ -206,26 +206,6 @@ class TestApplication < Test::Unit::TestCase
         load_rakefile
       end
       assert_equal "/AD/Rake", @app.system_dir
-    end
-  end
-
-  def test_load_from_system_rakefile_on_windows_with_no_appdata
-    flexmock(@app, :windows? => true,
-      :standard_system_dir => "XX"
-      )
-    flexmock(File).should_receive(:exists?).with("/AD/Rake").and_return(false)
-    out = capture_stderr do
-      assert_raise(SystemExit) do
-        in_environment('RAKE_SYSTEM' => nil, 'APPDATA' => "/AD") do
-          @app.options.rakelib = []
-          @app.instance_eval do
-            handle_options
-            options.silent = true
-            options.load_system = true
-            load_rakefile
-          end
-        end
-      end
     end
   end
 

@@ -29,7 +29,7 @@
 # as a library via a require statement, but it can be distributed
 # independently as an application.
 
-RAKEVERSION = '0.8.2.1.0.13'
+RAKEVERSION = '0.8.3.1.0.14'
 
 require 'rbconfig'
 require 'fileutils'
@@ -38,6 +38,8 @@ require 'monitor'
 require 'optparse'
 require 'ostruct'
 require 'rake/parallel'
+
+require 'rake/win32'
 
 ######################################################################
 # Rake extensions to Module.
@@ -260,11 +262,6 @@ module Rake
     def message
       super + ": [" + @targets.reverse.join(' => ') + "]"
     end
-  end
-
-  # Error indicating a problem in locating the home directory on a
-  # Win32 system.
-  class Win32HomeError < RuntimeError
   end
 
   # --------------------------------------------------------------------------
@@ -1032,7 +1029,8 @@ end
 # added to the FileUtils utility functions.
 #
 module FileUtils
-  RUBY = File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name'])
+  RUBY = File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name']).
+    sub(/.*\s.*/m, '"\&"')
 
   OPT_TABLE['sh']  = %w(noop verbose)
   OPT_TABLE['ruby'] = %w(noop verbose)
@@ -1078,22 +1076,13 @@ module FileUtils
   end
 
   def rake_system(*cmd)
-    if Rake.application.windows?
-      rake_win32_system(*cmd)
+    if Rake::Win32.windows?
+      Rake::Win32.rake_system(*cmd)
     else
       system(*cmd)
     end
   end
   private :rake_system
-
-  def rake_win32_system(*cmd)
-    if cmd.size == 1
-      system("call #{cmd}")
-    else
-      system(*cmd)
-    end
-  end
-  private :rake_win32_system
 
   # Run a Ruby interpreter with the given arguments.
   #
@@ -2244,7 +2233,7 @@ module Rake
     end
     
     def windows?
-      Config::CONFIG['host_os'] =~ /mswin/
+      Win32.windows?
     end
 
     def truncate(string, width)
@@ -2457,7 +2446,7 @@ module Rake
       rakefile, location = find_rakefile_location
       if (! options.ignore_system) &&
           (options.load_system || rakefile.nil?) &&
-          directory?(system_dir)
+          system_dir && File.directory?(system_dir)
         puts "(in #{Dir.pwd})" unless options.silent
         glob("#{system_dir}/*.rake") do |name|
           add_import name
@@ -2486,37 +2475,23 @@ module Rake
 
     # The directory path containing the system wide rakefiles.
     def system_dir
-      if ENV['RAKE_SYSTEM']
-        ENV['RAKE_SYSTEM']
-      elsif windows?
-        win32_system_dir
-      else
-        standard_system_dir
-      end
+      @system_dir ||=
+        begin
+          if ENV['RAKE_SYSTEM']
+            ENV['RAKE_SYSTEM']
+          elsif Win32.windows?
+            Win32.win32_system_dir
+          else
+            standard_system_dir
+          end
+        end
     end
- 
+    
     # The standard directory containing system wide rake files.
     def standard_system_dir #:nodoc:
       File.join(File.expand_path('~'), '.rake')
     end
     private :standard_system_dir
-
-    # The standard directory containing system wide rake files on Win
-    # 32 systems.
-    def win32_system_dir #:nodoc:
-      win32home = File.join(ENV['APPDATA'], 'Rake')
-      unless directory?(win32home)
-        raise Win32HomeError, "Unable to determine home path environment variable."
-      else
-        win32home
-      end
-    end
-    private :win32_system_dir
-
-    def directory?(path)
-      File.directory?(path)
-    end
-    private :directory?
 
     # Collect the list of tasks on the command line.  If no tasks are
     # given, return a list containing only the default task.
