@@ -8,6 +8,7 @@ require 'rake'
 
 class TestWin32 < Test::Unit::TestCase
   include InEnvironment
+  include TestMethods
 
   Win32 = Rake::Win32
   
@@ -48,7 +49,7 @@ class TestWin32 < Test::Unit::TestCase
       "HOMEPATH" => nil,
       "USERPROFILE" => nil
       ) do
-      assert_raise(Rake::Win32::Win32HomeError) do
+      assert_exception(Rake::Win32::Win32HomeError) do
         Win32.win32_system_dir
       end
     end

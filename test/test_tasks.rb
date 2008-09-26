@@ -5,11 +5,13 @@ require 'fileutils'
 require 'rake'
 require 'test/filecreation'
 require 'test/capture_stdout'
+require 'test/rake_test_setup'
 
 ######################################################################
 class TestTask < Test::Unit::TestCase
   include CaptureStdout
   include Rake
+  include TestMethods
 
   def setup
     Task.clear
@@ -48,7 +50,7 @@ class TestTask < Test::Unit::TestCase
     t2 = task(:t2 => [:t1]) { |t| runlist << t.name }
     assert_equal ["t2"], t1.prerequisites
     assert_equal ["t1"], t2.prerequisites
-    ex = assert_raise RuntimeError do
+    ex = assert_exception RuntimeError do
       t1.invoke
     end
     assert_match(/circular dependency/i, ex.message)
@@ -121,7 +123,7 @@ class TestTask < Test::Unit::TestCase
   def test_find
     task :tfind
     assert_equal "tfind", Task[:tfind].name
-    ex = assert_raises(RuntimeError) { Task[:leaves] }
+    ex = assert_exception(RuntimeError) { Task[:leaves] }
     assert_equal "Don't know how to build task 'leaves'", ex.message
   end
 
@@ -218,6 +220,7 @@ end
 class TestTaskWithArguments < Test::Unit::TestCase
   include CaptureStdout
   include Rake
+  include TestMethods
 
   def setup
     Task.clear
@@ -255,7 +258,7 @@ class TestTaskWithArguments < Test::Unit::TestCase
   end
 
   def test_illegal_keys_in_task_name_hash
-    assert_raise RuntimeError do
+    assert_exception RuntimeError do
       t = task(:t, :x, :y => 1, :needs => [:pre])
     end
   end

@@ -18,6 +18,7 @@ TESTING_REQUIRE = [ ]
 class TestApplication < Test::Unit::TestCase
   include CaptureStdout
   include InEnvironment
+  include TestMethods
 
   def setup
     @app = Rake::Application.new
@@ -148,7 +149,7 @@ class TestApplication < Test::Unit::TestCase
         handle_options
         options.silent = true
       end
-      ex = assert_raise(RuntimeError) do 
+      ex = assert_exception(RuntimeError) do 
         @app.instance_eval do raw_load_rakefile end 
       end
       assert_match(/no rakefile found/i, ex.message)
@@ -279,7 +280,7 @@ class TestApplication < Test::Unit::TestCase
     @app.intern(Rake::Task, "default").enhance { fail }
     ARGV.clear
     ARGV << '-f' << '-s' <<  '--rakelib=""'
-    assert_raise(SystemExit) {
+    assert_exception(SystemExit) {
       err = capture_stderr { @app.run }
       assert_match(/see full trace/, err)
     }
@@ -291,7 +292,7 @@ class TestApplication < Test::Unit::TestCase
     @app.intern(Rake::Task, "default").enhance { fail }
     ARGV.clear
     ARGV << '-f' << '-s' << '-t'
-    assert_raise(SystemExit) {
+    assert_exception(SystemExit) {
       err = capture_stderr { capture_stdout { @app.run } }
       assert_no_match(/see full trace/, err)
     }
@@ -303,7 +304,7 @@ class TestApplication < Test::Unit::TestCase
     @app.intern(Rake::Task, "default").enhance { fail }
     ARGV.clear
     ARGV << '-f' << '-s' << '--xyzzy'
-    assert_raise(SystemExit) {
+    assert_exception(SystemExit) {
       err = capture_stderr { capture_stdout { @app.run } }
     }
   ensure
@@ -315,6 +316,7 @@ end
 ######################################################################
 class TestApplicationOptions < Test::Unit::TestCase
   include CaptureStdout
+  include TestMethods
 
   def setup
     clear_argv
@@ -447,7 +449,7 @@ class TestApplicationOptions < Test::Unit::TestCase
   end
 
   def test_missing_require
-    ex = assert_raises(LoadError) do
+    ex = assert_exception(LoadError) do
       flags(['--require', 'test/missing']) do |opts|
       end
     end
@@ -546,7 +548,7 @@ class TestApplicationOptions < Test::Unit::TestCase
 
   def test_bad_option
     capture_stderr do
-      ex = assert_raise(OptionParser::InvalidOption) do
+      ex = assert_exception(OptionParser::InvalidOption) do
         flags('--bad-option') 
       end
       if ex.message =~ /^While/ # Ruby 1.9 error message

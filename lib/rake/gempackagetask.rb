@@ -10,7 +10,7 @@ require 'rubygems/user_interaction'
 require 'rubygems/builder'
 
 begin
-  Gem.manage_gems
+  Gem.manage_gems if Gem::RubyGemsVersion < '1.2.0'
 rescue NoMethodError => ex
   # Using rubygems prior to 0.6.1
 end

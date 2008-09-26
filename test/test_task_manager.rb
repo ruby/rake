@@ -2,12 +2,15 @@
 
 require 'test/unit'
 require 'rake'
+require 'test/rake_test_setup'
 
 class TaskManager
   include Rake::TaskManager
 end
 
 class TestTaskManager < Test::Unit::TestCase
+  include TestMethods
+
   def setup
     @tm = TaskManager.new
   end
@@ -68,7 +71,7 @@ class TestTaskManager < Test::Unit::TestCase
   end
 
   def test_name_lookup_with_nonexistent_task
-    assert_raise(RuntimeError) {
+    assert_exception(RuntimeError) {
       t = @tm["DOES NOT EXIST"]
     }
   end

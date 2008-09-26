@@ -4,10 +4,13 @@ require 'test/unit'
 require 'fileutils'
 require 'rake'
 require 'test/filecreation'
+require 'test/rake_test_setup'
 
 ######################################################################
 class TestDefinitions < Test::Unit::TestCase
   include Rake
+  include TestMethods
+  
   EXISTINGFILE = "testdata/existing"
 
   def setup
@@ -58,7 +61,7 @@ class TestDefinitions < Test::Unit::TestCase
 
   def test_missing_dependencies
     task :x => ["testdata/missing"]
-    assert_raises(RuntimeError) { Task[:x].invoke }
+    assert_exception(RuntimeError) { Task[:x].invoke }
   end
 
   def test_implicit_file_dependencies

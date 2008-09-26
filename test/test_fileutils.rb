@@ -5,9 +5,11 @@ require 'test/unit'
 require 'test/filecreation'
 require 'fileutils'
 require 'stringio'
+require 'test/rake_test_setup'
 
 class TestFileUtils < Test::Unit::TestCase
   include FileCreation
+  include TestMethods
 
   def setup
     File.chmod(0750,"test/shellcommand.rb")
@@ -81,7 +83,7 @@ class TestFileUtils < Test::Unit::TestCase
   def test_safe_ln_fails_on_script_error
     FileUtils::LN_SUPPORTED[0] = true
     c = BadLink.new(ScriptError)
-    assert_raise(ScriptError) do c.safe_ln "a", "b" end
+    assert_exception(ScriptError) do c.safe_ln "a", "b" end
   end
 
   def test_verbose
@@ -114,13 +116,27 @@ class TestFileUtils < Test::Unit::TestCase
 
   def test_fileutils_methods_dont_leak
     obj = Object.new
-    assert_raise(NoMethodError) { obj.copy } # from FileUtils
-    assert_raise(NoMethodError) { obj.ruby } # from RubyFileUtils
+    assert_exception(NoMethodError) { obj.copy } # from FileUtils
+    assert_exception(NoMethodError) { obj.ruby } # from RubyFileUtils
   end
 
   def test_sh
     verbose(false) { sh %{ruby test/shellcommand.rb} }
     assert true, "should not fail"
+  end
+
+  # If the :sh method is invoked directly from a test unit instance
+  # (under mini/test), the mini/test version of fail is invoked rather
+  # than the kernel version of fail. So we run :sh from within a
+  # non-test class to avoid the problem.
+  class Sh
+    include FileUtils
+    def run(*args)
+      sh(*args)
+    end
+    def self.run(*args)
+      new.run(*args)
+    end
   end
 
   def test_sh_multiple_arguments
@@ -129,15 +145,15 @@ class TestFileUtils < Test::Unit::TestCase
     # This one gets expanded by the shell
     verbose(false) { sh %{ruby test/check_expansion.rb #{expanded} someval} }
     assert true, "should not fail"
-    assert_raises(RuntimeError) {
+    assert_exception(RuntimeError) {
       # This one does not get expanded
-      verbose(false) { sh 'ruby', 'test/check_expansion.rb', expanded, 'someval' }
+      verbose(false) { Sh.run 'ruby', 'test/check_expansion.rb', expanded, 'someval' }
     }
   end
 
   def test_sh_failure
-    assert_raises(RuntimeError) { 
-      verbose(false) { sh %{ruby test/shellcommand.rb 1} }
+    assert_exception(RuntimeError) { 
+      verbose(false) { Sh.run %{ruby test/shellcommand.rb 1} }
     }
   end
 
@@ -164,7 +180,7 @@ class TestFileUtils < Test::Unit::TestCase
   end
 
   def test_sh_bad_option
-    ex = assert_raise(ArgumentError) {
+    ex = assert_exception(ArgumentError) {
       verbose(false) { sh %{test/shellcommand.rb}, :bad_option=>true }
     }
     assert_match(/bad_option/, ex.message)

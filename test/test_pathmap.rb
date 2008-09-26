@@ -5,6 +5,7 @@ require 'rake'
 
 # ====================================================================
 class TestPathMap < Test::Unit::TestCase
+  include TestMethods
 
   def test_returns_self_with_no_args
     assert_equal "abc.rb", "abc.rb".pathmap
@@ -86,7 +87,7 @@ class TestPathMap < Test::Unit::TestCase
   end
 
   def test_undefined_percent_causes_error
-    ex = assert_raise(ArgumentError) {
+    ex = assert_exception(ArgumentError) {
       "dir/abc.rb".pathmap("%z")
     }
   end
@@ -130,7 +131,7 @@ class TestPathMap < Test::Unit::TestCase
   end
 
   def test_pattern_with_invalid_operator
-    ex = assert_raise(ArgumentError) do
+    ex = assert_exception(ArgumentError) do
       "abc.xyz".pathmap("%{src,bin}z")
     end
     assert_match(/unknown.*pathmap.*spec.*z/i, ex.message)
