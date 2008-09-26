@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: drake
 version: !ruby/object:Gem::Version 
-  version: 0.8.2.1.0.13
+  version: 0.8.3.1.0.14
 platform: ruby
 authors: 
 - James M. Lawrence
@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2008-09-20 00:00:00 -04:00
+date: 2008-09-25 00:00:00 -04:00
 default_executable: drake
 dependencies: []
 
@@ -40,6 +40,7 @@ extra_rdoc_files:
 - doc/release_notes/rake-0.7.3.rdoc
 - doc/release_notes/rake-0.8.0.rdoc
 - doc/release_notes/rake-0.8.2.rdoc
+- doc/release_notes/rake-0.8.3.rdoc
 files: 
 - install.rb
 - CHANGES
@@ -68,6 +69,7 @@ files:
 - lib/rake/runtest.rb
 - lib/rake/tasklib.rb
 - lib/rake/testtask.rb
+- lib/rake/win32.rb
 - lib/rake.rb
 - lib/rake/comp_tree/algorithm.rb
 - lib/rake/comp_tree/diagnostic.rb
@@ -118,6 +120,7 @@ files:
 - test/test_tasks.rb
 - test/test_test_task.rb
 - test/test_top_level_functions.rb
+- test/test_win32.rb
 - test/data/imports/deps.mf
 - test/data/sample.mf
 - test/Rakefile.seq
@@ -157,6 +160,7 @@ files:
 - doc/release_notes/rake-0.7.3.rdoc
 - doc/release_notes/rake-0.8.0.rdoc
 - doc/release_notes/rake-0.8.2.rdoc
+- doc/release_notes/rake-0.8.3.rdoc
 has_rdoc: true
 homepage: http://drake.rubyforge.org
 post_install_message: 
