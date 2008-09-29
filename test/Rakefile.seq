@@ -1,7 +1,7 @@
 
 require 'thread'
 
-task_names = (1...100).map { |n| n.to_s }
+task_names = (1..50).map { |n| n.to_s }
 order_invoked = []
 mutex = Mutex.new
 
