@@ -1,29 +1,18 @@
 
-task :default => [:a, :b] do |t, args|
-  puts "task default"
-end
+require 'thread'
 
-def stuff
-  sleep(1)
-end
+task :default => [:a, :b]
+task :a => [:x, :y]
+task :b
 
-task :a => [:x, :y] do
-  puts "task a"
-  stuff
-end
+mutex = Mutex.new
+STDOUT.sync = true
 
-task :b do
-  puts "task b"
-  stuff
-end
-
-task :x do
-  puts "task x"
-  stuff
-end
-
-task :y do
-  puts "task y"
-  stuff
-end
-
+%w[a b x y].each { |name|
+  task name.to_sym do
+    mutex.synchronize {
+      puts "task #{name}"
+    }
+    sleep(1)
+  end
+}
