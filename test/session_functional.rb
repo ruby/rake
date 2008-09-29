@@ -8,6 +8,7 @@ require 'test/unit'
 require 'fileutils'
 require 'session'
 require 'test/in_environment'
+require 'test/rake_test_setup'
 
 # Version 2.1.9 of session has a bug where the @debug instance
 # variable is not initialized, causing warning messages.  This snippet
@@ -24,6 +25,7 @@ end
 
 class FunctionalTest < Test::Unit::TestCase
   include InEnvironment
+  include TestMethods
 
   RUBY_COMMAND = 'ruby'
 

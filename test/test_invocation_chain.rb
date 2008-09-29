@@ -2,9 +2,11 @@
 
 require 'test/unit'
 require 'rake'
+require 'test/rake_test_setup'
 
 ######################################################################
 class TestAnEmptyInvocationChain < Test::Unit::TestCase
+  include TestMethods
 
   def setup
     @empty = Rake::InvocationChain::EMPTY
@@ -23,6 +25,8 @@ end
 
 ######################################################################
 class TestAnInvocationChainWithOneMember < Test::Unit::TestCase
+  include TestMethods
+
   def setup
     @empty = Rake::InvocationChain::EMPTY
     @first_member = "A"
@@ -34,7 +38,7 @@ class TestAnInvocationChainWithOneMember < Test::Unit::TestCase
   end
 
   def test_should_fail_when_adding_original_member
-    ex = assert_raise RuntimeError do
+    ex = assert_exception RuntimeError do
       @chain.append(@first_member)
     end
     assert_match(/circular +dependency/i, ex.message)
@@ -49,6 +53,8 @@ end
 
 ######################################################################
 class TestAnInvocationChainWithMultipleMember < Test::Unit::TestCase
+  include TestMethods
+
   def setup
     @first_member = "A"
     @second_member = "B"
@@ -65,7 +71,7 @@ class TestAnInvocationChainWithMultipleMember < Test::Unit::TestCase
   end
 
   def test_should_fail_when_adding_original_member
-    ex = assert_raise RuntimeError do
+    ex = assert_exception RuntimeError do
       @chain.append(@first_member)
     end
     assert_match(/A.*=>.*B.*=>.*A/, ex.message)

@@ -2,6 +2,7 @@ TAGS
 html
 pkg
 coverage
+*.bak
 temp_*
 x
 *.patch

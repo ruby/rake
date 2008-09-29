@@ -2,9 +2,11 @@
 
 require 'test/unit'
 require 'rake/packagetask'
+require 'test/rake_test_setup'
 
 class TestPackageTask < Test::Unit::TestCase
   include Rake
+  include TestMethods
 
   def test_create
     pkg = Rake::PackageTask.new("pkgr", "1.2.3") { |p|
@@ -40,7 +42,7 @@ class TestPackageTask < Test::Unit::TestCase
   end
 
   def test_missing_version
-    assert_raises(RuntimeError) {
+    assert_exception(RuntimeError) {
       pkg = Rake::PackageTask.new("pkgr") { |p| }
     }
   end

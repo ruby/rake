@@ -7,12 +7,14 @@ rescue LoadError
 end
 
 require 'test/unit'
-require 'test/capture_stdout'
-require 'rake'
 require 'flexmock/test_unit'
+require 'test/capture_stdout'
+require 'test/rake_test_setup'
+require 'rake'
 
 class TestTopLevelFunctions < Test::Unit::TestCase
   include CaptureStdout
+  include TestMethods
 
   def setup
     super
@@ -79,6 +81,6 @@ class TestTopLevelFunctions < Test::Unit::TestCase
   end
 
   def test_missing_other_constant
-    assert_raise(NameError) do Object.const_missing(:Xyz) end
+    assert_exception(NameError) do Object.const_missing(:Xyz) end
   end
 end

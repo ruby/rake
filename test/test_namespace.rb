@@ -9,8 +9,10 @@ end
 require 'test/unit'
 require 'flexmock/test_unit'
 require 'rake'
+require 'test/rake_test_setup'
 
 class TestNameSpace < Test::Unit::TestCase
+  include TestMethods
 
   def test_namespace_creation
     mgr = flexmock("TaskManager")

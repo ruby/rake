@@ -4,10 +4,12 @@ require 'test/unit'
 require 'rake'
 
 require 'test/capture_stdout'
+require 'test/rake_test_setup'
 
 class TestFileList < Test::Unit::TestCase
   FileList = Rake::FileList
   include CaptureStdout
+  include TestMethods
 
   def setup
     create_test_data
@@ -442,7 +444,7 @@ class TestFileList < Test::Unit::TestCase
     a = FileList['a', 'b', 'c']
     a.freeze
     c = a.clone
-    assert_raise(TypeError, RuntimeError) do
+    assert_exception(TypeError, RuntimeError) do
       c << 'more'
     end
   end
