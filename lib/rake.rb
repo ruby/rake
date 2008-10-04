@@ -2058,7 +2058,10 @@ module Rake
     # If a match is found, it is copied into @rakefile.
     def have_rakefile
       @rakefiles.each do |fn|
-        if File.exist?(fn) || fn == ''
+        if File.exist?(fn)
+          others = Dir.glob(fn, File::FNM_CASEFOLD)
+          return others.size == 1 ? others.first : fn
+        elsif fn == ''
           return fn
         end
       end
