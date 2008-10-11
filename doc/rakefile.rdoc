@@ -1,4 +1,4 @@
-= Rakefile Format (as of version 0.8.2)
+= Rakefile Format (as of version 0.8.3)
 
 First of all, there is no special format for a Rakefile.  A Rakefile
 contains executable Ruby code.  Anything legal in a ruby script is
