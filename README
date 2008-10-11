@@ -33,6 +33,13 @@ http://github.com/jimweirich/rake. The public git clone URL is
 
 * git://github.com/jimweirich/rake.git
 
+== Issues and Bug Reports
+
+Bugs, features requests and other issues can be logged at
+http://onestepback.org/redmine/projects/show/rake.  You will need an
+account (register at http://onestepback.org/redmine/account/register).
+Or you can send me an email (at jim dot weirich at gmail dot com)
+
 == Installation
 
 === Normal Installation
@@ -153,7 +160,7 @@ new feature to be submitted in the form of new unit tests.
 
 For other information, feel free to ask on the ruby-talk mailing list
 (which is mirrored to comp.lang.ruby) or contact
-mailto:jim@weirichhouse.org.
+jim dot weirich at gmail.com.
 
 ----
 
