@@ -225,8 +225,8 @@ where we specify default values for the first and last names:
 === Tasks that Expect Parameters and Have Prerequisites
 
 Tasks that use parameters have a slightly different format for
-prerequisites.  Use the <tt>:needs</tt> keyword to specify the
-prerequisites for tasks with arguments.  For example:
+prerequisites.  Use the arrow notation to indicate the prerequisites
+for tasks with arguments.  For example:
 
    task :name, [:first_name, :last_name] => [:pre_name] do |t, args|
      args.with_defaults(:first_name => "John", :last_name => "Dough")
