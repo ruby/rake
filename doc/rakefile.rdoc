@@ -237,7 +237,7 @@ for tasks with arguments.  For example:
 === Deprecated Task Parameters Format
 
 There is an older format for declaring task parameters that omitted
-the task array and used the :needs keyword to introduce the
+the task argument array and used the :needs keyword to introduce the
 dependencies.  That format is still supported for compatibility, but
 is not recommended for use.
 
