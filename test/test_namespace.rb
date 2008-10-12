@@ -14,25 +14,42 @@ require 'test/rake_test_setup'
 class TestNameSpace < Test::Unit::TestCase
   include TestMethods
 
+  class TM
+    include Rake::TaskManager
+  end
+
   def test_namespace_creation
-    mgr = flexmock("TaskManager")
+    mgr = TM.new
     ns = Rake::NameSpace.new(mgr, [])
     assert_not_nil ns
   end
 
   def test_namespace_lookup
-    mgr = flexmock("TaskManager")
-    mgr.should_receive(:lookup).with(:t, ["a"]).
-      and_return(:dummy).once
-    ns = Rake::NameSpace.new(mgr, ["a"])
-    assert_equal :dummy, ns[:t]
+    mgr = TM.new
+    ns = mgr.in_namespace("n") do
+      mgr.define_task(Rake::Task, "t")
+    end
+
+    assert_not_nil ns["t"]
+    assert_equal mgr["n:t"], ns["t"]
   end
 
   def test_namespace_reports_tasks_it_owns
-    mgr = flexmock("TaskManager")
-    mgr.should_receive(:tasks).with().
-      and_return([:x, :y, :z]).once
-    ns = Rake::NameSpace.new(mgr, ["a"])
-    assert_equal [:x, :y, :z], ns.tasks
+    mgr = TM.new
+    nns = nil
+    ns = mgr.in_namespace("n") do
+      mgr.define_task(Rake::Task, :x)
+      mgr.define_task(Rake::Task, :y)
+      nns = mgr.in_namespace("nn") do
+        mgr.define_task(Rake::Task, :z)
+      end
+    end
+    mgr.in_namespace("m") do
+      mgr.define_task(Rake::Task, :x)
+    end
+
+    assert_equal ["n:nn:z", "n:x", "n:y"],
+      ns.tasks.map { |tsk| tsk.name }
+    assert_equal ["n:nn:z"], nns.tasks.map {|t| t.name}
   end
 end
