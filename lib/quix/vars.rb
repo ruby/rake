@@ -46,14 +46,14 @@ module Quix
       Vars.argument_cache.value = code
       vars, bind = private__eval_config_code
       vars.each { |var|
-        yield(var.to_sym, eval(var, bind))
+        yield(var.to_sym, eval(var.to_s, bind))
       }
     end
 
     def pull_ivs(&block)
       source = block.call
       hash = block.call.instance_variables.inject(Hash.new) { |acc, iv|
-        acc.update(iv.sub(%r!\A@!, "") => source.instance_variable_get(iv))
+        acc.update(iv.to_s.sub(%r!\A@!, "") => source.instance_variable_get(iv))
       }
       private__hash_to_ivs(hash, eval("self", block.binding))
     end
