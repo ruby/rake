@@ -12,7 +12,7 @@ module Rake
     class << self
       # True if running on a windows system.
       def windows?
-        Config::CONFIG['host_os'] =~ /mswin/
+        Config::CONFIG['host_os'] =~ /mswin|mingw/
       end
 
       # Run a command line on windows.
