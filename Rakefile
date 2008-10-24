@@ -189,7 +189,7 @@ else
 
     s.name = 'drake'
     s.version = $package_version
-    s.summary = "Ruby based make-like utility."
+    s.summary = "A fork of Rake supporting parallel task execution."
     s.description = <<-EOF
       Rake is a Make-like program implemented in Ruby. Tasks
       and dependencies are specified in standard Ruby syntax. 
