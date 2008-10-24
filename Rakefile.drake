@@ -1,8 +1,4 @@
 
-$LOAD_PATH.unshift "./contrib/comp_tree/contrib/quix/lib"
-
-require 'quix/subpackager'
-require 'quix/fileutils'
 require 'fileutils'
 
 ######################################################################
