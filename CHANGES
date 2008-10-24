@@ -1,6 +1,13 @@
 
 = Rake Changelog
 
+== Pre-Version 0.8.4
+
+* Preserve case when locating rakefiles (patch from James
+  M. Lawrence/quix)
+* Better support for windows paths in the test task (patch from Simon
+  Chiang/bahuvrihi)
+
 == Version 0.8.3
 
 * Enhanced the system directory detection in windows. We now check

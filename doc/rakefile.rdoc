@@ -1,4 +1,4 @@
-= Rakefile Format (as of version 0.8.2)
+= Rakefile Format (as of version 0.8.3)
 
 First of all, there is no special format for a Rakefile.  A Rakefile
 contains executable Ruby code.  Anything legal in a ruby script is
@@ -225,8 +225,8 @@ where we specify default values for the first and last names:
 === Tasks that Expect Parameters and Have Prerequisites
 
 Tasks that use parameters have a slightly different format for
-prerequisites.  Use the <tt>:needs</tt> keyword to specify the
-prerequisites for tasks with arguments.  For example:
+prerequisites.  Use the arrow notation to indicate the prerequisites
+for tasks with arguments.  For example:
 
    task :name, [:first_name, :last_name] => [:pre_name] do |t, args|
      args.with_defaults(:first_name => "John", :last_name => "Dough")
@@ -237,7 +237,7 @@ prerequisites for tasks with arguments.  For example:
 === Deprecated Task Parameters Format
 
 There is an older format for declaring task parameters that omitted
-the task array and used the :needs keyword to introduce the
+the task argument array and used the :needs keyword to introduce the
 dependencies.  That format is still supported for compatibility, but
 is not recommended for use.
 

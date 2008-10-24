@@ -1740,9 +1740,9 @@ module Rake
       @task_manager.lookup(name, @scope)
     end
 
-    # Return the list of tasks defined in this namespace.
+    # Return the list of tasks defined in this and nested namespaces.
     def tasks
-      @task_manager.tasks
+      @task_manager.tasks_in_scope(@scope)
     end
   end # NameSpace
 
@@ -1895,6 +1895,15 @@ module Rake
     # List of all defined tasks in this application.
     def tasks
       @tasks.values.sort_by { |t| t.name }
+    end
+
+    # List of all the tasks defined in the given scope (and its
+    # sub-scopes).
+    def tasks_in_scope(scope)
+      prefix = scope.join(":")
+      tasks.select { |t|
+        /^#{prefix}:/ =~ t.name
+      }
     end
 
     # Clear all tasks in this application.
@@ -2158,7 +2167,10 @@ module Rake
     # If a match is found, it is copied into @rakefile.
     def have_rakefile
       @rakefiles.each do |fn|
-        if File.exist?(fn) || fn == ''
+        if File.exist?(fn)
+          others = Dir.glob(fn, File::FNM_CASEFOLD)
+          return others.size == 1 ? others.first : fn
+        elsif fn == ''
           return fn
         end
       end

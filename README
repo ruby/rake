@@ -152,7 +152,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 = RAKE -- Ruby Make -- <em>master branch</em>
 
-Supporting Rake version: 0.8.2
+Supporting Rake version: 0.8.3
 
 This package contains Rake, a simple ruby build program with
 capabilities similar to make.
@@ -184,6 +184,17 @@ Rake is currently hosted at github. The github web page is
 http://github.com/jimweirich/rake. The public git clone URL is
 
 * git://github.com/jimweirich/rake.git
+
+== Issues and Bug Reports
+
+Bugs, features requests and other issues can be logged at
+
+* http://onestepback.org/redmine/projects/show/rake.
+
+You will need an account to before you can post issues.  Register at
+http://onestepback.org/redmine/account/register.  Or you can send me
+an email (at jim dot weirich at gmail dot com)
+
 
 == Installation
 
@@ -305,7 +316,7 @@ new feature to be submitted in the form of new unit tests.
 
 For other information, feel free to ask on the ruby-talk mailing list
 (which is mirrored to comp.lang.ruby) or contact
-mailto:jim@weirichhouse.org.
+jim dot weirich at gmail.com.
 
 ----
 
@@ -423,7 +434,7 @@ for details on the Rakefile format.
 
 = Other stuff
 
-Author::   Jim Weirich <jim@weirichhouse.org>
+Author::   Jim Weirich <jim.weirich@gmail.com>
 Requires:: Ruby 1.8.0 or later
 License::  Copyright 2003, 2004 by Jim Weirich.
            Released under an MIT-style license.  See the LICENSE file

@@ -95,7 +95,7 @@ module Rake
 
     # Create the tasks defined by this task lib.
     def define
-      lib_path = @libs.join(File::PATH_SEPARATOR)
+      lib_path = @libs.collect {|path| "-I\"#{File.expand_path(path)}\""}.join(' ')
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
         run_code = ''
@@ -109,7 +109,7 @@ module Rake
             when :rake
               rake_loader
             end
-          @ruby_opts.unshift( "-I#{lib_path}" )
+          @ruby_opts.unshift( lib_path )
           @ruby_opts.unshift( "-w" ) if @warning
           ruby @ruby_opts.join(" ") +
             " \"#{run_code}\" " +
