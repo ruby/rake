@@ -23,7 +23,7 @@ or equivalently,
 Drake is 100% compatible with Rake.  The code path for
 <tt>--threads=1</tt> is effectively identical to that of Rake's.
 Drake passes all of Rake's unit tests, with any number of threads from
-1 to 1000 (that's the most I tested).
+1 to 1000 (the most tested).
 
 === Dependencies
 
@@ -54,8 +54,8 @@ complete; can't do _z_ until _y_ is complete; can't do _y_ until _x_
 is complete; therefore do _x_."  In this fashion the sequence
 _x_,_y_,_z_ is enforced.
 
-The problem of insufficient dependencies plagues Makefiles as well.
-Package maintainers affectionately call it "not j-safe."
+The problem of insufficient dependencies plagues Makefiles as well,
+and is sometimes called "not j-safe".
 
 === MultiTask
 
@@ -85,34 +85,23 @@ If on the other hand your build takes twenty minutes to complete, you
 may be interested in investing some time getting the full dependency
 tree correct in order to take advantage of multiple CPUs or cores.
 
-Though there is no way for Drake to fathom what <em>you</em> mean by a
-correct dependency, there is a tool available which helps you get
-closer to saying what you mean.
+Though Drake cannot fathom what <em>you</em> mean by a correct
+dependency, there is a tool available which may help you get closer to
+saying what you mean:
 
   % drake --rand[=SEED]
 
 This will randomize the order of sibling prerequisites for each task.
 When given the optional SEED string, it will call
-<tt>srand(SEED.hash)</tt> to produce the same permutation each time
-(String#hash produces the integer which is the seed).  The randomize
-option also disables +multitask+, making it a regular unthreaded
-+task+.
+<tt>srand(SEED.hash)</tt> to produce the same permutation each time.
+The randomize option also disables +multitask+, making it a regular
++task+.  (In multi-threaded mode, +multitask+ is already a regular
++task+.)
 
-Though this option may produce an error due to an unspecified
-dependency, at least it will be an error which is exactly the same on
-each run (with SEED).  In addition, you'll have the major debugging
+Though this option may produce an error due to unspecified
+dependencies, with SEED at least it will be an error which is exactly
+the same on each run.  In addition you'll have the major debugging
 advantage of using a single thread.
-
-This option will also work in multi-threaded mode.  After all, once
-<tt>-jN</tt> is running smoothly there is <em>still</em> no guarantee
-that you have it right.  However with each successful execution of
-<tt>drake -jN --rand</tt>, the probability of correctness approaches 1
-(though asymptotically so).
-
-(The only way to <em>prove</em> correctness is to test <em>all</em>
-such permutations, which for any non-trivial project would be
-prohibitively large, especially those which meaningfully benefit from
-<tt>-j</tt>.)
 
 == Links
 
