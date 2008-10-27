@@ -10,7 +10,7 @@ module Rake
   #
   # The RDocTask will create the following targets:
   #
-  # [<b><em>rdoc</em></b>]
+  # [<b>:<em>rdoc</em></b>]
   #   Main task for this RDOC task.  
   #
   # [<b>:clobber_<em>rdoc</em></b>]
@@ -21,12 +21,17 @@ module Rake
   #   Rebuild the rdoc files from scratch, even if they are not out
   #   of date.
   #
-  # Simple Example:
+  # Simple example:
   #
   #   Rake::RDocTask.new do |rd|
   #     rd.main = "README.rdoc"
   #     rd.rdoc_files.include("README.rdoc", "lib/**/*.rb")
   #   end
+  #
+  # The +rd+ object passed to the block is an RDocTask object. See the
+  # attributes list for the RDocTask class for available customization options.
+  #
+  # == Specifying different task names
   #
   # You may wish to give the task a different name, such as if you are
   # generating two sets of documentation.  For instance, if you want to have a
@@ -39,7 +44,7 @@ module Rake
   #   end
   #
   # The tasks would then be named :<em>rdoc_dev</em>, :clobber_<em>rdoc_dev</em>, and
-  # :re<em>rdoc_dev</em>.
+  # :re<em>rdoc_dev</em>. 
   #
   class RDocTask < TaskLib
     # Name of the main, top level task.  (default is :rdoc)
@@ -48,7 +53,7 @@ module Rake
     # Name of directory to receive the html output files. (default is "html")
     attr_accessor :rdoc_dir
 
-    # Title of RDoc documentation. (default is none)
+    # Title of RDoc documentation. (defaults to rdoc's default)
     attr_accessor :title
 
     # Name of file to be used as the main, top level file of the
@@ -61,10 +66,10 @@ module Rake
     # List of files to be included in the rdoc generation. (default is [])
     attr_accessor :rdoc_files
 
-    # List of options to be passed rdoc.  (default is [])
+    # Additional list of options to be passed rdoc.  (default is [])
     attr_accessor :options
 
-    # Run the rdoc process as an external shell (default is false)
+    # Whether to run the rdoc process as an external shell (default is false)
     attr_accessor :external
 
     # Create an RDoc task named <em>rdoc</em>.  Default task name is +rdoc+.
