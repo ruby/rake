@@ -284,7 +284,7 @@ for details on the Rakefile format.
 
 Author::   Jim Weirich <jim.weirich@gmail.com>
 Requires:: Ruby 1.8.0 or later
-License::  Copyright 2003, 2004 by Jim Weirich.
+License::  Copyright 2003-2008 by Jim Weirich.
            Released under an MIT-style license.  See the LICENSE file
            included in the distribution.
 
