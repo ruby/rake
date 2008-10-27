@@ -63,4 +63,26 @@ class TestRDocTask < Test::Unit::TestCase
       assert_match(/foo/, e.message)
     end
   end
+  
+  def test_inline_source_is_enabled_by_default
+    rd = Rake::RDocTask.new
+    assert rd.option_list.include?('--inline-source')
+  end
+  
+  def test_inline_source_option_is_only_appended_if_option_not_already_given
+    rd = Rake::RDocTask.new
+    rd.options << '--inline-source'
+    assert_equal 1, rd.option_list.grep('--inline-source').size
+    
+    rd = Rake::RDocTask.new
+    rd.options << '-S'
+    assert_equal 1, rd.option_list.grep('-S').size
+    assert_equal 0, rd.option_list.grep('--inline-source').size
+  end
+  
+  def test_inline_source_option_can_be_disabled
+    rd = Rake::RDocTask.new
+    rd.inline_source = false
+    assert !rd.option_list.include?('--inline-source')
+  end
 end

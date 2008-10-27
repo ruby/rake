@@ -129,14 +129,25 @@ end
 # Create a task to build the RDOC documentation tree.
 
 rd = Rake::RDocTask.new("rdoc") { |rdoc|
+  if rdoc.respond_to?(:before_running_rdoc)
+    # This RDocTask method has only been added recently.
+    rdoc.before_running_rdoc do
+      begin
+        require 'rubygems'
+        require 'hanna/rdoc_version'
+        Hanna::require_rdoc
+        rdoc.template = 'hanna'
+      rescue LoadError
+        warn "*** WARNING: The Hanna RDoc template is not installed. Will now use the Jamis template. Type 'gem install mislav-hanna' if you want to install the Hanna."
+      end
+    end
+  end
   rdoc.rdoc_dir = 'html'
-#  rdoc.template = 'kilmer'
-#  rdoc.template = 'css2'
   rdoc.template = 'doc/jamis.rb'
   rdoc.title    = "Rake -- Ruby Make"
   rdoc.options << '--line-numbers' << '--inline-source' <<
-    '--main' << 'README' <<
-    '--title' <<  'Rake -- Ruby Make' 
+    '--main'  << 'README' <<
+    '--title' << 'Rake -- Ruby Make'
   rdoc.rdoc_files.include('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
   rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
   rdoc.rdoc_files.exclude(/\bcontrib\b/)

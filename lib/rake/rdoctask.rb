@@ -81,6 +81,8 @@ module Rake
 
     # Whether to run the rdoc process as an external shell (default is false)
     attr_accessor :external
+    
+    attr_accessor :inline_source
 
     # Create an RDoc task with the given name. See the RDocTask class overview
     # for documentation.
@@ -99,6 +101,7 @@ module Rake
       @title = nil
       @template = nil
       @external = false
+      @inline_source = true
       @options = []
       yield self if block_given?
       define
@@ -127,6 +130,7 @@ module Rake
       task rdoc_task_name => [rdoc_target]
       file rdoc_target => @rdoc_files + [Rake.application.rakefile] do
         rm_r @rdoc_dir rescue nil
+        @before_running_rdoc.call if @before_running_rdoc
         args = option_list + @rdoc_files
         if @external
           argstring = args.join(' ')
@@ -145,6 +149,7 @@ module Rake
       result << "--main" << quote(main) if main
       result << "--title" << quote(title) if title
       result << "-T" << quote(template) if template
+      result << "--inline-source" if inline_source && !@options.include?("--inline-source") && !@options.include?("-S")
       result
     end
 
@@ -159,9 +164,16 @@ module Rake
     def option_string
       option_list.join(' ')
     end
+    
+    # The block passed to this method will be called just before running the
+    # RDoc generator. It is allowed to modify RDocTask attributes inside the
+    # block.
+    def before_running_rdoc(&block)
+      @before_running_rdoc = block
+    end
 
     private
-
+    
     def rdoc_target
       "#{rdoc_dir}/index.html"
     end
