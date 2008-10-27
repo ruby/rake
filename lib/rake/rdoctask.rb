@@ -46,6 +46,16 @@ module Rake
   # The tasks would then be named :<em>rdoc_dev</em>, :clobber_<em>rdoc_dev</em>, and
   # :re<em>rdoc_dev</em>. 
   #
+  # If you wish to have completely different task names, then pass a Hash as
+  # first argument. With the <tt>:rdoc</tt>, <tt>:clobber_rdoc</tt> and
+  # <tt>:rerdoc</tt> options, you can customize the task names to your liking.
+  # For example:
+  #
+  #   Rake::RDocTask.new(:rdoc => "rdoc", :clobber_rdoc => "rdoc:clean", :rerdoc => "rdoc:force")
+  #
+  # This will create the tasks <tt>:rdoc</tt>, <tt>:rdoc_clean</tt> and
+  # <tt>:rdoc:force</tt>.
+  #
   class RDocTask < TaskLib
     # Name of the main, top level task.  (default is :rdoc)
     attr_accessor :name
@@ -72,8 +82,16 @@ module Rake
     # Whether to run the rdoc process as an external shell (default is false)
     attr_accessor :external
 
-    # Create an RDoc task named <em>rdoc</em>.  Default task name is +rdoc+.
-    def initialize(name=:rdoc)  # :yield: self
+    # Create an RDoc task with the given name. See the RDocTask class overview
+    # for documentation.
+    def initialize(name = :rdoc)  # :yield: self
+      if name.is_a?(Hash)
+        invalid_options = name.keys.map { |k| k.to_sym } - [:rdoc, :clobber_rdoc, :rerdoc]
+        if !invalid_options.empty?
+          raise ArgumentError, "Invalid option(s) passed to RDocTask.new: #{invalid_options.join(", ")}"
+        end
+      end
+      
       @name = name
       @rdoc_files = Rake::FileList.new
       @rdoc_dir = 'html'
@@ -88,25 +106,25 @@ module Rake
     
     # Create the tasks defined by this task lib.
     def define
-      if name.to_s != "rdoc"
+      if rdoc_task_name != "rdoc"
         desc "Build the RDOC HTML Files"
+      else
+        desc "Build the #{rdoc_task_name} HTML Files"
       end
-
-      desc "Build the #{name} HTML Files"
-      task name
+      task rdoc_task_name
       
       desc "Force a rebuild of the RDOC files"
-      task "re#{name}" => ["clobber_#{name}", name]
+      task rerdoc_task_name => [clobber_task_name, rdoc_task_name]
       
       desc "Remove rdoc products" 
-      task "clobber_#{name}" do
+      task clobber_task_name do
         rm_r rdoc_dir rescue nil
       end
       
-      task :clobber => ["clobber_#{name}"]
+      task :clobber => [clobber_task_name]
       
       directory @rdoc_dir
-      task name => [rdoc_target]
+      task rdoc_task_name => [rdoc_target]
       file rdoc_target => @rdoc_files + [Rake.application.rakefile] do
         rm_r @rdoc_dir rescue nil
         args = option_list + @rdoc_files
@@ -146,6 +164,33 @@ module Rake
 
     def rdoc_target
       "#{rdoc_dir}/index.html"
+    end
+    
+    def rdoc_task_name
+      case name
+      when Hash
+        (name[:rdoc] || "rdoc").to_s
+      else
+        name.to_s
+      end
+    end
+    
+    def clobber_task_name
+      case name
+      when Hash
+        (name[:clobber_rdoc] || "clobber_rdoc").to_s
+      else
+        "clobber_#{name}"
+      end
+    end
+    
+    def rerdoc_task_name
+      case name
+      when Hash
+        (name[:rerdoc] || "rerdoc").to_s
+      else
+        "re#{name}"
+      end
     end
 
   end
