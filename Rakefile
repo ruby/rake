@@ -132,6 +132,7 @@ rd = Rake::RDocTask.new("rdoc") { |rdoc|
   if rdoc.respond_to?(:before_running_rdoc)
     # This RDocTask method has only been added recently.
     rdoc.before_running_rdoc do
+      puts "DBG: BEFORE RDOC"
       begin
         require 'rubygems'
         require 'hanna/rdoc_version'
@@ -143,7 +144,7 @@ rd = Rake::RDocTask.new("rdoc") { |rdoc|
     end
   end
   rdoc.rdoc_dir = 'html'
-  rdoc.template = 'doc/jamis.rb'
+#  rdoc.template = 'doc/jamis.rb'
   rdoc.title    = "Rake -- Ruby Make"
   rdoc.options << '--line-numbers' << '--inline-source' <<
     '--main'  << 'README' <<
