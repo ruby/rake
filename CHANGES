@@ -1,12 +1,24 @@
 
 = Rake Changelog
 
-== Pre-Version 0.8.4
+== Version 0.8.4
 
 * Preserve case when locating rakefiles (patch from James
   M. Lawrence/quix)
+
 * Better support for windows paths in the test task (patch from Simon
   Chiang/bahuvrihi)
+
+* Windows system dir search order is now: HOME, HOMEDRIVE + HOMEPATH,
+  APPDATA, USERPROFILE (patch from Luis Lavena)
+
+* MingGW is now recognized as a windows platform.  (patch from Luis
+  Lavena)
+
+* Numerous fixes to the windows test suite (patch from Luis Lavena).
+
+* Improved Rakefile case insensitivity testing (patch from Luis
+  Lavena).
 
 == Version 0.8.3
 
