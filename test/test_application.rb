@@ -110,7 +110,7 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_finding_rakefile
-    assert_match("Rakefile", @app.instance_eval { have_rakefile })
+    assert_match(/Rakefile/i, @app.instance_eval { have_rakefile })
   end
 
   def test_not_finding_rakefile
@@ -171,9 +171,9 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_load_from_system_rakefile_on_unix
-    flexmock(@app, :windows? => false,
-      :win32_system_dir => nil,
-      :load => nil)
+    flexmock(Rake::Win32, :windows? => false,
+      :win32_system_dir => nil)
+    flexmock(@app, :load => nil)
     flexmock(File).should_receive(:expand_path).with("~").and_return("/HOME")
     flexmock(File).should_receive(:expand_path).and_return { |fn| fn }
     
@@ -196,9 +196,9 @@ class TestApplication < Test::Unit::TestCase
   def test_load_from_system_rakefile_on_windows
     flexmock(Rake::Win32, :windows? => true)
     flexmock(@app, :standard_system_dir => "XX")
-    flexmock(@app).should_receive(:directory?).with("/AD/Rake").and_return(true)
     flexmock(@app).should_receive(:load).and_return(nil)
-    in_environment('RAKE_SYSTEM' => nil, 'APPDATA' => '/AD') do
+    flexmock(File).should_receive(:directory?).with("D:/AD/Rake").and_return(true)
+    in_environment('RAKE_SYSTEM' => nil, 'HOME' => nil, 'HOMEDRIVE' => 'D:', 'HOMEPATH' => '\\AD') do
       @app.options.rakelib = []
       @app.instance_eval do
         handle_options
@@ -206,7 +206,7 @@ class TestApplication < Test::Unit::TestCase
         options.load_system = true
         load_rakefile
       end
-      assert_equal "/AD/Rake", @app.system_dir
+      assert_equal "D:/AD/Rake", @app.system_dir
     end
   end
 

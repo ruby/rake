@@ -12,7 +12,7 @@ module Rake
     class << self
       # True if running on a windows system.
       def windows?
-        Config::CONFIG['host_os'] =~ /mswin/
+        Config::CONFIG['host_os'] =~ /mswin|mingw/
       end
 
       # Run a command line on windows.
@@ -28,22 +28,25 @@ module Rake
       # Win 32 systems. Try the following environment variables (in
       # order):
       #
-      # * APPDATA
+      # * HOME
       # * HOMEDRIVE + HOMEPATH
+      # * APPDATA
       # * USERPROFILE
       #
       # If the above are not defined, the return nil.
       def win32_system_dir #:nodoc:
-        win32_shared_path = ENV['APPDATA']
+        win32_shared_path = ENV['HOME']
         if win32_shared_path.nil? && ENV['HOMEDRIVE'] && ENV['HOMEPATH']
           win32_shared_path = ENV['HOMEDRIVE'] + ENV['HOMEPATH']
         end
+
+        win32_shared_path ||= ENV['APPDATA']
         win32_shared_path ||= ENV['USERPROFILE']
         raise Win32HomeError, "Unable to determine home path environment variable." if
           win32_shared_path.nil? or win32_shared_path.empty?
         normalize(File.join(win32_shared_path, 'Rake'))
       end
-      
+
       # Normalize a win32 path so that the slashes are all forward slashes.
       def normalize(path)
         path.gsub(/\\/, '/')
