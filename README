@@ -15,66 +15,115 @@ Rake has the following features:
 
 * Rake supports rule patterns to synthesize implicit tasks.
 
-*  Flexible FileLists that act like arrays but know about manipulating
-   file names and paths.
+* Flexible FileLists that act like arrays but know about manipulating
+  file names and paths.
 
-* A library of prepackaged tasks to make building rakefiles easier.
+* A library of prepackaged tasks to make building rakefiles easier. For example,
+  tasks for building tarballs, gems and RDoc output are provided.
 
-== Download
+* Supports parallel execution of tasks.
 
-The latest version of rake can be found at
+
+== Installation
+
+=== Gem Installation
+
+Download and install  rake with the following.
+
+   gem install rake
+
+=== Normal Installation
+
+You can download the source tarball of the latest version of Rake from
 
 * http://rubyforge.org/project/showfiles.php?group_id=50
 
-== Source Repository
+Extract the tarball and run
+
+  % ruby install.rb
+
+from its distribution directory.
+
+== Usage
+
+=== Simple Example
+
+First, you must write a "Rakefile" file which contains the build rules. Here's
+a simple example:
+
+  task :default => [:test]
+  
+  task :test do
+    ruby "test/unittest.rb"
+  end
+
+This Rakefile has two tasks:
+
+* A task named "test", which - upon invocation - will run a unit test file in
+  Ruby.
+* A task named "default". This task does nothing by itself, but it has exactly
+  one dependency, namely the "test" task. Invoking the "default" task will
+  cause Rake to invoke the "test" task as well.
+
+Running the "rake" command without any options will cause it to run the
+"default" task in the Rakefile:
+
+  % ls
+  Rakefile     test/
+  % rake
+  (in /home/some_user/Projects/rake)
+  ruby test/unittest.rb
+  ....unit test output here...
+
+Type "rake --help" for all available options.
+
+
+=== More Information
+
+* For details on Rake's command-line invocation, read
+  doc/command_line_usage.rdoc[http://rake.rubyforge.org/files/doc/command_line_usage_rdoc.html]
+* For details on writing Rakefiles, see
+  doc/rakefile.rdoc[http://rake.rubyforge.org/files/doc/rakefile_rdoc.html].
+* For the original announcement of Rake, see
+  doc/rational.rdoc[http://rake.rubyforge.org/files/doc/rational_rdoc.html].
+* For a glossary of terms, see
+  doc/glossary.rdoc[http://rake.rubyforge.org/files/doc/glossary_rdoc.html].
+
+
+== Development
+
+=== Source Repository
 
 Rake is currently hosted at github. The github web page is
 http://github.com/jimweirich/rake. The public git clone URL is
 
 * git://github.com/jimweirich/rake.git
 
-== Issues and Bug Reports
-
-Bugs, features requests and other issues can be logged at
-
-* http://onestepback.org/redmine/projects/show/rake.
-
-You will need an account to before you can post issues.  Register at
-http://onestepback.org/redmine/account/register.  Or you can send me
-an email (at jim dot weirich at gmail dot com)
-
-
-== Installation
-
-=== Normal Installation
-
-You can install rake with the following command.
-
-  % ruby install.rb
-
-from its distribution directory.
-
-=== GEM Installation
-
-Download and install  rake with the following.
-
-   gem install --remote rake
-
 === Running the Rake Test Suite
 
 If you wish to run the unit and functional tests that come with Rake:
 
-* Install the 'session' gem in order to run the functional tests. adf
-  asdf asdf
+* Install the 'session' gem in order to run the functional tests.
 * CD into the top project directory of rake.
 * Type one of the following:
 
      rake                  # If you have a version of rake installed
      ruby -Ilib bin/rake   # If you do not have a version of rake installed.
 
+=== Issues and Bug Reports
+
+Bugs, features requests and other issues can be logged at
+
+* http://onestepback.org/redmine/projects/show/rake
+
+You will need an account to before you can post issues.  Register at
+http://onestepback.org/redmine/account/register.  Or you can send me
+an email (at jim dot weirich at gmail dot com)
+
+
 == Online Resources
 
-== Rake References
+=== Rake References
 
 * Rake Documentation Home: http://docs.rubyrake.org
 * Rake Project Page: http://rubyforge.org/projects/rake
@@ -82,47 +131,10 @@ If you wish to run the unit and functional tests that come with Rake:
 * Rake Source Code Repo:  http://github.com/jimweirich/rake
 * Rake Git Repo Clone URL: git://github.com/jimweirich/rake.git
 
-== Presentations and Articles about Rake
+=== Presentations and Articles about Rake
 
 * Jim Weirich's 2003 RubyConf presentation: http://onestepback.org/articles/buildingwithrake/
 * Martin Fowler's article on Rake: http://martinfowler.com/articles/rake.html
-
-=== Road Map
-
-* If you want to see how to invoke rake to build your projects, read on.
-* If you want to see the format of a Rakefile, see
-  doc/rakefile.rdoc[http://rake.rubyforge.org/files/doc/rakefile_rdoc.html].
-* If you want to see the original announcement of rake, see
-  doc/rational.rdoc[http://rake.rubyforge.org/files/doc/rational_rdoc.html].
-* If you want to see a glossary of terms, see
-  doc/glossary.rdoc[http://rake.rubyforge.org/files/doc/glossary_rdoc.html].
-
-== Simple Example
-
-Once installed, you can run rake as follows ...
-
-  % rake [options ...]  [VAR=VALUE ...]  [tasks...]
-
-Type "rake --help" for an up-to-date option summary.
-
-Invoking <tt>rake</tt> without any options or targets causes rake to
-look for a rakefile and invoke the default task in that rakefile.
-
-For example, given a simple rakefile like this ...
-
-  task :default => [:test]
-
-  task :test do
-    ruby "test/unittest.rb"
-  end
-
-The command 
-
-  $ rake
-
-will invoke the +default+ task.  As +default+ satisfies its
-prerequisites, the +test+ task will run the unit tests for the
-package.
 
 == Other Make Reinvisionings ...
 
@@ -165,118 +177,6 @@ new feature to be submitted in the form of new unit tests.
 For other information, feel free to ask on the ruby-talk mailing list
 (which is mirrored to comp.lang.ruby) or contact
 jim dot weirich at gmail.com.
-
-----
-
-= Usage
-
-Rake is invoked from the command line using:
-
-   % rake [<em>options</em> ...]  [<em>VAR</em>=<em>VALUE</em>]  [<em>targets</em> ...]
-
-Options are:
-
-[<tt><em>name</em>=<em>value</em></tt>]
-    Set the environment variable <em>name</em> to <em>value</em>
-    during the execution of the <b>rake</b> command.  You can access
-    the value by using ENV['<em>name</em>'].  
-
-[<tt>--classic-namespace</tt> (-n)]
-    Import the Task, FileTask, and FileCreateTask into the top-level
-    scope to be compatible with older versions of Rake.  Alternatively
-    you can include the line <code>require
-    'rake/classic_namespace'</code> in your Rakefile to get the
-    classic behavior.
-
-[<tt>--describe</tt> _pattern_ (-D)]
-    Describe the tasks (matching optional PATTERN), then exit.
-
-[<tt>--dry-run</tt> (-n)]
-    Do a dry run.  Print the tasks invoked and executed, but do not
-    actually execute any of the actions.
-
-[<tt>--execute</tt> _code_ (-e)]
-    Execute some Ruby code and exit.
-
-[<tt>--execute-print</tt> _code_ (-p)]
-    Execute some Ruby code, print the result, and exit.
-
-[<tt>--execute-continue</tt> _code_ (-p)]
-    Execute some Ruby code, then continue with normal task processing.
-
-[<tt>--help</tt>  (-H)]
-    Display some help text and exit.
-
-[<tt>--libdir</tt> _directory_  (-I)]
-    Add _directory_ to the list of directories searched for require.
-
-[<tt>--nosearch</tt>  (-N)]
-    Do not search for a Rakefile in parent directories.
-
-[<tt>--prereqs</tt>  (-P)]
-    Display a list of all tasks and their immediate prerequisites.
-
-[<tt>--quiet</tt> (-q)]
-    Do not echo commands from FileUtils.
-
-[<tt>--rakefile</tt> _filename_ (-f)]
-    Use _filename_ as the name of the rakefile. The default rakefile
-    names are +rakefile+ and +Rakefile+ (with +rakefile+ taking
-    precedence). If the rakefile is not found in the current
-    directory, +rake+ will search parent directories for a match. The
-    directory where the Rakefile is found will become the current
-    directory for the actions executed in the Rakefile.
-
-[<tt>--rakelibdir</tt> _rakelibdir_ (-R)]
-    Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')
-
-[<tt>--require</tt> _name_ (-r)]
-    Require _name_ before executing the Rakefile.
-
-[<tt>--rules</tt>]
-    Trace the rules resolution.
-
-[<tt>--silent (-s)]
-    Like --quiet, but also suppresses the 'in directory' announcement.
-
-[<tt>--system</tt> (-g)]
-    Use the system wide (global) rakefiles. The project Rakefile is
-    ignored. By default, the system wide rakefiles are used only if no
-    project Rakefile is found. On Unix-like system, the system wide
-    rake files are located in $HOME/.rake. On a windows system they
-    are stored in $APPDATA/Rake.
-
-[<tt>--no-system</tt> (-G)]
-    Use the project level Rakefile, ignoring the system-wide (global)
-    rakefiles.
-
-[<tt>--tasks</tt> (-T)]
-    Display a list of the major tasks and their comments.  Comments
-    are defined using the "desc" command.
-
-[<tt>--trace</tt> (-t)]
-    Turn on invoke/execute tracing. Also enable full backtrace on
-    errors.
-
-[<tt>--usage</tt> (-h)]
-    Display a usage message and exit.
-
-[<tt>--verbose</tt> (-v)]
-    Echo the Sys commands to standard output.
-
-[<tt>--version</tt> (-V)]
-    Display the program version and exit.
-
-In addition, any command line option of the form
-<em>VAR</em>=<em>VALUE</em> will be added to the environment hash
-<tt>ENV</tt> and may be tested in the Rakefile.
-
----
-
-= Rakefile Format
-
-See doc/rakefile.rdoc[http://rake.rubyforge.org/files/doc/rakefile_rdoc.html]
-for details on the Rakefile format.
 
 ---
 
