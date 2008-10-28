@@ -1,6 +1,6 @@
 = RAKE -- Ruby Make 
 
-Supporting Rake version: 0.8.3
+Supporting Rake version: 0.8.4
 
 This package contains Rake, a simple ruby build program with
 capabilities similar to make.
