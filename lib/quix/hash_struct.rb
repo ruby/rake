@@ -1,5 +1,5 @@
 
-require 'quix/builtin/kernel/tap'
+require 'quix/kernel'
 require 'ostruct'
 
 module Quix

@@ -1,8 +1,17 @@
 $LOAD_PATH.unshift File.dirname(__FILE__) + "/../lib"
 
 require 'quix/reverse_range'
-require 'rubygems'
-require 'spec'
+
+begin
+  require 'spec'
+rescue LoadError
+  require 'rubygems'
+  require 'spec'
+end
+
+unless RUBY_VERSION >= "1.8.7"
+  raise "test needs ruby 1.8.7 or higher"
+end
 
 ReverseRange = Quix::ReverseRange
 

@@ -1,13 +1,11 @@
 
 require 'quix/kernel'
 require 'quix/thread_local'
-require 'quix/builtin/kernel/tap'
+require 'quix/kernel'
 require 'ostruct'
 
 module Quix
   module Vars
-    include Quix::Kernel
-
     def eval_locals(code_with_locals, &block)
       code_with_locals.call.split(",").map { |name|
         # trim
@@ -121,7 +119,7 @@ module Quix
       target.instance_eval {
         hash.each_pair { |name, value|
           ivar = "@#{name}"
-          existing_value = Quix::Kernel.no_warnings {
+          existing_value = no_warnings {
             instance_variable_get(ivar)
           }
           unless existing_value.nil?

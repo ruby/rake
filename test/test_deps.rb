@@ -4,9 +4,8 @@ require 'test/unit'
 require 'quix/config'
 
 class TestDeps < Test::Unit::TestCase
-  include Quix::Config
   def test_deps
-    ruby = ruby_executable
+    ruby = Config::CONFIG["ruby_executable"]
     root = File.expand_path("#{File.dirname(__FILE__)}/../lib")
     Dir["#{root}/**/*.rb"].map { |file|
       file.

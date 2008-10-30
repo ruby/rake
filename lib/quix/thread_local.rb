@@ -4,8 +4,6 @@ require 'quix/kernel'
 
 module Quix
   class ThreadLocal
-    include Quix::Kernel
-
     def initialize(prefix = nil, &default)
       @name = gensym(prefix)
       @accessed = gensym(prefix)

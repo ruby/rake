@@ -3,11 +3,6 @@ $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
 require 'test/unit'
 require 'quix/pathname'
 
-class Pathname
-  include Quix::Pathname
-  self.extend(Quix::Pathname::Meta)
-end
-
 class TestPathname < Test::Unit::TestCase
   def test_ext
     assert_equal("a/b/c.o", Pathname.new("a/b/c.rb").ext("o").to_s)

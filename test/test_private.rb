@@ -4,9 +4,9 @@ require 'test/unit'
 require 'quix/config'
 require 'quix/kernel'
 
-if Quix::Config.version_ge("1.8.7")
+if RUBY_VERSION >= "1.8.7"
   require 'test/unit'
-  require 'quix/builtin/module/private'
+  require 'quix/module'
 
   class TestPrivate < Test::Unit::TestCase
     BODY = %{
@@ -67,7 +67,7 @@ if Quix::Config.version_ge("1.8.7")
     def test_2
       added = []
       Class.new {
-        extend(Quix::Kernel).singleton_class.instance_eval {
+        singleton_class.instance_eval {
           define_method(:method_added) { |name|
             added << name
           }
