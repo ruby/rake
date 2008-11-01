@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: rake
 version: !ruby/object:Gem::Version 
-  version: 0.8.3.1
+  version: 0.8.3.99
 platform: ruby
 authors: 
 - Jim Weirich
@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2008-09-25 00:00:00 -04:00
+date: 2008-11-01 00:00:00 -04:00
 default_executable: rake
 dependencies: []
 
@@ -24,6 +24,7 @@ extra_rdoc_files:
 - MIT-LICENSE
 - TODO
 - CHANGES
+- doc/command_line_usage.rdoc
 - doc/glossary.rdoc
 - doc/proto_rake.rdoc
 - doc/rakefile.rdoc
@@ -41,12 +42,14 @@ extra_rdoc_files:
 - doc/release_notes/rake-0.8.0.rdoc
 - doc/release_notes/rake-0.8.2.rdoc
 - doc/release_notes/rake-0.8.3.rdoc
+- doc/release_notes/rake-0.8.4.rdoc
 files: 
 - install.rb
 - CHANGES
 - MIT-LICENSE
 - Rakefile
 - README
+- TAGS
 - TODO
 - bin/rake
 - lib/rake/classic_namespace.rb
@@ -98,6 +101,7 @@ files:
 - test/test_package_task.rb
 - test/test_pathmap.rb
 - test/test_rake.rb
+- test/test_rdoc_task.rb
 - test/test_require.rb
 - test/test_rules.rb
 - test/test_task_arguments.rb
@@ -119,6 +123,7 @@ files:
 - test/data/statusreturn/Rakefile
 - test/data/unittest/Rakefile
 - test/data/unittest/subdir
+- doc/command_line_usage.rdoc
 - doc/example
 - doc/example/a.c
 - doc/example/b.c
@@ -145,6 +150,7 @@ files:
 - doc/release_notes/rake-0.8.0.rdoc
 - doc/release_notes/rake-0.8.2.rdoc
 - doc/release_notes/rake-0.8.3.rdoc
+- doc/release_notes/rake-0.8.4.rdoc
 has_rdoc: true
 homepage: http://rake.rubyforge.org
 post_install_message: 
