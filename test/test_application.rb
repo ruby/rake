@@ -232,6 +232,19 @@ class TestApplication < Test::Unit::TestCase
     end
   end
 
+  def test_handle_options__should_strip_options_from_ARGV
+    assert !@app.options.trace
+
+    valid_option = '--trace'
+    ARGV.clear
+    ARGV << valid_option
+
+    @app.handle_options
+
+    assert !ARGV.include?(valid_option)
+    assert @app.options.trace
+  end
+
   def test_good_run
     ran = false
     ARGV.clear
@@ -596,7 +609,8 @@ class TestApplicationOptions < Test::Unit::TestCase
       throw :system_exit, :exit
     end
     @app.instance_eval do
-      collect_tasks handle_options
+      handle_options
+      collect_tasks
     end
     @tasks = @app.top_level_tasks
     @app.options

@@ -1984,7 +1984,8 @@ module Rake
     def init(app_name='rake')
       standard_exception_handling do
         @name = app_name
-        collect_tasks handle_options
+        handle_options
+        collect_tasks
       end
     end
 
@@ -2287,18 +2288,18 @@ module Rake
     def handle_options
       options.rakelib = ['rakelib']
 
-      opts = OptionParser.new
-      opts.banner = "rake [-f rakefile] {options} targets..."
-      opts.separator ""
-      opts.separator "Options are ..."
-      
-      opts.on_tail("-h", "--help", "-H", "Display this help message.") do
-        puts opts
-        exit
-      end
-      
-      standard_rake_options.each { |args| opts.on(*args) }
-      parsed_argv = opts.parse(ARGV)
+      OptionParser.new do |opts|
+        opts.banner = "rake [-f rakefile] {options} targets..."
+        opts.separator ""
+        opts.separator "Options are ..."
+
+        opts.on_tail("-h", "--help", "-H", "Display this help message.") do
+          puts opts
+          exit
+        end
+
+        standard_rake_options.each { |args| opts.on(*args) }
+      end.parse!
 
       # If class namespaces are requested, set the global options
       # according to the values in the options structure.
@@ -2309,7 +2310,6 @@ module Rake
         $dryrun = options.dryrun
         $silent = options.silent
       end
-      parsed_argv
     end
 
     # Similar to the regular Ruby +require+ command, but will check
@@ -2396,9 +2396,9 @@ module Rake
     # Collect the list of tasks on the command line.  If no tasks are
     # given, return a list containing only the default task.
     # Environmental assignments are processed at this time as well.
-    def collect_tasks(argv)
+    def collect_tasks
       @top_level_tasks = []
-      argv.each do |arg|
+      ARGV.each do |arg|
         if arg =~ /^(\w+)=(.*)$/
           ENV[$1] = $2
         else
