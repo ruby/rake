@@ -749,9 +749,7 @@ module Rake
     # Is this file task needed?  Yes if it doesn't exist, or if its time stamp
     # is out of date.
     def needed?
-      return true unless File.exist?(name)
-      return true if out_of_date?(timestamp)
-      false
+      ! File.exist?(name) || out_of_date?(timestamp)
     end
 
     # Time stamp for file task.
