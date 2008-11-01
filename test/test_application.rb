@@ -163,6 +163,7 @@ class TestApplication < Test::Unit::TestCase
         handle_options
         options.silent = true
         options.load_system = true
+        options.rakelib = []
         load_rakefile
       end
       assert_equal "test/data/sys", @app.system_dir
@@ -183,6 +184,7 @@ class TestApplication < Test::Unit::TestCase
         handle_options
         options.silent = true
         options.load_system = true
+        options.rakelib = []
         load_rakefile
       end
       assert_equal "/HOME/.rake", @app.system_dir
@@ -204,6 +206,7 @@ class TestApplication < Test::Unit::TestCase
         handle_options
         options.silent = true
         options.load_system = true
+        options.rakelib = []
         load_rakefile
       end
       assert_equal "D:/AD/Rake", @app.system_dir
