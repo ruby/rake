@@ -16,6 +16,10 @@ class Pathname
     }
   end
 
+  def =~(regexp)
+    to_s =~ regexp
+  end
+
   class << self
     def join(*paths)
       Pathname.new File.join(*paths)
