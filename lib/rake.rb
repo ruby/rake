@@ -2050,7 +2050,7 @@ module Rake
         exit(1)
       rescue Exception => ex
         # Exit with error message
-        $stderr.puts "rake aborted!"
+        $stderr.puts "#{name} aborted!"
         $stderr.puts ex.message
         if options.trace
           $stderr.puts ex.backtrace.join("\n")
@@ -2099,7 +2099,7 @@ module Rake
       }
       if options.full_description
         displayable_tasks.each do |t|
-          puts "rake #{t.name_with_args}"
+          puts "#{name} #{t.name_with_args}"
           t.full_comment.split("\n").each do |line|
             puts "    #{line}"
           end
@@ -2158,7 +2158,7 @@ module Rake
     # Display the tasks and prerequisites
     def display_prerequisites
       tasks.each do |t|
-        puts "rake #{t.name}"
+        puts "#{name} #{t.name}"
         t.prerequisites.each { |pre| puts "    #{pre}" }
       end
     end
