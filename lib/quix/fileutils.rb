@@ -17,13 +17,18 @@ module FileUtils
       raise
     end
   end
+  module_function :rename_file
   
-  def replace_file(file)
+  def replace_file(file, opts = {})
     old_contents = File.read(file)
     yield(old_contents).tap { |new_contents|
-      File.open(file, "w") { |output|
-        output.print(new_contents)
-      }
+      if opts[:force] or old_contents != new_contents
+        File.open(file, "w") { |output|
+          output.print(new_contents)
+        }
+      end
     }
   end
+  module_function :replace_file
+
 end
