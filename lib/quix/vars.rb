@@ -10,8 +10,7 @@ module Quix
 
     def eval_locals(code_with_locals, &block)
       code_with_locals.call.split(",").map { |name|
-        # trim
-        name.sub(%r!\A\s+!, "").sub(%r!\s+\Z!, "")
+        name.strip
       }.each { |name|
         block.call(name, eval(name, code_with_locals.binding))
       }
