@@ -17,7 +17,7 @@ module Quix
       # is assigned a different value.
       #
       def attribute(reader, &block)
-        singleton = (class << self ; self ; end)
+        singleton = singleton_class
         singleton.instance_eval {
           #
           # Define a special reader method in the singleton class.
