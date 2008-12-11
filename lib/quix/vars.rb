@@ -6,6 +6,8 @@ require 'ostruct'
 
 module Quix
   module Vars
+    module_function
+
     def eval_locals(code_with_locals, &block)
       code_with_locals.call.split(",").map { |name|
         # trim
@@ -129,8 +131,6 @@ module Quix
         }
       }
     end
-
-    extend self
   end
 end
 

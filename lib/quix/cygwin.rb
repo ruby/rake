@@ -8,6 +8,8 @@ require 'thread'
 
 module Quix
   module Cygwin
+    module_function
+
     def run_batchfile(file, *args)
       dos_pwd_env {
         sh("cmd", "/c", dos_path(file), *args)
@@ -54,7 +56,5 @@ module Quix
         FileUtils.mv(temp_file, file)
       end
     end
-
-    extend self
   end
 end

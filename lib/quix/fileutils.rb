@@ -3,21 +3,22 @@ require 'tmpdir'
 require 'quix/kernel'
 
 module FileUtils
+  module_function
+
   def rename_file(file, new_name)
     #
     # For case-insensitive systems, we must move the file elsewhere
     # before changing case.
     #
     temp = File.join(Dir.tmpdir, File.basename(file))
-    ::FileUtils.mv(file, temp)
+    mv(file, temp)
     begin
-      ::FileUtils.mv(temp, new_name)
+      mv(temp, new_name)
     rescue
-      ::FileUtils.mv(temp, file)
+      mv(temp, file)
       raise
     end
   end
-  module_function :rename_file
   
   def replace_file(file, opts = {})
     old_contents = File.read(file)
@@ -29,6 +30,4 @@ module FileUtils
       end
     }
   end
-  module_function :replace_file
-
 end
