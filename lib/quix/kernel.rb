@@ -8,21 +8,15 @@ module Kernel
     end
   end
 
-  def call_private(method, *args, &block)
-    instance_eval { send(method, *args, &block) }
+  def let
+    yield self
   end
 
   unless respond_to? :tap
-    module Kernel
-      def tap
-        yield self
-        self
-      end
+    def tap
+      yield self
+      self
     end
-  end
-
-  def let
-    yield self
   end
 
   private
@@ -52,10 +46,11 @@ module Kernel
   end
 
   let {
+    method_name = :gensym
     mutex = Mutex.new
     count = 0
 
-    define_method(:gensym) { |*args|
+    define_method(method_name) { |*args|
       prefix =
         case args.size
         when 0
@@ -70,7 +65,8 @@ module Kernel
       mutex.synchronize {
         count += 1
       }
-      "#{prefix}_#{count}".to_sym
+      :"#{prefix}#{count}"
     }
+    private method_name
   }
 end

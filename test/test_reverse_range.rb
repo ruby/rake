@@ -9,8 +9,13 @@ rescue LoadError
   require 'spec'
 end
 
-unless RUBY_VERSION >= "1.8.7"
-  raise "test needs ruby 1.8.7 or higher"
+if RUBY_VERSION < "1.8.7"
+  require 'enumerator'
+  class Integer
+    def pred
+      self - 1
+    end
+  end
 end
 
 ReverseRange = Quix::ReverseRange
