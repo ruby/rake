@@ -199,8 +199,8 @@ class TestApplication < Test::Unit::TestCase
     flexmock(Rake::Win32, :windows? => true)
     flexmock(@app, :standard_system_dir => "XX")
     flexmock(@app).should_receive(:load).and_return(nil)
-    flexmock(File).should_receive(:directory?).with("D:/AD/Rake").and_return(true)
-    in_environment('RAKE_SYSTEM' => nil, 'HOME' => nil, 'HOMEDRIVE' => 'D:', 'HOMEPATH' => '\\AD') do
+    flexmock(File).should_receive(:directory?).with("C:/AD/Rake").and_return(true)
+    in_environment('RAKE_SYSTEM' => nil, 'HOME' => nil, 'HOMEDRIVE' => 'C:', 'HOMEPATH' => '\\AD') do
       @app.options.rakelib = []
       @app.instance_eval do
         handle_options
@@ -209,7 +209,7 @@ class TestApplication < Test::Unit::TestCase
         options.rakelib = []
         load_rakefile
       end
-      assert_equal "D:/AD/Rake", @app.system_dir
+      assert_equal "C:/AD/Rake", @app.system_dir
     end
   end
 
