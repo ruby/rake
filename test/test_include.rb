@@ -9,7 +9,7 @@ class TestInclude < Test::Unit::TestCase
     Dir.chdir(File.dirname(__FILE__)) {
       code = %q{
         $LOAD_PATH.unshift "../lib"
-        require 'quix/module'
+        require 'quix/module/include'
 
         module A
           def f ; end

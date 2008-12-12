@@ -6,7 +6,7 @@ require 'quix/kernel'
 
 if RUBY_VERSION >= "1.8.7"
   require 'test/unit'
-  require 'quix/module'
+  require 'quix/module/private'
 
   class TestPrivate < Test::Unit::TestCase
     BODY = %{
