@@ -224,18 +224,14 @@ class TestFileUtils < Test::Unit::TestCase
       end
       assert block_run, "The block must be run"
 
-      if windows?
-        puts "SKIPPING test_ruby/part 2 when in windows"
-      else
-        # This one does not get expanded
-        block_run = false
-        ruby '-e', %{exit "#{env_var}".length} do |ok, status| # " (emacs wart)
-          assert(!ok)
-          assert_equal 15, status.exitstatus
-          block_run = true
-        end
-        assert block_run, "The block must be run"
+      # This one does not get expanded
+      block_run = false
+      ruby '-e', %{exit %{#{env_var}}.length} do |ok, status| # " (emacs wart)
+        assert(!ok)
+        assert_equal env_var.length, status.exitstatus
+        block_run = true
       end
+      assert block_run, "The block must be run"
     end
   end
 
