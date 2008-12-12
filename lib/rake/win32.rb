@@ -1,3 +1,6 @@
+
+require 'rake/repaired_system'
+
 module Rake
   
   # Win 32 interface methods for Rake. Windows specific functionality
@@ -17,11 +20,7 @@ module Rake
 
       # Run a command line on windows.
       def rake_system(*cmd)
-        if cmd.size == 1
-          system("call #{cmd}")
-        else
-          system(*cmd)
-        end
+        RepairedSystem.system(*cmd)
       end
       
       # The standard directory containing system wide rake files on
