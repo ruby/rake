@@ -25,7 +25,7 @@ class TestRules < Test::Unit::TestCase
   end
 
   def teardown
-    FileList['testdata/*'].each do |f| rm_r(f, :verbose=>false) end
+    FileList['testdata/*'].uniq.each do |f| rm_r(f, :verbose=>false) end
   end
 
   def test_multiple_rules1
