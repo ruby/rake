@@ -119,20 +119,17 @@ module Rake::RepairedSystem
     end
 
     def system(cmd, *args)
+      file = cmd.to_s
       repaired_args = 
         if args.empty?
-          [repair_command(cmd)]
+          [repair_command(file)]
+        elsif file =~ BATCHFILE_PATTERN
+          [ENV["COMSPEC"], "/c", File.expand_path(file), *args]
+        elsif runnable = find_runnable(file)
+          [File.expand_path(runnable), *args]
         else
-          file = cmd.to_s
-          if file =~ BATCHFILE_PATTERN
-            [join_command(file, *args)]
-          else
-            if runnable = find_runnable(file)
-              [File.expand_path(runnable), *args]
-            else
-              [join_command(file, *args)]
-            end
-          end
+          # maybe a built-in shell command
+          [join_command(file, *args)]
         end
       if repaired_args.size == 1
         system_previous("call #{repaired_args.first}")
