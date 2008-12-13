@@ -74,7 +74,7 @@ end # module Module
 #
 class String
   rake_extension("ext") do
-    # Replace the file extension with +newext+.  If there is no extenson on
+    # Replace the file extension with +newext+.  If there is no extension on
     # the string, append the new extension to the end.  If the new extension
     # is not given, or is the empty string, remove any existing extension.
     #
@@ -1461,8 +1461,8 @@ module Rake
       collect { |fn| fn.pathmap(spec) }
     end
 
-    # Return a new array with <tt>String#ext</tt> method applied to each
-    # member of the array.
+    # Return a new file list with <tt>String#ext</tt> method applied
+    # to each member of the array.
     #
     # This method is a shortcut for:
     #
@@ -2092,7 +2092,7 @@ module Rake
       tty_output? || ENV['RAKE_COLUMNS']
     end
 
-    # Display the tasks and dependencies.
+    # Display the tasks and comments.
     def display_tasks_and_comments
       displayable_tasks = tasks.select { |t|
         t.comment && t.name =~ options.show_task_pattern
