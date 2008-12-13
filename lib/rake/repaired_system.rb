@@ -124,9 +124,9 @@ module Rake::RepairedSystem
         if args.empty?
           [repair_command(file)]
         elsif file =~ BATCHFILE_PATTERN
-          [ENV["COMSPEC"], "/c", File.expand_path(file), *args]
+          [ENV["COMSPEC"], "/c", to_backslashes(File.expand_path(file)), *args]
         elsif runnable = find_runnable(file)
-          [File.expand_path(runnable), *args]
+          [to_backslashes(File.expand_path(runnable)), *args]
         else
           # maybe a built-in shell command
           [join_command(file, *args)]
