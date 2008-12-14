@@ -2270,7 +2270,7 @@ module Rake
             verbose(true)
           }
         ],
-        ['--verbose', '-v', "Log message to standard output (default).",
+        ['--verbose', '-v', "Log message to standard output.",
           lambda { |value| verbose(true) }
         ],
         ['--version', '-V', "Display the program version.",
