@@ -2,7 +2,7 @@
 
 #--
 
-# Copyright (c) 2003, 2004, 2005, 2006, 2007  Jim Weirich
+# Copyright 2003, 2004, 2005, 2006, 2007, 2008 by Jim Weirich (jim@weirichhouse.org)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -29,7 +29,7 @@
 # as a library via a require statement, but it can be distributed
 # independently as an application.
 
-RAKEVERSION = '0.8.3.99'
+RAKEVERSION = '0.8.3.100'
 
 require 'rbconfig'
 require 'fileutils'
@@ -74,7 +74,7 @@ end # module Module
 #
 class String
   rake_extension("ext") do
-    # Replace the file extension with +newext+.  If there is no extenson on
+    # Replace the file extension with +newext+.  If there is no extension on
     # the string, append the new extension to the end.  If the new extension
     # is not given, or is the empty string, remove any existing extension.
     #
@@ -1461,8 +1461,8 @@ module Rake
       collect { |fn| fn.pathmap(spec) }
     end
 
-    # Return a new array with <tt>String#ext</tt> method applied to each
-    # member of the array.
+    # Return a new file list with <tt>String#ext</tt> method applied
+    # to each member of the array.
     #
     # This method is a shortcut for:
     #
@@ -2092,7 +2092,7 @@ module Rake
       tty_output? || ENV['RAKE_COLUMNS']
     end
 
-    # Display the tasks and dependencies.
+    # Display the tasks and comments.
     def display_tasks_and_comments
       displayable_tasks = tasks.select { |t|
         t.comment && t.name =~ options.show_task_pattern
@@ -2270,7 +2270,7 @@ module Rake
             verbose(true)
           }
         ],
-        ['--verbose', '-v', "Log message to standard output (default).",
+        ['--verbose', '-v', "Log message to standard output.",
           lambda { |value| verbose(true) }
         ],
         ['--version', '-V', "Display the program version.",

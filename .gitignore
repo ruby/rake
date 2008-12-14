@@ -2,6 +2,7 @@ TAGS
 html
 pkg
 coverage
+testdata
 *.bak
 temp_*
 x
