@@ -15,7 +15,7 @@ module Rake
     class << self
       # True if running on a windows system.
       def windows?
-        Config::CONFIG['host_os'] =~ /mswin|mingw/
+        defined? RepairedSystem
       end
 
       # Run a command line on windows.

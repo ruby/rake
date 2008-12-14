@@ -27,21 +27,11 @@ require 'rbconfig'
 module Rake
 end
 
-#
-# Alternate implementations of system() and backticks `` for Windows.
-# 
-module Rake::RepairedSystem
-  class << self
-    def define_module_function(name, &block)
-      define_method(name, &block)
-      module_function(name)
-    end
-  end
-
-  if Config::CONFIG["host_os"] !~ %r!(msdos|mswin|djgpp|mingw)!
-    define_module_function :system, &Kernel.method(:system)
-    define_module_function :'`', &Kernel.method(:'`')
-  else
+if Config::CONFIG["host_os"] =~ %r!(msdos|mswin|djgpp|mingw)!
+  #
+  # Alternate implementations of system() and backticks `` for Windows.
+  # 
+  module Rake::RepairedSystem
     BINARY_EXTS = %w[com exe]
 
     BATCHFILE_EXTS = %w[bat] +
@@ -62,22 +52,30 @@ module Rake::RepairedSystem
         end
       }
 
+    class << self
+      def define_module_function(name, &block)
+        define_method(name, &block)
+        module_function(name)
+      end
+    end
+    
     define_module_function :system_previous, &Kernel.method(:system)
     define_module_function :backticks_previous, &Kernel.method(:'`')
 
     module_function
 
     def repair_command(cmd)
-      if (match = cmd.match(%r!\A\s*\"(.*?)\"!)) or
-         (match = cmd.match(%r!\A(\S+)!))
-        if runnable = find_runnable(match.captures.first)
-          quote(to_backslashes(runnable)) + match.post_match
+      "call " +
+        if (match = cmd.match(%r!\A\s*\"(.*?)\"!)) or
+           (match = cmd.match(%r!\A(\S+)!))
+          if runnable = find_runnable(match.captures.first)
+            quote(to_backslashes(runnable)) + match.post_match
+          else
+            cmd
+          end
         else
           cmd
         end
-      else
-        cmd
-      end
     end
 
     def join_command(*args)
@@ -106,13 +104,10 @@ module Rake::RepairedSystem
       if file =~ RUNNABLE_PATTERN
         file
       else
-        [nil, ".", *ENV["PATH"].split(";")].each { |path|
-          RUNNABLE_EXTS.each { |ext|
-            test = (path ? "#{path}/" : "") + "#{file}.#{ext}"
-            if File.exist?(test)
-              return test
-            end
-          }
+        RUNNABLE_EXTS.each { |ext|
+          if File.exist?(test = "#{file}.#{ext}")
+            return test
+          end
         }
         nil
       end
@@ -128,14 +123,10 @@ module Rake::RepairedSystem
         elsif runnable = find_runnable(file)
           [to_backslashes(File.expand_path(runnable)), *args]
         else
-          # maybe a built-in shell command
-          [join_command(file, *args)]
+          # your friends can't save you now
+          args
         end
-      if repaired_args.size == 1
-        system_previous("call #{repaired_args.first}")
-      else
-        system_previous(*repaired_args)
-      end
+      system_previous(*repaired_args)
     end
 
     def `(cmd) #`
