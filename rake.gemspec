@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: rake
 version: !ruby/object:Gem::Version 
-  version: 0.8.3.99
+  version: 0.8.3.100
 platform: ruby
 authors: 
 - Jim Weirich
@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2008-11-01 00:00:00 -04:00
+date: 2008-12-13 00:00:00 -05:00
 default_executable: rake
 dependencies: []
 
@@ -49,7 +49,6 @@ files:
 - MIT-LICENSE
 - Rakefile
 - README
-- TAGS
 - TODO
 - bin/rake
 - lib/rake/classic_namespace.rb
@@ -65,6 +64,7 @@ files:
 - lib/rake/packagetask.rb
 - lib/rake/rake_test_loader.rb
 - lib/rake/rdoctask.rb
+- lib/rake/repaired_system.rb
 - lib/rake/ruby182_test_unit_fix.rb
 - lib/rake/runtest.rb
 - lib/rake/tasklib.rb
@@ -178,7 +178,7 @@ required_rubygems_version: !ruby/object:Gem::Requirement
 requirements: []
 
 rubyforge_project: rake
-rubygems_version: 1.2.0
+rubygems_version: 1.3.1
 signing_key: 
 specification_version: 2
 summary: Ruby based make-like utility.
