@@ -32,14 +32,11 @@ if Config::CONFIG["host_os"] =~ %r!(msdos|mswin|djgpp|mingw)!
   # Alternate implementations of system() and backticks `` for Windows.
   # 
   module Rake::RepairedSystem
+    COMSPEC = ENV["ComSpec"]
+
     BINARY_EXTS = %w[com exe]
 
-    BATCHFILE_EXTS = %w[bat] +
-      if (t = ENV["COMSPEC"]) and t =~ %r!command\.exe\Z!i
-        []
-      else
-        %w[cmd]
-      end
+    BATCHFILE_EXTS = %w[bat cmd]
 
     RUNNABLE_EXTS = BINARY_EXTS + BATCHFILE_EXTS
 
@@ -47,8 +44,6 @@ if Config::CONFIG["host_os"] =~ %r!(msdos|mswin|djgpp|mingw)!
       [RUNNABLE_EXTS, BINARY_EXTS, BATCHFILE_EXTS].map { |exts|
         if exts.size > 1
           %r!\.(#{exts.join('|')})\Z!i
-        else
-          %r!\.#{exts.first}\Z!i
         end
       }
 
@@ -65,27 +60,18 @@ if Config::CONFIG["host_os"] =~ %r!(msdos|mswin|djgpp|mingw)!
     module_function
 
     def repair_command(cmd)
-      "call " +
-        if (match = cmd.match(%r!\A\s*\"(.*?)\"!)) or
-           (match = cmd.match(%r!\A(\S+)!))
-          if runnable = find_runnable(match.captures.first)
-            quote(to_backslashes(runnable)) + match.post_match
+      if (match = cmd.match(%r!\A\s*\"(.*?)\"!)) or
+         (match = cmd.match(%r!\A(\S+)!))
+        "call " +
+          if runnable = find_runnable(match[1])
+            quote(runnable) + match.post_match
           else
             cmd
           end
-        else
-          cmd
-        end
-    end
-
-    def join_command(*args)
-      first =
-        if args.first =~ %r!\s!
-          quote(args.first)
-        else
-          args.first
-        end
-      [to_backslashes(first), *tail(args)].join(" ")
+      else
+        # empty or whitespace
+        cmd
+      end
     end
 
     def to_backslashes(string)
@@ -96,17 +82,13 @@ if Config::CONFIG["host_os"] =~ %r!(msdos|mswin|djgpp|mingw)!
       %Q!"#{string}"!
     end
 
-    def tail(array)
-      array[1..-1]
-    end
-
     def find_runnable(file)
       if file =~ RUNNABLE_PATTERN
         file
       else
         RUNNABLE_EXTS.each { |ext|
           if File.exist?(test = "#{file}.#{ext}")
-            return test
+            return to_backslashes(test)
           end
         }
         nil
@@ -119,11 +101,11 @@ if Config::CONFIG["host_os"] =~ %r!(msdos|mswin|djgpp|mingw)!
         if args.empty?
           [repair_command(file)]
         elsif file =~ BATCHFILE_PATTERN
-          [ENV["ComSpec"], "/c", to_backslashes(File.expand_path(file)), *args]
+          [COMSPEC, "/c", to_backslashes(File.expand_path(file)), *args]
         elsif runnable = find_runnable(file)
           [to_backslashes(File.expand_path(runnable)), *args]
         else
-          # your friends can't save you now
+          # shell command or non-existent non-batchfile
           args
         end
       system_previous(*repaired_args)
