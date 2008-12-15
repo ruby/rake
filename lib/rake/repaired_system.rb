@@ -119,7 +119,7 @@ if Config::CONFIG["host_os"] =~ %r!(msdos|mswin|djgpp|mingw)!
         if args.empty?
           [repair_command(file)]
         elsif file =~ BATCHFILE_PATTERN
-          [ENV["COMSPEC"], "/c", to_backslashes(File.expand_path(file)), *args]
+          [ENV["ComSpec"], "/c", to_backslashes(File.expand_path(file)), *args]
         elsif runnable = find_runnable(file)
           [to_backslashes(File.expand_path(runnable)), *args]
         else
