@@ -181,7 +181,7 @@ class TestTask < Test::Unit::TestCase
     out = t1.investigation
     assert_match(/class:\s*Rake::Task/, out)
     assert_match(/needed:\s*true/, out)
-    assert_match(/pre-requisites:\s*--t2/, out)
+    assert_match(/pre-requisites:\s*--t[23]/, out)
   end
 
 
