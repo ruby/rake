@@ -37,7 +37,7 @@ module Rake::AltSystem
     end
   end
     
-  if WINDOWS
+  if WINDOWS and RUBY_VERSION < "1.9.0"
     RUNNABLE_EXTS = %w[com exe bat cmd]
     RUNNABLE_PATTERN = %r!\.(#{RUNNABLE_EXTS.join('|')})\Z!i
 
