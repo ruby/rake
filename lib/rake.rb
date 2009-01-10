@@ -970,7 +970,7 @@ module FileUtils
       }
     end
     if RakeFileUtils.verbose_flag == :default
-      options[:verbose] = false
+      options[:verbose] = true
     else
       options[:verbose] ||= RakeFileUtils.verbose_flag
     end
