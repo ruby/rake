@@ -23,6 +23,8 @@
 * Fixed stray ARGV option problem that was interfering with
   Test::Unit::Runner.
 
+* Fixed default verbose mode (was accidently changed to false).  
+
 == Version 0.8.3
 
 * Enhanced the system directory detection in windows. We now check
