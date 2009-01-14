@@ -1,5 +1,4 @@
 
-require 'quix/kernel'
 require 'quix/thread_local'
 require 'quix/kernel'
 require 'ostruct'
@@ -100,8 +99,6 @@ module Quix
         end
       }
     end
-
-    private
 
     class << self
       attr_accessor :argument_cache
