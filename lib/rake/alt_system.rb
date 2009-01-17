@@ -25,7 +25,8 @@
 require 'rbconfig'
 
 #
-# Alternate implementations of system() and backticks `` for Windows.
+# Alternate implementations of system() and backticks `` on Windows
+# for ruby-1.8 and earlier.
 # 
 module Rake::AltSystem
   WINDOWS = Config::CONFIG["host_os"] =~ %r!(msdos|mswin|djgpp|mingw)!
@@ -99,7 +100,7 @@ module Rake::AltSystem
 
     define_module_function :'`', &method(:backticks)
   else
-    # Non-Windows: same as Kernel versions
+    # Non-Windows or ruby-1.9+: same as Kernel versions
     define_module_function :system, &Kernel.method(:system)
     define_module_function :backticks, &Kernel.method(:'`')
     define_module_function :'`', &Kernel.method(:'`')
