@@ -21,18 +21,20 @@ module Quix
     end
     
     def unix2dos(string)
-      string.
-        gsub("\n", "\r\n").
-        gsub(%r!\r+!, "\r")
+      string.gsub(%r![^\r]\n!) { "#{$1}\r\n" }
     end
     
+    def dos2unix(string)
+      string.gsub("\r\n", "\n")
+    end
+
     def dos_path(unix_path)
-      `cygpath -w #{normalize_path(unix_path)}`.chomp
+      `cygpath -w "#{normalize_path(unix_path)}"`.chomp
     end
   
     def unix_path(dos_path)
       escaped_path = dos_path.sub(%r!\\+\Z!, "").gsub("\\", "\\\\\\\\")
-      `cygpath #{escaped_path}`.chomp
+      `cygpath "#{escaped_path}"`.chomp
     end
     
     def dos_pwd_env
