@@ -18,6 +18,7 @@ end
   
 require 'comp_tree'
 require 'quix/config'
+require File.dirname(__FILE__) + '/use_fork'
 
 module CompTree
   class TestRaises < Test::Unit::TestCase
@@ -27,7 +28,7 @@ module CompTree
       if RUBY_PLATFORM =~ %r!java!
         puts "skipping #{File.basename(__FILE__)}."
       else
-        [true, false].each { |use_fork|
+        [use_fork?, false].each { |use_fork|
           [true, false].each { |define_all|
             assert(
               !system(
@@ -50,7 +51,7 @@ module CompTree
     end
 
     def code(use_fork, define_all)
-      %Q( 
+      %(
         $LOAD_PATH.unshift '#{LIB_DIR}'
         require 'comp_tree'
         require 'open3'
@@ -72,7 +73,7 @@ module CompTree
           }
       ) +    
       if define_all
-        %Q(
+        %(
           driver.define(:border) {
             raise CompTreeTestError
           }
@@ -80,7 +81,7 @@ module CompTree
       else
         ""
       end +
-      %Q(        
+      %(        
           driver.define(:offset) {
             7
           }

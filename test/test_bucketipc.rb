@@ -3,6 +3,7 @@ $LOAD_PATH.unshift(File.expand_path("#{File.dirname(__FILE__)}/../lib"))
 
 require 'test/unit'
 require 'comp_tree/bucket_ipc'
+require File.dirname(__FILE__) + '/use_fork'
 
 Thread.abort_on_exception = true
 
@@ -10,7 +11,7 @@ class BucketTest < Test::Unit::TestCase
   include CompTree::RetriableFork
 
   def each_bucket(num_buckets, &block)
-    if HAVE_FORK
+    if use_fork?
       CompTree::BucketIPC::Driver.new(num_buckets) { |buckets|
         buckets.each { |bucket|
           yield bucket

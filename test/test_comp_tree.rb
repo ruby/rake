@@ -5,13 +5,12 @@ require 'test/unit'
 require 'benchmark'
 
 require 'comp_tree'
+require File.dirname(__FILE__) + '/use_fork'
 
 srand(22)
 
 module CompTree
   Thread.abort_on_exception = true
-  HAVE_FORK = RetriableFork::HAVE_FORK
-  DO_FORK = (HAVE_FORK and not ARGV.include?("--no-fork"))
 
   module TestCommon
     include Diagnostic
@@ -229,7 +228,7 @@ module CompTree
     end
 
     def use_fork?
-      not opts(0)[:fork].nil?
+      opts(0)[:fork]
     end
   end
   
@@ -238,6 +237,7 @@ module CompTree
     def opts(threads)
       {
         :threads => threads,
+        :fork => false,
       }
     end
   end
@@ -247,7 +247,7 @@ module CompTree
     def opts(threads)
       {
         :threads => threads,
-        :fork => DO_FORK,
+        :fork => true,
       }
     end
   end
@@ -256,7 +256,7 @@ module CompTree
     include NoForkTestBase
   end
 
-  if DO_FORK
+  if use_fork?
     class Test_2_Fork < Test::Unit::TestCase
       include ForkTestBase
     end
@@ -288,20 +288,22 @@ module CompTree
           visit = 0
         }
 
-        (2..10).each { |threads|
-          assert_equal(
-            true,
-            driver.compute(
-              :a,
-              :threads => threads,
-              :fork => DO_FORK))
-          if DO_FORK
-            assert_equal(visit, 0)
-          else
-            assert_equal(visit, 4)
-          end
-          driver.reset(:a)
-          visit = 0
+        [false, use_fork?].each { |use_fork|
+          (2..10).each { |threads|
+            assert_equal(
+              true,
+              driver.compute(
+                :a,
+                :threads => threads,
+                :fork => use_fork))
+            if use_fork?
+              assert_equal(visit, 0)
+            else
+              assert_equal(visit, 4)
+            end
+            driver.reset(:a)
+            visit = 0
+          }
         }
       }
     end
@@ -350,12 +352,12 @@ module CompTree
       }
     end
     
-    if DO_FORK
+    if use_fork?
       def test_fork
         separator
         trace "Forking test."
         each_drain { |threads|
-          run_drain({:threads => threads, :fork => DO_FORK})
+          run_drain({:threads => threads, :fork => true})
         }
       end
     end
