@@ -9,7 +9,7 @@ module CompTree
     def compute_multithreaded(root, num_threads, use_fork, buckets)
       trace "Computing #{root.name} with #{num_threads} threads"
       result = nil
-      mutex = Mutex.new
+      tree_mutex = Mutex.new
       node_finished_condition = ConditionVariable.new
       thread_wake_condition = ConditionVariable.new
       threads = []
@@ -19,9 +19,9 @@ module CompTree
           #
           # wait for main thread
           #
-          mutex.synchronize {
+          tree_mutex.synchronize {
             trace "Thread #{thread_index} waiting to start"
-            thread_wake_condition.wait(mutex)
+            thread_wake_condition.wait(tree_mutex)
           }
 
           while true
@@ -30,7 +30,7 @@ module CompTree
             #
             # Done! Thread will exit.
             #
-            break if mutex.synchronize {
+            break if tree_mutex.synchronize {
               result
             }
 
@@ -38,7 +38,7 @@ module CompTree
             # Lock the tree and find a node.  The node we
             # obtain, if any, is already locked.
             #
-            node = mutex.synchronize {
+            node = tree_mutex.synchronize {
               find_node(root)
             }
 
@@ -51,14 +51,14 @@ module CompTree
                   use_fork,
                   buckets ? buckets[thread_index] : nil)
               
-              mutex.synchronize {
+              tree_mutex.synchronize {
                 node.result = node_result
               }
 
               #
               # remove locks for this node (shared lock and own lock)
               #
-              mutex.synchronize {
+              tree_mutex.synchronize {
                 node.unlock
                 if node == root
                   #
@@ -71,8 +71,8 @@ module CompTree
               }
             else
               trace "Thread #{thread_index}: no node found; sleeping."
-              mutex.synchronize {
-                thread_wake_condition.wait(mutex)
+              tree_mutex.synchronize {
+                thread_wake_condition.wait(tree_mutex)
               }
             end
           end
@@ -82,7 +82,7 @@ module CompTree
 
       trace "Main: waiting for threads to launch and block."
       while true
-        break if mutex.synchronize {
+        break if tree_mutex.synchronize {
           Thread.list.all? { |t|
             t == Thread.current or t.status == "sleep"
           }
@@ -91,7 +91,7 @@ module CompTree
       end
       
       trace "Main: entering main loop"
-      mutex.synchronize {
+      tree_mutex.synchronize {
         while true
           trace "Main: waking threads"
           thread_wake_condition.broadcast
@@ -102,7 +102,7 @@ module CompTree
           end
 
           trace "Main: waiting for a node"
-          node_finished_condition.wait(mutex)
+          node_finished_condition.wait(tree_mutex)
           trace "Main: got a node"
         end
       }
@@ -110,7 +110,7 @@ module CompTree
       trace "Main: waiting for threads to finish."
       catch(:done) {
         while true
-          mutex.synchronize {
+          tree_mutex.synchronize {
             throw :done if threads.all? { |thread|
               thread.status == false
             }
@@ -125,7 +125,7 @@ module CompTree
     end
 
     def find_node(node)
-      # --- only called inside mutex
+      # --- only called inside shared tree mutex
       trace "Looking for a node, starting with #{node.name}"
       if node.result
         #
