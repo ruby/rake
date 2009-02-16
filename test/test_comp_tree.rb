@@ -248,7 +248,7 @@ module CompTree
     def opts(threads)
       {
         :threads => threads,
-        :fork => HAVE_FORK,
+        :fork => DO_FORK,
       }
     end
   end
@@ -295,8 +295,8 @@ module CompTree
             driver.compute(
               :a,
               :threads => threads,
-              :fork => HAVE_FORK))
-          if HAVE_FORK
+              :fork => DO_FORK))
+          if DO_FORK
             assert_equal(visit, 0)
           else
             assert_equal(visit, 4)
@@ -356,7 +356,7 @@ module CompTree
         separator
         trace "Forking test."
         each_drain { |threads|
-          run_drain({:threads => threads, :fork => HAVE_FORK})
+          run_drain({:threads => threads, :fork => DO_FORK})
         }
       end
     end
