@@ -16,14 +16,13 @@ module CompTree
   module TestCommon
     include Diagnostic
 
-    if  ARGV.include?("--bench")
+    if ARGV.include?("--bench")
       def separator
         trace ""
         trace "-"*60
       end
     else
       def separator ; end
-      def trace(*args) ; end
     end
   end
 
@@ -120,7 +119,7 @@ module CompTree
         end
       (1..max).each { |threads|
         CompTree::Driver.new { |driver|
-          drain = lambda {
+          drain = lambda { |*args|
             1.times { }
           }
           driver.define_a(:b, &drain)
@@ -159,12 +158,12 @@ module CompTree
       CompTree::Driver.new { |driver|
         root = :aaa
         last_name = root
-        pick_names = lambda {
+        pick_names = lambda { |*args|
           (0..rand(num_children)).map {
             last_name = last_name.to_s.succ.to_sym
           }
         }
-        drain = lambda {
+        drain = lambda { |*args|
           drain_iterations.times {
           }
         }
@@ -268,7 +267,7 @@ module CompTree
       CompTree::Driver.new(:discard_result => true) { |driver|
         visit = 0
         mutex = Mutex.new
-        func = lambda {
+        func = lambda { |*args|
           mutex.synchronize {
             visit += 1
           }
@@ -322,7 +321,7 @@ module CompTree
     
     def run_drain(opts)
       CompTree::Driver.new { |driver|
-        func = lambda {
+        func = lambda { |*args|
           drain(opts)
         }
         driver.define_area(:width, :height, :offset, &func)
