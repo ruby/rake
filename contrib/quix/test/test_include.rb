@@ -5,13 +5,11 @@ require 'open3'
 require 'quix/config'
 
 class TestInclude < Test::Unit::TestCase
-  include Quix::Config
-
   def test_include
     Dir.chdir(File.dirname(__FILE__)) {
       code = %q{
         $LOAD_PATH.unshift "../lib"
-        require 'quix/builtin/module/include'
+        require 'quix/module/include'
 
         module A
           def f ; end
@@ -31,7 +29,7 @@ class TestInclude < Test::Unit::TestCase
           include A
         end
       }
-      ruby = ruby_executable
+      ruby = Config::CONFIG["ruby_executable"]
       begin
         stdin, stdout, stderr = Open3.popen3("#{ruby} -d -")
         stdin.puts(code)

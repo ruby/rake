@@ -17,7 +17,7 @@ module Quix
 
     }.gsub(%r!^ +!, "")
   
-    def self.run(packages)
+    def self.run(packages, warning = WARNING)
       HashStruct.recursive_new(packages).each_pair { |pkg, pkg_spec|
         pkg_spec.subpackages.each_pair { |subpkg, subpkg_spec|
           process_path = lambda { |path|

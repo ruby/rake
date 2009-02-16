@@ -4,7 +4,6 @@ require 'thread'
 
 require 'comp_tree/retriable_fork'
 require 'comp_tree/diagnostic'
-require 'comp_tree/tap'
 
 module CompTree
   module BucketIPC
@@ -114,11 +113,11 @@ module CompTree
           end
 
           def map_indexes(num_buckets)
-            Array.new.tap { |result|
-              num_buckets.times {
-                result << yield(increment_count)
-              }
+            result = []
+            num_buckets.times {
+              result << yield(increment_count)
             }
+            result
           end
         end
       end

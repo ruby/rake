@@ -1,8 +1,10 @@
 
-require 'comp_tree/tap'
+require 'comp_tree/misc'
 
 module CompTree
   module Diagnostic
+    module_function
+
     def show(desc = nil, stream = STDOUT, &block)
       if desc
         stream.puts(desc)
@@ -37,8 +39,6 @@ module CompTree
       def debugging? ; end
       def trace(*args) ; end
     end
-
-    extend self
   end
 end
 

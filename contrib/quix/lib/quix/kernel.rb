@@ -2,60 +2,91 @@
 require 'thread'
 
 module CompTree
-  module Misc
-    module_function
+end
 
-    def let
+module CompTree::Misc
+  def singleton_class
+    class << self
+      self
+    end
+  end
+
+  def let
+    yield self
+  end
+
+  unless respond_to? :tap
+    def tap
       yield self
+      self
     end
+  end
 
-    def singleton_class
-      class << self
-        self
-      end
+  private
+
+  def with_warnings(value = true)
+    previous = $VERBOSE
+    $VERBOSE = value
+    begin
+      yield
+    ensure
+      $VERBOSE = previous
     end
+  end
 
-    module Gensym
-      @mutex = Mutex.new
-      @count = 0
+  def no_warnings(&block)
+    with_warnings(false, &block)
+  end
 
-      def gensym(prefix = nil)
-        count = Gensym.module_eval {
-          @mutex.synchronize {
-            @count += 1
-          }
-        }
-        "#{prefix || :G}_#{count}".to_sym
-      end
+  def abort_on_exception(value = true)
+    previous = Thread.abort_on_exception
+    Thread.abort_on_exception = value
+    begin
+      yield
+    ensure
+      Thread.abort_on_exception = previous
     end
-    include Gensym
+  end
 
-    def call_private(method, *args, &block)
-      instance_eval { send(method, *args, &block) }
+  def system2(*args)
+    unless system(*args)
+      raise "system() failed with exit status #{$?.exitstatus}"
     end
+  end
 
-    def with_warnings(value = true)
-      previous = $VERBOSE
-      $VERBOSE = value
-      begin
-        yield
-      ensure
-        $VERBOSE = previous
-      end
-    end
+  lambda {
+    method_name = :gensym
+    mutex = Mutex.new
+    count = 0
 
-    def no_warnings(&block)
-      with_warnings(false, &block)
-    end
-
-    def loop_with(done, restart)
-      catch(done) {
-        while true
-          catch(restart) {
-            yield
-          }
+    define_method(method_name) { |*args|
+      # workaround for no default args
+      prefix =
+        case args.size
+        when 0
+          :G
+        when 1
+          args.first
+        else
+          raise ArgumentError,
+            "wrong number of arguments (#{args.size} for 1)"
         end
+
+      mutex.synchronize {
+        count += 1
       }
-    end
+      :"#{prefix}#{count}"
+    }
+    private method_name
+  }.call
+
+  def loop_with(done = gensym, restart = gensym)
+    catch(done) {
+      while true
+        catch(restart) {
+          yield(done, restart)
+        }
+      end
+    }
   end
 end

@@ -1,4 +1,8 @@
 
+#
+# scoped private sections:
+#   private { def f ; end }
+#
 class Module
   alias_method :private__original, :private
   def private(*args, &block)
@@ -38,4 +42,3 @@ class Module
     end
   end
 end
-

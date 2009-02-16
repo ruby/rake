@@ -8,6 +8,8 @@ require 'thread'
 
 module Quix
   module Cygwin
+    module_function
+
     def run_batchfile(file, *args)
       dos_pwd_env {
         sh("cmd", "/c", dos_path(file), *args)
@@ -19,18 +21,20 @@ module Quix
     end
     
     def unix2dos(string)
-      string.
-        gsub("\n", "\r\n").
-        gsub(%r!\r+!, "\r")
+      string.gsub(%r![^\r]\n!) { "#{$1}\r\n" }
     end
     
+    def dos2unix(string)
+      string.gsub("\r\n", "\n")
+    end
+
     def dos_path(unix_path)
-      `cygpath -w #{normalize_path(unix_path)}`.chomp
+      `cygpath -w "#{normalize_path(unix_path)}"`.chomp
     end
   
     def unix_path(dos_path)
       escaped_path = dos_path.sub(%r!\\+\Z!, "").gsub("\\", "\\\\\\\\")
-      `cygpath #{escaped_path}`.chomp
+      `cygpath "#{escaped_path}"`.chomp
     end
     
     def dos_pwd_env
@@ -54,7 +58,5 @@ module Quix
         FileUtils.mv(temp_file, file)
       end
     end
-
-    extend self
   end
 end

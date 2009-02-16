@@ -2,7 +2,6 @@ $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
 
 require 'test/unit'
 require 'quix/lazy_struct'
-require 'quix/hash_struct'
 
 class TestLazyStruct < Test::Unit::TestCase
   def common(s)
@@ -31,18 +30,6 @@ class TestLazyStruct < Test::Unit::TestCase
       include Quix::LazyStruct::Mixin
     end
     common(s)
-  end
-
-  def test_3
-    s = Quix::HashStruct.new
-    class << s
-      include Quix::LazyStruct::Mixin
-    end
-    common(s)
-    s[:g] = 55
-    assert_equal(
-      { :f => 33, :g => 55 },
-      s.keys.inject(Hash.new) { |acc, e| acc.merge(e => s[e]) })
   end
 end
 
