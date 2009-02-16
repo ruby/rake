@@ -35,8 +35,8 @@ module CompTree
             }
 
             #
-            # Lock the tree and find a node.  The node we
-            # obtain, if any, is already locked.
+            # Lock the tree and find a node.
+            # The node we obtain, if any, will be locked.
             #
             node = tree_mutex.synchronize {
               find_node(root)
@@ -53,12 +53,10 @@ module CompTree
               
               tree_mutex.synchronize {
                 node.result = node_result
-              }
 
-              #
-              # remove locks for this node (shared lock and own lock)
-              #
-              tree_mutex.synchronize {
+                #
+                # remove locks for this node (shared lock and own lock)
+                #
                 node.unlock
                 if node == root
                   #
@@ -133,11 +131,12 @@ module CompTree
         #
         trace "#{node.name} has been computed"
         nil
-      elsif node.children_results and node.try_lock
+      elsif (children_results = node.find_children_results) and node.try_lock
         #
         # Node is not computed and its children are computed;
         # and we have the lock.  Ready to compute.
         #
+        node.children_results = children_results
         node
       else
         #

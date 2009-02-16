@@ -11,6 +11,8 @@ module CompTree
       true
     }.call
 
+    module_function
+
     def fork(retry_wait = 10, retry_max = 10, &block)
       num_retries = 0
       begin
@@ -36,7 +38,6 @@ module CompTree
         retry
       end
     end
-    module_function :fork
   end
 end
 
