@@ -226,10 +226,7 @@ module CompTree
       # <tt>:timeout</tt> -- (seconds) (Obscure) Give up after this
       # period of persistent IPC failures.
       #
-
-      abort_on_exception {
-        compute_private(name, opts || Hash.new)
-      }
+      compute_private(name, opts || Hash.new)
     end
 
     private
@@ -250,9 +247,9 @@ module CompTree
         #
         result = nil
         BucketIPC::Driver.new(opts[:threads], opts) { |buckets|
-          result =
-            Algorithm.compute_multithreaded(
-              root, opts[:threads], opts[:fork], buckets)
+          result = Algorithm.compute_multithreaded(
+            root, opts[:threads], opts[:fork], buckets
+          )
         }
         result
       else
@@ -260,7 +257,8 @@ module CompTree
         # Multithreaded computation without fork.
         #
         Algorithm.compute_multithreaded(
-          root, opts[:threads], opts[:fork], nil)
+          root, opts[:threads], opts[:fork], nil
+        )
       end
     end
   end

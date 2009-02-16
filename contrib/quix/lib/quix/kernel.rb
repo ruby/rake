@@ -3,6 +3,8 @@ require 'thread'
 
 module CompTree
   module Misc
+    module_function
+
     def let
       yield self
     end
@@ -46,16 +48,14 @@ module CompTree
       with_warnings(false, &block)
     end
 
-    def abort_on_exception(value = true)
-      previous = Thread.abort_on_exception
-      Thread.abort_on_exception = value
-      begin
-        yield
-      ensure
-        Thread.abort_on_exception = previous
-      end
+    def loop_with(done, restart)
+      catch(done) {
+        while true
+          catch(restart) {
+            yield
+          }
+        end
+      }
     end
-
-    extend self
   end
 end

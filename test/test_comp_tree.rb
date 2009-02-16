@@ -10,8 +10,6 @@ require File.dirname(__FILE__) + '/use_fork'
 srand(22)
 
 module CompTree
-  Thread.abort_on_exception = true
-
   module TestCommon
     include Diagnostic
 
@@ -296,7 +294,7 @@ module CompTree
                 :a,
                 :threads => threads,
                 :fork => use_fork))
-            if use_fork?
+            if use_fork
               assert_equal(visit, 0)
             else
               assert_equal(visit, 4)

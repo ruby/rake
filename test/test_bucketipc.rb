@@ -5,8 +5,6 @@ require 'test/unit'
 require 'comp_tree/bucket_ipc'
 require File.dirname(__FILE__) + '/use_fork'
 
-Thread.abort_on_exception = true
-
 class BucketTest < Test::Unit::TestCase
   include CompTree::RetriableFork
 
