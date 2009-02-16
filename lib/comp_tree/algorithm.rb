@@ -14,10 +14,6 @@ module CompTree
       thread_wake_condition = ConditionVariable.new
       threads = []
       
-      # workaround: jruby gives "run" status for waiting on
-      # condition variable
-      num_threads_ready = 0
-
       num_threads.times { |thread_index|
         threads << Thread.new {
           #
@@ -25,7 +21,6 @@ module CompTree
           #
           mutex.synchronize {
             trace "Thread #{thread_index} waiting to start"
-            num_threads_ready += 1
             thread_wake_condition.wait(mutex)
           }
 
@@ -88,7 +83,9 @@ module CompTree
       trace "Main: waiting for threads to launch and block."
       while true
         break if mutex.synchronize {
-          num_threads_ready == num_threads
+          Thread.list.all? { |t|
+            t == Thread.current or t.status == "sleep"
+          }
         }
         Thread.pass
       end
