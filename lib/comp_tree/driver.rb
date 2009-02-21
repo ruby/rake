@@ -1,10 +1,8 @@
 
-require 'comp_tree/bucket_ipc'
 require 'comp_tree/diagnostic'
 require 'comp_tree/misc'
 require 'comp_tree/algorithm'
 require 'comp_tree/node'
-require 'comp_tree/task_node'
 require 'comp_tree/error'
 
 require 'thread'
@@ -15,15 +13,9 @@ module CompTree
   # responsible for defining nodes and running computations.
   #
   class Driver
-    DEFAULTS = {
-      :threads => 1,
-      :fork => false,
-      :timeout => 5.0,
-      :wait_interval => 0.02,
-    }
-
     include Diagnostic
     include Misc
+    include Algorithm
     
     #
     # Begin a new computation tree.
@@ -33,26 +25,10 @@ module CompTree
     # <tt>:node_class</tt> -- (Class) CompTree::Node subclass from
     # which nodes are created.
     #
-    # <tt>:discard_result</tt> -- (boolean) If you are <em>not</em>
-    # interested in the final answer, but only in the actions which
-    # complete the computation, then set this to +true+.  This is
-    # equivalent to saying <tt>:node_class => CompTree::TaskNode</tt>.
-    # (If you are forking processes, it is good to know that IPC is
-    # not needed to communicate the result.)
-    #
     def initialize(opts = nil)
-      if opts and opts[:node_class] and opts[:discard_result]
-        raise(
-          Error::ArgumentError,
-          "#{self.class.name}.new: :discard_result and :node_class " +
-          "are mutually exclusive")
-      end
-
       @node_class =
         if opts and opts[:node_class]
           opts[:node_class]
-        elsif opts and opts[:discard_result]
-          TaskNode
         else
           Node
         end
@@ -207,58 +183,19 @@ module CompTree
     #
     # +name+ -- (Symbol) node name.
     #
-    # Options hash:
+    # +threads+ -- (Integer) number of threads.
     #
-    # <tt>:threads</tt> -- (Integer) Number of parallel threads.
-    #
-    # <tt>:fork</tt> -- (boolean) Whether to fork each computation
-    # node into its own process.
-    #
-    # Defaults options are taken from Driver::DEFAULTS.
-    #
-    def compute(name, opts = nil)
-      #
-      # Undocumented options:
-      #
-      # <tt>:wait_interval</tt> -- (seconds) (Obscure) How long to
-      # wait after an IPC failure.
-      #
-      # <tt>:timeout</tt> -- (seconds) (Obscure) Give up after this
-      # period of persistent IPC failures.
-      #
-      compute_private(name, opts || Hash.new)
-    end
-
-    private
-    
-    def compute_private(name, opts_in)
-      opts = DEFAULTS.merge(opts_in)
+    def compute(name, threads)
       root = @nodes[name]
 
-      if opts[:threads] < 1
-        raise Error::ArgumentError, "threads is #{opts[:threads]}"
+      if threads < 1
+        raise Error::ArgumentError, "threads is #{threads}"
       end
 
-      if opts[:threads] == 1
+      if threads == 1
         root.result = root.compute_now
-      elsif opts[:fork] and not @node_class.discard_result?
-        #
-        # Use buckets to send results across forks.
-        #
-        result = nil
-        BucketIPC::Driver.new(opts[:threads], opts) { |buckets|
-          result = Algorithm.compute_multithreaded(
-            root, opts[:threads], opts[:fork], buckets
-          )
-        }
-        result
       else
-        #
-        # Multithreaded computation without fork.
-        #
-        Algorithm.compute_multithreaded(
-          root, opts[:threads], opts[:fork], nil
-        )
+        compute_multithreaded(root, threads)
       end
     end
   end

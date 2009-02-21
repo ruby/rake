@@ -3,9 +3,13 @@ $LOAD_PATH.unshift(File.expand_path("#{File.dirname(__FILE__)}/../lib"))
 
 require 'test/unit'
 require 'benchmark'
-
 require 'comp_tree'
-require File.dirname(__FILE__) + '/use_fork'
+
+trace = lambda { |*args|
+  STDERR.puts "#{Process.pid}: #{args.inspect}"
+}
+
+#set_trace_func(trace)
 
 srand(22)
 
@@ -48,8 +52,7 @@ module CompTree
           7
         }
         
-        assert_equal((2 + 5)*(3 + 5) - 7,
-                     driver.compute(:area, opts(6)))
+        assert_equal((2 + 5)*(3 + 5) - 7, driver.compute(:area, 6))
       }
     end
 
@@ -75,8 +78,7 @@ module CompTree
           7
         }
         
-        assert_equal((2 + 5)*(3 + 5) - 7,
-                     driver.compute(:area, opts(6)))
+        assert_equal((2 + 5)*(3 + 5) - 7, driver.compute(:area, 6))
       }
     end
 
@@ -102,26 +104,19 @@ module CompTree
           7
         }
 
-        assert_equal((2 + 5)*(3 + 5) - 7,
-                     driver.compute(:area, opts(6)))
+        assert_equal((2 + 5)*(3 + 5) - 7, driver.compute(:area, 6))
       }
     end
 
     def test_thread_flood
-      max =
-        if use_fork?
-          16
-        else
-          200
-        end
-      (1..max).each { |threads|
+      (1..200).each { |num_threads|
         CompTree::Driver.new { |driver|
           drain = lambda { |*args|
             1.times { }
           }
           driver.define_a(:b, &drain)
           driver.define_b(&drain)
-          driver.compute(:a, opts(threads))
+          driver.compute(:a, num_threads)
         }
       }
     end
@@ -141,12 +136,12 @@ module CompTree
         assert_raise(CompTree::Error::ArgumentError) {
           driver.define(:b) {
           }
-          driver.compute(:b, :threads => 0)
+          driver.compute(:b, 0)
         }
         assert_raise(CompTree::Error::ArgumentError) {
           driver.define(:c) {
           }
-          driver.compute(:c, :threads => -1)
+          driver.compute(:c, -1)
         }
       }
     end
@@ -189,7 +184,6 @@ module CompTree
           separator
           trace {%{num_levels}}
           trace {%{num_children}}
-          trace {%{use_fork?}}
           driver = generate_comp_tree(
             num_levels,
             num_children,
@@ -200,7 +194,7 @@ module CompTree
               driver.reset(:aaa)
               result = nil
               trace Benchmark.measure {
-                result = driver.compute(:aaa, opts(threads))
+                result = driver.compute(:aaa, threads)
               }
               assert_equal(result, args[:drain_iterations])
             }
@@ -210,128 +204,39 @@ module CompTree
     end
 
     def test_generated_tree
-      if use_fork?
-        run_generated_tree(
-          :level_range => 4..4,
-          :children_range => 4..4,
-          :thread_range => 8..8,
-          :drain_iterations => 0)
-      else
-        run_generated_tree(
-          :level_range => 4..4,
-          :children_range => 4..4,
-          :thread_range => 8..8,
-          :drain_iterations => 0)
-      end
+      run_generated_tree(
+        :level_range => 4..4,
+        :children_range => 4..4,
+        :thread_range => 8..8,
+        :drain_iterations => 0
+      )
     end
+  end
 
-    def use_fork?
-      opts(0)[:fork]
-    end
+  class Test_Core < Test::Unit::TestCase
+    include TestBase
   end
   
-  module NoForkTestBase
-    include TestBase
-    def opts(threads)
-      {
-        :threads => threads,
-        :fork => false,
-      }
-    end
-  end
-
-  module ForkTestBase
-    include TestBase
-    def opts(threads)
-      {
-        :threads => threads,
-        :fork => true,
-      }
-    end
-  end
-  
-  class Test_1_NoFork < Test::Unit::TestCase
-    include NoForkTestBase
-  end
-
-  if use_fork?
-    class Test_2_Fork < Test::Unit::TestCase
-      include ForkTestBase
-    end
-  end
-
-  class Test_Task < Test::Unit::TestCase
-    def test_task
-      CompTree::Driver.new(:discard_result => true) { |driver|
-        visit = 0
-        mutex = Mutex.new
-        func = lambda { |*args|
-          mutex.synchronize {
-            visit += 1
-          }
-        }
-        driver.define_a(:b, :c, &func)
-        driver.define_b(&func)
-        driver.define_c(:d, &func)
-        driver.define_d(&func)
-
-        (2..10).each { |threads|
-          assert_equal(
-            true,
-            driver.compute(
-              :a,
-              :threads => threads))
-          assert_equal(visit, 4)
-          driver.reset(:a)
-          visit = 0
-        }
-
-        [false, use_fork?].each { |use_fork|
-          (2..10).each { |threads|
-            assert_equal(
-              true,
-              driver.compute(
-                :a,
-                :threads => threads,
-                :fork => use_fork))
-            if use_fork
-              assert_equal(visit, 0)
-            else
-              assert_equal(visit, 4)
-            end
-            driver.reset(:a)
-            visit = 0
-          }
-        }
-      }
-    end
-  end
-
   class Test_Drainer < Test::Unit::TestCase
     include TestCommon
 
-    def drain(opts)
-      code = %{ 5000.times { } }
-      if opts[:fork]
-        eval code
-      else
-        system("ruby", "-e", code)
-      end
+    def drain
+      5000.times { }
     end
     
-    def run_drain(opts)
+    def run_drain(threads)
       CompTree::Driver.new { |driver|
         func = lambda { |*args|
-          drain(opts)
+          drain
         }
         driver.define_area(:width, :height, :offset, &func)
         driver.define_width(:border, &func)
         driver.define_height(:border, &func)
         driver.define_border(&func)
         driver.define_offset(&func)
-        trace "number of threads: #{opts[:threads]}"
+        trace "number of threads: #{threads}"
         trace Benchmark.measure {
-          driver.compute(:area, opts)
+          driver.compute(:area, threads)
         }
       }
     end
@@ -342,22 +247,12 @@ module CompTree
       }
     end
 
-    def test_no_fork
+    def test_drain
       separator
       trace "Subrocess test."
       each_drain { |threads|
-        run_drain({:threads => threads})
+        run_drain(threads)
       }
-    end
-    
-    if use_fork?
-      def test_fork
-        separator
-        trace "Forking test."
-        each_drain { |threads|
-          run_drain({:threads => threads, :fork => true})
-        }
-      end
     end
   end
 end

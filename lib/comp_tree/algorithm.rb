@@ -1,15 +1,15 @@
 
 require 'comp_tree/diagnostic'
-require 'comp_tree/retriable_fork'
 require 'comp_tree/misc'
 
 module CompTree
   module Algorithm
     include Diagnostic
     include Misc
-    include RetriableFork
 
-    def compute_multithreaded(root, num_threads, use_fork, buckets)
+    module_function
+
+    def compute_multithreaded(root, num_threads)
       trace "Computing #{root.name} with #{num_threads} threads"
 
       result = nil
@@ -57,11 +57,7 @@ module CompTree
             }
 
             trace "Thread #{thread_index} computing node"
-            node_result = compute_node(
-              node,
-              use_fork,
-              buckets ? buckets[thread_index] : nil
-            )
+            node_result = compute_node(node)
             trace "Thread #{thread_index} node computed; waiting for tree lock"
 
             tree_mutex.synchronize {
@@ -169,61 +165,13 @@ module CompTree
       end
     end
 
-    def compute_node(node, use_fork, bucket)
-      if use_fork
-        if bucket
-          #
-          # Use our assigned bucket to transfer the result.
-          #
-          fork_node(node) {
-            node.trace_compute
-            bucket.contents = (
-              begin 
-                node.compute
-              rescue Exception => e
-                e
-              end
-            )
-          }
-          bucket.contents
-        else
-          #
-          # No bucket -- discarding result
-          #
-          fork_node(node) {
-            node.trace_compute
-            node.compute
-          }
-          true
-        end
-      else
-        #
-        # No fork
-        #
-        begin
-          node.trace_compute
-          node.compute
-        rescue Exception => e
-          e
-        end
+    def compute_node(node)
+      begin
+        node.trace_compute
+        node.compute
+      rescue Exception => e
+        e
       end
     end
-
-    def fork_node(node)
-      trace "About to fork for node #{node.name}"
-      process_id = 123456
-      process_id = fork {
-        trace "Fork: process #{Process.pid}"
-        node.trace_compute
-        yield
-        trace "Fork: computation done"
-      }
-      trace "Waiting for process #{process_id}"
-      Process.wait(process_id)
-      trace "Process #{process_id} finished"
-      trace "Process #{process_id} returned #{$?.exitstatus}"
-    end
-    
-    extend self
   end
 end
