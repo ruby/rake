@@ -25,6 +25,9 @@
 
 * Fixed default verbose mode (was accidently changed to false).  
 
+* Removed reference to manage_gem to fix the warning produced by the
+  gem package task.
+
 == Version 0.8.3
 
 * Enhanced the system directory detection in windows. We now check
