@@ -8,6 +8,16 @@ NOTE: The version of Rake that comes with Ruby 1.9 has diverged
       comes with Ruby 1.9.  A (near) future release of Rake will unify
       those two codebases.
 
+== Letter Writing Campaign
+
+Thanks to Aaron Patterson (@tenderlove) and Eric Hodel (@drbrain) for
+their encouraging support in organizing a letter writing campaign to
+lobby for the "Warning Free" release of rake 0.8.4.  A special callout
+goes to Jonathan D. Lord, Sr (Dr. Wingnut) whose postcard was the
+first to actually reach me. (see
+http://tenderlovemaking.com/2009/02/26/we-need-a-new-version-of-rake/
+for details)
+
 == Changes
 
 === New Features / Enhancements in Version 0.8.4
