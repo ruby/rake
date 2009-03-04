@@ -1,8 +1,7 @@
 
-require 'rake/repaired_system'
-
 module Rake
-  
+  require 'rake/alt_system'
+
   # Win 32 interface methods for Rake. Windows specific functionality
   # will be placed here to collect that knowledge in one spot.
   module Win32
@@ -15,12 +14,12 @@ module Rake
     class << self
       # True if running on a windows system.
       def windows?
-        Config::CONFIG['host_os'] =~ /mswin|mingw/
+        AltSystem::WINDOWS
       end
 
       # Run a command line on windows.
       def rake_system(*cmd)
-        RepairedSystem.system(*cmd)
+        AltSystem.system(*cmd)
       end
       
       # The standard directory containing system wide rake files on
