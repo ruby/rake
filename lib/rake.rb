@@ -60,7 +60,7 @@ class Module
   #   end
   #
   def rake_extension(method)
-    if instance_methods.include?(method.to_s) || instance_methods.include?(method.to_sym)
+    if method_defined?(method)
       $stderr.puts "WARNING: Possible conflict with Rake extension: #{self}##{method} already exists"
     else
       yield
