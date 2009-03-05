@@ -84,7 +84,7 @@ class String
       if newext != ''
         newext = (newext =~ /^\./) ? newext : ("." + newext)
       end
-      dup.sub!(%r(([^/\\])\.[^./\\]*$)) { $1 + newext } || self + newext
+      self.chomp(File.extname(self)) << newext
     end
   end
 
