@@ -161,7 +161,7 @@ class String
     #   'a/b/c/d/file.txt'.pathmap("%2d")   => 'a/b'
     #   'a/b/c/d/file.txt'.pathmap("%-2d")  => 'c/d'
     #
-    # Also the %d, %p, $f, $n, %x, and %X operators can take a
+    # Also the %d, %p, %f, %n, %x, and %X operators can take a
     # pattern/replacement argument to perform simple string substititions on a
     # particular part of the path.  The pattern and replacement are speparated
     # by a comma and are enclosed by curly braces.  The replacement spec comes
