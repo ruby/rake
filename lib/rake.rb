@@ -1472,9 +1472,9 @@ module Rake
     # name, line number, and the matching line of text.  If no block is given,
     # a standard emac style file:linenumber:line message will be printed to
     # standard out.
-    def egrep(pattern)
+    def egrep(pattern, *options)
       each do |fn|
-        open(fn) do |inf|
+        open(fn, "rb", *options) do |inf|
           count = 0
           inf.each do |line|
             count += 1
