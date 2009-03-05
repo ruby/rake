@@ -1454,7 +1454,7 @@ module Rake
       collect { |fn| fn.pathmap(spec) }
     end
 
-    # Return a new file list with <tt>String#ext</tt> method applied
+    # Return a new FileList with <tt>String#ext</tt> method applied
     # to each member of the array.
     #
     # This method is a shortcut for:
