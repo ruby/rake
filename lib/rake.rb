@@ -981,11 +981,7 @@ module FileUtils
   end
 
   def rake_system(*cmd)
-    if Rake::Win32.windows?
-      Rake::Win32.rake_system(*cmd)
-    else
-      system(*cmd)
-    end
+    system(*cmd)
   end
   private :rake_system
 
