@@ -207,13 +207,9 @@ class String
         when '%d'
           result << File.dirname(self)
         when '%x'
-          result << $1 if self =~ /[^\/](\.[^.]+)$/
+          result << File.extname(self)
         when '%X'
-          if self =~ /^(.*[^\/])(\.[^.]+)$/
-            result << $1
-          else
-            result << self
-          end
+          result << self.ext
         when '%p'
           result << self
         when '%s'
