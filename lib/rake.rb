@@ -2037,10 +2037,10 @@ module Rake
         yield
       rescue SystemExit => ex
         # Exit silently with current status
-        exit(ex.status)
-      rescue SystemExit, OptionParser::InvalidOption => ex
+        raise
+      rescue OptionParser::InvalidOption => ex
         # Exit silently
-        exit(1)
+        exit(false)
       rescue Exception => ex
         # Exit with error message
         $stderr.puts "#{name} aborted!"
@@ -2051,7 +2051,7 @@ module Rake
           $stderr.puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
           $stderr.puts "(See full trace by running task with --trace)"
         end
-        exit(1)
+        exit(false)
       end
     end
 
