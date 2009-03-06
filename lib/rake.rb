@@ -2370,8 +2370,6 @@ module Rake
         begin
           if ENV['RAKE_SYSTEM']
             ENV['RAKE_SYSTEM']
-          elsif Win32.windows?
-            Win32.win32_system_dir
           else
             standard_system_dir
           end
