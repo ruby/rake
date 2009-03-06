@@ -960,7 +960,7 @@ module FileUtils
     options = (Hash === cmd.last) ? cmd.pop : {}
     unless block_given?
       show_command = cmd.join(" ")
-      show_command = show_command[0,42] + "..."
+      show_command = show_command[0,42] + "..." unless $trace
       # TODO code application logic heref show_command.length > 45
       block = lambda { |ok, status|
         ok or fail "Command failed with status (#{status.exitstatus}): [#{show_command}]"
