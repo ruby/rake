@@ -10,7 +10,7 @@ module Rake
   #
   # The RDocTask will create the following targets:
   #
-  # [<b>:<em>rdoc</em></b>]
+  # [<b><em>rdoc</em></b>]
   #   Main task for this RDOC task.  
   #
   # [<b>:clobber_<em>rdoc</em></b>]

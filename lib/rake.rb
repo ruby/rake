@@ -2377,8 +2377,14 @@ module Rake
     end
     
     # The standard directory containing system wide rake files.
-    def standard_system_dir #:nodoc:
-      File.join(File.expand_path('~'), '.rake')
+    if Win32.windows?
+      def standard_system_dir #:nodoc:
+        Win32.win32_system_dir
+      end
+    else
+      def standard_system_dir #:nodoc:
+        File.join(File.expand_path('~'), '.rake')
+      end
     end
     private :standard_system_dir
 
