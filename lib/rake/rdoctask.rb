@@ -21,7 +21,7 @@ module Rake
   #   Rebuild the rdoc files from scratch, even if they are not out
   #   of date.
   #
-  # Simple example:
+  # Simple Example:
   #
   #   Rake::RDocTask.new do |rd|
   #     rd.main = "README.rdoc"
