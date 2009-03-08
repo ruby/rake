@@ -40,6 +40,8 @@ require 'ostruct'
 
 require 'rake/win32'
 
+$trace = false
+
 ######################################################################
 # Rake extensions to Module.
 #

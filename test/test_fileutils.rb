@@ -139,15 +139,19 @@ class TestFileUtils < Test::Unit::TestCase
     end
   end
 
-  def test_sh_multiple_arguments
+  def test_sh_with_a_single_string_argument
     ENV['RAKE_TEST_SH'] = 'someval'
-    expanded = windows? ? '%RAKE_TEST_SH%' : '$RAKE_TEST_SH'
-    # This one gets expanded by the shell
-    verbose(false) { sh %{ruby test/check_expansion.rb #{expanded} someval} }
-    assert true, "should not fail"
-    assert_exception(RuntimeError) {
-      # This one does not get expanded
-      verbose(false) { Sh.run 'ruby', 'test/check_expansion.rb', expanded, 'someval' }
+    verbose(false) { sh %{ruby test/check_expansion.rb #{env_var} someval} }
+    verbose(false) {
+      Sh.run 'ruby', 'test/check_no_expansion.rb', env_var, 'someval'
+    }
+  end
+
+  def test_sh_with_multiple_arguments
+    ENV['RAKE_TEST_SH'] = 'someval'
+    verbose(false) { sh %{ruby test/check_expansion.rb #{env_var} someval} }
+    verbose(false) {
+      Sh.run 'ruby', 'test/check_no_expansion.rb', env_var, 'someval'
     }
   end
 
@@ -204,37 +208,24 @@ class TestFileUtils < Test::Unit::TestCase
     assert_equal '', out
   end
 
-  def test_sh_default_is_no_verbose
-    out = redirect_stderr {
-      sh %{test/shellcommand.rb}, :noop=>true
+  def test_ruby_with_a_single_string_argumentx
+    ENV['RAKE_TEST_SH'] = 'someval'
+    verbose(false) {
+      ruby %{test/check_expansion.rb #{env_var} someval}
     }
-    assert_equal '', out
   end
 
-  def test_ruby
-    verbose(false) do
-      ENV['RAKE_TEST_RUBY'] = "123"
-      block_run = false
-      # This one gets expanded by the shell
-      env_var = windows? ? '%RAKE_TEST_RUBY%' : '$RAKE_TEST_RUBY'
-      ruby %{-e "exit #{env_var}"} do |ok, status| # " (emacs wart)
-        assert(!ok)
-        assert_equal 123, status.exitstatus
-        block_run = true
-      end
-      assert block_run, "The block must be run"
-
-      # This one does not get expanded
-      block_run = false
-      ruby '-e', %{exit %{#{env_var}}.length} do |ok, status| # " (emacs wart)
-        assert(!ok)
-        assert_equal env_var.length, status.exitstatus
-        block_run = true
-      end
-      assert block_run, "The block must be run"
-    end
+  def test_ruby_with_multiple_arguments
+    ENV['RAKE_TEST_SH'] = 'someval'
+    verbose(false) {
+      ruby 'test/check_no_expansion.rb', env_var, 'someval'
+    }
   end
 
+  def env_var
+    windows? ? '%RAKE_TEST_SH%' : '$RAKE_TEST_SH'
+  end
+  
   def test_split_all
     assert_equal ['a'], RakeFileUtils.split_all('a')
     assert_equal ['..'], RakeFileUtils.split_all('..')
