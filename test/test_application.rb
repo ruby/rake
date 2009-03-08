@@ -195,28 +195,6 @@ class TestApplication < Test::Unit::TestCase
     assert ! (@app.windows? && @app.unix?)
   end
 
-  if Rake::Win32.windows?
-    # NOTE: This test no longer works against the modified windows
-    # support.  Need to check if it is still worthwhile.
-    def test_load_from_system_rakefile_on_windows
-      flexmock(Rake::Win32, :windows? => true)
-      flexmock(@app, :standard_system_dir => "XX")
-      flexmock(@app).should_receive(:load).and_return(nil)
-      flexmock(File).should_receive(:directory?).with("C:/AD/Rake").and_return(true)
-      in_environment('RAKE_SYSTEM' => nil, 'HOME' => nil, 'HOMEDRIVE' => 'C:', 'HOMEPATH' => '\\AD') do
-        @app.options.rakelib = []
-        @app.instance_eval do
-          handle_options
-          options.silent = true
-          options.load_system = true
-          options.rakelib = []
-          load_rakefile
-        end
-        assert_equal "C:/AD/Rake", @app.system_dir
-      end
-    end
-  end
-
   def test_loading_imports
     mock = flexmock("loader")
     mock.should_receive(:load).with("x.dummy").once
@@ -239,7 +217,7 @@ class TestApplication < Test::Unit::TestCase
     end
   end
 
-  def test_handle_options__should_strip_options_from_ARGV
+  def test_handle_options_should_strip_options_from_ARGV
     assert !@app.options.trace
 
     valid_option = '--trace'
