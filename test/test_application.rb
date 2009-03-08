@@ -171,26 +171,6 @@ class TestApplication < Test::Unit::TestCase
     end
   end
 
-  def test_load_from_system_rakefile_on_unix
-    flexmock(Rake::Win32, :windows? => false,
-      :win32_system_dir => nil)
-    flexmock(@app, :load => nil)
-    flexmock(File).should_receive(:expand_path).with("~").and_return("/HOME")
-    flexmock(File).should_receive(:expand_path).and_return { |fn| fn }
-    
-    in_environment('RAKE_SYSTEM' => nil) do
-      @app.options.rakelib = []
-      @app.instance_eval do
-        handle_options
-        options.silent = true
-        options.load_system = true
-        options.rakelib = []
-        load_rakefile
-      end
-      assert_equal "/HOME/.rake", @app.system_dir
-    end
-  end
-
   def test_windows
     assert ! (@app.windows? && @app.unix?)
   end
