@@ -141,15 +141,13 @@ class TestFileUtils < Test::Unit::TestCase
 
   def test_sh_with_a_single_string_argument
     ENV['RAKE_TEST_SH'] = 'someval'
-    verbose(false) { sh %{ruby test/check_expansion.rb #{env_var} someval} }
     verbose(false) {
-      Sh.run 'ruby', 'test/check_no_expansion.rb', env_var, 'someval'
+      sh %{ruby test/check_expansion.rb #{env_var} someval}
     }
   end
 
   def test_sh_with_multiple_arguments
     ENV['RAKE_TEST_SH'] = 'someval'
-    verbose(false) { sh %{ruby test/check_expansion.rb #{env_var} someval} }
     verbose(false) {
       Sh.run 'ruby', 'test/check_no_expansion.rb', env_var, 'someval'
     }
@@ -208,7 +206,7 @@ class TestFileUtils < Test::Unit::TestCase
     assert_equal '', out
   end
 
-  def test_ruby_with_a_single_string_argumentx
+  def test_ruby_with_a_single_string_argument
     ENV['RAKE_TEST_SH'] = 'someval'
     verbose(false) {
       ruby %{test/check_expansion.rb #{env_var} someval}
@@ -222,10 +220,6 @@ class TestFileUtils < Test::Unit::TestCase
     }
   end
 
-  def env_var
-    windows? ? '%RAKE_TEST_SH%' : '$RAKE_TEST_SH'
-  end
-  
   def test_split_all
     assert_equal ['a'], RakeFileUtils.split_all('a')
     assert_equal ['..'], RakeFileUtils.split_all('..')
@@ -250,4 +244,8 @@ class TestFileUtils < Test::Unit::TestCase
     ! File::ALT_SEPARATOR.nil?
   end
 
+  def env_var
+    windows? ? '%RAKE_TEST_SH%' : '$RAKE_TEST_SH'
+  end
+  
 end
