@@ -8,7 +8,7 @@ module Ruby19
   SVN = "#{ENV['HOME']}/working/svn/software/thirdparty/ruby"
 
   def run_tests(files, opts='')
-    sh "#{PROG} -Ilib lib/rake/rake_test_loader.rb #{opts} #{files}"
+    sh "#{PROG} -w -Ilib lib/rake/rake_test_loader.rb #{opts} #{files}"
   end
 
   extend self
