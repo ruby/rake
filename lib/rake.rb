@@ -1008,7 +1008,7 @@ module FileUtils
   end
 
   def rake_system(*cmd)
-    system(*cmd)
+    Rake::AltSystem.system(*cmd)
   end
   private :rake_system
 
