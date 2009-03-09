@@ -307,6 +307,27 @@ module Rake
   end
 
   ####################################################################
+  # Exit status class for times the system just gives us a nil.
+  class PseudoStatus
+    attr_reader :exitstatus
+    def initialize(code=0)
+      @exitstatus = code
+    end
+    def to_i
+      @exitstatus << 8
+    end
+    def >>(n)
+      to_i >> n
+    end
+    def stopped?
+      false
+    end
+    def exited?
+      true
+    end
+  end
+
+  ####################################################################
   # TaskAguments manage the arguments passed to a task.
   #
   class TaskArguments
@@ -978,7 +999,9 @@ module FileUtils
     rake_output_message cmd.join(" ") if options[:verbose]
     unless options[:noop]
       res = rake_system(*cmd)
-      block.call(res, $?)
+      status = $?
+      status = PseudoStatus.new(1) if !res && status.nil?
+      block.call(res, status)
     end
   end
 
