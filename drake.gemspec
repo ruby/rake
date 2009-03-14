@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: drake
 version: !ruby/object:Gem::Version 
-  version: 0.8.3.1.0.14
+  version: 0.8.4.1.0.15
 platform: ruby
 authors: 
 - James M. Lawrence
@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2008-09-25 00:00:00 -04:00
+date: 2009-03-14 00:00:00 -04:00
 default_executable: drake
 dependencies: []
 
@@ -24,6 +24,7 @@ extra_rdoc_files:
 - MIT-LICENSE
 - TODO
 - CHANGES
+- doc/command_line_usage.rdoc
 - doc/glossary.rdoc
 - doc/proto_rake.rdoc
 - doc/rakefile.rdoc
@@ -41,6 +42,7 @@ extra_rdoc_files:
 - doc/release_notes/rake-0.8.0.rdoc
 - doc/release_notes/rake-0.8.2.rdoc
 - doc/release_notes/rake-0.8.3.rdoc
+- doc/release_notes/rake-0.8.4.rdoc
 files: 
 - install.rb
 - CHANGES
@@ -51,6 +53,7 @@ files:
 - Rakefile.drake
 - TODO
 - bin/drake
+- lib/rake/alt_system.rb
 - lib/rake/classic_namespace.rb
 - lib/rake/clean.rb
 - lib/rake/contrib/compositepublisher.rb
@@ -81,6 +84,7 @@ files:
 - lib/rake/comp_tree/task_node.rb
 - test/capture_stdout.rb
 - test/check_expansion.rb
+- test/check_no_expansion.rb
 - test/contrib/test_sys.rb
 - test/data/rakelib/test1.rb
 - test/data/rbext/rakefile.rb
@@ -111,7 +115,9 @@ files:
 - test/test_package_task.rb
 - test/test_parallel.rb
 - test/test_pathmap.rb
+- test/test_pseudo_status.rb
 - test/test_rake.rb
+- test/test_rdoc_task.rb
 - test/test_require.rb
 - test/test_rules.rb
 - test/test_task_arguments.rb
@@ -135,6 +141,7 @@ files:
 - test/data/statusreturn/Rakefile
 - test/data/unittest/Rakefile
 - test/data/unittest/subdir
+- doc/command_line_usage.rdoc
 - doc/example
 - doc/example/Rakefile1
 - doc/example/Rakefile2
@@ -161,6 +168,7 @@ files:
 - doc/release_notes/rake-0.8.0.rdoc
 - doc/release_notes/rake-0.8.2.rdoc
 - doc/release_notes/rake-0.8.3.rdoc
+- doc/release_notes/rake-0.8.4.rdoc
 has_rdoc: true
 homepage: http://drake.rubyforge.org
 post_install_message: 
@@ -188,9 +196,9 @@ required_rubygems_version: !ruby/object:Gem::Requirement
 requirements: []
 
 rubyforge_project: drake
-rubygems_version: 1.2.0
+rubygems_version: 1.3.1
 signing_key: 
 specification_version: 2
-summary: Ruby based make-like utility.
+summary: A fork of Rake supporting parallel task execution.
 test_files: []
 
