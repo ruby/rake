@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-# Copyright 2003, 2004 by Jim Weirich (jim@weirichhouse.org)
+# Copyright 2003, 2004, 2005, 2006, 2007, 2008 by Jim Weirich (jim@weirichhouse.org)
 # All rights reserved.
 
 # Permission is granted for use, copying, modification, distribution,

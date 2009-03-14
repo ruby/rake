@@ -2,7 +2,7 @@
 
 #--
 
-# Copyright (c) 2003, 2004, 2005, 2006, 2007  Jim Weirich
+# Copyright 2003, 2004, 2005, 2006, 2007, 2008 by Jim Weirich (jim@weirichhouse.org)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -29,7 +29,7 @@
 # as a library via a require statement, but it can be distributed
 # independently as an application.
 
-RAKEVERSION = '0.8.3.1.0.14'
+RAKEVERSION = '0.8.4.1.0.15'
 
 require 'rbconfig'
 require 'fileutils'
@@ -40,6 +40,8 @@ require 'ostruct'
 require 'rake/parallel'
 
 require 'rake/win32'
+
+$trace = false
 
 ######################################################################
 # Rake extensions to Module.
@@ -61,7 +63,7 @@ class Module
   #   end
   #
   def rake_extension(method)
-    if instance_methods.include?(method.to_s) || instance_methods.include?(method.to_sym)
+    if method_defined?(method)
       $stderr.puts "WARNING: Possible conflict with Rake extension: #{self}##{method} already exists"
     else
       yield
@@ -75,7 +77,7 @@ end # module Module
 #
 class String
   rake_extension("ext") do
-    # Replace the file extension with +newext+.  If there is no extenson on
+    # Replace the file extension with +newext+.  If there is no extension on
     # the string, append the new extension to the end.  If the new extension
     # is not given, or is the empty string, remove any existing extension.
     #
@@ -85,7 +87,7 @@ class String
       if newext != ''
         newext = (newext =~ /^\./) ? newext : ("." + newext)
       end
-      dup.sub!(%r(([^/\\])\.[^./\\]*$)) { $1 + newext } || self + newext
+      self.chomp(File.extname(self)) << newext
     end
   end
 
@@ -162,7 +164,7 @@ class String
     #   'a/b/c/d/file.txt'.pathmap("%2d")   => 'a/b'
     #   'a/b/c/d/file.txt'.pathmap("%-2d")  => 'c/d'
     #
-    # Also the %d, %p, $f, $n, %x, and %X operators can take a
+    # Also the %d, %p, %f, %n, %x, and %X operators can take a
     # pattern/replacement argument to perform simple string substititions on a
     # particular part of the path.  The pattern and replacement are speparated
     # by a comma and are enclosed by curly braces.  The replacement spec comes
@@ -208,13 +210,9 @@ class String
         when '%d'
           result << File.dirname(self)
         when '%x'
-          result << $1 if self =~ /[^\/](\.[^.]+)$/
+          result << File.extname(self)
         when '%X'
-          if self =~ /^(.*[^\/])(\.[^.]+)$/
-            result << $1
-          else
-            result << self
-          end
+          result << self.ext
         when '%p'
           result << self
         when '%s'
@@ -306,6 +304,27 @@ module Rake
       sibling = dup
       sibling.freeze if frozen?
       sibling
+    end
+  end
+
+  ####################################################################
+  # Exit status class for times the system just gives us a nil.
+  class PseudoStatus
+    attr_reader :exitstatus
+    def initialize(code=0)
+      @exitstatus = code
+    end
+    def to_i
+      @exitstatus << 8
+    end
+    def >>(n)
+      to_i >> n
+    end
+    def stopped?
+      false
+    end
+    def exited?
+      true
     end
   end
 
@@ -822,9 +841,7 @@ module Rake
     # Is this file task needed?  Yes if it doesn't exist, or if its time stamp
     # is out of date.
     def needed?
-      return true unless File.exist?(name)
-      return true if out_of_date?(timestamp)
-      false
+      ! File.exist?(name) || out_of_date?(timestamp)
     end
 
     # Time stamp for file task.
@@ -879,6 +896,7 @@ module Rake
   # parallel using Ruby threads.
   #
   class MultiTask < Task
+    private
     def invoke_prerequisites(args, invocation_chain)
       threads = @prerequisites.collect { |p|
         Thread.new(p) { |r| application[r].invoke_with_call_chain(args, invocation_chain) }
@@ -1029,7 +1047,9 @@ end
 # added to the FileUtils utility functions.
 #
 module FileUtils
-  RUBY = File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name']).
+  RUBY = File.join(
+    Config::CONFIG['bindir'],
+    Config::CONFIG['ruby_install_name'] + Config::CONFIG['EXEEXT']).
     sub(/.*\s.*/m, '"\&"')
 
   OPT_TABLE['sh']  = %w(noop verbose)
@@ -1055,14 +1075,14 @@ module FileUtils
     options = (Hash === cmd.last) ? cmd.pop : {}
     unless block_given?
       show_command = cmd.join(" ")
-      show_command = show_command[0,42] + "..."
+      show_command = show_command[0,42] + "..." unless $trace
       # TODO code application logic heref show_command.length > 45
       block = lambda { |ok, status|
         ok or fail "Command failed with status (#{status.exitstatus}): [#{show_command}]"
       }
     end
     if RakeFileUtils.verbose_flag == :default
-      options[:verbose] = false
+      options[:verbose] = true
     else
       options[:verbose] ||= RakeFileUtils.verbose_flag
     end
@@ -1071,16 +1091,14 @@ module FileUtils
     rake_output_message cmd.join(" ") if options[:verbose]
     unless options[:noop]
       res = rake_system(*cmd)
-      block.call(res, $?)
+      status = $?
+      status = PseudoStatus.new(1) if !res && status.nil?
+      block.call(res, status)
     end
   end
 
   def rake_system(*cmd)
-    if Rake::Win32.windows?
-      Rake::Win32.rake_system(*cmd)
-    else
-      system(*cmd)
-    end
+    Rake::AltSystem.system(*cmd)
   end
   private :rake_system
 
@@ -1553,8 +1571,8 @@ module Rake
       collect { |fn| fn.pathmap(spec) }
     end
 
-    # Return a new array with <tt>String#ext</tt> method applied to each
-    # member of the array.
+    # Return a new FileList with <tt>String#ext</tt> method applied
+    # to each member of the array.
     #
     # This method is a shortcut for:
     #
@@ -1571,9 +1589,9 @@ module Rake
     # name, line number, and the matching line of text.  If no block is given,
     # a standard emac style file:linenumber:line message will be printed to
     # standard out.
-    def egrep(pattern)
+    def egrep(pattern, *options)
       each do |fn|
-        open(fn) do |inf|
+        open(fn, "rb", *options) do |inf|
           count = 0
           inf.each do |line|
             count += 1
@@ -2084,7 +2102,8 @@ module Rake
     def init(app_name='rake')
       standard_exception_handling do
         @name = app_name
-        collect_tasks handle_options
+        handle_options
+        collect_tasks
       end
     end
 
@@ -2145,13 +2164,13 @@ module Rake
         yield
       rescue SystemExit => ex
         # Exit silently with current status
-        exit(ex.status)
-      rescue SystemExit, OptionParser::InvalidOption => ex
+        raise
+      rescue OptionParser::InvalidOption => ex
         # Exit silently
-        exit(1)
+        exit(false)
       rescue Exception => ex
         # Exit with error message
-        $stderr.puts "rake aborted!"
+        $stderr.puts "#{name} aborted!"
         $stderr.puts ex.message
         if options.trace
           $stderr.puts ex.backtrace.join("\n")
@@ -2159,7 +2178,7 @@ module Rake
           $stderr.puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
           $stderr.puts "(See full trace by running task with --trace)"
         end
-        exit(1)
+        exit(false)
       end
     end
 
@@ -2193,14 +2212,14 @@ module Rake
       tty_output? || ENV['RAKE_COLUMNS']
     end
 
-    # Display the tasks and dependencies.
+    # Display the tasks and comments.
     def display_tasks_and_comments
       displayable_tasks = tasks.select { |t|
         t.comment && t.name =~ options.show_task_pattern
       }
       if options.full_description
         displayable_tasks.each do |t|
-          puts "rake #{t.name_with_args}"
+          puts "#{name} #{t.name_with_args}"
           t.full_comment.split("\n").each do |line|
             puts "    #{line}"
           end
@@ -2259,7 +2278,7 @@ module Rake
     # Display the tasks and prerequisites
     def display_prerequisites
       tasks.each do |t|
-        puts "rake #{t.name}"
+        puts "#{name} #{t.name}"
         t.prerequisites.each { |pre| puts "    #{pre}" }
       end
     end
@@ -2383,7 +2402,7 @@ module Rake
             verbose(true)
           }
         ],
-        ['--verbose', '-v', "Log message to standard output (default).",
+        ['--verbose', '-v', "Log message to standard output.",
           lambda { |value| verbose(true) }
         ],
         ['--version', '-V', "Display the program version.",
@@ -2399,18 +2418,18 @@ module Rake
     def handle_options
       options.rakelib = ['rakelib']
 
-      opts = OptionParser.new
-      opts.banner = "rake [-f rakefile] {options} targets..."
-      opts.separator ""
-      opts.separator "Options are ..."
-      
-      opts.on_tail("-h", "--help", "-H", "Display this help message.") do
-        puts opts
-        exit
-      end
-      
-      standard_rake_options.each { |args| opts.on(*args) }
-      parsed_argv = opts.parse(ARGV)
+      OptionParser.new do |opts|
+        opts.banner = "rake [-f rakefile] {options} targets..."
+        opts.separator ""
+        opts.separator "Options are ..."
+
+        opts.on_tail("-h", "--help", "-H", "Display this help message.") do
+          puts opts
+          exit
+        end
+
+        standard_rake_options.each { |args| opts.on(*args) }
+      end.parse!
 
       # If class namespaces are requested, set the global options
       # according to the values in the options structure.
@@ -2421,7 +2440,6 @@ module Rake
         $dryrun = options.dryrun
         $silent = options.silent
       end
-      parsed_argv
     end
 
     # Similar to the regular Ruby +require+ command, but will check
@@ -2491,8 +2509,6 @@ module Rake
         begin
           if ENV['RAKE_SYSTEM']
             ENV['RAKE_SYSTEM']
-          elsif Win32.windows?
-            Win32.win32_system_dir
           else
             standard_system_dir
           end
@@ -2500,17 +2516,23 @@ module Rake
     end
     
     # The standard directory containing system wide rake files.
-    def standard_system_dir #:nodoc:
-      File.join(File.expand_path('~'), '.rake')
+    if Win32.windows?
+      def standard_system_dir #:nodoc:
+        Win32.win32_system_dir
+      end
+    else
+      def standard_system_dir #:nodoc:
+        File.join(File.expand_path('~'), '.rake')
+      end
     end
     private :standard_system_dir
 
     # Collect the list of tasks on the command line.  If no tasks are
     # given, return a list containing only the default task.
     # Environmental assignments are processed at this time as well.
-    def collect_tasks(argv)
+    def collect_tasks
       @top_level_tasks = []
-      argv.each do |arg|
+      ARGV.each do |arg|
         if arg =~ /^(\w+)=(.*)$/
           ENV[$1] = $2
         else

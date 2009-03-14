@@ -285,9 +285,7 @@ class TestFileList < Test::Unit::TestCase
     assert_equal "one.two.net", "one.two.c".ext(".net")
     assert_equal "one/two.net", "one/two.c".ext(".net")
     assert_equal "one.x/two.net", "one.x/two.c".ext(".net")
-    assert_equal "one.x\\two.net", "one.x\\two.c".ext(".net")
     assert_equal "one.x/two.net", "one.x/two".ext(".net")
-    assert_equal "one.x\\two.net", "one.x\\two".ext(".net")
     assert_equal ".onerc.net", ".onerc.dot".ext("net")
     assert_equal ".onerc.net", ".onerc".ext("net")
     assert_equal ".a/.onerc.net", ".a/.onerc".ext("net")
@@ -297,6 +295,11 @@ class TestFileList < Test::Unit::TestCase
     assert_equal ".one", ".one".ext
     assert_equal ".", ".".ext("c")
     assert_equal "..", "..".ext("c")
+    # These only need to work in windows
+    if Rake::Win32.windows?
+      assert_equal "one.x\\two.net", "one.x\\two.c".ext(".net")
+      assert_equal "one.x\\two.net", "one.x\\two".ext(".net")
+    end
   end
 
   def test_filelist_ext

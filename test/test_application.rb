@@ -110,7 +110,7 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_finding_rakefile
-    assert_match("Rakefile", @app.instance_eval { have_rakefile })
+    assert_match(/Rakefile/i, @app.instance_eval { have_rakefile })
   end
 
   def test_not_finding_rakefile
@@ -163,6 +163,7 @@ class TestApplication < Test::Unit::TestCase
         handle_options
         options.silent = true
         options.load_system = true
+        options.rakelib = []
         load_rakefile
       end
       assert_equal "test/data/sys", @app.system_dir
@@ -170,44 +171,8 @@ class TestApplication < Test::Unit::TestCase
     end
   end
 
-  def test_load_from_system_rakefile_on_unix
-    flexmock(@app, :windows? => false,
-      :win32_system_dir => nil,
-      :load => nil)
-    flexmock(File).should_receive(:expand_path).with("~").and_return("/HOME")
-    flexmock(File).should_receive(:expand_path).and_return { |fn| fn }
-    
-    in_environment('RAKE_SYSTEM' => nil) do
-      @app.options.rakelib = []
-      @app.instance_eval do
-        handle_options
-        options.silent = true
-        options.load_system = true
-        load_rakefile
-      end
-      assert_equal "/HOME/.rake", @app.system_dir
-    end
-  end
-
   def test_windows
     assert ! (@app.windows? && @app.unix?)
-  end
-
-  def test_load_from_system_rakefile_on_windows
-    flexmock(Rake::Win32, :windows? => true)
-    flexmock(@app, :standard_system_dir => "XX")
-    flexmock(@app).should_receive(:directory?).with("/AD/Rake").and_return(true)
-    flexmock(@app).should_receive(:load).and_return(nil)
-    in_environment('RAKE_SYSTEM' => nil, 'APPDATA' => '/AD') do
-      @app.options.rakelib = []
-      @app.instance_eval do
-        handle_options
-        options.silent = true
-        options.load_system = true
-        load_rakefile
-      end
-      assert_equal "/AD/Rake", @app.system_dir
-    end
   end
 
   def test_loading_imports
@@ -230,6 +195,19 @@ class TestApplication < Test::Unit::TestCase
       add_import("x.dummy")
       load_imports
     end
+  end
+
+  def test_handle_options_should_strip_options_from_ARGV
+    assert !@app.options.trace
+
+    valid_option = '--trace'
+    ARGV.clear
+    ARGV << valid_option
+
+    @app.handle_options
+
+    assert !ARGV.include?(valid_option)
+    assert @app.options.trace
   end
 
   def test_good_run
@@ -596,7 +574,8 @@ class TestApplicationOptions < Test::Unit::TestCase
       throw :system_exit, :exit
     end
     @app.instance_eval do
-      collect_tasks handle_options
+      handle_options
+      collect_tasks
     end
     @tasks = @app.top_level_tasks
     @app.options

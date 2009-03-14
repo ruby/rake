@@ -2,9 +2,11 @@ TAGS
 html
 pkg
 coverage
+testdata
 *.bak
 temp_*
 x
 *.patch
 .#*
 *.rbc
+r19.diff
