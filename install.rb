@@ -1,3 +1,3 @@
-$LOAD_PATH.unshift "./contrib/quix/lib"
+$LOAD_PATH.unshift "support"
 require 'quix/simple_installer'
-CompTree::SimpleInstaller.new.run
+Quix::SimpleInstaller.new.run
