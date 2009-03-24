@@ -1,6 +1,4 @@
 
-require 'comp_tree/misc'
-
 module CompTree
   module Diagnostic
     module_function
@@ -11,9 +9,9 @@ module CompTree
       end
       if block
         expression = block.call
-        eval(expression, block.binding).tap { |result|
-          stream.printf("%-16s => %s\n", expression, result.inspect)
-        }
+        result = eval(expression, block.binding)
+        stream.printf("%-16s => %s\n", expression, result.inspect)
+        result
       end
     end
 
@@ -27,14 +25,9 @@ module CompTree
       end
 
       def trace(desc = nil, &block)
-        if desc
-          show("#{desc}.".sub(%r!\.\.+\Z!, ""), STDERR, &block)
-        else
-          show(nil, STDERR, &block)
-        end
+        show(desc, STDERR, &block)
       end
     else
-      # non-$DEBUG
       def debug ; end
       def debugging? ; end
       def trace(*args) ; end

@@ -1,6 +1,5 @@
 
 require 'comp_tree/diagnostic'
-require 'comp_tree/misc'
 require 'comp_tree/algorithm'
 require 'comp_tree/node'
 require 'comp_tree/error'
@@ -14,7 +13,6 @@ module CompTree
   #
   class Driver
     include Diagnostic
-    include Misc
     include Algorithm
     
     #

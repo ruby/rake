@@ -1,13 +1,21 @@
 
 require 'comp_tree/diagnostic'
-require 'comp_tree/misc'
 
 module CompTree
   module Algorithm
     include Diagnostic
-    include Misc
 
     module_function
+
+    def loop_with(leave, again)
+      catch(leave) {
+        while true
+          catch(again) {
+            yield
+          }
+        end
+      }
+    end
 
     def compute_multithreaded(root, num_threads)
       trace "Computing #{root.name} with #{num_threads} threads"
@@ -30,13 +38,13 @@ module CompTree
             thread_wake_condition.wait(tree_mutex)
           }
 
-          loop_with(:done, :restart) {
+          loop_with(:leave, :again) {
             node = tree_mutex.synchronize {
               trace "Thread #{thread_index} node search"
               if result
                 trace "Thread #{thread_index} detected finish"
                 num_threads_in_use -= 1
-                throw :done
+                throw :leave
               else
                 #
                 # Lock the tree and find a node.
@@ -51,7 +59,7 @@ module CompTree
                 else
                   trace "Thread #{thread_index}: no node found; sleeping."
                   thread_wake_condition.wait(tree_mutex)
-                  throw :restart
+                  throw :again
                 end
               end
             }
@@ -117,10 +125,10 @@ module CompTree
       }
 
       trace "Main: waiting for threads to finish."
-      loop_with(:done, :restart) {
+      loop_with(:leave, :again) {
         tree_mutex.synchronize {
           if threads.all? { |thread| thread.status == false }
-            throw :done
+            throw :leave
           end
           thread_wake_condition.broadcast
         }
