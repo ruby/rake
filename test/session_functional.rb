@@ -299,8 +299,37 @@ class FunctionalTest < Test::Unit::TestCase
     end
   end
 
+  def test_comment_before_task_acts_like_desc
+    Dir.chdir("test/data/comments") { rake("-T")}
+    assert_match("comment for t1", @out)
+  end
+  
+  def test_comment_separated_from_task_by_blank_line_is_not_picked_up
+    Dir.chdir("test/data/comments") { rake("-T")}
+    assert_not_match("t2", @out)
+  end
+
+  def test_comment_after_desc_is_ignored
+    Dir.chdir("test/data/comments") { rake("-T")}
+    assert_match("override comment for t3", @out)
+  end
+  
+  def test_comment_before_desc_is_ignored
+    Dir.chdir("test/data/comments") { rake("-T")}
+    assert_match("override comment for t4", @out)
+  end
+  
+  def test_correct_number_of_tasks_reported
+    Dir.chdir("test/data/comments") { rake("-T")}
+    assert_equal(3, @out.grep(/t\d/).size)
+  end
+  
   private
 
+  def assert_not_match(pattern, string, comment="'#{pattern}' was found (incorrectly) in '#{string}.inspect")
+    assert_nil Regexp.new(pattern).match(string), comment
+  end
+  
   def remove_chaining_files
     %w(play.scpt play.app base).each do |fn|
       FileUtils.rm_f File.join("test/data/chains", fn)

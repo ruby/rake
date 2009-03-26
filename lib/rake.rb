@@ -1707,8 +1707,7 @@ module Rake
       deps = deps.collect {|d| d.to_s }
       task = intern(task_class, task_name)
       task.set_arg_names(arg_names) unless arg_names.empty?
-      task.add_description(@last_description)
-      @last_description = nil
+      task.add_description(get_description)
       task.enhance(deps, &block)
       task
     end
@@ -1944,6 +1943,45 @@ module Rake
       }.flatten
     end
 
+
+    private 
+    
+    # Return the current description. If there isn't one, try to find it
+    # by reading in the source file and looking for a comment immediately
+    # prior to the task definition
+    def get_description
+      desc = @last_description || find_preceding_comment_for_task
+      @last_description = nil
+      desc
+    end
+    
+    def find_preceding_comment_for_task
+      stack = caller
+      begin
+        where = stack.shift
+      end until stack.empty? || where =~ /in `task'/
+      return nil if stack.empty?
+      file_name, line = parse_stack_line(stack.shift)
+      return nil unless file_name
+      comment_from_file(file_name, line)
+    end
+    
+    def parse_stack_line(where)
+      if where =~ /^(.*):(\d)/
+        [ $1, Integer($2) ]
+      else
+        nil
+      end
+    end
+
+    def comment_from_file(file_name, line)
+      @file_cache ||= {}
+      content = (@file_cache[file_name] ||= File.readlines(file_name))
+      line -= 2
+#      line -= 1 while line >= 0 && content[line] =~ /^\s*$/
+      return nil unless content[line] =~ /^\s*#\s*(.*)/
+      $1
+    end
   end # TaskManager
 
   ######################################################################
