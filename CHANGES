@@ -16,6 +16,10 @@
 * Minor fixes to the RDoc generation (removed dependency on darkfish
   and removed inline source option).
 
+== PreVersion 0.8.6
+
+* Now allow # comments to comment a task definition.
+
 == Version 0.8.5
 
 * Better support for the system command on Windows.
