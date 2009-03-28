@@ -2,7 +2,7 @@
 
 #--
 
-# Copyright 2003, 2004, 2005, 2006, 2007, 2008 by Jim Weirich (jim@weirichhouse.org)
+# Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009 by Jim Weirich (jim.weirich@gmail.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -22,12 +22,6 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 #++
-#
-# = Rake -- Ruby Make
-#
-# This is the main file for the Rake application.  Normally it is referenced
-# as a library via a require statement, but it can be distributed
-# independently as an application.
 
 RAKEVERSION = '0.8.5'
 
