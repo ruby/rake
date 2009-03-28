@@ -117,7 +117,7 @@ class TestFileUtils < Test::Unit::TestCase
   def test_fileutils_methods_dont_leak
     obj = Object.new
     assert_exception(NoMethodError) { obj.copy } # from FileUtils
-    assert_exception(NoMethodError) { obj.ruby } # from RubyFileUtils
+    assert_exception(NoMethodError) { obj.ruby "-v" } # from RubyFileUtils
   end
 
   def test_sh
