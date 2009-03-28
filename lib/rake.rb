@@ -41,7 +41,15 @@ require 'ostruct'
 require 'rake/win32'
 require 'rake/file_list'
 
+$trace = false
+
 # Alias FileList to be available at the top level.
 FileList = Rake::FileList
 
-$trace = false
+# Include the FileUtils file manipulation functions in the top level module,
+# but mark them private so that they don't unintentionally define methods on
+# other objects.
+
+include RakeFileUtils
+private(*FileUtils.instance_methods(false))
+private(*RakeFileUtils.instance_methods(false))
