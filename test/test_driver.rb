@@ -5,12 +5,6 @@ require 'test/unit'
 require 'benchmark'
 require 'comp_tree'
 
-trace = lambda { |*args|
-  STDERR.puts "#{Process.pid}: #{args.inspect}"
-}
-
-#set_trace_func(trace)
-
 srand(22)
 
 module CompTree
