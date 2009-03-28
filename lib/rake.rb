@@ -1967,7 +1967,7 @@ module Rake
     end
     
     def parse_stack_line(where)
-      if where =~ /^(.*):(\d)/
+      if where =~ /^(.*):(\d+)/
         [ $1, Integer($2) ]
       else
         nil
@@ -1978,7 +1978,6 @@ module Rake
       @file_cache ||= {}
       content = (@file_cache[file_name] ||= File.readlines(file_name))
       line -= 2
-#      line -= 1 while line >= 0 && content[line] =~ /^\s*$/
       return nil unless content[line] =~ /^\s*#\s*(.*)/
       $1
     end
