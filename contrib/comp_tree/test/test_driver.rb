@@ -3,31 +3,21 @@ $LOAD_PATH.unshift(File.expand_path("#{File.dirname(__FILE__)}/../lib"))
 
 require 'test/unit'
 require 'benchmark'
-
 require 'comp_tree'
 
 srand(22)
 
-module Rake::CompTree
-  module RetriableFork
-    HAVE_FORK = false
-  end
-
-  Thread.abort_on_exception = true
-  HAVE_FORK = RetriableFork::HAVE_FORK
-  DO_FORK = (HAVE_FORK and not ARGV.include?("--no-fork"))
-
+module CompTree
   module TestCommon
-    include Rake::CompTree::Diagnostic
+    include Diagnostic
 
-    if  ARGV.include?("--bench")
+    if ARGV.include?("--bench")
       def separator
         trace ""
         trace "-"*60
       end
     else
       def separator ; end
-      def trace(*args) ; end
     end
   end
 
@@ -35,7 +25,7 @@ module Rake::CompTree
     include TestCommon
 
     def test_1_syntax
-      Rake::CompTree::Driver.new { |driver|
+      CompTree::Driver.new { |driver|
         driver.define(:area, :width, :height, :offset) { |width, height, offset|
           width*height - offset
         }
@@ -56,13 +46,12 @@ module Rake::CompTree
           7
         }
         
-        assert_equal((2 + 5)*(3 + 5) - 7,
-                     driver.compute(:area, opts(6)))
+        assert_equal((2 + 5)*(3 + 5) - 7, driver.compute(:area, 6))
       }
     end
 
     def test_2_syntax
-      Rake::CompTree::Driver.new { |driver|
+      CompTree::Driver.new { |driver|
         driver.define_area(:width, :height, :offset) { |width, height, offset|
           width*height - offset
         }
@@ -83,13 +72,12 @@ module Rake::CompTree
           7
         }
         
-        assert_equal((2 + 5)*(3 + 5) - 7,
-                     driver.compute(:area, opts(6)))
+        assert_equal((2 + 5)*(3 + 5) - 7, driver.compute(:area, 6))
       }
     end
 
     def test_3_syntax
-      Rake::CompTree::Driver.new { |driver|
+      CompTree::Driver.new { |driver|
         driver.define_area :width, :height, :offset, %{
           width*height - offset
         }
@@ -110,65 +98,76 @@ module Rake::CompTree
           7
         }
 
-        assert_equal((2 + 5)*(3 + 5) - 7,
-                     driver.compute(:area, opts(6)))
+        assert_equal((2 + 5)*(3 + 5) - 7, driver.compute(:area, 6))
       }
     end
 
     def test_thread_flood
-      max =
-        if use_fork?
-          16
-        else
-          200
-        end
-      (1..max).each { |threads|
-        Rake::CompTree::Driver.new { |driver|
-          drain = lambda {
+      (1..200).each { |num_threads|
+        CompTree::Driver.new { |driver|
+          drain = lambda { |*args|
             1.times { }
           }
           driver.define_a(:b, &drain)
           driver.define_b(&drain)
-          driver.compute(:a, opts(threads))
+          driver.compute(:a, num_threads)
+        }
+      }
+    end
+
+    def test_sequential
+      (1..50).each { |num_threads|
+        [1, 3, 50].each { |num_nodes|
+          CompTree::Driver.new { |driver|
+            driver.define(:root) { true }
+            (1..num_nodes).each { |n|
+              if n == 0
+                driver.define("a#{n}".to_s, :root) { true }
+              else
+                driver.define("a#{n}".to_s, "a#{n-1}".to_s) { true }
+              end
+            }
+            driver.compute(:root, num_threads)
+          }
         }
       }
     end
 
     def test_malformed
-      Rake::CompTree::Driver.new { |driver|
-        assert_raise(Rake::CompTree::Error::ArgumentError) {
+      CompTree::Driver.new { |driver|
+        assert_raise(CompTree::Error::ArgumentError) {
           driver.define {
           }
         }
-        assert_raise(Rake::CompTree::Error::RedefinitionError) {
+        assert_raise(CompTree::Error::RedefinitionError) {
           driver.define(:a) {
           }
           driver.define(:a) {
           }
         }
-        assert_raise(Rake::CompTree::Error::ArgumentError) {
+        assert_raise(CompTree::Error::ArgumentError) {
           driver.define(:b) {
           }
-          driver.compute(:b, :threads => 0)
+          driver.compute(:b, 0)
         }
-        assert_raise(Rake::CompTree::Error::ArgumentError) {
+        assert_raise(CompTree::Error::ArgumentError) {
           driver.define(:c) {
           }
-          driver.compute(:c, :threads => -1)
+          driver.compute(:c, -1)
         }
       }
     end
 
     def generate_comp_tree(num_levels, num_children, drain_iterations)
-      Rake::CompTree::Driver.new { |driver|
+      CompTree::Driver.new { |driver|
         root = :aaa
         last_name = root
-        pick_names = lambda {
+        pick_names = lambda { |*args|
           (0..rand(num_children)).map {
             last_name = last_name.to_s.succ.to_sym
           }
         }
-        drain = lambda {
+        drain = lambda { |*args|
           drain_iterations.times {
           }
         }
@@ -197,7 +196,6 @@ module Rake::CompTree
           separator
           trace {%{num_levels}}
           trace {%{num_children}}
-          trace {%{use_fork?}}
           driver = generate_comp_tree(
             num_levels,
             num_children,
@@ -208,7 +206,7 @@ module Rake::CompTree
               driver.reset(:aaa)
               result = nil
               trace Benchmark.measure {
-                result = driver.compute(:aaa, opts(threads))
+                result = driver.compute(:aaa, threads)
               }
               assert_equal(result, args[:drain_iterations])
             }
@@ -218,125 +216,39 @@ module Rake::CompTree
     end
 
     def test_generated_tree
-      if use_fork?
-        run_generated_tree(
-          :level_range => 4..4,
-          :children_range => 4..4,
-          :thread_range => 8..8,
-          :drain_iterations => 0)
-      else
-        run_generated_tree(
-          :level_range => 4..4,
-          :children_range => 4..4,
-          :thread_range => 8..8,
-          :drain_iterations => 0)
-      end
+      run_generated_tree(
+        :level_range => 4..4,
+        :children_range => 4..4,
+        :thread_range => 8..8,
+        :drain_iterations => 0
+      )
     end
+  end
 
-    def use_fork?
-      not opts(0)[:fork].nil?
-    end
+  class Test_Core < Test::Unit::TestCase
+    include TestBase
   end
   
-  module NoForkTestBase
-    include TestBase
-    def opts(threads)
-      {
-        :threads => threads,
-      }
-    end
-  end
-
-  module ForkTestBase
-    include TestBase
-    def opts(threads)
-      {
-        :threads => threads,
-        :fork => HAVE_FORK,
-      }
-    end
-  end
-  
-  class Test_1_NoFork < Test::Unit::TestCase
-    include NoForkTestBase
-  end
-
-  if DO_FORK
-    class Test_2_Fork < Test::Unit::TestCase
-      include ForkTestBase
-    end
-  end
-
-  class Test_Task < Test::Unit::TestCase
-    def test_task
-      Rake::CompTree::Driver.new(:discard_result => true) { |driver|
-        visit = 0
-        mutex = Mutex.new
-        func = lambda {
-          mutex.synchronize {
-            visit += 1
-          }
-        }
-        driver.define_a(:b, :c, &func)
-        driver.define_b(&func)
-        driver.define_c(:d, &func)
-        driver.define_d(&func)
-
-        (2..10).each { |threads|
-          assert_equal(
-            true,
-            driver.compute(
-              :a,
-              :threads => threads))
-          assert_equal(visit, 4)
-          driver.reset(:a)
-          visit = 0
-        }
-
-        (2..10).each { |threads|
-          assert_equal(
-            true,
-            driver.compute(
-              :a,
-              :threads => threads,
-              :fork => HAVE_FORK))
-          if HAVE_FORK
-            assert_equal(visit, 0)
-          else
-            assert_equal(visit, 4)
-          end
-          driver.reset(:a)
-          visit = 0
-        }
-      }
-    end
-  end
-
   class Test_Drainer < Test::Unit::TestCase
     include TestCommon
 
-    def drain(opts)
-      code = %{ 5000.times { } }
-      if opts[:fork]
-        eval code
-      else
-        system("ruby", "-e", code)
-      end
+    def drain
+      5000.times { }
     end
     
-    def run_drain(opts)
-      Rake::CompTree::Driver.new { |driver|
-        func = lambda {
-          drain(opts)
+    def run_drain(threads)
+      CompTree::Driver.new { |driver|
+        func = lambda { |*args|
+          drain
         }
         driver.define_area(:width, :height, :offset, &func)
         driver.define_width(:border, &func)
         driver.define_height(:border, &func)
         driver.define_border(&func)
         driver.define_offset(&func)
-        trace "number of threads: #{opts[:threads]}"
+        trace "number of threads: #{threads}"
         trace Benchmark.measure {
-          driver.compute(:area, opts)
+          driver.compute(:area, threads)
         }
       }
     end
@@ -347,22 +259,12 @@ module Rake::CompTree
       }
     end
 
-    def test_no_fork
+    def test_drain
       separator
       trace "Subrocess test."
       each_drain { |threads|
-        run_drain({:threads => threads})
+        run_drain(threads)
       }
-    end
-    
-    if DO_FORK
-      def test_fork
-        separator
-        trace "Forking test."
-        each_drain { |threads|
-          run_drain({:threads => threads, :fork => HAVE_FORK})
-        }
-      end
     end
   end
 end

@@ -6,7 +6,7 @@ require 'rake/comp_tree/driver'
 module Rake
   module TaskManager
     def invoke_parallel(root_task_name) # :nodoc:
-      CompTree::Driver.new(:discard_result => true) { |driver|
+      CompTree::Driver.new { |driver|
         #
         # Build the computation tree from task prereqs.
         #
@@ -18,6 +18,7 @@ module Rake
           }
           driver.define(task_name.to_sym, *children_names) {
             task.execute(task_args)
+            true
           }
         }
 
@@ -39,10 +40,7 @@ module Rake
           #
           # Launch the computation.
           #
-          driver.compute(
-            root_node.name,
-            :threads => num_threads,
-            :fork => false)
+          driver.compute(root_node.name, num_threads)
         end
       }
     end

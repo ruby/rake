@@ -1,10 +1,11 @@
 
+module Rake end
 module Rake::CompTree
   module Error
-    # Base class for Rake::CompTree errors.
+    # Base class for CompTree errors.
     class Base < StandardError ; end
     
-    # Internal error inside Rake::CompTree.  Please send a bug report.
+    # Internal error inside CompTree.  Please send a bug report.
     class AssertionFailed < Base ; end
     
     # Bad arguments were passed to a method.

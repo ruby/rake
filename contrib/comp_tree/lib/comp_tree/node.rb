@@ -2,6 +2,7 @@
 require 'rake/comp_tree/diagnostic'
 require 'thread'
 
+module Rake end
 module Rake::CompTree
   #
   # Base class for nodes in the computation tree.
@@ -83,19 +84,18 @@ module Rake::CompTree
     # If all children have been computed, return their results;
     # otherwise return nil.
     #
-    def children_results #:nodoc:
+    def find_children_results #:nodoc:
       if @children_results
         @children_results
       else
-        results = @children.map { |child|
-          if child_result = child.result
-            child_result
-          else
-            return nil
-          end
+        @children.map { |child|
+          child.result or return nil
         }
-        @children_results = results
       end
+    end
+
+    def children_results=(value) #:nodoc:
+      @children_results = value
     end
 
     def trace_compute #:nodoc:

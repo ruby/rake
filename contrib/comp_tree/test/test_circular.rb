@@ -3,10 +3,10 @@ $LOAD_PATH.unshift(File.expand_path("#{File.dirname(__FILE__)}/../lib"))
 require 'comp_tree'
 require 'test/unit'
 
-module Rake::CompTree
+module CompTree
   class TestCircular < Test::Unit::TestCase
     def test_1
-      Rake::CompTree::Driver.new { |driver|
+      CompTree::Driver.new { |driver|
         driver.define(:area, :width, :height, :offset) { |width, height, offset|
           width*height - offset
         }
