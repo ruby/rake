@@ -40,21 +40,17 @@ module CompTree
 
           loop_with(:leave, :again) {
             node = tree_mutex.synchronize {
-              trace "Thread #{thread_index} node search"
+              trace "Thread #{thread_index} aquired tree lock; begin node search"
               if result
                 trace "Thread #{thread_index} detected finish"
                 num_threads_in_use -= 1
                 throw :leave
               else
                 #
-                # Lock the tree and find a node.
-                # The node we obtain, if any, will be locked.
+                # Find a node.  The node we obtain, if any, will be locked.
                 #
                 if node = find_node(root)
-                  trace(
-                    "Thread #{thread_index} found node #{node.name}; " +
-                    "ready to compute"
-                  )
+                  trace "Thread #{thread_index} found node #{node.name}"
                   node
                 else
                   trace "Thread #{thread_index}: no node found; sleeping."
@@ -87,9 +83,9 @@ module CompTree
 
               if node == root or node_result.is_a? Exception
                 #
-                # Root node was computed; we are done.
+                # Root node was computed or error occurred; we are done.
                 #
-                result = node.result
+                result = node_result
               end
                 
               #
