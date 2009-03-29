@@ -117,7 +117,7 @@ module CompTree
 
     def test_sequential
       (1..50).each { |num_threads|
-        [1, 3, 50].each { |num_nodes|
+        [1, 2, 3, 20, 50].each { |num_nodes|
           CompTree::Driver.new { |driver|
             driver.define(:root) { true }
             (1..num_nodes).each { |n|
