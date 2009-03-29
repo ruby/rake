@@ -1,6 +1,10 @@
 
 = Drake Changelog
 
+== Version 0.8.4.1.0.16
+
+* Merge with latest comp_tree.
+
 == Version 0.8.4.1.0.15
 
 * Merge with mainline rake-0.8.4.1.

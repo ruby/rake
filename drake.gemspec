@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: drake
 version: !ruby/object:Gem::Version 
-  version: 0.8.4.1.0.15
+  version: 0.8.4.1.0.16
 platform: ruby
 authors: 
 - James M. Lawrence
@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2009-03-14 00:00:00 -04:00
+date: 2009-03-29 00:00:00 -04:00
 default_executable: drake
 dependencies: []
 
@@ -78,10 +78,7 @@ files:
 - lib/rake/comp_tree/diagnostic.rb
 - lib/rake/comp_tree/driver.rb
 - lib/rake/comp_tree/error.rb
-- lib/rake/comp_tree/misc.rb
 - lib/rake/comp_tree/node.rb
-- lib/rake/comp_tree/tap.rb
-- lib/rake/comp_tree/task_node.rb
 - test/capture_stdout.rb
 - test/check_expansion.rb
 - test/check_no_expansion.rb
