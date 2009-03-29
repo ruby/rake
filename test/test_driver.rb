@@ -115,6 +115,24 @@ module CompTree
       }
     end
 
+    def test_sequential
+      (1..50).each { |num_threads|
+        [1, 3, 50].each { |num_nodes|
+          CompTree::Driver.new { |driver|
+            driver.define(:root) { true }
+            (1..num_nodes).each { |n|
+              if n == 0
+                driver.define("a#{n}".to_s, :root) { true }
+              else
+                driver.define("a#{n}".to_s, "a#{n-1}".to_s) { true }
+              end
+            }
+            driver.compute(:root, num_threads)
+          }
+        }
+      }
+    end
+
     def test_malformed
       CompTree::Driver.new { |driver|
         assert_raise(CompTree::Error::ArgumentError) {
