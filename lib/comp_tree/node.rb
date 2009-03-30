@@ -149,16 +149,5 @@ module CompTree
       }
       @mutex.unlock
     end
-
-    class << self
-      #
-      # Throw away the computation result?
-      #
-      # This Node base class always returns false.
-      #
-      def discard_result?
-        false
-      end
-    end
   end
 end
