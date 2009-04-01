@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: drake
 version: !ruby/object:Gem::Version 
-  version: 0.8.4.1.0.16
+  version: 0.8.4.1.0.17
 platform: ruby
 authors: 
 - James M. Lawrence
@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2009-03-29 00:00:00 -04:00
+date: 2009-04-01 00:00:00 -04:00
 default_executable: drake
 dependencies: []
 
@@ -48,9 +48,9 @@ files:
 - CHANGES
 - CHANGES.drake
 - MIT-LICENSE
-- README
 - Rakefile
 - Rakefile.drake
+- README
 - TODO
 - bin/drake
 - lib/rake/alt_system.rb
@@ -100,10 +100,10 @@ files:
 - test/test_definitions.rb
 - test/test_earlytime.rb
 - test/test_extension.rb
-- test/test_file_creation_task.rb
-- test/test_file_task.rb
 - test/test_filelist.rb
 - test/test_fileutils.rb
+- test/test_file_creation_task.rb
+- test/test_file_task.rb
 - test/test_ftp.rb
 - test/test_invocation_chain.rb
 - test/test_makefile_loader.rb
@@ -117,17 +117,15 @@ files:
 - test/test_rdoc_task.rb
 - test/test_require.rb
 - test/test_rules.rb
-- test/test_task_arguments.rb
-- test/test_task_manager.rb
 - test/test_tasklib.rb
 - test/test_tasks.rb
+- test/test_task_arguments.rb
+- test/test_task_manager.rb
 - test/test_test_task.rb
 - test/test_top_level_functions.rb
 - test/test_win32.rb
 - test/data/imports/deps.mf
 - test/data/sample.mf
-- test/Rakefile.seq
-- test/Rakefile.simple
 - test/data/chains/Rakefile
 - test/data/default/Rakefile
 - test/data/dryrun/Rakefile
@@ -137,14 +135,16 @@ files:
 - test/data/namespace/Rakefile
 - test/data/statusreturn/Rakefile
 - test/data/unittest/Rakefile
+- test/Rakefile.seq
+- test/Rakefile.simple
 - test/data/unittest/subdir
 - doc/command_line_usage.rdoc
 - doc/example
-- doc/example/Rakefile1
-- doc/example/Rakefile2
 - doc/example/a.c
 - doc/example/b.c
 - doc/example/main.c
+- doc/example/Rakefile1
+- doc/example/Rakefile2
 - doc/glossary.rdoc
 - doc/jamis.rb
 - doc/proto_rake.rdoc
