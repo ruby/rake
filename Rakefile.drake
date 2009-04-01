@@ -46,7 +46,14 @@ task :drake_prerelease => [:clean, :gemspec] do
     raise "New stuff from remote repository"
   end
   %w[github.com rubyforge.org].each { |server|
-    unless `ping -c2 #{server}` =~ %r!0% packet loss!
+    cmd = "ping " + (
+      if Config::CONFIG["host"] =~ %r!darwin!
+        "-c2 #{server}"
+      else
+        "#{server} 2 2"
+      end
+    )
+    unless `#{cmd}` =~ %r!0% packet loss!
       raise "No ping for #{server}"
     end
   }
