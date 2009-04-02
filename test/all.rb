@@ -1,11 +1,8 @@
+here = File.dirname(__FILE__)
+$LOAD_PATH.unshift here + "../support"
 
-require 'rbconfig'
+require 'quix/ruby'
 
-Dir["#{File.dirname(__FILE__)}/test_*.rb"].map { |file|
-  File.expand_path(file)
-}.each { |file|
-  ruby = File.join(
-    Config::CONFIG["bindir"],
-    Config::CONFIG["RUBY_INSTALL_NAME"])
-  system(ruby, file, *ARGV)
+Dir["#{here}/test_*.rb"].each { |file|
+  Quix::Ruby.run_or_raise("-w", file, *ARGV)
 }
