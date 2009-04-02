@@ -9,12 +9,10 @@ srand(22)
 
 module CompTree
   module TestCommon
-    include Diagnostic
-
     if ARGV.include?("--bench")
       def separator
-        trace ""
-        trace "-"*60
+        #trace ""
+        #trace "-"*60
       end
     else
       def separator ; end
@@ -180,7 +178,7 @@ module CompTree
           }
         }
         build_tree = lambda { |parent, children, level|
-          trace "building #{parent} --> #{children.join(' ')}"
+          #trace "building #{parent} --> #{children.join(' ')}"
           
           driver.define(parent, *children, &drain)
 
@@ -202,20 +200,18 @@ module CompTree
       args[:level_range].each { |num_levels|
         args[:children_range].each { |num_children|
           separator
-          trace {%{num_levels}}
-          trace {%{num_children}}
+          #trace {%{num_levels}}
+          #trace {%{num_children}}
           driver = generate_comp_tree(
             num_levels,
             num_children,
             args[:drain_iterations])
           args[:thread_range].each { |threads|
-            trace {%{threads}}
+            #trace {%{threads}}
             2.times {
               driver.reset(:aaa)
-              result = nil
-              trace Benchmark.measure {
-                result = driver.compute(:aaa, threads)
-              }
+              result = driver.compute(:aaa, threads)
+              #trace result
               assert_equal(result, args[:drain_iterations])
             }
           }
@@ -254,10 +250,9 @@ module CompTree
         driver.define_height(:border, &func)
         driver.define_border(&func)
         driver.define_offset(&func)
-        trace "number of threads: #{threads}"
-        trace Benchmark.measure {
-          driver.compute(:area, threads)
-        }
+        #trace "number of threads: #{threads}"
+        result = driver.compute(:area, threads)
+        #trace result
       }
     end
 

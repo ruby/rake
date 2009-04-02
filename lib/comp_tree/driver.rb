@@ -1,5 +1,4 @@
 
-require 'comp_tree/diagnostic'
 require 'comp_tree/algorithm'
 require 'comp_tree/node'
 require 'comp_tree/error'
@@ -12,7 +11,6 @@ module CompTree
   # responsible for defining nodes and running computations.
   #
   class Driver
-    include Diagnostic
     include Algorithm
     
     #
