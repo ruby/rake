@@ -4,11 +4,35 @@ require 'comp_tree'
 require 'test/unit'
 require 'benchmark'
 
+TREE_GENERATION_DATA = {
+  :level_range => 1..4,
+  :children_range => 1..6,
+  :thread_range => 1..6,
+  :drain_iterations => 0,
+}
+
 module CompTree
   module TestCommon
-    def separator
-      #trace ""
-      #trace "-"*60
+    if ARGV.include?("--bench")
+      def separator
+        puts
+        puts "-"*60
+      end
+
+      def bench_output(desc = nil, stream = STDOUT, &block)
+        if desc
+          stream.puts(desc)
+        end
+        if block
+          expression = block.call
+          result = eval(expression, block.binding)
+          stream.printf("%-16s => %s\n", expression, result.inspect)
+          result
+        end
+      end
+    else
+      def separator() end
+      def bench_output(desc = nil, stream = STDOUT, &block) end
     end
   end
 
@@ -235,21 +259,21 @@ module CompTree
       args[:level_range].each { |num_levels|
         args[:children_range].each { |num_children|
           separator
-          #trace {%{num_levels}}
-          #trace {%{num_children}}
+          bench_output {%{num_levels}}
+          bench_output {%{num_children}}
           driver = generate_comp_tree(
             num_levels,
             num_children,
             args[:drain_iterations])
           args[:thread_range].each { |threads|
-            #trace {%{threads}}
+           bench_output {%{threads}}
             2.times {
               driver.reset(:aaa)
               result = nil
               bench = Benchmark.measure {
                 result = driver.compute(:aaa, threads)
               }
-              #trace bench
+              bench_output bench
               assert_equal(result, args[:drain_iterations])
             }
           }
@@ -258,12 +282,7 @@ module CompTree
     end
 
     def test_generated_tree
-      run_generated_tree(
-        :level_range => 4..4,
-        :children_range => 4..4,
-        :thread_range => 8..8,
-        :drain_iterations => 0
-      )
+      run_generated_tree(TREE_GENERATION_DATA)
     end
   end
 
@@ -288,9 +307,9 @@ module CompTree
         driver.define_height(:border, &func)
         driver.define_border(&func)
         driver.define_offset(&func)
-        #trace "number of threads: #{threads}"
+        bench_output "number of threads: #{threads}"
         bench = Benchmark.measure { driver.compute(:area, threads) }
-        #trace bench
+        bench_output bench
       }
     end
 
