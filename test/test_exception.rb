@@ -1,9 +1,7 @@
-
-$LOAD_PATH.unshift(File.expand_path("#{File.dirname(__FILE__)}/../lib"))
+$LOAD_PATH.unshift File.dirname(__FILE__) + "/../lib"
 
 require 'comp_tree'
 require 'test/unit'
-require 'open3'
 
 module CompTree
   class TestRaises < Test::Unit::TestCase

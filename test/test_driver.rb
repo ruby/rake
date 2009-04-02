@@ -1,21 +1,14 @@
+$LOAD_PATH.unshift File.dirname(__FILE__) + "/../lib"
 
-$LOAD_PATH.unshift(File.expand_path("#{File.dirname(__FILE__)}/../lib"))
-
+require 'comp_tree'
 require 'test/unit'
 require 'benchmark'
-require 'comp_tree'
-
-srand(22)
 
 module CompTree
   module TestCommon
-    if ARGV.include?("--bench")
-      def separator
-        #trace ""
-        #trace "-"*60
-      end
-    else
-      def separator ; end
+    def separator
+      #trace ""
+      #trace "-"*60
     end
   end
 
@@ -252,8 +245,11 @@ module CompTree
             #trace {%{threads}}
             2.times {
               driver.reset(:aaa)
-              result = driver.compute(:aaa, threads)
-              #trace result
+              result = nil
+              bench = Benchmark.measure {
+                result = driver.compute(:aaa, threads)
+              }
+              #trace bench
               assert_equal(result, args[:drain_iterations])
             }
           }
@@ -271,11 +267,11 @@ module CompTree
     end
   end
 
-  class Test_Core < Test::Unit::TestCase
+  class TestCore < Test::Unit::TestCase
     include TestBase
   end
   
-  class Test_Drainer < Test::Unit::TestCase
+  class TestDrainer < Test::Unit::TestCase
     include TestCommon
 
     def drain
@@ -293,8 +289,8 @@ module CompTree
         driver.define_border(&func)
         driver.define_offset(&func)
         #trace "number of threads: #{threads}"
-        result = driver.compute(:area, threads)
-        #trace result
+        bench = Benchmark.measure { driver.compute(:area, threads) }
+        #trace bench
       }
     end
 
