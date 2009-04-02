@@ -164,6 +164,19 @@ module CompTree
       }
     end
 
+    def test_node_subclass
+      subclass = Class.new(CompTree::Node) {
+        def stuff
+          "--data--"
+        end
+      }
+      CompTree::Driver.new(:node_class => subclass) { |driver|
+        driver.define(:a) {
+        }
+        assert_equal("--data--", driver.nodes[:a].stuff)
+      }
+    end
+
     def generate_comp_tree(num_levels, num_children, drain_iterations)
       CompTree::Driver.new { |driver|
         root = :aaa
