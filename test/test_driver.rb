@@ -158,6 +158,14 @@ module CompTree
       }
     end
 
+    def test_method_missing_intact
+      assert_raise(NoMethodError) {
+        CompTree::Driver.new { |driver|
+          driver.junk
+        }
+      }
+    end
+
     def generate_comp_tree(num_levels, num_children, drain_iterations)
       CompTree::Driver.new { |driver|
         root = :aaa
@@ -261,7 +269,6 @@ module CompTree
 
     def test_drain
       separator
-      trace "Subrocess test."
       each_drain { |threads|
         run_drain(threads)
       }
