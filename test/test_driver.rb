@@ -156,6 +156,35 @@ module CompTree
       }
     end
 
+    def test_exception_in_compute
+      test_error = Class.new(RuntimeError)
+      CompTree::Driver.new { |driver|
+        driver.define_area(:width, :height, :offset) { |width, height, offset|
+          width*height - offset
+        }
+        
+        driver.define_width(:border) { |border|
+          2 + border
+        }
+        
+        driver.define_height(:border) { |border|
+          3 + border
+        }
+        
+        driver.define_border {
+          raise test_error
+        }
+        
+        driver.define_offset {
+          7
+        }
+        
+        assert_raise(test_error) {
+          driver.compute(:area, 6)
+        }
+      }
+    end
+
     def test_method_missing_intact
       assert_raise(NoMethodError) {
         CompTree::Driver.new { |driver|
