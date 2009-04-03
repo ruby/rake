@@ -1,5 +1,4 @@
 
-require 'rake/comp_tree/diagnostic'
 require 'rake/comp_tree/algorithm'
 require 'rake/comp_tree/node'
 require 'rake/comp_tree/error'
@@ -13,7 +12,6 @@ module Rake::CompTree
   # responsible for defining nodes and running computations.
   #
   class Driver
-    include Diagnostic
     include Algorithm
     
     #

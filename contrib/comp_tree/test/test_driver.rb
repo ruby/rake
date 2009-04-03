@@ -1,23 +1,38 @@
+$LOAD_PATH.unshift File.dirname(__FILE__) + "/../lib"
 
-$LOAD_PATH.unshift(File.expand_path("#{File.dirname(__FILE__)}/../lib"))
-
+require 'comp_tree'
 require 'test/unit'
 require 'benchmark'
-require 'comp_tree'
 
-srand(22)
+TREE_GENERATION_DATA = {
+  :level_range => 1..4,
+  :children_range => 1..6,
+  :thread_range => 1..6,
+  :drain_iterations => 0,
+}
 
 module CompTree
   module TestCommon
-    include Diagnostic
-
     if ARGV.include?("--bench")
       def separator
-        trace ""
-        trace "-"*60
+        puts
+        puts "-"*60
+      end
+
+      def bench_output(desc = nil, stream = STDOUT, &block)
+        if desc
+          stream.puts(desc)
+        end
+        if block
+          expression = block.call
+          result = eval(expression, block.binding)
+          stream.printf("%-16s => %s\n", expression, result.inspect)
+          result
+        end
       end
     else
-      def separator ; end
+      def separator() end
+      def bench_output(desc = nil, stream = STDOUT, &block) end
     end
   end
 
@@ -158,6 +173,56 @@ module CompTree
       }
     end
 
+    def test_exception_in_compute
+      test_error = Class.new(RuntimeError)
+      CompTree::Driver.new { |driver|
+        driver.define_area(:width, :height, :offset) { |width, height, offset|
+          width*height - offset
+        }
+        
+        driver.define_width(:border) { |border|
+          2 + border
+        }
+        
+        driver.define_height(:border) { |border|
+          3 + border
+        }
+        
+        driver.define_border {
+          raise test_error
+        }
+        
+        driver.define_offset {
+          7
+        }
+        
+        assert_raise(test_error) {
+          driver.compute(:area, 6)
+        }
+      }
+    end
+
+    def test_method_missing_intact
+      assert_raise(NoMethodError) {
+        CompTree::Driver.new { |driver|
+          driver.junk
+        }
+      }
+    end
+
+    def test_node_subclass
+      subclass = Class.new(CompTree::Node) {
+        def stuff
+          "--data--"
+        end
+      }
+      CompTree::Driver.new(:node_class => subclass) { |driver|
+        driver.define(:a) {
+        }
+        assert_equal("--data--", driver.nodes[:a].stuff)
+      }
+    end
+
     def generate_comp_tree(num_levels, num_children, drain_iterations)
       CompTree::Driver.new { |driver|
         root = :aaa
@@ -172,7 +237,7 @@ module CompTree
           }
         }
         build_tree = lambda { |parent, children, level|
-          trace "building #{parent} --> #{children.join(' ')}"
+          #trace "building #{parent} --> #{children.join(' ')}"
           
           driver.define(parent, *children, &drain)
 
@@ -194,20 +259,21 @@ module CompTree
       args[:level_range].each { |num_levels|
         args[:children_range].each { |num_children|
           separator
-          trace {%{num_levels}}
-          trace {%{num_children}}
+          bench_output {%{num_levels}}
+          bench_output {%{num_children}}
           driver = generate_comp_tree(
             num_levels,
             num_children,
             args[:drain_iterations])
           args[:thread_range].each { |threads|
-            trace {%{threads}}
+           bench_output {%{threads}}
             2.times {
               driver.reset(:aaa)
               result = nil
-              trace Benchmark.measure {
+              bench = Benchmark.measure {
                 result = driver.compute(:aaa, threads)
               }
+              bench_output bench
               assert_equal(result, args[:drain_iterations])
             }
           }
@@ -216,20 +282,15 @@ module CompTree
     end
 
     def test_generated_tree
-      run_generated_tree(
-        :level_range => 4..4,
-        :children_range => 4..4,
-        :thread_range => 8..8,
-        :drain_iterations => 0
-      )
+      run_generated_tree(TREE_GENERATION_DATA)
     end
   end
 
-  class Test_Core < Test::Unit::TestCase
+  class TestCore < Test::Unit::TestCase
     include TestBase
   end
   
-  class Test_Drainer < Test::Unit::TestCase
+  class TestDrainer < Test::Unit::TestCase
     include TestCommon
 
     def drain
@@ -246,10 +307,9 @@ module CompTree
         driver.define_height(:border, &func)
         driver.define_border(&func)
         driver.define_offset(&func)
-        trace "number of threads: #{threads}"
-        trace Benchmark.measure {
-          driver.compute(:area, threads)
-        }
+        bench_output "number of threads: #{threads}"
+        bench = Benchmark.measure { driver.compute(:area, threads) }
+        bench_output bench
       }
     end
 
@@ -261,7 +321,6 @@ module CompTree
 
     def test_drain
       separator
-      trace "Subrocess test."
       each_drain { |threads|
         run_drain(threads)
       }

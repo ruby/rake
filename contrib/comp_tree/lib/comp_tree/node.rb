@@ -1,5 +1,4 @@
 
-require 'rake/comp_tree/diagnostic'
 require 'thread'
 
 module Rake end
@@ -8,8 +7,6 @@ module Rake::CompTree
   # Base class for nodes in the computation tree.
   # 
   class Node
-    include Diagnostic
-
     attr_reader :name                   #:nodoc:
 
     attr_accessor :parents              #:nodoc:
@@ -98,15 +95,15 @@ module Rake::CompTree
       @children_results = value
     end
 
-    def trace_compute #:nodoc:
-      debug {
-        # --- own mutex
-        trace "Computing #{@name}"
-        raise Error::AssertionFailed if @result
-        raise Error::AssertionFailed unless @mutex.locked?
-        raise Error::AssertionFailed unless @children_results
-      }
-    end
+    #def trace_compute #:nodoc:
+    #  debug {
+    #    # --- own mutex
+    #    trace "Computing #{@name}"
+    #    raise Error::AssertionFailed if @result
+    #    raise Error::AssertionFailed unless @mutex.locked?
+    #    raise Error::AssertionFailed unless @children_results
+    #  }
+    #end
 
     #
     # Compute this node; children must be computed and lock must be
@@ -123,10 +120,10 @@ module Rake::CompTree
     def try_lock #:nodoc:
       # --- shared tree mutex and own mutex
       if @shared_lock == 0 and @mutex.try_lock
-        trace "Locking #{@name}"
+        #trace "Locking #{@name}"
         each_upward { |node|
           node.shared_lock += 1
-          trace "#{node.name} locked by #{@name}: level: #{node.shared_lock}"
+          #trace "#{node.name} locked by #{@name}: level: #{node.shared_lock}"
         }
         true
       else
@@ -136,17 +133,17 @@ module Rake::CompTree
 
     def unlock #:nodoc:
       # --- shared tree mutex and own mutex
-      debug {
-        raise Error::AssertionFailed unless @mutex.locked?
-        trace "Unlocking #{@name}"
-      }
+      #debug {
+      #  raise Error::AssertionFailed unless @mutex.locked?
+      #  trace "Unlocking #{@name}"
+      #}
       each_upward { |node|
         node.shared_lock -= 1
-        debug {
-          if node.shared_lock == 0
-            trace "#{node.name} unlocked by #{@name}"
-          end
-        }
+        #debug {
+        #  if node.shared_lock == 0
+        #    trace "#{node.name} unlocked by #{@name}"
+        #  end
+        #}
       }
       @mutex.unlock
     end
