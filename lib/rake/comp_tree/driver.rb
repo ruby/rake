@@ -54,9 +54,6 @@ module Rake::CompTree
     #     width*height
     #   }
     #
-    # NOTE: You must return a non-nil value to signal the computation
-    # is complete.  If nil is returned, the node will be recomputed.
-    #
     def define(*args, &block)
       parent_name = args.first
       children_names = args[1..-1]
@@ -144,13 +141,13 @@ module Rake::CompTree
         raise ArgumentError, "threads is #{threads}"
       end
 
-      root.result or (
-        if threads == 1
-          root.result = root.compute_now
-        else
-          compute_multithreaded(root, threads)
-        end
-      )
+      if root.computed
+        root.result
+      elsif threads == 1
+        root.result = root.compute_now
+      else
+        compute_multithreaded(root, threads)
+      end
     end
   end
 end

@@ -14,7 +14,6 @@ module Rake
           children_names = prereqs.map { |child| child.name }
           driver.define(task_name, *children_names) {
             task.execute(task_args)
-            true
           }
         }
 
@@ -29,7 +28,7 @@ module Rake
           #
           root_node.each_downward { |node|
             unless node.function
-              node.result = true
+              node.computed = true
             end
           }
 

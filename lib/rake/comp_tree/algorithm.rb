@@ -16,7 +16,7 @@ module Rake::CompTree
 
     def compute_multithreaded(root, num_threads)
       #trace "Computing #{root.name} with #{num_threads} threads"
-      result = nil
+      finished = nil
       tree_mutex = Mutex.new
       node_finished_condition = ConditionVariable.new
       thread_wake_condition = ConditionVariable.new
@@ -36,7 +36,7 @@ module Rake::CompTree
           loop_with(:leave, :again) {
             node = tree_mutex.synchronize {
               #trace "Thread #{thread_index} acquired tree lock; begin search"
-              if result
+              if finished
                 #trace "Thread #{thread_index} detected finish"
                 num_threads_in_use -= 1
                 throw :leave
@@ -57,7 +57,10 @@ module Rake::CompTree
             }
 
             #trace "Thread #{thread_index} computing node"
-            node_result = compute_node(node)
+            #debug {
+            #  node.trace_compute
+            #}
+            node.compute
             #trace "Thread #{thread_index} node computed; waiting for tree lock"
 
             tree_mutex.synchronize {
@@ -65,25 +68,28 @@ module Rake::CompTree
               #debug {
               #  name = "#{node.name}" + ((node == root) ? " (ROOT NODE)" : "")
               #  initial = "Thread #{thread_index} compute result for #{name}: "
-              #  status = node_result.is_a?(Exception) ? "error" : "success"
+              #  status = node.computed.is_a?(Exception) ? "error" : "success"
               #  trace initial + status
-              #  trace "Thread #{thread_index} node result: #{node_result}"
+              #  trace "Thread #{thread_index} node result: #{node.result}"
               #}
 
-              node.result = node_result
-
+              if node.computed.is_a? Exception
+                #
+                # An error occurred; we are done.
+                #
+                finished = node.computed
+              elsif node == root
+                #
+                # Root node was computed; we are done.
+                #
+                finished = true
+              end
+                
               #
               # remove locks for this node (shared lock and own lock)
               #
               node.unlock
 
-              if node == root or node_result.is_a? Exception
-                #
-                # Root node was computed or error occurred; we are done.
-                #
-                result = node_result
-              end
-                
               #
               # Tell the main thread that another node was computed.
               #
@@ -105,7 +111,7 @@ module Rake::CompTree
           #trace "Main: waking threads"
           thread_wake_condition.broadcast
 
-          if result
+          if finished
             #trace "Main: detected finish."
             break
           end
@@ -128,17 +134,17 @@ module Rake::CompTree
       }
 
       #trace "Main: computation done."
-      if result.is_a? Exception
-        raise result
+      if finished.is_a? Exception
+        raise finished
       else
-        result
+        root.result
       end
     end
 
     def find_node(node)
       # --- only called inside shared tree mutex
       #trace "Looking for a node, starting with #{node.name}"
-      if node.result
+      if node.computed
         #
         # already computed
         #
@@ -160,14 +166,6 @@ module Rake::CompTree
           next_node = find_node(child) and return next_node
         }
         nil
-      end
-    end
-
-    def compute_node(node)
-      begin
-        node.compute
-      rescue Exception => e
-        e
       end
     end
   end
