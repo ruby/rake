@@ -581,9 +581,8 @@ module Rake
     end
 
     def base_invoke(*args) #:nodoc:
-      invoke_with_call_chain(
-        TaskArguments.new(arg_names, args),
-        InvocationChain::EMPTY)
+      task_args = TaskArguments.new(arg_names, args)
+      invoke_with_call_chain(task_args, InvocationChain::EMPTY)
     end
 
     # Invoke the task if it is needed.  Prerequites are invoked first.
@@ -618,21 +617,9 @@ module Rake
           @prerequisites = @prerequisites.sort_by { rand }
         end
 
-        prereqs = 
-          if application.num_threads == 1
-            invoke_prerequisites(task_args, new_chain)
-            nil
-          else
-            invoke_prerequisites_parallel(task_args, new_chain)
-          end
-
         if application.num_threads == 1
-          #
-          # single-threaded mode
-          #
-          if needed?
-            execute(task_args) 
-          end
+          invoke_prerequisites(task_args, new_chain)
+          execute(task_args) if needed?
         else
           #
           # parallel mode
@@ -640,6 +627,7 @@ module Rake
           # Either the task knows it's needed or we've marked it as
           # such.  See next comments.
           #
+          prereqs = invoke_prerequisites_parallel(task_args, new_chain)
           if application.parallel_parent_flags[self] or needed?
             # gather tasks for batch execution
             application.parallel_tasks[name] = [task_args, prereqs]
@@ -650,8 +638,7 @@ module Rake
             # the 'needed?' flag does not propagate.
             #
             unless invocation_chain == InvocationChain::EMPTY
-              application.
-                parallel_parent_flags[invocation_chain.value] = true
+              application.parallel_parent_flags[invocation_chain.value] = true
             end
           end
         end
@@ -1028,19 +1015,17 @@ end
 #
 # +seq+ : Force tasks to be executed sequentially.
 #
-(class << self ; self ; end).class_eval {
-  # use this form to cleanly hide the lambda
-  seq_lambda = lambda { |*task_names|
+def seq
+  Rake::SEQ_LAMBDA
+end
+module Rake
+  SEQ_LAMBDA = lambda { |*task_names|
     (1...task_names.size).each { |n|
       task task_names[n] => task_names[n - 1]
     }
     task_names.last
   }
-  
-  define_method(:seq) {
-    seq_lambda
-  }
-}
+end
 
 # ###########################################################################
 # This a FileUtils extension that defines several additional commands to be
