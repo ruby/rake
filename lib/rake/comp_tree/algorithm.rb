@@ -16,9 +16,7 @@ module Rake::CompTree
 
     def compute_multithreaded(root, num_threads)
       #trace "Computing #{root.name} with #{num_threads} threads"
-
       result = nil
-
       tree_mutex = Mutex.new
       node_finished_condition = ConditionVariable.new
       thread_wake_condition = ConditionVariable.new
@@ -37,7 +35,7 @@ module Rake::CompTree
 
           loop_with(:leave, :again) {
             node = tree_mutex.synchronize {
-              #trace "Thread #{thread_index} aquired tree lock; begin node search"
+              #trace "Thread #{thread_index} acquired tree lock; begin search"
               if result
                 #trace "Thread #{thread_index} detected finish"
                 num_threads_in_use -= 1
@@ -46,7 +44,8 @@ module Rake::CompTree
                 #
                 # Find a node.  The node we obtain, if any, will be locked.
                 #
-                if node = find_node(root)
+                node = find_node(root)
+                if node
                   #trace "Thread #{thread_index} found node #{node.name}"
                   node
                 else
@@ -158,9 +157,7 @@ module Rake::CompTree
         #
         #trace "Checking #{node.name}'s children"
         node.each_child { |child|
-          if next_node = find_node(child)
-            return next_node
-          end
+          next_node = find_node(child) and return next_node
         }
         nil
       end

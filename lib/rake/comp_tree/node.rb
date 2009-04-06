@@ -99,9 +99,9 @@ module Rake::CompTree
     #  debug {
     #    # --- own mutex
     #    trace "Computing #{@name}"
-    #    raise Error::AssertionFailed if @result
-    #    raise Error::AssertionFailed unless @mutex.locked?
-    #    raise Error::AssertionFailed unless @children_results
+    #    raise AssertionFailedError if @result
+    #    raise AssertionFailedError unless @mutex.locked?
+    #    raise AssertionFailedError unless @children_results
     #  }
     #end
 
@@ -111,7 +111,7 @@ module Rake::CompTree
     #
     def compute #:nodoc:
       unless defined?(@function) and @function
-        raise Error::NoFunctionError,
+        raise NoFunctionError,
           "No function was defined for node '#{@name.inspect}'"
       end
       @function.call(*@children_results)
@@ -134,7 +134,7 @@ module Rake::CompTree
     def unlock #:nodoc:
       # --- shared tree mutex and own mutex
       #debug {
-      #  raise Error::AssertionFailed unless @mutex.locked?
+      #  raise AssertionFailedError unless @mutex.locked?
       #  trace "Unlocking #{@name}"
       #}
       each_upward { |node|

@@ -1,28 +1,6 @@
 
-require 'fileutils'
-
-######################################################################
-# git
-
 def git(*args)
-  cmd = ["git"] + args
-  sh(*cmd)
-end
-
-task :add_contrib_first_time => :init_contrib do
-  git(*%w!merge --squash -s ours --no-commit comp_tree/master!)
-  git(*%w!read-tree --prefix=contrib/comp_tree -u comp_tree/master!)
-  git("commit", "-m", "add comp_tree package")
-end
-
-task :init_contrib do
-  unless `git remote`.split.include? "comp_tree"
-    git(*%w!remote add -f comp_tree git@github.com:quix/comp_tree.git!)
-  end
-end
-
-task :run_pull_contrib => :init_contrib do
-  git(*%w!pull --no-commit -s subtree comp_tree master!)
+  sh("git", *args)
 end
 
 task :pull_mainline do
@@ -31,14 +9,7 @@ task :pull_mainline do
           refs/heads/master:refs/heads/origin!)
 end
 
-task :pull_contrib => [ :init_contrib, :run_pull_contrib ]
-
-######################################################################
-# drake_release
-
-task :drake_prerelease => [:clean, :gemspec] do
-  rm_rf("html")
-  rm_rf("pkg")
+task :drake_prerelease => [:clobber, :gemspec] do
   unless `git status` =~ %r!nothing to commit \(working directory clean\)!
     raise "Directory not clean"
   end

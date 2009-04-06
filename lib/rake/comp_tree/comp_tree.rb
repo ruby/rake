@@ -20,4 +20,23 @@
 # THE SOFTWARE.
 # 
 
-require 'comp_tree/driver'
+require 'rake/comp_tree/driver'
+
+module Rake end
+module Rake::CompTree
+  class << self
+    #
+    # Build and run a new computation tree.
+    #
+    # A Driver instance is passed to the given block.
+    #
+    # Options hash:
+    #
+    # <tt>:node_class</tt> -- (Class) CompTree::Node subclass from
+    # which nodes are created.
+    #
+    def build(opts = nil)
+      yield Driver.new(opts)
+    end
+  end
+end
