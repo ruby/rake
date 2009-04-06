@@ -590,12 +590,12 @@ module Rake
       if application.num_threads == 1
         base_invoke(*args)
       else
-        if application.parallel_lock.locked?
+        if application.parallel.lock.locked?
           raise "Calling Task#invoke within a task is not allowed."
         end
-        application.parallel_lock.synchronize {
-          application.parallel_tasks.clear
-          application.parallel_parent_flags.clear
+        application.parallel.lock.synchronize {
+          application.parallel.tasks.clear
+          application.parallel.needed.clear
           base_invoke(*args)
           application.invoke_parallel(self.name)
         }
@@ -622,23 +622,20 @@ module Rake
           execute(task_args) if needed?
         else
           #
-          # parallel mode
+          # Parallel mode -- gather tasks for batch execution.
           #
           # Either the task knows it's needed or we've marked it as
-          # such.  See next comments.
+          # needed.
+          #
+          # Why do we manually mark tasks as needed?  Since this is a
+          # dry run, files are not created or modified.  Therefore the
+          # 'needed?' result does not propagate through the recursion.
           #
           prereqs = invoke_prerequisites_parallel(task_args, new_chain)
-          if application.parallel_parent_flags[self] or needed?
-            # gather tasks for batch execution
-            application.parallel_tasks[name] = [task_args, prereqs]
-            
-            #
-            # Since this is a dry run, parents must be manually marked
-            # as needed.  Files are not created or modified, so the
-            # the 'needed?' flag does not propagate.
-            #
+          if needed? or application.parallel.needed[self]
+            application.parallel.tasks[name] = [task_args, prereqs]
             unless invocation_chain == InvocationChain::EMPTY
-              application.parallel_parent_flags[invocation_chain.value] = true
+              application.parallel.needed[invocation_chain.value] = true
             end
           end
         end
@@ -1758,9 +1755,7 @@ module Rake
     alias :last_comment :last_description    # Backwards compatibility
 
     attr_accessor :num_threads
-    attr_reader :parallel_tasks #:nodoc:
-    attr_reader :parallel_lock #:nodoc:
-    attr_reader :parallel_parent_flags #:nodoc:
+    attr_reader :parallel
 
     def initialize
       super
@@ -1770,9 +1765,11 @@ module Rake
       @last_description = nil
 
       @num_threads = 1
-      @parallel_tasks = Hash.new
-      @parallel_lock = Mutex.new
-      @parallel_parent_flags = Hash.new
+
+      @parallel = Struct.new(:tasks, :needed, :lock).new
+      @parallel.tasks = Hash.new
+      @parallel.needed = Hash.new
+      @parallel.lock = Mutex.new
     end
 
     def create_rule(*args, &block)

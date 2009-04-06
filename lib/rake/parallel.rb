@@ -1,6 +1,4 @@
 
-module Rake ; end
-
 require 'rake/comp_tree/comp_tree'
 
 module Rake
@@ -10,19 +8,17 @@ module Rake
         #
         # Build the computation tree from task prereqs.
         #
-        parallel_tasks.each_pair { |task_name, cache|
+        self.parallel.tasks.each_pair { |task_name, cache|
           task = self[task_name]
           task_args, prereqs = cache
-          children_names = prereqs.map { |child|
-            child.name.to_sym
-          }
-          driver.define(task_name.to_sym, *children_names) {
+          children_names = prereqs.map { |child| child.name }
+          driver.define(task_name, *children_names) {
             task.execute(task_args)
             true
           }
         }
 
-        root_node = driver.nodes[root_task_name.to_sym]
+        root_node = driver.nodes[root_task_name]
 
         #
         # If there were nothing to do, there would be no root node.
@@ -40,7 +36,7 @@ module Rake
           #
           # Launch the computation.
           #
-          driver.compute(root_node.name, num_threads)
+          driver.compute(root_node.name, self.num_threads)
         end
       end
     end
