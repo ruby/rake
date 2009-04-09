@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: drake
 version: !ruby/object:Gem::Version 
-  version: 0.8.4.1.0.18
+  version: 0.8.4.1.1.0
 platform: ruby
 authors: 
 - James M. Lawrence
@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2009-04-02 00:00:00 -04:00
+date: 2009-04-09 00:00:00 -04:00
 default_executable: drake
 dependencies: []
 
@@ -56,6 +56,11 @@ files:
 - lib/rake/alt_system.rb
 - lib/rake/classic_namespace.rb
 - lib/rake/clean.rb
+- lib/rake/comp_tree/algorithm.rb
+- lib/rake/comp_tree/comp_tree.rb
+- lib/rake/comp_tree/driver.rb
+- lib/rake/comp_tree/error.rb
+- lib/rake/comp_tree/node.rb
 - lib/rake/contrib/compositepublisher.rb
 - lib/rake/contrib/ftptools.rb
 - lib/rake/contrib/publisher.rb
@@ -75,7 +80,7 @@ files:
 - lib/rake/win32.rb
 - lib/rake.rb
 - lib/rake/comp_tree/algorithm.rb
-- lib/rake/comp_tree/diagnostic.rb
+- lib/rake/comp_tree/comp_tree.rb
 - lib/rake/comp_tree/driver.rb
 - lib/rake/comp_tree/error.rb
 - lib/rake/comp_tree/node.rb
