@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: drake
 version: !ruby/object:Gem::Version 
-  version: 0.8.4.1.1.0
+  version: 0.8.4.1.2.0
 platform: ruby
 authors: 
 - James M. Lawrence
@@ -9,10 +9,19 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2009-04-09 00:00:00 -04:00
+date: 2009-04-13 00:00:00 -04:00
 default_executable: drake
-dependencies: []
-
+dependencies: 
+- !ruby/object:Gem::Dependency 
+  name: comp_tree
+  type: :runtime
+  version_requirement: 
+  version_requirements: !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        version: 0.7.1
+    version: 
 description: Rake is a Make-like program implemented in Ruby. Tasks and dependencies are specified in standard Ruby syntax.
 email: quixoticsycophant@gmail.com
 executables: 
@@ -26,6 +35,7 @@ extra_rdoc_files:
 - CHANGES
 - doc/command_line_usage.rdoc
 - doc/glossary.rdoc
+- doc/parallel.rdoc
 - doc/proto_rake.rdoc
 - doc/rakefile.rdoc
 - doc/rational.rdoc
@@ -48,19 +58,14 @@ files:
 - CHANGES
 - CHANGES.drake
 - MIT-LICENSE
+- README
 - Rakefile
 - Rakefile.drake
-- README
 - TODO
 - bin/drake
 - lib/rake/alt_system.rb
 - lib/rake/classic_namespace.rb
 - lib/rake/clean.rb
-- lib/rake/comp_tree/algorithm.rb
-- lib/rake/comp_tree/comp_tree.rb
-- lib/rake/comp_tree/driver.rb
-- lib/rake/comp_tree/error.rb
-- lib/rake/comp_tree/node.rb
 - lib/rake/contrib/compositepublisher.rb
 - lib/rake/contrib/ftptools.rb
 - lib/rake/contrib/publisher.rb
@@ -79,11 +84,6 @@ files:
 - lib/rake/testtask.rb
 - lib/rake/win32.rb
 - lib/rake.rb
-- lib/rake/comp_tree/algorithm.rb
-- lib/rake/comp_tree/comp_tree.rb
-- lib/rake/comp_tree/driver.rb
-- lib/rake/comp_tree/error.rb
-- lib/rake/comp_tree/node.rb
 - test/capture_stdout.rb
 - test/check_expansion.rb
 - test/check_no_expansion.rb
@@ -93,22 +93,22 @@ files:
 - test/filecreation.rb
 - test/functional.rb
 - test/in_environment.rb
-- test/parallel.rb
+- test/parallel_setup.rb
 - test/rake_test_setup.rb
 - test/reqfile.rb
 - test/reqfile2.rb
+- test/serial_setup.rb
 - test/session_functional.rb
 - test/shellcommand.rb
-- test/single_threaded.rb
 - test/test_application.rb
 - test/test_clean.rb
 - test/test_definitions.rb
 - test/test_earlytime.rb
 - test/test_extension.rb
-- test/test_filelist.rb
-- test/test_fileutils.rb
 - test/test_file_creation_task.rb
 - test/test_file_task.rb
+- test/test_filelist.rb
+- test/test_fileutils.rb
 - test/test_ftp.rb
 - test/test_invocation_chain.rb
 - test/test_makefile_loader.rb
@@ -122,10 +122,10 @@ files:
 - test/test_rdoc_task.rb
 - test/test_require.rb
 - test/test_rules.rb
-- test/test_tasklib.rb
-- test/test_tasks.rb
 - test/test_task_arguments.rb
 - test/test_task_manager.rb
+- test/test_tasklib.rb
+- test/test_tasks.rb
 - test/test_test_task.rb
 - test/test_top_level_functions.rb
 - test/test_win32.rb
@@ -140,18 +140,17 @@ files:
 - test/data/namespace/Rakefile
 - test/data/statusreturn/Rakefile
 - test/data/unittest/Rakefile
-- test/Rakefile.seq
-- test/Rakefile.simple
 - test/data/unittest/subdir
 - doc/command_line_usage.rdoc
 - doc/example
+- doc/example/Rakefile1
+- doc/example/Rakefile2
 - doc/example/a.c
 - doc/example/b.c
 - doc/example/main.c
-- doc/example/Rakefile1
-- doc/example/Rakefile2
 - doc/glossary.rdoc
 - doc/jamis.rb
+- doc/parallel.rdoc
 - doc/proto_rake.rdoc
 - doc/rake.1.gz
 - doc/rakefile.rdoc
@@ -201,6 +200,6 @@ rubyforge_project: drake
 rubygems_version: 1.3.1
 signing_key: 
 specification_version: 2
-summary: A fork of Rake supporting parallel task execution.
+summary: A branch of Rake supporting automatic parallelizing of tasks.
 test_files: []
 
