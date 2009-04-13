@@ -63,23 +63,22 @@ task :tf => :test_functional
 task :tu => :test_units
 task :tc => :test_contribs
 task :test => :test_units
+task :test_all => [:test_serial, :test_parallel]
 
-all_test_files = FileList[
+test_files = FileList[
   'test/test*.rb',
   'test/contrib/test*.rb',
   'test/fun*.rb'
 ]
 
-task :test_all => [:test_single_threaded, :test_parallel]
-
-Rake::TestTask.new(:test_parallel) do |t|
-  t.test_files = FileList['test/parallel.rb'] + all_test_files
+Rake::TestTask.new(:test_serial) do |t|
+  t.test_files = ['test/serial_setup.rb'] + test_files
   t.warning = true
   t.verbose = false
 end
 
-Rake::TestTask.new(:test_single_threaded) do |t|
-  t.test_files = FileList['test/single_threaded.rb'] + all_test_files
+Rake::TestTask.new(:test_parallel) do |t|
+  t.test_files = ['test/parallel_setup.rb'] + test_files
   t.warning = true
   t.verbose = false
 end
@@ -98,12 +97,6 @@ end
 
 Rake::TestTask.new(:test_contribs) do |t|
   t.test_files = FileList['test/contrib/test*.rb']
-  t.warning = true
-  t.verbose = false
-end
-
-Rake::TestTask.new(:test_current) do |t|
-  t.test_files = FileList['test/parallel.rb', 'test/test_tasks.rb']
   t.warning = true
   t.verbose = false
 end
@@ -167,7 +160,6 @@ PKG_FILES = FileList[
   '[A-Z]*',
   'bin/drake', 
   'lib/**/*.rb', 
-  'lib/rake/comp_tree/**/*.rb', 
   'test/**/*.rb',
   'test/**/*.rf',
   'test/**/*.mf',
@@ -187,7 +179,7 @@ else
 
     s.name = 'drake'
     s.version = $package_version
-    s.summary = "A fork of Rake supporting parallel task execution."
+    s.summary = "A branch of Rake supporting automatic parallelizing of tasks."
     s.description = <<-EOF
       Rake is a Make-like program implemented in Ruby. Tasks
       and dependencies are specified in standard Ruby syntax. 
@@ -195,6 +187,7 @@ else
 
     #### Dependencies and requirements.
 
+    s.add_dependency('comp_tree', '>= 0.7.1')
     #s.add_dependency('log4r', '> 1.0.4')
     #s.requirements << ""
 

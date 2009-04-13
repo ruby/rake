@@ -1,6 +1,6 @@
 = DRAKE -- Distributed Rake
 
-A branch of Rake supporting parallel task execution.
+A branch of Rake supporting automatic parallelizing of tasks.
 
 == Synopsis
 
@@ -18,90 +18,7 @@ or equivalently,
 
 == Notes
 
-=== Compatibility
-
-Drake is 100% compatible with Rake.  The code path for
-<tt>--threads=1</tt> is effectively identical to that of Rake's.
-Drake passes all of Rake's unit tests, with any number of threads from
-1 to 1000 (the most tested).
-
-=== Dependencies
-
-In a given Rakefile, it is possible (even likely) that the
-dependency tree has not been properly defined.  Consider
-
-   task :a => [:x, :y, :z]
-
-With single-threaded Rake, _x_,_y_,_z_ will be invoked <em>in that
-order</em> before _a_ is invoked (assuming there are no other rules
-involving these tasks).  However with <code>drake -jN</code> (for +N+
-> 1), one should not expect any particular order of execution.  Since
-there is no dependency specified between _x_,_y_,_z_ above, Drake is
-free to run them in any order.
-
-If you wish _x_,_y_,_z_ to be invoked sequentially, then write
-
-   task :a => seq[:x, :y, :z]
-
-This is shorthand for
-
-   task :a => :z
-   task :z => :y
-   task :y => :x
-
-Upon invoking _a_, the above rules say: "Can't do _a_ until _z_ is
-complete; can't do _z_ until _y_ is complete; can't do _y_ until _x_
-is complete; therefore do _x_."  In this fashion the sequence
-_x_,_y_,_z_ is enforced.
-
-The problem of insufficient dependencies plagues Makefiles as well,
-and is sometimes called "not j-safe".
-
-=== MultiTask
-
-When more than one thread is given, +multitask+ behaves just like
-+task+.  Those tasks which may properly be run in parallel will be run
-in parallel; those which cannot, will not.  It is not the user's job
-to decide.  In other words, for <tt>-jN</tt> (+N+ > 1), +multitask+ is
-an alias of +task+.
-
-For <tt>-j1</tt> (default), +multitask+ behaves as the original.
-
-=== Task#invoke inside Task#invoke
-
-Parallelizing code means surrendering control over the
-micro-management of its execution.  Manually invoking tasks inside
-other tasks is rather contrary to this notion, throwing a monkey
-wrench into the system.  An exception will be raised when this is
-attempted in multi-threaded mode.
-
-=== Migrating to -j
-
-First of all, do you want to bother with <tt>-j</tt>?  If you are
-satisfied with your build time, then there is really no reason to use
-it.
-
-If on the other hand your build takes twenty minutes to complete, you
-may be interested in investing some time getting the full dependency
-tree correct in order to take advantage of multiple CPUs or cores.
-
-Though Drake cannot fathom what <em>you</em> mean by a correct
-dependency, there is a tool available which may help you get closer to
-saying what you mean:
-
-  % drake --rand[=SEED]
-
-This will randomize the order of sibling prerequisites for each task.
-When given the optional SEED string, it will call
-<tt>srand(SEED.hash)</tt> to produce the same permutation each time.
-The randomize option also disables +multitask+, making it a regular
-+task+.  (In multi-threaded mode, +multitask+ is already a regular
-+task+.)
-
-Though this option may produce an error due to unspecified
-dependencies, with SEED at least it will be an error which is exactly
-the same on each run.  In addition you'll have the major debugging
-advantage of using a single thread.
+See parallel.rdoc.
 
 == Links
 

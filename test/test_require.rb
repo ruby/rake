@@ -10,6 +10,7 @@ class TestRequire < Test::Unit::TestCase
 
   def test_can_load_rake_library
     app = Rake::Application.new
+    app.options.threads = Rake.application.options.threads
     assert app.instance_eval {
       rake_require("test2", ['test/data/rakelib'], [])
     }
@@ -17,6 +18,7 @@ class TestRequire < Test::Unit::TestCase
 
   def test_wont_reload_rake_library
     app = Rake::Application.new
+    app.options.threads = Rake.application.options.threads
     assert ! app.instance_eval {
       rake_require("test2", ['test/data/rakelib'], ['test2'])
     }
@@ -24,6 +26,7 @@ class TestRequire < Test::Unit::TestCase
 
   def test_throws_error_if_library_not_found
     app = Rake::Application.new
+    app.options.threads = Rake.application.options.threads
     ex = assert_exception(LoadError) {
       assert app.instance_eval {
         rake_require("testx", ['test/data/rakelib'], [])

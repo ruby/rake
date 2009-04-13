@@ -9,7 +9,7 @@ class TestMultiTask < Test::Unit::TestCase
 
   def setup
     Task.clear
-    @runs = Array.new
+    @runs = SerializedArray.new
   end
 
   def test_running_multitasks

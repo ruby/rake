@@ -2,7 +2,7 @@ module Ruby19
   PROG = '/Users/jim/local/ruby19/bin/ruby'
   GEM_HOME = '/Users/jim/local/ruby19.gems'
 
-  RELEASE_FILES = FileList['bin/drake', 'lib/rake.rb', 'lib/rake/**/*']
+  RELEASE_FILES = FileList['bin/rake', 'lib/rake.rb', 'lib/rake/**/*']
   RELEASE_FILES.exclude('lib/rake/lib', 'project.rake', 'lib/rake/plugins', 'lib/rake/contrib')
 
   SVN = "#{ENV['HOME']}/working/svn/software/thirdparty/ruby"
@@ -37,8 +37,8 @@ namespace "ruby19" do
 
   desc "Remove Rake from the Ruby 19 SVN"
   task :unrelease => [:check_svn] do
-    rm_r "#{Ruby19::SVN}/bin/drake" rescue nil
-    rm_r "#{Ruby19::SVN}/lib/drake" rescue nil
+    rm_r "#{Ruby19::SVN}/bin/rake" rescue nil
+    rm_r "#{Ruby19::SVN}/lib/rake" rescue nil
     rm_r "#{Ruby19::SVN}/lib/rake.rb" rescue nil
   end
 

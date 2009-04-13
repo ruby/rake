@@ -48,14 +48,18 @@ class TestDefinitions < Test::Unit::TestCase
   end
 
   def test_incremental_definitions
-    runs = []
+    runs = SerializedArray.new
     task :t1 => [:t2] do runs << "A"; 4321 end
     task :t1 => [:t3] do runs << "B"; 1234 end
     task :t1 => [:t3]
     task :t2
     task :t3
     Task[:t1].invoke
-    assert_equal ["A", "B"], runs
+    if Rake.application.options.threads == 1
+      assert_equal ["A", "B"], runs
+    else
+      assert_equal ["A", "B"], runs.sort
+    end
     assert_equal ["t2", "t3"], Task[:t1].prerequisites
   end
 

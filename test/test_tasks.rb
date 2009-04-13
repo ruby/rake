@@ -35,17 +35,24 @@ class TestTask < Test::Unit::TestCase
   end
 
   def test_invoke
-    runlist = []
+    runlist = SerializedArray.new
     t1 = task(:t1 => [:t2, :t3]) { |t| runlist << t.name; 3321 }
     t2 = task(:t2) { |t| runlist << t.name }
     t3 = task(:t3) { |t| runlist << t.name }
     assert_equal ["t2", "t3"], t1.prerequisites
     t1.invoke
-    assert_equal ["t2", "t3", "t1"], runlist
+    if Rake.application.options.threads == 1
+      assert_equal ["t2", "t3", "t1"], runlist
+    else
+      assert_block {
+        ["t2", "t3", "t1"] == runlist or
+        ["t3", "t2", "t1"] == runlist
+      }
+    end
   end
 
   def test_invoke_with_circular_dependencies
-    runlist = []
+    runlist = SerializedArray.new
     t1 = task(:t1 => [:t2]) { |t| runlist << t.name; 3321 }
     t2 = task(:t2 => [:t1]) { |t| runlist << t.name }
     assert_equal ["t2"], t1.prerequisites
@@ -59,7 +66,7 @@ class TestTask < Test::Unit::TestCase
 
   def test_dry_run_prevents_actions
     Rake.application.options.dryrun = true
-    runlist = []
+    runlist = SerializedArray.new
     t1 = task(:t1) { |t| runlist << t.name; 3321 }
     out = capture_stdout { t1.invoke }
     assert_match(/execute .*t1/i, out)
@@ -76,25 +83,30 @@ class TestTask < Test::Unit::TestCase
     out = capture_stdout {
       t1.invoke
     }
-    if Rake.application.num_threads == 1
-      assert_match(/invoke t1/i, out)
-    end
+    assert_match(/invoke t1/i, out)
     assert_match(/execute t1/i, out)
   ensure
     Rake.application.options.trace = false
   end
 
   def test_no_double_invoke
-    runlist = []
+    runlist = SerializedArray.new
     t1 = task(:t1 => [:t2, :t3]) { |t| runlist << t.name; 3321 }
     t2 = task(:t2 => [:t3]) { |t| runlist << t.name }
     t3 = task(:t3) { |t| runlist << t.name }
     t1.invoke
-    assert_equal ["t3", "t2", "t1"], runlist
+    if Rake.application.options.threads == 1
+      assert_equal ["t3", "t2", "t1"], runlist
+    else
+      assert_block {
+        ["t2", "t3", "t1"] == runlist or
+        ["t3", "t2", "t1"] == runlist
+      }
+    end
   end
 
   def test_can_double_invoke_with_reenable
-    runlist = []
+    runlist = SerializedArray.new
     t1 = task(:t1) { |t| runlist << t.name }
     t1.invoke
     t1.reenable
@@ -136,7 +148,7 @@ class TestTask < Test::Unit::TestCase
   end
 
   def test_multi_invocations
-    runs = []
+    runs = SerializedArray.new
     p = proc do |t| runs << t.name end
     task({:t1=>[:t2,:t3]}, &p)
     task({:t2=>[:t3]}, &p)
@@ -284,7 +296,7 @@ class TestTaskWithArguments < Test::Unit::TestCase
   end
 
   def test_actions_of_various_arity_are_ok_with_args
-    notes = []
+    notes = SerializedArray.new
     t = task(:t, :x) do
       notes << :a
     end

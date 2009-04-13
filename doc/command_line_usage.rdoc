@@ -40,6 +40,9 @@ Options are:
 [<tt>--libdir</tt> _directory_  (-I)]
     Add _directory_ to the list of directories searched for require.
 
+[<tt>--threads</tt> _number_ (-j)]
+    Run up to N independent tasks simultaneously in separate threads.
+
 [<tt>--nosearch</tt>  (-N)]
     Do not search for a Rakefile in parent directories.
 
@@ -59,6 +62,12 @@ Options are:
 
 [<tt>--rakelibdir</tt> _rakelibdir_ (-R)]
     Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')
+
+[<tt>--randomize</tt>[=_seed_]]
+    Randomize the order of sibling prerequisites for each task.  When
+    _seed_ is given, <tt>srand(seed.hash)</tt> will be called so that
+    the same permutations will be produced for subsequent runs with
+    the same _seed_.
 
 [<tt>--require</tt> _name_ (-r)]
     Require _name_ before executing the Rakefile.

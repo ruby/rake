@@ -21,7 +21,7 @@ class TestRules < Test::Unit::TestCase
 
   def setup
     Task.clear
-    @runs = []
+    @runs = SerializedArray.new
   end
 
   def teardown
@@ -41,12 +41,11 @@ class TestRules < Test::Unit::TestCase
   end
 
   def test_multiple_rules2
-    mutex = Mutex.new
     create_file(FTNFILE)
     delete_file(SRCFILE)
     delete_file(OBJFILE)
-    rule(/\.o$/ => ['.f']) do mutex.synchronize { @runs << :F } end
-    rule(/\.o$/ => ['.c']) do mutex.synchronize { @runs << :C } end
+    rule(/\.o$/ => ['.f']) do @runs << :F end
+    rule(/\.o$/ => ['.c']) do @runs << :C end
     Task[OBJFILE].invoke
     assert_equal [:F], @runs
   end
@@ -318,7 +317,7 @@ class TestRules < Test::Unit::TestCase
   end
 
   def test_recursive_rules_will_work_as_long_as_they_terminate
-    actions = []
+    actions = SerializedArray.new
     create_file("testdata/abc.xml")
     rule '.y' => '.xml' do actions << 'y' end
     rule '.c' => '.y' do actions << 'c'end

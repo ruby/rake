@@ -22,6 +22,7 @@ class TestApplication < Test::Unit::TestCase
 
   def setup
     @app = Rake::Application.new
+    @app.options.threads = Rake.application.options.threads
     @app.options.rakelib = []
   end
 
@@ -570,6 +571,7 @@ class TestApplicationOptions < Test::Unit::TestCase
   def command_line(*options)
     options.each do |opt| ARGV << opt end
     @app = Rake::Application.new
+    @app.options.threads = Rake.application.options.threads
     def @app.exit(*args)
       throw :system_exit, :exit
     end
@@ -585,6 +587,7 @@ end
 class TestTaskArgumentParsing < Test::Unit::TestCase
   def setup
     @app = Rake::Application.new
+    @app.options.threads = Rake.application.options.threads
   end
   
   def test_name_only
@@ -630,6 +633,7 @@ class TestTaskArgumentParsing < Test::Unit::TestCase
 
   def test_terminal_width_using_env
     app = Rake::Application.new
+    app.options.threads = Rake.application.options.threads
     in_environment('RAKE_COLUMNS' => '1234') do
       assert_equal 1234, app.terminal_width
     end
@@ -637,6 +641,7 @@ class TestTaskArgumentParsing < Test::Unit::TestCase
 
   def test_terminal_width_using_stty
     app = Rake::Application.new
+    app.options.threads = Rake.application.options.threads
     flexmock(app,
       :unix? => true,
       :dynamic_width_stty => 1235,
@@ -648,6 +653,7 @@ class TestTaskArgumentParsing < Test::Unit::TestCase
 
   def test_terminal_width_using_tput
     app = Rake::Application.new
+    app.options.threads = Rake.application.options.threads
     flexmock(app,
       :unix? => true,
       :dynamic_width_stty => 0,
@@ -659,6 +665,7 @@ class TestTaskArgumentParsing < Test::Unit::TestCase
 
   def test_terminal_width_using_hardcoded_80
     app = Rake::Application.new
+    app.options.threads = Rake.application.options.threads
     flexmock(app, :unix? => false)
     in_environment('RAKE_COLUMNS' => nil) do
       assert_equal 80, app.terminal_width
@@ -667,6 +674,7 @@ class TestTaskArgumentParsing < Test::Unit::TestCase
 
   def test_terminal_width_with_failure
     app = Rake::Application.new
+    app.options.threads = Rake.application.options.threads
     flexmock(app).should_receive(:unix?).and_throw(RuntimeError)
     in_environment('RAKE_COLUMNS' => nil) do
       assert_equal 80, app.terminal_width

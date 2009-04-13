@@ -150,6 +150,12 @@ to do extra synchronization for Rake's benefit.  However, if there are
 user data structures shared between the parallel prerequisites, the
 user must do whatever is necessary to prevent race conditions.
 
+=== Automatically Running Tasks in Parallel
+
+Rake now supports the command-line option -j for automatically
+detecting non-dependent tasks and safely executing them in parallel.
+See parallel.rdoc.
+
 == Tasks with Arguments
 
 Prior to version 0.8.0, rake was only able to handle command line

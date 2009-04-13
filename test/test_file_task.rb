@@ -12,11 +12,17 @@ class TestFileTask < Test::Unit::TestCase
   include FileCreation
   include TestMethods
 
+  FILES = [ANCIENT_FILE, OLDFILE, MIDDLE_AGED_FILE, NEWFILE] 
+
   def setup
     Task.clear
-    @runs = Array.new
-    FileUtils.rm_f NEWFILE
-    FileUtils.rm_f OLDFILE
+    @runs = SerializedArray.new
+    FileUtils.rm_f FILES
+  end
+
+  def test_create_dispersed_timed_files
+    create_dispersed_timed_files(*FILES)
+    assert_equal FILES, FILES.sort_by { |f| File.stat(f).mtime }
   end
 
   def test_file_need
@@ -71,6 +77,46 @@ class TestFileTask < Test::Unit::TestCase
     file NEWFILE
     file OLDFILE => NEWFILE
     assert_nothing_raised do Task[OLDFILE].invoke end
+  end
+
+  def test_old_file_in_between
+    create_dispersed_timed_files(*FILES)
+
+    file MIDDLE_AGED_FILE => OLDFILE do |t|
+      @runs << t.name
+    end
+    file OLDFILE => NEWFILE do |t|
+      @runs << t.name
+      touch OLDFILE, :verbose => false
+    end
+    file NEWFILE do |t|
+      @runs << t.name
+    end
+
+    Task[MIDDLE_AGED_FILE].invoke
+    assert_equal([OLDFILE, MIDDLE_AGED_FILE], @runs)
+  end
+
+  def test_two_old_files_in_between
+    create_dispersed_timed_files(*FILES)
+
+    file MIDDLE_AGED_FILE => OLDFILE do |t|
+      @runs << t.name
+    end
+    file OLDFILE => ANCIENT_FILE do |t|
+      @runs << t.name
+      touch OLDFILE, :verbose => false
+    end
+    file ANCIENT_FILE => NEWFILE do |t|
+      @runs << t.name
+      touch ANCIENT_FILE, :verbose => false
+    end
+    file NEWFILE do |t|
+      @runs << t.name
+    end
+
+    Task[MIDDLE_AGED_FILE].invoke
+    assert_equal([ANCIENT_FILE, OLDFILE, MIDDLE_AGED_FILE], @runs)
   end
 
   # I have currently disabled this test.  I'm not convinced that
