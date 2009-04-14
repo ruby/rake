@@ -49,7 +49,6 @@ files:
 - MIT-LICENSE
 - Rakefile
 - README
-- TAGS
 - TODO
 - bin/rake
 - lib/rake/alt_system.rb

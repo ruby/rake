@@ -157,6 +157,7 @@ PKG_FILES = FileList[
   'doc/**/*'
 ]
 PKG_FILES.exclude('doc/example/*.o')
+PKG_FILES.exclude('TAGS')
 PKG_FILES.exclude(%r{doc/example/main$})
 
 if ! defined?(Gem)
