@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2009-04-14 00:00:00 -04:00
+date: 2009-04-22 00:00:00 -04:00
 default_executable: rake
 dependencies: []
 
@@ -163,6 +163,9 @@ rdoc_options:
 - README
 - --title
 - Rake -- Ruby Make
+- -SHN
+- -f
+- darkfish
 require_paths: 
 - lib
 required_ruby_version: !ruby/object:Gem::Requirement 
