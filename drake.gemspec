@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: drake
 version: !ruby/object:Gem::Version 
-  version: 0.8.4.1.2.0
+  version: 0.8.4.1.2.1
 platform: ruby
 authors: 
 - James M. Lawrence
@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2009-04-13 00:00:00 -04:00
+date: 2009-04-25 00:00:00 -04:00
 default_executable: drake
 dependencies: 
 - !ruby/object:Gem::Dependency 
@@ -20,7 +20,7 @@ dependencies:
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
-        version: 0.7.1
+        version: 0.7.3
     version: 
 description: Rake is a Make-like program implemented in Ruby. Tasks and dependencies are specified in standard Ruby syntax.
 email: quixoticsycophant@gmail.com
@@ -58,9 +58,9 @@ files:
 - CHANGES
 - CHANGES.drake
 - MIT-LICENSE
-- README
 - Rakefile
 - Rakefile.drake
+- README
 - TODO
 - bin/drake
 - lib/rake/alt_system.rb
@@ -105,10 +105,10 @@ files:
 - test/test_definitions.rb
 - test/test_earlytime.rb
 - test/test_extension.rb
-- test/test_file_creation_task.rb
-- test/test_file_task.rb
 - test/test_filelist.rb
 - test/test_fileutils.rb
+- test/test_file_creation_task.rb
+- test/test_file_task.rb
 - test/test_ftp.rb
 - test/test_invocation_chain.rb
 - test/test_makefile_loader.rb
@@ -122,10 +122,10 @@ files:
 - test/test_rdoc_task.rb
 - test/test_require.rb
 - test/test_rules.rb
-- test/test_task_arguments.rb
-- test/test_task_manager.rb
 - test/test_tasklib.rb
 - test/test_tasks.rb
+- test/test_task_arguments.rb
+- test/test_task_manager.rb
 - test/test_test_task.rb
 - test/test_top_level_functions.rb
 - test/test_win32.rb
@@ -143,11 +143,11 @@ files:
 - test/data/unittest/subdir
 - doc/command_line_usage.rdoc
 - doc/example
-- doc/example/Rakefile1
-- doc/example/Rakefile2
 - doc/example/a.c
 - doc/example/b.c
 - doc/example/main.c
+- doc/example/Rakefile1
+- doc/example/Rakefile2
 - doc/glossary.rdoc
 - doc/jamis.rb
 - doc/parallel.rdoc
