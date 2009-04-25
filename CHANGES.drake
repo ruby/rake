@@ -1,6 +1,10 @@
 
 = Drake Changelog
 
+== Version 0.8.4.1.2.1
+
+* update dependency >= comp_tree-0.7.3
+
 == Version 0.8.4.1.2.0
 
 * github master now represents mainline-merge-candidate branch.
