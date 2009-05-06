@@ -1,6 +1,10 @@
 
 = Rake Changelog
 
+== Version 0.8.5
+
+* Better support for the system command on Windows.
+
 == Version 0.8.4
 
 * Preserve case when locating rakefiles (patch from James
