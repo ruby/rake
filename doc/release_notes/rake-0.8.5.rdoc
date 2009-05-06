@@ -1,6 +1,8 @@
 = Rake 0.8.5 Released
 
-Rake version 0.8.5 is a bug-fix release of rake.
+Rake version 0.8.5 is a new release of Rake with greatly improved
+support for executing commands on Windows.  The "sh" command now has
+the same semantics on Windows that it has on Unix based platforms.
 
 == Changes
 
@@ -12,16 +14,13 @@ Rake version 0.8.5 is a bug-fix release of rake.
 * Support for Ruby 1.9's improved system command.  (patch from James
   M. Lawrence/quix)
 
-* Environment variable keys are now correctly cased (it matters in
-  some implementations).
-
 * Rake now includes the configured extension when invoking an
-  executable (Config::CONFIG['EXEEXT])"  
+  executable (Config::CONFIG['EXEEXT])
 
 === Bug Fixes in Version 0.8.5
 
-=== Infrastructure Improvements in Version 0.8.5
-
+* Environment variable keys are now correctly cased (it matters in
+  some implementations).
 
 == What is Rake
 
