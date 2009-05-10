@@ -139,17 +139,25 @@ end
 
 # Create a task to build the RDOC documentation tree.
 
-rd = Rake::RDocTask.new("rdoc") { |rdoc|
+begin
+  require 'darkfish-rdoc'
+  DARKFISH_ENABLED = true
+rescue LoadError => ex
+  DARKFISH_ENABLED = false
+end
+
+rd = Rake::RDocTask.new("rdoc") do |rdoc|
   rdoc.rdoc_dir = 'html'
   rdoc.template = 'doc/jamis.rb'
   rdoc.title    = "Drake: Distributed Rake"
   rdoc.options << '--line-numbers' << '--inline-source' <<
     '--main' << 'README' <<
     '--title' << 'Drake: Distributed Rake' 
+  rdoc.options << '-SHN' << '-f' << 'darkfish' if DARKFISH_ENABLED
   rdoc.rdoc_files.include('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
   rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
   rdoc.rdoc_files.exclude(/\bcontrib\b/)
-}
+end
 
 # ====================================================================
 # Create a task that will package the Rake software into distributable
@@ -168,6 +176,7 @@ PKG_FILES = FileList[
   'doc/**/*'
 ]
 PKG_FILES.exclude('doc/example/*.o')
+PKG_FILES.exclude('TAGS')
 PKG_FILES.exclude(%r{doc/example/main$})
 
 if ! defined?(Gem)
