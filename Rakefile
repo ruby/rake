@@ -136,7 +136,7 @@ rescue LoadError => ex
 end
 
 BASE_RDOC_OPTIONS = [
-  '--line-numbers', '--inline-source',
+  '--line-numbers',
   '--main', 'README',
   '--title', 'Rake -- Ruby Make',
 ]
