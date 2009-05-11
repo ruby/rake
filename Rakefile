@@ -136,9 +136,9 @@ rescue LoadError => ex
 end
 
 BASE_RDOC_OPTIONS = [
-  '--line-numbers',
-  '--main', 'README',
-  '--title', 'Rake -- Ruby Make',
+  '--line-numbers', '--inline-source',
+  '--main' , 'README',
+  '--title', 'Rake -- Ruby Make'
 ]
 
 rd = Rake::RDocTask.new("rdoc") do |rdoc|
