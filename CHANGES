@@ -1,6 +1,11 @@
 
 = Rake Changelog
 
+== Version 0.8.6
+
+* Minor fixes to the RDoc generation (removed dependency on darkfish
+  and removed inline source option).
+
 == Version 0.8.5
 
 * Better support for the system command on Windows.
