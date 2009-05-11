@@ -282,7 +282,7 @@ module Rake
 
   end
 
-  # ##########################################################################
+  ####################################################################
   # Mixin for creating easily cloned objects.
   #
   module Cloneable
@@ -457,7 +457,7 @@ end # module Rake
 
 module Rake
 
-  # #########################################################################
+  ###########################################################################
   # A Task is the basic unit of work in a Rakefile.  Tasks have associated
   # actions (possibly more than one) and a list of prerequisites.  When
   # invoked, a task will first ensure that all of its prerequisites have an
@@ -757,7 +757,7 @@ module Rake
   end # class Rake::Task
 
 
-  # #########################################################################
+  ###########################################################################
   # A FileTask is a task that includes time based dependencies.  If any of a
   # FileTask's prerequisites have a timestamp that is later than the file
   # represented by this task, then the file must be rebuilt (using the
@@ -799,7 +799,7 @@ module Rake
     end
   end # class Rake::FileTask
 
-  # #########################################################################
+  ###########################################################################
   # A FileCreationTask is a file task that when used as a dependency will be
   # needed if and only if the file has not been created.  Once created, it is
   # not re-triggered if any of its dependencies are newer, nor does trigger
@@ -818,7 +818,7 @@ module Rake
     end
   end
 
-  # #########################################################################
+  ###########################################################################
   # Same as a regular task, but the immediate prerequisites are done in
   # parallel using Ruby threads.
   #
@@ -833,7 +833,7 @@ module Rake
   end
 end # module Rake
 
-# ###########################################################################
+## ###########################################################################
 # Task Definition Functions ...
 
 # Declare a basic task.
@@ -952,7 +952,7 @@ def import(*fns)
   end
 end
 
-# ###########################################################################
+#############################################################################
 # This a FileUtils extension that defines several additional commands to be
 # added to the FileUtils utility functions.
 #
@@ -1056,7 +1056,7 @@ module FileUtils
   end
 end
 
-# ###########################################################################
+#############################################################################
 # RakeFileUtils provides a custom version of the FileUtils methods that
 # respond to the <tt>verbose</tt> and <tt>nowrite</tt> commands.
 #
@@ -1187,7 +1187,7 @@ module RakeFileUtils
   extend self
 end
 
-# ###########################################################################
+#############################################################################
 # Include the FileUtils file manipulation functions in the top level module,
 # but mark them private so that they don't unintentionally define methods on
 # other objects.
@@ -1199,7 +1199,7 @@ private(*RakeFileUtils.instance_methods(false))
 ######################################################################
 module Rake
 
-  # #########################################################################
+  ###########################################################################
   # A FileList is essentially an array with a few helper methods defined to
   # make file manipulation a bit easier.
   #
@@ -1607,7 +1607,7 @@ end # module Rake
 # Alias FileList to be available at the top level.
 FileList = Rake::FileList
 
-# ###########################################################################
+#############################################################################
 module Rake
 
   # Default Rakefile loader used by +import+.
@@ -1634,7 +1634,7 @@ module Rake
   EARLY = EarlyTime.instance
 end # module Rake
 
-# ###########################################################################
+#############################################################################
 # Extensions to time to allow comparisons with an early time class.
 #
 class Time
