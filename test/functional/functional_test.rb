@@ -11,5 +11,5 @@ end
 
 if defined?(Session)
   puts "RUNNING WITH SESSIONS"
-  require 'test/session_functional'
+  require 'test/functional/session_based_tests.rb'
 end

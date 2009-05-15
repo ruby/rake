@@ -64,22 +64,22 @@ task :test => :test_units
 
 Rake::TestTask.new(:test_all) do |t|
   t.test_files = FileList[
-    'test/test*.rb',
-    'test/contrib/test*.rb',
-    'test/fun*.rb'
+    'test/lib/*_test.rb',
+    'test/contrib/*_test.rb',
+    'test/functional/*_test.rb'
   ]
   t.warning = true
   t.verbose = false
 end
 
 Rake::TestTask.new(:test_units) do |t|
-  t.test_files = FileList['test/test*.rb']
+  t.test_files = FileList['test/lib/*_test.rb']
   t.warning = true
   t.verbose = false
 end
 
 Rake::TestTask.new(:test_functional) do |t|
-  t.test_files = FileList['test/fun*.rb']
+  t.test_files = FileList['test/functional/*_test.rb']
   t.warning = true
   t.verbose = false
 end
