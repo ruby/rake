@@ -1,3 +1,9 @@
+require 'rake/task'
+require 'rake/file_task'
+require 'rake/file_creation_task'
+require 'rake/application'
+require 'rake/task_manager'
+
 ######################################################################
 # Rake extensions to Module.
 #

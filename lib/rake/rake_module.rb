@@ -1,3 +1,5 @@
+require 'rake/application'
+
 module Rake
 
   # Rake module singleton methods.

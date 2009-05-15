@@ -1,4 +1,5 @@
 require 'rake/task_manager'
+require 'rake/win32'
 
 module Rake
   
