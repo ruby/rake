@@ -63,19 +63,19 @@ namespace "rbx" do
 
     desc "Run the unit tests in Ruby 1.9"
     task :units, :opts, :needs => [:env19] do |t, args|
-      test_files = FileList['test/**/test_*.rb']
+      test_files = FileList['test/lib/*_test.rb']
       Rbx.run_tests(test_files, args.opts)
     end
 
     desc "Run the functional tests in Ruby 1.9"
     task :functionals, :opts, :needs => [:env19] do |t, args|
-      test_files = FileList['test/functional.rb']
+      test_files = FileList['test/functional/*_test.rb']
       Rbx.run_tests(test_files, args.opts)
     end
 
     desc "Run the all the tests in Ruby 1.9"
     task :all, :opts, :needs => [:env19] do |t, args|
-      test_files = FileList['test/functional.rb', 'test/**/test_*.rb']
+      test_files = FileList['test/functional/*_test.rb', 'test/lib/*_test.rb']
       Rbx.run_tests(test_files, args.opts)
     end
   end

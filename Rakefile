@@ -62,7 +62,8 @@ task :tu => :test_units
 task :tc => :test_contribs
 task :test => :test_units
 
-Rake::TestTask.new(:test_all) do |t|
+namespace :test do
+  Rake::TestTask.new(:all) do |t|
   t.test_files = FileList[
     'test/lib/*_test.rb',
     'test/contrib/*_test.rb',
@@ -72,22 +73,23 @@ Rake::TestTask.new(:test_all) do |t|
   t.verbose = false
 end
 
-Rake::TestTask.new(:test_units) do |t|
+Rake::TestTask.new(:units) do |t|
   t.test_files = FileList['test/lib/*_test.rb']
   t.warning = true
   t.verbose = false
 end
 
-Rake::TestTask.new(:test_functional) do |t|
+Rake::TestTask.new(:functional) do |t|
   t.test_files = FileList['test/functional/*_test.rb']
   t.warning = true
   t.verbose = false
 end
 
-Rake::TestTask.new(:test_contribs) do |t|
+Rake::TestTask.new(:contribs) do |t|
   t.test_files = FileList['test/contrib/test*.rb']
   t.warning = true
   t.verbose = false
+end
 end
 
 begin

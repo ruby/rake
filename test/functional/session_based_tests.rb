@@ -321,7 +321,7 @@ class FunctionalTest < Test::Unit::TestCase
   
   def test_correct_number_of_tasks_reported
     Dir.chdir("test/data/comments") { rake("-T")}
-    assert_equal(3, @out.grep(/t\d/).size)
+    assert_equal(3, @out.split(/\n/).grep(/t\d/).size)
   end
   
   private
