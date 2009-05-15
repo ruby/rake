@@ -56,11 +56,11 @@ end
 
 # Common Abbreviations ...
 
-task :ta => :test_all
-task :tf => :test_functional
-task :tu => :test_units
-task :tc => :test_contribs
-task :test => :test_units
+task :ta => "test:all"
+task :tf => "test:functional"
+task :tu => "test:units"
+task :tc => "test:contribs"
+task :test => "test:units"
 
 namespace :test do
   Rake::TestTask.new(:all) do |t|
