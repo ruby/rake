@@ -1,6 +1,10 @@
 
 = Rake Changelog
 
+== Version 0.8.7
+
+* Fixed EXEEXT for JRuby on windows.
+
 == Version 0.8.6
 
 * Minor fixes to the RDoc generation (removed dependency on darkfish

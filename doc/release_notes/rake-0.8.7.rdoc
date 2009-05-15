@@ -50,7 +50,6 @@ As usual, it was input from users that drove a alot of these changes. The
 following people either contributed patches, made suggestions or made
 otherwise helpful comments.  Thanks to ...
 
-* James M. Lawrence/quix
-* Luis Lavena
+* Charles Nutter
 
 -- Jim Weirich
