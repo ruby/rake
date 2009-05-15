@@ -1,5 +1,11 @@
-
 = Rake Changelog
+
+== Pre-Version 0.9.x
+
+* Allow single line comments immediately prior to a task to be used in
+  place of +desc+.
+
+* Split rake.rb into individual files.
 
 == Version 0.8.7
 
