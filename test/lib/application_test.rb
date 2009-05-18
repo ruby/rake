@@ -115,6 +115,17 @@ class TestApplication < Test::Unit::TestCase
     assert_match(/^ {4}COMMENT$/, out)
   end
 
+  def test_show_lines
+    @app.options.show_tasks = :lines
+    @app.options.show_task_pattern = //
+    @app.last_description = "COMMENT"
+    @app.define_task(Rake::Task, "t")
+    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+    puts out
+    assert_match(/^rake t$/, out)
+    assert_match(/^ {4}COMMENT$/, out)
+  end
+
   def test_finding_rakefile
     assert_match(/Rakefile/i, @app.instance_eval { have_rakefile })
   end

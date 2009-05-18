@@ -27,6 +27,7 @@ class TestTask < Test::Unit::TestCase
     assert_equal t, arg
     assert_nil t.source
     assert_equal [], t.sources
+    assert_equal "", t.location
   end
 
   def test_inspect

@@ -29,6 +29,10 @@ module Rake
     # Array of nested namespaces names used for task lookup by this task.
     attr_reader :scope
 
+    # File/Line location of the the task definition (only valid if the
+    # task was defined with the detect location option set).
+    attr_reader :location
+
     # Return task name
     def to_s
       name
@@ -62,6 +66,7 @@ module Rake
       @application = app
       @scope = app.current_scope
       @arg_names = nil
+      @location = ""
     end
 
     # Enhance a task with prerequisites or actions.  Returns self.
