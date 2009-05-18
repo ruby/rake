@@ -178,7 +178,8 @@ module Rake
       displayable_tasks = tasks.select { |t|
         t.comment && t.name =~ options.show_task_pattern
       }
-      if options.show_tasks == :describe
+      case options.show_tasks
+      when :describe
         displayable_tasks.each do |t|
           puts "#{name} #{t.name_with_args}"
           t.full_comment.split("\n").each do |line|
@@ -186,13 +187,15 @@ module Rake
           end
           puts
         end
-      else
+      when :tasks
         width = displayable_tasks.collect { |t| t.name_with_args.length }.max || 10
         max_column = truncate_output? ? terminal_width - name.size - width - 7 : nil
         displayable_tasks.each do |t|
           printf "#{name} %-#{width}s  # %s\n",
             t.name_with_args, max_column ? truncate(t.comment, max_column) : t.comment
         end
+      else
+        fail "Unknown show task mode: '#{options.show_tasks}'"
       end
     end
 

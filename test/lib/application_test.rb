@@ -33,6 +33,7 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_display_tasks
+    @app.options.show_tasks = :tasks
     @app.options.show_task_pattern = //
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "t")
@@ -43,6 +44,7 @@ class TestApplication < Test::Unit::TestCase
 
   def test_display_tasks_with_long_comments
     in_environment('RAKE_COLUMNS' => '80') do
+      @app.options.show_tasks = :tasks
       @app.options.show_task_pattern = //
       @app.last_description = "1234567890" * 8
       @app.define_task(Rake::Task, "t")
@@ -54,6 +56,7 @@ class TestApplication < Test::Unit::TestCase
 
   def test_display_tasks_with_task_name_wider_than_tty_display
     in_environment('RAKE_COLUMNS' => '80') do
+      @app.options.show_tasks = :tasks
       @app.options.show_task_pattern = //
       description = "something short"
       task_name = "task name" * 80
@@ -66,6 +69,7 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_display_tasks_with_very_long_task_name_to_a_non_tty_shows_name_and_comment
+    @app.options.show_tasks = :tasks
     @app.options.show_task_pattern = //
     @app.tty_output = false
     description = "something short"
@@ -78,6 +82,7 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_display_tasks_with_long_comments_to_a_non_tty_shows_entire_comment
+    @app.options.show_tasks = :tasks
     @app.options.show_task_pattern = //
     @app.tty_output = false
     @app.last_description = "1234567890" * 8
@@ -89,6 +94,7 @@ class TestApplication < Test::Unit::TestCase
 
   def test_display_tasks_with_long_comments_to_a_non_tty_with_columns_set_truncates_comments
     in_environment("RAKE_COLUMNS" => '80') do
+      @app.options.show_tasks = :tasks
       @app.options.show_task_pattern = //
       @app.tty_output = false
       @app.last_description = "1234567890" * 8
