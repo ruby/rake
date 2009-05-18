@@ -178,7 +178,7 @@ module Rake
       displayable_tasks = tasks.select { |t|
         t.comment && t.name =~ options.show_task_pattern
       }
-      if options.show_task == :describe
+      if options.show_tasks == :describe
         displayable_tasks.each do |t|
           puts "#{name} #{t.name_with_args}"
           t.full_comment.split("\n").each do |line|

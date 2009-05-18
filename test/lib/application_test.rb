@@ -100,7 +100,7 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_describe_tasks
-    @app.options.show_task = :describe
+    @app.options.show_tasks = :describe
     @app.options.show_task_pattern = //
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "t")

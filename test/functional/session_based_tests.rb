@@ -84,7 +84,6 @@ class FunctionalTest < Test::Unit::TestCase
     in_environment("PWD" => "test/data/multidesc") do
       rake "--describe"
     end
-    puts @out
     assert_match %r{^rake a\n *A / A2 *$}m, @out
     assert_match %r{^rake b\n *B *$}m, @out
     assert_match %r{^rake d\n *x{80}}m, @out
