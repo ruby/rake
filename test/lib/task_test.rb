@@ -27,7 +27,8 @@ class TestTask < Test::Unit::TestCase
     assert_equal t, arg
     assert_nil t.source
     assert_equal [], t.sources
-    assert_equal "", t.location
+    assert_equal 1, t.locations.size
+    assert_match(/#{Regexp.quote(__FILE__)}/, t.locations.first)
   end
 
   def test_inspect

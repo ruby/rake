@@ -29,7 +29,9 @@ module Rake
       task.set_arg_names(arg_names) unless arg_names.empty?
       task.add_description(get_description)
       task.enhance(deps, &block)
-      task
+      with_location {
+        task
+      }
     end
 
     # Lookup a task.  Return an existing task if found, otherwise
@@ -205,7 +207,30 @@ module Rake
     end
 
     private
-
+    
+    # Add a location to the locations field of the yield object.
+    def with_location
+      result = yield
+      loc = find_location
+      result.locations << loc if loc
+      result
+    end
+    
+    # Find the location that called into the dsl layer.
+    def find_location
+      begin
+        raise StandardError.new
+      rescue StandardError => ex
+        locations = ex.backtrace
+        i = 0
+        while locations[i]
+          return locations[i+1] if locations[i] =~ /rake\/dsl.rb/
+          i += 1
+        end
+      end
+      nil
+    end
+      
     # Generate an anonymous namespace name.
     def generate_name
       @seed ||= 0

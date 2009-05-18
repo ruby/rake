@@ -196,7 +196,9 @@ module Rake
         end
       when :lines
         displayable_tasks.each do |t|
-          puts "#{name} #{t.name_with_args} #{t.location}"
+          t.locations.each do |loc|
+            printf "#{name} %-30s %s\n",t.name_with_args, loc
+          end
         end
       else
         fail "Unknown show task mode: '#{options.show_tasks}'"
@@ -364,7 +366,13 @@ module Rake
             puts "rake, version #{RAKEVERSION}"
             exit
           }
-        ]
+        ],
+        ['--where', '-W [PATTERN]', "Describe the tasks (matching optional PATTERN), then exit.",
+          lambda { |value|
+            options.show_tasks = :lines
+            options.show_task_pattern = Regexp.new(value || '')
+          }
+        ],
       ]
     end
 

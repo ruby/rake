@@ -120,10 +120,9 @@ class TestApplication < Test::Unit::TestCase
     @app.options.show_task_pattern = //
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "t")
+    @app['t'].locations << "HERE:1"
     out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
-    puts out
-    assert_match(/^rake t$/, out)
-    assert_match(/^ {4}COMMENT$/, out)
+    assert_match(/^rake t +[^:]+:\d+ *$/, out)
   end
 
   def test_finding_rakefile
