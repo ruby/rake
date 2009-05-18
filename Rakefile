@@ -47,7 +47,7 @@ SRC_RB = FileList['lib/**/*.rb']
 # The default task is run if rake is given no explicit arguments.
 
 desc "Default Task"
-task :default => :test_all
+task :default => "test:all"
 
 # Test Tasks ---------------------------------------------------------
 task :dbg do |t|
@@ -115,7 +115,7 @@ rescue LoadError
 end
 
 directory 'testdata'
-[:test_all, :test_units, :test_contribs, :test_functional].each do |t|
+["test:all", :test_units, :test_contribs, :test_functional].each do |t|
   task t => ['testdata']
 end
 
@@ -328,7 +328,7 @@ task :release, :rel, :reuse, :reltest,
   :needs => [
     :prerelease,
     :clobber,
-    :test_all,
+    "test:all",
     :update_version,
     :package,
     :tag
