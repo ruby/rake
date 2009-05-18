@@ -99,9 +99,9 @@ class TestApplication < Test::Unit::TestCase
     end
   end
 
-  def test_display_tasks_with_full_descriptions
+  def test_describe_tasks
+    @app.options.show_task = :describe
     @app.options.show_task_pattern = //
-    @app.options.full_description = true
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "t")
     out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
@@ -319,7 +319,6 @@ class TestApplicationOptions < Test::Unit::TestCase
     opts = command_line
     assert_nil opts.classic_namespace
     assert_nil opts.dryrun
-    assert_nil opts.full_description
     assert_nil opts.ignore_system
     assert_nil opts.load_system
     assert_nil opts.nosearch
@@ -345,16 +344,14 @@ class TestApplicationOptions < Test::Unit::TestCase
 
   def test_describe
     flags('--describe') do |opts|
-      assert opts.full_description
-      assert opts.show_tasks
+      assert_equal :describe, opts.show_tasks
       assert_equal(//.to_s, opts.show_task_pattern.to_s)
     end
   end
 
   def test_describe_with_pattern
     flags('--describe=X') do |opts|
-      assert opts.full_description
-      assert opts.show_tasks
+      assert_equal :describe, opts.show_tasks
       assert_equal(/X/.to_s, opts.show_task_pattern.to_s)
     end
   end
@@ -489,11 +486,11 @@ class TestApplicationOptions < Test::Unit::TestCase
 
   def test_tasks
     flags('--tasks', '-T') do |opts|
-      assert opts.show_tasks
+      assert_equal :tasks, opts.show_tasks
       assert_equal(//.to_s, opts.show_task_pattern.to_s)
     end
     flags(['--tasks', 'xyz'], ['-Txyz']) do |opts|
-      assert opts.show_tasks
+      assert_equal :tasks, opts.show_tasks
       assert_equal(/xyz/, opts.show_task_pattern)
     end
   end

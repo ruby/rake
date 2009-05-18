@@ -178,7 +178,7 @@ module Rake
       displayable_tasks = tasks.select { |t|
         t.comment && t.name =~ options.show_task_pattern
       }
-      if options.full_description
+      if options.show_task == :describe
         displayable_tasks.each do |t|
           puts "#{name} #{t.name_with_args}"
           t.full_comment.split("\n").each do |line|
@@ -256,8 +256,7 @@ module Rake
         ],
         ['--describe', '-D [PATTERN]', "Describe the tasks (matching optional PATTERN), then exit.",
           lambda { |value|
-            options.show_tasks = true
-            options.full_description = true
+            options.show_tasks = :describe
             options.show_task_pattern = Regexp.new(value || '')
           }
         ],
@@ -340,9 +339,8 @@ module Rake
         ],
         ['--tasks', '-T [PATTERN]', "Display the tasks (matching optional PATTERN) with descriptions, then exit.",
           lambda { |value|
-            options.show_tasks = true
+            options.show_tasks = :tasks
             options.show_task_pattern = Regexp.new(value || '')
-            options.full_description = false
           }
         ],
         ['--trace', '-t', "Turn on invoke/execute tracing, enable full backtrace.",
