@@ -7,6 +7,8 @@
 
 * Split rake.rb into individual files.
 
+* Support for the --where (-W) flag for showing where a task is defined.
+
 == Version 0.8.7
 
 * Fixed EXEEXT for JRuby on windows.
