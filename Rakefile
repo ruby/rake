@@ -50,9 +50,6 @@ desc "Default Task"
 task :default => "test:all"
 
 # Test Tasks ---------------------------------------------------------
-task :dbg do |t|
-  puts "Arguments are: #{t.args.join(', ')}"
-end
 
 # Common Abbreviations ...
 
@@ -289,11 +286,6 @@ RUBY_FILES = FileList['**/*.rb'].exclude('pkg')
 desc "Look for TODO and FIXME tags in the code"
 task :todo do
   RUBY_FILES.egrep(/#.*(FIXME|TODO|TBD)/)
-end
-
-desc "Look for Debugging print lines"
-task :dbg do
-  RUBY_FILES.egrep(/\bDBG|\bbreakpoint\b/)
 end
 
 desc "List all ruby files"
