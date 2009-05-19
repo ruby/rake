@@ -131,18 +131,23 @@ module Rake
         exit(false)
       rescue Exception => ex
         # Exit with error message
-        $stderr.puts "#{name} aborted!"
-        $stderr.puts ex.message
-        if options.trace
-          $stderr.puts ex.backtrace.join("\n")
-        else
-          $stderr.puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
-          $stderr.puts "(See full trace by running task with --trace)"
-        end
+        display_error_message(ex)
         exit(false)
       end
     end
 
+    # Display the error message that caused the exception.
+    def display_error_message(ex)
+      $stderr.puts "#{name} aborted!"
+      $stderr.puts ex.message
+      if options.trace
+        $stderr.puts ex.backtrace.join("\n")
+      else
+        $stderr.puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
+        $stderr.puts "(See full trace by running task with --trace)"
+      end
+    end
+    
     # True if one of the files in RAKEFILES is in the current directory.
     # If a match is found, it is copied into @rakefile.
     def have_rakefile
