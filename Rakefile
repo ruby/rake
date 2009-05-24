@@ -61,32 +61,32 @@ task :test => "test:units"
 
 namespace :test do
   Rake::TestTask.new(:all) do |t|
-  t.test_files = FileList[
-    'test/lib/*_test.rb',
-    'test/contrib/*_test.rb',
-    'test/functional/*_test.rb'
-  ]
-  t.warning = true
-  t.verbose = false
-end
-
-Rake::TestTask.new(:units) do |t|
-  t.test_files = FileList['test/lib/*_test.rb']
-  t.warning = true
-  t.verbose = false
-end
-
-Rake::TestTask.new(:functional) do |t|
-  t.test_files = FileList['test/functional/*_test.rb']
-  t.warning = true
-  t.verbose = false
-end
-
-Rake::TestTask.new(:contribs) do |t|
-  t.test_files = FileList['test/contrib/test*.rb']
-  t.warning = true
-  t.verbose = false
-end
+    t.test_files = FileList[
+      'test/lib/*_test.rb',
+      'test/contrib/*_test.rb',
+      'test/functional/*_test.rb'
+    ]
+    t.warning = true
+    t.verbose = false
+  end
+  
+  Rake::TestTask.new(:units) do |t|
+    t.test_files = FileList['test/lib/*_test.rb']
+    t.warning = true
+    t.verbose = false
+  end
+  
+  Rake::TestTask.new(:functional) do |t|
+    t.test_files = FileList['test/functional/*_test.rb']
+    t.warning = true
+    t.verbose = false
+  end
+  
+  Rake::TestTask.new(:contribs) do |t|
+    t.test_files = FileList['test/contrib/test*.rb']
+    t.warning = true
+    t.verbose = false
+  end
 end
 
 begin

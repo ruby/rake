@@ -128,7 +128,7 @@ module Rake
     def fix # :nodoc:
       case ruby_version
       when '1.8.2'
-        "'#{find_file 'rake/ruby182_test_unit_fix'}'"
+        "\"#{find_file 'rake/ruby182_test_unit_fix'}\""
       else
         nil
       end || ''
@@ -141,11 +141,11 @@ module Rake
     def run_code
       case @loader
       when :direct
-        "-e 'ARGV.each{|f| load f}'"
+        "-e \"ARGV.each{|f| load f}\""
       when :testrb
         "-S testrb #{fix}"
       when :rake
-        "'#{rake_loader}'"
+        "\"#{rake_loader}\""
       end
     end
 
