@@ -9,8 +9,11 @@
 
 * Support for the --where (-W) flag for showing where a task is defined.
 
-* Fixed quoting in test task
+* Fixed quoting in test task.
   (http://onestepback.org/redmine/issues/show/44)
+
+* Fixed the silent option parsing problem.
+  (http://onestepback.org/redmine/issues/show/47)
 
 == Version 0.8.7
 
