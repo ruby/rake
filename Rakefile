@@ -295,16 +295,6 @@ task :rubyfiles do
 end
 task :rf => :rubyfiles
 
-desc "Create a TAGS file"
-task :tags => "TAGS"
-
-TAGS = 'xctags -e'
-
-file "TAGS" => RUBY_FILES do
-  puts "Makings TAGS"
-  sh "#{TAGS} #{RUBY_FILES}", :verbose => false
-end
-
 # --------------------------------------------------------------------
 # Creating a release
 
