@@ -73,7 +73,7 @@ end
 def namespace(name=nil, &block)
   name = name.to_s if name.kind_of?(Symbol)
   name = name.to_str if name.respond_to?(:to_str)
-  unless name.kind_of?(String)
+  unless name.kind_of?(String) || name.nil?
     raise ArgumentError, "Expected a String or Symbol for a namespace name"
   end
   Rake.application.in_namespace(name, &block)
