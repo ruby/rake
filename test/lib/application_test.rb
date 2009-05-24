@@ -538,7 +538,7 @@ class TestApplicationOptions < Test::Unit::TestCase
   end
 
   def test_bad_option
-    capture_stderr do
+    error_output = capture_stderr do
       ex = assert_exception(OptionParser::InvalidOption) do
         flags('--bad-option') 
       end
@@ -549,6 +549,7 @@ class TestApplicationOptions < Test::Unit::TestCase
         assert_match(/--bad-option/, ex.message)
       end
     end
+    assert_equal '', error_output
   end
 
   def test_task_collection

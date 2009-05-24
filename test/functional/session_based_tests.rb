@@ -23,7 +23,7 @@ module Session
   end
 end
 
-class FunctionalTest < Test::Unit::TestCase
+class SessionBasedTests < Test::Unit::TestCase
   include InEnvironment
   include TestMethods
 
@@ -154,6 +154,13 @@ class FunctionalTest < Test::Unit::TestCase
       rake "--nosearch"
     end
     assert_match %r{^No Rakefile found}, @err
+  end
+
+  def test_invalid_command_line_options
+    in_environment("PWD" => "test/data/default") do
+      rake "--bad-options"
+    end
+    assert_match %r{invalid +option}i, @err
   end
 
   def test_dry_run

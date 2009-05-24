@@ -127,7 +127,7 @@ module Rake
         # Exit silently with current status
         raise
       rescue OptionParser::InvalidOption => ex
-        # Exit silently
+        $stderr.puts ex.message
         exit(false)
       rescue Exception => ex
         # Exit with error message
