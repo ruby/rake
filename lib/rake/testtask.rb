@@ -55,6 +55,10 @@ module Rake
     # E.g. warning=true implies "ruby -w" used to run the tests.
     attr_accessor :warning
 
+    # Request that the tests be run at the given safe level.
+    # E.g. safe_level=1 implies "ruby -T1" is used to run the tests.
+    attr_accessor :safe_level
+
     # Glob pattern to match test files. (default is 'test/test*.rb')
     attr_accessor :pattern
 
@@ -87,6 +91,7 @@ module Rake
       @verbose = false
       @warning = false
       @loader = :rake
+      @safe_level = nil
       @ruby_opts = []
       yield self if block_given?
       @pattern = 'test/test*.rb' if @pattern.nil? && @test_files.nil?
@@ -95,16 +100,10 @@ module Rake
 
     # Create the tasks defined by this task lib.
     def define
-      lib_path = @libs.join(File::PATH_SEPARATOR)
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
         RakeFileUtils.verbose(@verbose) do
-          @ruby_opts.unshift( "-I\"#{lib_path}\"" )
-          @ruby_opts.unshift( "-w" ) if @warning
-          ruby @ruby_opts.join(" ") +
-            " #{run_code} " +
-            file_list.collect { |fn| "\"#{fn}\"" }.join(' ') +
-            " #{option_list}"
+          ruby "#{ruby_opts_string} #{run_code} #{file_list_string} #{option_list}"
         end
       end
       self
@@ -112,6 +111,19 @@ module Rake
 
     def option_list # :nodoc:
       ENV['TESTOPTS'] || @options || ""
+    end
+
+    def ruby_opts_string
+      lib_path = @libs.join(File::PATH_SEPARATOR)
+      opts = @ruby_opts.dup
+      opts.unshift( "-I\"#{lib_path}\"" )
+      opts.unshift( "-w" ) if @warning
+      opts.unshift("-T#{@safe_level}") if @safe_level
+      opts.join(" ")
+    end
+    
+    def file_list_string
+      file_list.collect { |fn| "\"#{fn}\"" }.join(' ')
     end
 
     def file_list # :nodoc:
