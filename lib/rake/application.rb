@@ -235,7 +235,7 @@ module Rake
     end
 
     def unix?
-      RUBY_PLATFORM =~ /(aix|darwin|linux|(net|free|open)bsd|cygwin|solaris|irix|hpux)/i
+      Config::CONFIG['host_os'] =~ /(aix|darwin|linux|(net|free|open)bsd|cygwin|solaris|irix|hpux)/i
     end
     
     def windows?
