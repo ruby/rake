@@ -98,7 +98,6 @@ module Rake
       @pending = false
       @exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
       @exclude_procs = DEFAULT_IGNORE_PROCS.dup
-      @exclude_re = nil
       @items = []
       patterns.each { |pattern| include(pattern) }
       yield self if block_given?
@@ -161,7 +160,6 @@ module Rake
     def clear_exclude
       @exclude_patterns = []
       @exclude_procs = []
-      calculate_exclude_regexp if ! @pending
       self
     end
 
@@ -209,26 +207,6 @@ module Rake
       self
     end
 
-    def calculate_exclude_regexp
-      ignores = []
-      @exclude_patterns.each do |pat|
-        case pat
-        when Regexp
-          ignores << pat
-        when /[*?]/
-          Dir[pat].each do |p| ignores << p end
-        else
-          ignores << Regexp.quote(pat)
-        end
-      end
-      if ignores.empty?
-        @exclude_re = /^$/
-      else
-        re_str = ignores.collect { |p| "(" + p.to_s + ")" }.join("|")
-        @exclude_re = Regexp.new(re_str)
-      end
-    end
-
     def resolve_add(fn)
       case fn
       when %r{[*?\[\{]}
@@ -240,7 +218,6 @@ module Rake
     private :resolve_add
 
     def resolve_exclude
-      calculate_exclude_regexp
       reject! { |fn| exclude?(fn) }
       self
     end
@@ -363,8 +340,17 @@ module Rake
 
     # Should the given file name be excluded?
     def exclude?(fn)
-      calculate_exclude_regexp unless @exclude_re
-      fn =~ @exclude_re || @exclude_procs.any? { |p| p.call(fn) }
+      return true if @exclude_patterns.any? do |pat|
+        case pat
+        when Regexp
+          fn =~ pat
+        when /[*?]/
+          File.fnmatch?(pat, fn, File::FNM_PATHNAME)
+        else
+          fn == pat
+        end
+      end
+      @exclude_procs.any? { |p| p.call(fn) }
     end
 
     DEFAULT_IGNORE_PATTERNS = [
@@ -376,7 +362,6 @@ module Rake
     DEFAULT_IGNORE_PROCS = [
       proc { |fn| fn =~ /(^|[\/\\])core$/ && ! File.directory?(fn) }
     ]
-#    @exclude_patterns = DEFAULT_IGNORE_PATTERNS.dup
 
     def import(array)
       @items = array
@@ -391,7 +376,7 @@ module Rake
         new(*args)
       end
     end
-  end # FileList
+  end 
 end
 
 module Rake
