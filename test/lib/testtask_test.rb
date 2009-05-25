@@ -31,4 +31,11 @@ class TestTaskTest < Test::Unit::TestCase
     end
     assert_match(/".*"/, test_task.run_code)
   end
+
+  def test_nested_libs_will_be_flattened
+    test_task = Rake::TestTask.new(:tx) do |t|
+      t.libs << ["A", "B"]
+    end
+    assert_match(/lib:A:B/, test_task.ruby_opts_string)
+  end
 end
