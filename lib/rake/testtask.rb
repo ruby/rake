@@ -55,10 +55,6 @@ module Rake
     # E.g. warning=true implies "ruby -w" used to run the tests.
     attr_accessor :warning
 
-    # Request that the tests be run at the given safe level.
-    # E.g. safe_level=1 implies "ruby -T1" is used to run the tests.
-    attr_accessor :safe_level
-
     # Glob pattern to match test files. (default is 'test/test*.rb')
     attr_accessor :pattern
 
@@ -91,7 +87,6 @@ module Rake
       @verbose = false
       @warning = false
       @loader = :rake
-      @safe_level = nil
       @ruby_opts = []
       yield self if block_given?
       @pattern = 'test/test*.rb' if @pattern.nil? && @test_files.nil?
@@ -118,7 +113,6 @@ module Rake
       opts = @ruby_opts.dup
       opts.unshift( "-I\"#{lib_path}\"" )
       opts.unshift( "-w" ) if @warning
-      opts.unshift("-T#{@safe_level}") if @safe_level
       opts.join(" ")
     end
     
