@@ -563,4 +563,4 @@ This is the proper way to specify the task ...
 
 == See
 
-* README -- Main documentation for Rake.
+* README.rdoc -- Main documentation for Rake.
