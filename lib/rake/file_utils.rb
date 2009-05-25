@@ -29,7 +29,7 @@ module FileUtils
   #
   def sh(*cmd, &block)
     options = (Hash === cmd.last) ? cmd.pop : {}
-    block = create_shell_command(cmd) unless block_given?
+    shell_runner = block_given? ? block : create_shell_runner(cmd)
     set_verbose_option(options)
     options[:noop] ||= RakeFileUtils.nowrite_flag
     rake_check_options options, :noop, :verbose
@@ -38,17 +38,18 @@ module FileUtils
       res = rake_system(*cmd)
       status = $?
       status = PseudoStatus.new(1) if !res && status.nil?
-      block.call(res, status)
+      shell_runner.call(res, status)
     end
   end
 
-  def create_shell_command(cmd)
+  def create_shell_runner(cmd)
     show_command = cmd.join(" ")
     show_command = show_command[0,42] + "..." unless $trace
     block = lambda { |ok, status|
       ok or fail "Command failed with status (#{status.exitstatus}): [#{show_command}]"
     }
   end
+  private :create_shell_runner
 
   def set_verbose_option(options)
     if options[:verbose].nil?
