@@ -136,7 +136,7 @@ end
 
 BASE_RDOC_OPTIONS = [
   '--line-numbers', '--inline-source',
-  '--main' , 'README',
+  '--main' , 'README.rdoc',
   '--title', 'Rake -- Ruby Make'
 ]
 
@@ -147,7 +147,7 @@ rd = Rake::RDocTask.new("rdoc") do |rdoc|
   rdoc.options = BASE_RDOC_OPTIONS.dup
   rdoc.options << '-SHN' << '-f' << 'darkfish' if DARKFISH_ENABLED
     
-  rdoc.rdoc_files.include('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
+  rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGES')
   rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
   rdoc.rdoc_files.exclude(/\bcontrib\b/)
 end
