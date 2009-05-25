@@ -163,6 +163,55 @@ class SessionBasedTests < Test::Unit::TestCase
     assert_match %r{invalid +option}i, @err
   end
 
+  def test_inline_verbose_default_should_show_command
+    in_environment("PWD" => "test/data/verbose") do
+      rake "inline_verbose_default"
+    end
+    assert_match(/ruby -e/, @err)
+  end
+
+  def test_inline_verbose_true_should_show_command
+    in_environment("PWD" => "test/data/verbose") do
+      rake "inline_verbose_true"
+    end
+    assert_match(/ruby -e/, @err)
+  end
+
+  def test_inline_verbose_false_should_not_show_command
+    in_environment("PWD" => "test/data/verbose") do
+      rake "inline_verbose_false"
+    end
+    assert_no_match(/ruby -e/, @err)
+  end
+
+  def test_block_verbose_false_should_not_show_command
+    in_environment("PWD" => "test/data/verbose") do
+      rake "block_verbose_false"
+    end
+    assert_no_match(/ruby -e/, @err)
+  end
+
+  def test_block_verbose_true_should_show_command
+    in_environment("PWD" => "test/data/verbose") do
+      rake "block_verbose_true"
+    end
+    assert_match(/ruby -e/, @err)
+  end
+
+  def test_standalone_verbose_true_should_show_command
+    in_environment("PWD" => "test/data/verbose") do
+      rake "standalone_verbose_true"
+    end
+    assert_match(/ruby -e/, @err)
+  end
+
+  def test_standalone_verbose_false_should_not_show_command
+    in_environment("PWD" => "test/data/verbose") do
+      rake "standalone_verbose_false"
+    end
+    assert_no_match(/ruby -e/, @err)
+  end
+
   def test_dry_run
     in_environment("PWD" => "test/data/default") do rake "-n", "other" end
     assert_match %r{Execute \(dry run\) default}, @out

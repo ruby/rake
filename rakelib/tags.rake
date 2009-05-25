@@ -2,7 +2,7 @@
 
 module Tags
   PROG = ENV['TAGS'] || 'ctags'
-  RUBY_FILES = FileList['**/*.rb']
+  RUBY_FILES = FileList['**/*.rb'].exclude('sys.rb')
   RUBY_FILES.include('**/*.rake')
 end
 

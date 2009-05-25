@@ -37,9 +37,9 @@ module FileUtils
         ok or fail "Command failed with status (#{status.exitstatus}): [#{show_command}]"
       }
     end
-    if RakeFileUtils.verbose_flag == :default
+    if RakeFileUtils.verbose_flag == :default && options[:verbose].nil?
       options[:verbose] = true
-    else
+    elsif options[:verbose].nil?
       options[:verbose] ||= RakeFileUtils.verbose_flag
     end
     options[:noop]    ||= RakeFileUtils.nowrite_flag
