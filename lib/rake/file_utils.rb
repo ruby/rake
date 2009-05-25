@@ -29,16 +29,9 @@ module FileUtils
   #
   def sh(*cmd, &block)
     options = (Hash === cmd.last) ? cmd.pop : {}
-    unless block_given?
-      show_command = cmd.join(" ")
-      show_command = show_command[0,42] + "..." unless $trace
-      # TODO code application logic heref show_command.length > 45
-      block = lambda { |ok, status|
-        ok or fail "Command failed with status (#{status.exitstatus}): [#{show_command}]"
-      }
-    end
+    block = create_shell_command(cmd) unless block_given?
     set_verbose_option(options)
-    options[:noop]    ||= RakeFileUtils.nowrite_flag
+    options[:noop] ||= RakeFileUtils.nowrite_flag
     rake_check_options options, :noop, :verbose
     rake_output_message cmd.join(" ") if options[:verbose]
     unless options[:noop]
@@ -49,11 +42,17 @@ module FileUtils
     end
   end
 
+  def create_shell_command(cmd)
+    show_command = cmd.join(" ")
+    show_command = show_command[0,42] + "..." unless $trace
+    block = lambda { |ok, status|
+      ok or fail "Command failed with status (#{status.exitstatus}): [#{show_command}]"
+    }
+  end
+
   def set_verbose_option(options)
-    if RakeFileUtils.verbose_flag.nil? && options[:verbose].nil?
-      options[:verbose] = true
-    elsif options[:verbose].nil?
-      options[:verbose] ||= RakeFileUtils.verbose_flag
+    if options[:verbose].nil?
+      options[:verbose] = RakeFileUtils.verbose_flag.nil? || RakeFileUtils.verbose_flag
     end
   end
   private :set_verbose_option
