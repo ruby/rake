@@ -37,11 +37,7 @@ module FileUtils
         ok or fail "Command failed with status (#{status.exitstatus}): [#{show_command}]"
       }
     end
-    if RakeFileUtils.verbose_flag == :default && options[:verbose].nil?
-      options[:verbose] = true
-    elsif options[:verbose].nil?
-      options[:verbose] ||= RakeFileUtils.verbose_flag
-    end
+    set_verbose_option(options)
     options[:noop]    ||= RakeFileUtils.nowrite_flag
     rake_check_options options, :noop, :verbose
     rake_output_message cmd.join(" ") if options[:verbose]
@@ -52,6 +48,15 @@ module FileUtils
       block.call(res, status)
     end
   end
+
+  def set_verbose_option(options)
+    if RakeFileUtils.verbose_flag.nil? && options[:verbose].nil?
+      options[:verbose] = true
+    elsif options[:verbose].nil?
+      options[:verbose] ||= RakeFileUtils.verbose_flag
+    end
+  end
+  private :set_verbose_option
 
   def rake_system(*cmd)
     Rake::AltSystem.system(*cmd)

@@ -10,7 +10,7 @@ module RakeFileUtils
   class << self
     attr_accessor :verbose_flag, :nowrite_flag
   end
-  RakeFileUtils.verbose_flag = :default
+  RakeFileUtils.verbose_flag = nil
   RakeFileUtils.nowrite_flag = false
 
   $fileutils_verbose = true
