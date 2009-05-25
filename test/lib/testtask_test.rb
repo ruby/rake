@@ -38,4 +38,11 @@ class TestTaskTest < Test::Unit::TestCase
     end
     assert_match(/lib:A:B/, test_task.ruby_opts_string)
   end
+
+  def test_empty_lib_path_implies_no_dash_I_option
+    test_task = Rake::TestTask.new(:tx) do |t|
+      t.libs = []
+    end
+    assert_no_match(/-I/, test_task.ruby_opts_string)
+  end
 end

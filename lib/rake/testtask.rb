@@ -109,11 +109,14 @@ module Rake
     end
 
     def ruby_opts_string
-      lib_path = @libs.join(File::PATH_SEPARATOR)
       opts = @ruby_opts.dup
-      opts.unshift( "-I\"#{lib_path}\"" )
+      opts.unshift( "-I\"#{lib_path}\"" ) unless @libs.empty?
       opts.unshift( "-w" ) if @warning
       opts.join(" ")
+    end
+
+    def lib_path
+      @libs.join(File::PATH_SEPARATOR)
     end
     
     def file_list_string
