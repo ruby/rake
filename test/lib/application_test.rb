@@ -311,6 +311,7 @@ end
 class TestApplicationOptions < Test::Unit::TestCase
   include CaptureStdout
   include TestMethods
+  include InEnvironment
 
   def setup
     clear_argv
@@ -332,21 +333,23 @@ class TestApplicationOptions < Test::Unit::TestCase
   end
 
   def test_default_options
-    opts = command_line
-    assert_nil opts.classic_namespace
-    assert_nil opts.dryrun
-    assert_nil opts.ignore_system
-    assert_nil opts.load_system
-    assert_nil opts.nosearch
-    assert_equal ['rakelib'], opts.rakelib
-    assert_nil opts.show_prereqs
-    assert_nil opts.show_task_pattern
-    assert_nil opts.show_tasks
-    assert_nil opts.silent
-    assert_nil opts.trace
-    assert_equal ['rakelib'], opts.rakelib
-    assert ! RakeFileUtils.verbose_flag
-    assert ! RakeFileUtils.nowrite_flag
+    in_environment("RAKEOPT" => nil) do
+      opts = command_line
+      assert_nil opts.classic_namespace
+      assert_nil opts.dryrun
+      assert_nil opts.ignore_system
+      assert_nil opts.load_system
+      assert_nil opts.nosearch
+      assert_equal ['rakelib'], opts.rakelib
+      assert_nil opts.show_prereqs
+      assert_nil opts.show_task_pattern
+      assert_nil opts.show_tasks
+      assert_nil opts.silent
+      assert_nil opts.trace
+      assert_equal ['rakelib'], opts.rakelib
+      assert ! RakeFileUtils.verbose_flag
+      assert ! RakeFileUtils.nowrite_flag
+    end
   end
 
   def test_dry_run
@@ -684,6 +687,15 @@ class TestTaskArgumentParsing < Test::Unit::TestCase
     flexmock(app).should_receive(:unix?).and_throw(RuntimeError)
     in_environment('RAKE_COLUMNS' => nil) do
       assert_equal 80, app.terminal_width
+    end
+  end
+
+  def test_no_rakeopt
+    in_environment do
+      ARGV << '--trace'
+      app = Rake::Application.new
+      app.init
+      assert !app.options.silent
     end
   end
 
