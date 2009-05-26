@@ -1,3 +1,5 @@
+require 'rake/ext/exception'
+
 module Rake
   
   # #########################################################################
@@ -144,6 +146,11 @@ module Rake
         invoke_prerequisites(task_args, new_chain)
         execute(task_args) if needed?
       end
+    rescue Exception => ex
+      if ex.chain.nil?
+        ex.chain = new_chain
+      end
+      raise ex
     end
     protected :invoke_with_call_chain
 

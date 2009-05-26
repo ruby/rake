@@ -412,3 +412,8 @@ desc "Where is the current directory.  This task displays\nthe current rake dire
 task :where_am_i do
   puts Rake.original_dir
 end
+
+task :failure => :really_fail
+task :really_fail do
+  fail "oops"
+end

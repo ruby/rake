@@ -147,8 +147,9 @@ module Rake
         $stderr.puts ex.backtrace.join("\n")
       else
         $stderr.puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
-        $stderr.puts "(See full trace by running task with --trace)"
       end
+      $stderr.puts "Tasks: #{ex.chain}" if ex.chain
+      $stderr.puts "(See full trace by running task with --trace)" unless options.trace
     end
     
     # True if one of the files in RAKEFILES is in the current directory.
