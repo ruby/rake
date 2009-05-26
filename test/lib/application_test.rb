@@ -353,206 +353,256 @@ class TestApplicationOptions < Test::Unit::TestCase
   end
 
   def test_dry_run
-    flags('--dry-run', '-n') do |opts|
-      assert opts.dryrun
-      assert opts.trace
-      assert RakeFileUtils.verbose_flag
-      assert RakeFileUtils.nowrite_flag
+    in_environment do
+      flags('--dry-run', '-n') do |opts|
+        assert opts.dryrun
+        assert opts.trace
+        assert RakeFileUtils.verbose_flag
+        assert RakeFileUtils.nowrite_flag
+      end
     end
   end
 
   def test_describe
-    flags('--describe') do |opts|
-      assert_equal :describe, opts.show_tasks
-      assert_equal(//.to_s, opts.show_task_pattern.to_s)
+    in_environment do
+      flags('--describe') do |opts|
+        assert_equal :describe, opts.show_tasks
+        assert_equal(//.to_s, opts.show_task_pattern.to_s)
+      end
     end
   end
 
   def test_describe_with_pattern
-    flags('--describe=X') do |opts|
-      assert_equal :describe, opts.show_tasks
-      assert_equal(/X/.to_s, opts.show_task_pattern.to_s)
+    in_environment do
+      flags('--describe=X') do |opts|
+        assert_equal :describe, opts.show_tasks
+        assert_equal(/X/.to_s, opts.show_task_pattern.to_s)
+      end
     end
   end
 
   def test_execute
-    $xyzzy = 0
-    flags('--execute=$xyzzy=1', '-e $xyzzy=1') do |opts|
-      assert_equal 1, $xyzzy
-      assert_equal :exit, @exit
+    in_environment do
       $xyzzy = 0
+      flags('--execute=$xyzzy=1', '-e $xyzzy=1') do |opts|
+        assert_equal 1, $xyzzy
+        assert_equal :exit, @exit
+        $xyzzy = 0
+      end
     end
   end
 
   def test_execute_and_continue
-    $xyzzy = 0
-    flags('--execute-continue=$xyzzy=1', '-E $xyzzy=1') do |opts|
-      assert_equal 1, $xyzzy
-      assert_not_equal :exit, @exit
+    in_environment do
       $xyzzy = 0
+      flags('--execute-continue=$xyzzy=1', '-E $xyzzy=1') do |opts|
+        assert_equal 1, $xyzzy
+        assert_not_equal :exit, @exit
+        $xyzzy = 0
+      end
     end
   end
 
   def test_execute_and_print
-    $xyzzy = 0
-    flags('--execute-print=$xyzzy="pugh"', '-p $xyzzy="pugh"') do |opts|
-      assert_equal 'pugh', $xyzzy
-      assert_equal :exit, @exit
-      assert_match(/^pugh$/, @out)
+    in_environment do
       $xyzzy = 0
+      flags('--execute-print=$xyzzy="pugh"', '-p $xyzzy="pugh"') do |opts|
+        assert_equal 'pugh', $xyzzy
+        assert_equal :exit, @exit
+        assert_match(/^pugh$/, @out)
+        $xyzzy = 0
+      end
     end
   end
 
   def test_help
-    flags('--help', '-H', '-h') do |opts|
-      assert_match(/\Arake/, @out)
-      assert_match(/\boptions\b/, @out)
-      assert_match(/\btargets\b/, @out)
-      assert_equal :exit, @exit
-      assert_equal :exit, @exit
+    in_environment do
+      flags('--help', '-H', '-h') do |opts|
+        assert_match(/\Arake/, @out)
+        assert_match(/\boptions\b/, @out)
+        assert_match(/\btargets\b/, @out)
+        assert_equal :exit, @exit
+        assert_equal :exit, @exit
+      end
     end
   end
 
   def test_libdir
-    flags(['--libdir', 'xx'], ['-I', 'xx'], ['-Ixx']) do |opts|
-      $:.include?('xx')
+    in_environment do
+      flags(['--libdir', 'xx'], ['-I', 'xx'], ['-Ixx']) do |opts|
+        $:.include?('xx')
+      end
     end
   ensure
     $:.delete('xx')
   end
 
   def test_rakefile
-    flags(['--rakefile', 'RF'], ['--rakefile=RF'], ['-f', 'RF'], ['-fRF']) do |opts|
-      assert_equal ['RF'], @app.instance_eval { @rakefiles }
+    in_environment do
+      flags(['--rakefile', 'RF'], ['--rakefile=RF'], ['-f', 'RF'], ['-fRF']) do |opts|
+        assert_equal ['RF'], @app.instance_eval { @rakefiles }
+      end
     end
   end
 
   def test_rakelib
-    flags(['--rakelibdir', 'A:B:C'], ['--rakelibdir=A:B:C'], ['-R', 'A:B:C'], ['-RA:B:C']) do |opts|
-      assert_equal ['A', 'B', 'C'], opts.rakelib
+    in_environment do
+      flags(['--rakelibdir', 'A:B:C'], ['--rakelibdir=A:B:C'], ['-R', 'A:B:C'], ['-RA:B:C']) do |opts|
+        assert_equal ['A', 'B', 'C'], opts.rakelib
+      end
     end
   end
 
   def test_require
-    flags(['--require', 'test/reqfile'], '-rtest/reqfile2', '-rtest/reqfile3') do |opts|
-    end
-    assert TESTING_REQUIRE.include?(1)
-    assert TESTING_REQUIRE.include?(2)
-    assert TESTING_REQUIRE.include?(3)
-    assert_equal 3, TESTING_REQUIRE.size
-  end
-
-  def test_missing_require
-    ex = assert_exception(LoadError) do
-      flags(['--require', 'test/missing']) do |opts|
+    in_environment do
+      flags(['--require', 'test/reqfile'], '-rtest/reqfile2', '-rtest/reqfile3') do |opts|
       end
+      assert TESTING_REQUIRE.include?(1)
+      assert TESTING_REQUIRE.include?(2)
+      assert TESTING_REQUIRE.include?(3)
+      assert_equal 3, TESTING_REQUIRE.size
     end
-    assert_match(/no such file/, ex.message)
-    assert_match(/test\/missing/, ex.message)
+  end
+  
+  def test_missing_require
+    in_environment do
+      ex = assert_exception(LoadError) do
+        flags(['--require', 'test/missing']) do |opts|
+        end
+      end
+      assert_match(/no such file/, ex.message)
+      assert_match(/test\/missing/, ex.message)
+    end
   end
 
   def test_prereqs
-    flags('--prereqs', '-P') do |opts|
-      assert opts.show_prereqs
+    in_environment do
+      flags('--prereqs', '-P') do |opts|
+        assert opts.show_prereqs
+      end
     end
   end
 
   def test_quiet
-    flags('--quiet', '-q') do |opts|
-      assert ! RakeFileUtils.verbose_flag
-      assert ! opts.silent
+    in_environment do
+      flags('--quiet', '-q') do |opts|
+        assert ! RakeFileUtils.verbose_flag
+        assert ! opts.silent
+      end
     end
   end
 
   def test_no_search
-    flags('--nosearch', '--no-search', '-N') do |opts|
-      assert opts.nosearch
+    in_environment do
+      flags('--nosearch', '--no-search', '-N') do |opts|
+        assert opts.nosearch
+      end
     end
   end
 
   def test_silent
-    flags('--silent', '-s') do |opts|
-      assert ! RakeFileUtils.verbose_flag
-      assert opts.silent
+    in_environment do
+      flags('--silent', '-s') do |opts|
+        assert ! RakeFileUtils.verbose_flag
+        assert opts.silent
+      end
     end
   end
 
   def test_system
-    flags('--system', '-g') do |opts|
-      assert opts.load_system
+    in_environment do
+      flags('--system', '-g') do |opts|
+        assert opts.load_system
+      end
     end
   end
 
   def test_no_system
-    flags('--no-system', '-G') do |opts|
-      assert opts.ignore_system
+    in_environment do
+      flags('--no-system', '-G') do |opts|
+        assert opts.ignore_system
+      end
     end
   end
 
   def test_trace
-    flags('--trace', '-t') do |opts|
-      assert opts.trace
-      assert RakeFileUtils.verbose_flag
-      assert ! RakeFileUtils.nowrite_flag
+    in_environment do
+      flags('--trace', '-t') do |opts|
+        assert opts.trace
+        assert RakeFileUtils.verbose_flag
+        assert ! RakeFileUtils.nowrite_flag
+      end
     end
   end
 
   def test_trace_rules
-    flags('--rules') do |opts|
-      assert opts.trace_rules
+    in_environment do
+      flags('--rules') do |opts|
+        assert opts.trace_rules
+      end
     end
   end
 
   def test_tasks
-    flags('--tasks', '-T') do |opts|
-      assert_equal :tasks, opts.show_tasks
-      assert_equal(//.to_s, opts.show_task_pattern.to_s)
-    end
-    flags(['--tasks', 'xyz'], ['-Txyz']) do |opts|
-      assert_equal :tasks, opts.show_tasks
-      assert_equal(/xyz/, opts.show_task_pattern)
+    in_environment do
+      flags('--tasks', '-T') do |opts|
+        assert_equal :tasks, opts.show_tasks
+        assert_equal(//.to_s, opts.show_task_pattern.to_s)
+      end
+      flags(['--tasks', 'xyz'], ['-Txyz']) do |opts|
+        assert_equal :tasks, opts.show_tasks
+        assert_equal(/xyz/, opts.show_task_pattern)
+      end
     end
   end
 
   def test_verbose
-    flags('--verbose', '-V') do |opts|
-      assert RakeFileUtils.verbose_flag
-      assert ! opts.silent
+    in_environment do
+      flags('--verbose', '-V') do |opts|
+        assert RakeFileUtils.verbose_flag
+        assert ! opts.silent
+      end
     end
   end
 
   def test_version
-    flags('--version', '-V') do |opts|
-      assert_match(/\bversion\b/, @out)
-      assert_match(/\b#{RAKEVERSION}\b/, @out)
-      assert_equal :exit, @exit
+    in_environment do
+      flags('--version', '-V') do |opts|
+        assert_match(/\bversion\b/, @out)
+        assert_match(/\b#{RAKEVERSION}\b/, @out)
+        assert_equal :exit, @exit
+      end
     end
   end
   
   def test_classic_namespace
-    flags(['--classic-namespace'], ['-C', '-T', '-P', '-n', '-s', '-t']) do |opts|
-      assert opts.classic_namespace
-      assert_equal opts.show_tasks, $show_tasks
-      assert_equal opts.show_prereqs, $show_prereqs
-      assert_equal opts.trace, $trace
-      assert_equal opts.dryrun, $dryrun
-      assert_equal opts.silent, $silent
+    in_environment do
+      flags(['--classic-namespace'], ['-C', '-T', '-P', '-n', '-s', '-t']) do |opts|
+        assert opts.classic_namespace
+        assert_equal opts.show_tasks, $show_tasks
+        assert_equal opts.show_prereqs, $show_prereqs
+        assert_equal opts.trace, $trace
+        assert_equal opts.dryrun, $dryrun
+        assert_equal opts.silent, $silent
+      end
     end
   end
 
   def test_bad_option
-    error_output = capture_stderr do
-      ex = assert_exception(OptionParser::InvalidOption) do
-        flags('--bad-option') 
+    in_environment do
+      error_output = capture_stderr do
+        ex = assert_exception(OptionParser::InvalidOption) do
+          flags('--bad-option') 
+        end
+        if ex.message =~ /^While/ # Ruby 1.9 error message
+          assert_match(/while parsing/i, ex.message)
+        else                      # Ruby 1.8 error message
+          assert_match(/(invalid|unrecognized) option/i, ex.message)
+          assert_match(/--bad-option/, ex.message)
+        end
       end
-      if ex.message =~ /^While/ # Ruby 1.9 error message
-        assert_match(/while parsing/i, ex.message)
-      else                      # Ruby 1.8 error message
-        assert_match(/(invalid|unrecognized) option/i, ex.message)
-        assert_match(/--bad-option/, ex.message)
-      end
+      assert_equal '', error_output
     end
-    assert_equal '', error_output
   end
 
   def test_task_collection
