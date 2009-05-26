@@ -1,4 +1,4 @@
-require 'rake/ext/exception'
+require 'rake/invocation_exception_mixin'
 
 module Rake
   
@@ -147,12 +147,16 @@ module Rake
         execute(task_args) if needed?
       end
     rescue Exception => ex
-      if ex.chain.nil?
-        ex.chain = new_chain
-      end
+      add_chain_to(ex, new_chain)
       raise ex
     end
     protected :invoke_with_call_chain
+
+    def add_chain_to(exception, new_chain)
+      exception.extend(InvocationExceptionMixin) unless exception.respond_to?(:chain)
+      exception.chain = new_chain if exception.chain.nil?
+    end
+    private :add_chain_to
 
     # Invoke all the prerequisites of a task.
     def invoke_prerequisites(task_args, invocation_chain) # :nodoc:

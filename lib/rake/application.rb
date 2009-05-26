@@ -148,10 +148,16 @@ module Rake
       else
         $stderr.puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
       end
-      $stderr.puts "Tasks: #{ex.chain}" if ex.chain
+      $stderr.puts "Tasks: #{ex.chain}" if has_chain?(ex)
       $stderr.puts "(See full trace by running task with --trace)" unless options.trace
     end
-    
+
+    # Does the exception have a task invocation chain?
+    def has_chain?(exception)
+      exception.respond_to?(:chain) && exception.chain
+    end
+    private :has_chain?
+
     # True if one of the files in RAKEFILES is in the current directory.
     # If a match is found, it is copied into @rakefile.
     def have_rakefile
