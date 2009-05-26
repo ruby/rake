@@ -15,7 +15,13 @@
 * Fixed the silent option parsing problem.
   (http://onestepback.org/redmine/issues/show/47)
 
-* Fixed :verbose=>false flag on sh and ruby commands.  
+* Fixed :verbose=>false flag on sh and ruby commands.
+
+* Rake command line options may be given by default in a RAKEOPT
+  environment variable.
+
+* Errors in Rake will now display the task invocation chain in effect
+  at the time of the error.
 
 == Version 0.8.7
 
