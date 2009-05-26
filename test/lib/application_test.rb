@@ -686,4 +686,21 @@ class TestTaskArgumentParsing < Test::Unit::TestCase
       assert_equal 80, app.terminal_width
     end
   end
+
+  def test_rakeopt_with_blank_options
+    in_environment("RAKEOPT" => "") do
+      ARGV << '--trace'
+      app = Rake::Application.new
+      app.init
+      assert !app.options.silent
+    end
+  end
+
+  def test_rakeopt_with_silent_options
+    in_environment("RAKEOPT" => "-s") do
+      app = Rake::Application.new
+      app.init
+      assert app.options.silent
+    end
+  end
 end

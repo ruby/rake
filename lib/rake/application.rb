@@ -1,3 +1,6 @@
+require 'shellwords'
+require 'optparse'
+
 require 'rake/task_manager'
 require 'rake/win32'
 
@@ -396,6 +399,7 @@ module Rake
         end
 
         standard_rake_options.each { |args| opts.on(*args) }
+        opts.environment('RAKEOPT')
       end.parse!
 
       # If class namespaces are requested, set the global options
