@@ -58,7 +58,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 = RAKE -- Ruby Make -- <em>master branch</em>
 
-Supporting Rake version: 0.8.4
+Supporting Rake version: 0.8.6
 
 This package contains Rake, a simple ruby build program with
 capabilities similar to make.

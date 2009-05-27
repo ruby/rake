@@ -146,13 +146,17 @@ rescue LoadError => ex
   DARKFISH_ENABLED = false
 end
 
+BASE_RDOC_OPTIONS = [
+  '--line-numbers',
+  '--main', 'README',
+  '--title', 'Drake: Distributed Rake',
+]
+
 rd = Rake::RDocTask.new("rdoc") do |rdoc|
   rdoc.rdoc_dir = 'html'
   rdoc.template = 'doc/jamis.rb'
   rdoc.title    = "Drake: Distributed Rake"
-  rdoc.options << '--line-numbers' << '--inline-source' <<
-    '--main' << 'README' <<
-    '--title' << 'Drake: Distributed Rake' 
+  rdoc.options = BASE_RDOC_OPTIONS.dup
   rdoc.options << '-SHN' << '-f' << 'darkfish' if DARKFISH_ENABLED
   rdoc.rdoc_files.include('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
   rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
@@ -220,7 +224,7 @@ else
 
     s.has_rdoc = true
     s.extra_rdoc_files = rd.rdoc_files.reject { |fn| fn =~ /\.rb$/ }.to_a
-    s.rdoc_options = rd.options
+    s.rdoc_options = BASE_RDOC_OPTIONS
 
     #### Author and project details.
 
