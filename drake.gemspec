@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
-name: drake
+name: rake
 version: !ruby/object:Gem::Version 
-  version: 0.8.7.0.2.3
+  version: 0.8.7.1.2.4
 platform: ruby
 authors: 
 - James M. Lawrence
@@ -20,7 +20,7 @@ dependencies:
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
-        version: 0.7.3
+        version: 0.7.6
     version: 
 description: Rake is a Make-like program implemented in Ruby. Tasks and dependencies are specified in standard Ruby syntax.
 email: quixoticsycophant@gmail.com
@@ -29,7 +29,7 @@ executables:
 extensions: []
 
 extra_rdoc_files: 
-- README
+- README.rdoc
 - MIT-LICENSE
 - TODO
 - CHANGES
@@ -63,27 +63,51 @@ files:
 - MIT-LICENSE
 - Rakefile
 - Rakefile.drake
-- README
+- README.rdoc
 - TODO
 - bin/drake
 - lib/rake/alt_system.rb
+- lib/rake/application.rb
 - lib/rake/classic_namespace.rb
 - lib/rake/clean.rb
+- lib/rake/cloneable.rb
 - lib/rake/contrib/compositepublisher.rb
 - lib/rake/contrib/ftptools.rb
 - lib/rake/contrib/publisher.rb
 - lib/rake/contrib/rubyforgepublisher.rb
 - lib/rake/contrib/sshpublisher.rb
 - lib/rake/contrib/sys.rb
+- lib/rake/default_loader.rb
+- lib/rake/dsl.rb
+- lib/rake/early_time.rb
+- lib/rake/ext/module.rb
+- lib/rake/ext/string.rb
+- lib/rake/ext/time.rb
+- lib/rake/file_creation_task.rb
+- lib/rake/file_list.rb
+- lib/rake/file_task.rb
+- lib/rake/file_utils.rb
 - lib/rake/gempackagetask.rb
+- lib/rake/invocation_chain.rb
+- lib/rake/invocation_exception_mixin.rb
 - lib/rake/loaders/makefile.rb
+- lib/rake/multi_task.rb
+- lib/rake/name_space.rb
 - lib/rake/packagetask.rb
 - lib/rake/parallel.rb
+- lib/rake/psuedo_status.rb
+- lib/rake/rake_file_utils.rb
+- lib/rake/rake_module.rb
 - lib/rake/rake_test_loader.rb
 - lib/rake/rdoctask.rb
 - lib/rake/ruby182_test_unit_fix.rb
+- lib/rake/rule_recursion_overflow_error.rb
 - lib/rake/runtest.rb
+- lib/rake/task.rb
 - lib/rake/tasklib.rb
+- lib/rake/task_arguments.rb
+- lib/rake/task_argument_error.rb
+- lib/rake/task_manager.rb
 - lib/rake/testtask.rb
 - lib/rake/win32.rb
 - lib/rake.rb
@@ -94,47 +118,51 @@ files:
 - test/data/rakelib/test1.rb
 - test/data/rbext/rakefile.rb
 - test/filecreation.rb
-- test/functional.rb
+- test/functional/functional_test.rb
+- test/functional/session_based_tests.rb
 - test/in_environment.rb
+- test/lib/application_test.rb
+- test/lib/clean_test.rb
+- test/lib/definitions_test.rb
+- test/lib/dsl_test.rb
+- test/lib/earlytime_test.rb
+- test/lib/extension_test.rb
+- test/lib/filelist_test.rb
+- test/lib/fileutils_test.rb
+- test/lib/file_creation_task_test.rb
+- test/lib/file_task_test.rb
+- test/lib/ftp_test.rb
+- test/lib/invocation_chain_test.rb
+- test/lib/makefile_loader_test.rb
+- test/lib/multitask_test.rb
+- test/lib/namespace_test.rb
+- test/lib/package_task_test.rb
+- test/lib/parallel_test.rb
+- test/lib/pathmap_test.rb
+- test/lib/pseudo_status_test.rb
+- test/lib/rake_test.rb
+- test/lib/rdoc_task_test.rb
+- test/lib/require_test.rb
+- test/lib/rules_test.rb
+- test/lib/tasklib_test.rb
+- test/lib/task_arguments_test.rb
+- test/lib/task_manager_test.rb
+- test/lib/task_test.rb
+- test/lib/testtask_test.rb
+- test/lib/test_task_test.rb
+- test/lib/top_level_functions_test.rb
+- test/lib/win32_test.rb
 - test/parallel_setup.rb
 - test/rake_test_setup.rb
 - test/reqfile.rb
 - test/reqfile2.rb
 - test/serial_setup.rb
-- test/session_functional.rb
 - test/shellcommand.rb
-- test/test_application.rb
-- test/test_clean.rb
-- test/test_definitions.rb
-- test/test_earlytime.rb
-- test/test_extension.rb
-- test/test_filelist.rb
-- test/test_fileutils.rb
-- test/test_file_creation_task.rb
-- test/test_file_task.rb
-- test/test_ftp.rb
-- test/test_invocation_chain.rb
-- test/test_makefile_loader.rb
-- test/test_multitask.rb
-- test/test_namespace.rb
-- test/test_package_task.rb
-- test/test_parallel.rb
-- test/test_pathmap.rb
-- test/test_pseudo_status.rb
-- test/test_rake.rb
-- test/test_rdoc_task.rb
-- test/test_require.rb
-- test/test_rules.rb
-- test/test_tasklib.rb
-- test/test_tasks.rb
-- test/test_task_arguments.rb
-- test/test_task_manager.rb
-- test/test_test_task.rb
-- test/test_top_level_functions.rb
-- test/test_win32.rb
+- test/test_helper.rb
 - test/data/imports/deps.mf
 - test/data/sample.mf
 - test/data/chains/Rakefile
+- test/data/comments/Rakefile
 - test/data/default/Rakefile
 - test/data/dryrun/Rakefile
 - test/data/file_creation_task/Rakefile
@@ -143,6 +171,7 @@ files:
 - test/data/namespace/Rakefile
 - test/data/statusreturn/Rakefile
 - test/data/unittest/Rakefile
+- test/data/verbose/Rakefile
 - test/data/unittest/subdir
 - doc/command_line_usage.rdoc
 - doc/example
@@ -181,8 +210,9 @@ homepage: http://drake.rubyforge.org
 post_install_message: 
 rdoc_options: 
 - --line-numbers
+- --inline-source
 - --main
-- README
+- README.rdoc
 - --title
 - "Drake: Distributed Rake"
 require_paths: 

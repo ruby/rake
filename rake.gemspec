@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: rake
 version: !ruby/object:Gem::Version 
-  version: 0.8.4.99
+  version: 0.8.5
 platform: ruby
 authors: 
 - Jim Weirich
@@ -9,7 +9,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2009-04-22 00:00:00 -04:00
+date: 2009-05-11 00:00:00 -04:00
 default_executable: rake
 dependencies: []
 
@@ -43,6 +43,7 @@ extra_rdoc_files:
 - doc/release_notes/rake-0.8.2.rdoc
 - doc/release_notes/rake-0.8.3.rdoc
 - doc/release_notes/rake-0.8.4.rdoc
+- doc/release_notes/rake-0.8.5.rdoc
 files: 
 - install.rb
 - CHANGES
@@ -52,21 +53,44 @@ files:
 - TODO
 - bin/rake
 - lib/rake/alt_system.rb
+- lib/rake/application.rb
 - lib/rake/classic_namespace.rb
 - lib/rake/clean.rb
+- lib/rake/cloneable.rb
 - lib/rake/contrib/compositepublisher.rb
 - lib/rake/contrib/ftptools.rb
 - lib/rake/contrib/publisher.rb
 - lib/rake/contrib/rubyforgepublisher.rb
 - lib/rake/contrib/sshpublisher.rb
 - lib/rake/contrib/sys.rb
+- lib/rake/default_loader.rb
+- lib/rake/dsl.rb
+- lib/rake/early_time.rb
+- lib/rake/ext/module.rb
+- lib/rake/ext/string.rb
+- lib/rake/ext/time.rb
+- lib/rake/file_creation_task.rb
+- lib/rake/file_list.rb
+- lib/rake/file_task.rb
+- lib/rake/file_utils.rb
 - lib/rake/gempackagetask.rb
+- lib/rake/invocation_chain.rb
 - lib/rake/loaders/makefile.rb
+- lib/rake/multi_task.rb
+- lib/rake/name_space.rb
 - lib/rake/packagetask.rb
+- lib/rake/psuedo_status.rb
+- lib/rake/rake_file_utils.rb
+- lib/rake/rake_module.rb
 - lib/rake/rake_test_loader.rb
 - lib/rake/rdoctask.rb
 - lib/rake/ruby182_test_unit_fix.rb
+- lib/rake/rule_recursion_overflow_error.rb
 - lib/rake/runtest.rb
+- lib/rake/task.rb
+- lib/rake/task_argument_error.rb
+- lib/rake/task_arguments.rb
+- lib/rake/task_manager.rb
 - lib/rake/tasklib.rb
 - lib/rake/testtask.rb
 - lib/rake/win32.rb
@@ -116,6 +140,7 @@ files:
 - test/data/imports/deps.mf
 - test/data/sample.mf
 - test/data/chains/Rakefile
+- test/data/comments/Rakefile
 - test/data/default/Rakefile
 - test/data/dryrun/Rakefile
 - test/data/file_creation_task/Rakefile
@@ -153,6 +178,7 @@ files:
 - doc/release_notes/rake-0.8.2.rdoc
 - doc/release_notes/rake-0.8.3.rdoc
 - doc/release_notes/rake-0.8.4.rdoc
+- doc/release_notes/rake-0.8.5.rdoc
 has_rdoc: true
 homepage: http://rake.rubyforge.org
 post_install_message: 
@@ -163,9 +189,6 @@ rdoc_options:
 - README
 - --title
 - Rake -- Ruby Make
-- -SHN
-- -f
-- darkfish
 require_paths: 
 - lib
 required_ruby_version: !ruby/object:Gem::Requirement 

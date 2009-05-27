@@ -58,7 +58,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 = RAKE -- Ruby Make -- <em>master branch</em>
 
-Supporting Rake version: 0.8.6
+Supporting Rake version: 0.8.7.
 
 This package contains Rake, a simple ruby build program with
 capabilities similar to make.
@@ -147,7 +147,6 @@ Type "rake --help" for all available options.
 * For a glossary of terms, see
   doc/glossary.rdoc[http://rake.rubyforge.org/files/doc/glossary_rdoc.html].
 
-
 == Development
 
 === Source Repository
@@ -177,7 +176,6 @@ Bugs, features requests and other issues can be logged at
 You will need an account to before you can post issues.  Register at
 http://onestepback.org/redmine/account/register.  Or you can send me
 an email (at jim dot weirich at gmail dot com)
-
 
 == Online Resources
 

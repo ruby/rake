@@ -16,7 +16,7 @@ require 'rake/clean'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
-CLEAN.include('**/*.o', '*.dot', '**/.*.rbc')
+CLEAN.include('**/*.o', '*.dot', '**/*.rbc')
 CLOBBER.include('doc/example/main', 'testdata')
 CLOBBER.include('test/data/**/temp_*')
 CLOBBER.include('test/data/chains/play.*')
@@ -47,58 +47,56 @@ SRC_RB = FileList['lib/**/*.rb']
 # The default task is run if rake is given no explicit arguments.
 
 desc "Default Task"
-task :default => :test_all
-
-load 'Rakefile.drake'
+task :default => "test:all"
 
 # Test Tasks ---------------------------------------------------------
-task :dbg do |t|
-  puts "Arguments are: #{t.args.join(', ')}"
-end
 
 # Common Abbreviations ...
 
-task :ta => :test_all
-task :tf => :test_functional
-task :tu => :test_units
-task :tc => :test_contribs
-task :test => :test_units
-task :test_all => [:test_serial, :test_parallel]
+task :ta => "test:all"
+task :tf => "test:functional"
+task :tu => "test:units"
+task :tc => "test:contribs"
+task :test => "test:units"
 
-test_files = FileList[
-  'test/test*.rb',
-  'test/contrib/test*.rb',
-  'test/fun*.rb'
-]
+namespace :test do
+  task :all => [:serial, :parallel]
 
-Rake::TestTask.new(:test_serial) do |t|
-  t.test_files = ['test/serial_setup.rb'] + test_files
-  t.warning = true
-  t.verbose = false
-end
+  all_test_files = FileList[
+    'test/lib/*_test.rb',
+    'test/contrib/*_test.rb',
+    'test/functional/*_test.rb'
+  ]
 
-Rake::TestTask.new(:test_parallel) do |t|
-  t.test_files = ['test/parallel_setup.rb'] + test_files
-  t.warning = true
-  t.verbose = false
-end
+  Rake::TestTask.new(:serial) do |t|
+    t.test_files = ['test/serial_setup.rb'] + all_test_files
+    t.warning = true
+    t.verbose = false
+  end
 
-Rake::TestTask.new(:test_units) do |t|
-  t.test_files = FileList['test/test*.rb']
-  t.warning = true
-  t.verbose = false
-end
+  Rake::TestTask.new(:parallel) do |t|
+    t.test_files = ['test/parallel_setup.rb'] + all_test_files
+    t.warning = true
+    t.verbose = false
+  end
 
-Rake::TestTask.new(:test_functional) do |t|
-  t.test_files = FileList['test/fun*.rb']
-  t.warning = true
-  t.verbose = false
-end
-
-Rake::TestTask.new(:test_contribs) do |t|
-  t.test_files = FileList['test/contrib/test*.rb']
-  t.warning = true
-  t.verbose = false
+  Rake::TestTask.new(:units) do |t|
+    t.test_files = FileList['test/lib/*_test.rb']
+    t.warning = true
+    t.verbose = false
+  end
+  
+  Rake::TestTask.new(:functional) do |t|
+    t.test_files = FileList['test/functional/*_test.rb']
+    t.warning = true
+    t.verbose = false
+  end
+  
+  Rake::TestTask.new(:contribs) do |t|
+    t.test_files = FileList['test/contrib/test*.rb']
+    t.warning = true
+    t.verbose = false
+  end
 end
 
 begin
@@ -124,7 +122,7 @@ rescue LoadError
 end
 
 directory 'testdata'
-[:test_all, :test_units, :test_contribs, :test_functional].each do |t|
+["test:all", :test_units, :test_contribs, :test_functional].each do |t|
   task t => ['testdata']
 end
 
@@ -147,9 +145,9 @@ rescue LoadError => ex
 end
 
 BASE_RDOC_OPTIONS = [
-  '--line-numbers',
-  '--main', 'README',
-  '--title', 'Drake: Distributed Rake',
+  '--line-numbers', '--inline-source',
+  '--main' , 'README.rdoc',
+  '--title', 'Drake: Distributed Rake'
 ]
 
 rd = Rake::RDocTask.new("rdoc") do |rdoc|
@@ -158,7 +156,8 @@ rd = Rake::RDocTask.new("rdoc") do |rdoc|
   rdoc.title    = "Drake: Distributed Rake"
   rdoc.options = BASE_RDOC_OPTIONS.dup
   rdoc.options << '-SHN' << '-f' << 'darkfish' if DARKFISH_ENABLED
-  rdoc.rdoc_files.include('README', 'MIT-LICENSE', 'TODO', 'CHANGES')
+    
+  rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGES')
   rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
   rdoc.rdoc_files.exclude(/\bcontrib\b/)
 end
@@ -175,7 +174,7 @@ PKG_FILES = FileList[
   'test/**/*.rb',
   'test/**/*.rf',
   'test/**/*.mf',
-  'test/**/Rakefile*',
+  'test/**/Rakefile',
   'test/**/subdir',
   'doc/**/*'
 ]
@@ -190,7 +189,7 @@ else
     
     #### Basic information.
 
-    s.name = 'drake'
+    s.name = 'rake'
     s.version = $package_version
     s.summary = "A branch of Rake supporting automatic parallelizing of tasks."
     s.description = <<-EOF
@@ -200,7 +199,7 @@ else
 
     #### Dependencies and requirements.
 
-    s.add_dependency('comp_tree', '>= 0.7.3')
+    s.add_dependency('comp_tree', '>= 0.7.6')
     #s.add_dependency('log4r', '> 1.0.4')
     #s.requirements << ""
 
@@ -254,6 +253,8 @@ end
 
 # Misc tasks =========================================================
 
+load 'Rakefile.drake'
+
 def count_lines(filename)
   lines = 0
   codelines = 0
@@ -300,27 +301,12 @@ task :todo do
   RUBY_FILES.egrep(/#.*(FIXME|TODO|TBD)/)
 end
 
-desc "Look for Debugging print lines"
-task :dbg do
-  RUBY_FILES.egrep(/\bDBG|\bbreakpoint\b/)
-end
-
 desc "List all ruby files"
 task :rubyfiles do 
   puts RUBY_FILES
   puts FileList['bin/*'].exclude('bin/*.rb')
 end
 task :rf => :rubyfiles
-
-desc "Create a TAGS file"
-task :tags => "TAGS"
-
-TAGS = 'xctags -e'
-
-file "TAGS" => RUBY_FILES do
-  puts "Makings TAGS"
-  sh "#{TAGS} #{RUBY_FILES}", :verbose => false
-end
 
 # --------------------------------------------------------------------
 # Creating a release
@@ -337,7 +323,7 @@ task :release, :rel, :reuse, :reltest,
   :needs => [
     :prerelease,
     :clobber,
-    :test_all,
+    "test:all",
     :update_version,
     :package,
     :tag
@@ -438,4 +424,9 @@ load 'xforge.rf' if File.exist?('xforge.rf')
 desc "Where is the current directory.  This task displays\nthe current rake directory"
 task :where_am_i do
   puts Rake.original_dir
+end
+
+task :failure => :really_fail
+task :really_fail do
+  fail "oops"
 end

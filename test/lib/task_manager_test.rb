@@ -65,8 +65,8 @@ class TestTaskManager < Test::Unit::TestCase
   end
 
   def test_name_lookup_with_implicit_file_tasks
-    t = @tm["README"]
-    assert_equal "README", t.name
+    t = @tm["README.rdoc"]
+    assert_equal "README.rdoc", t.name
     assert Rake::FileTask === t
   end
 

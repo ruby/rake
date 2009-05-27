@@ -3,8 +3,10 @@ module InEnvironment
   
   # Create an environment for a test. At the completion of the yielded
   # block, the environment is restored to its original conditions.
-  def in_environment(settings)
-    original_settings = set_env(settings)
+  def in_environment(settings=nil)
+    settings ||= {}
+    full_settings = {"RAKEOPT" => nil}.merge(settings)
+    original_settings = set_env(full_settings)
     yield    
   ensure
     set_env(original_settings)

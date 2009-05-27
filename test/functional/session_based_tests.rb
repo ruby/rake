@@ -23,7 +23,7 @@ module Session
   end
 end
 
-class FunctionalTest < Test::Unit::TestCase
+class SessionBasedTests < Test::Unit::TestCase
   include InEnvironment
   include TestMethods
 
@@ -154,6 +154,62 @@ class FunctionalTest < Test::Unit::TestCase
       rake "--nosearch"
     end
     assert_match %r{^No Rakefile found}, @err
+  end
+
+  def test_invalid_command_line_options
+    in_environment("PWD" => "test/data/default") do
+      rake "--bad-options"
+    end
+    assert_match %r{invalid +option}i, @err
+  end
+
+  def test_inline_verbose_default_should_show_command
+    in_environment("PWD" => "test/data/verbose") do
+      rake "inline_verbose_default"
+    end
+    assert_match(/ruby -e/, @err)
+  end
+
+  def test_inline_verbose_true_should_show_command
+    in_environment("PWD" => "test/data/verbose") do
+      rake "inline_verbose_true"
+    end
+    assert_match(/ruby -e/, @err)
+  end
+
+  def test_inline_verbose_false_should_not_show_command
+    in_environment("PWD" => "test/data/verbose") do
+      rake "inline_verbose_false"
+    end
+    assert_no_match(/ruby -e/, @err)
+  end
+
+  def test_block_verbose_false_should_not_show_command
+    in_environment("PWD" => "test/data/verbose") do
+      rake "block_verbose_false"
+    end
+    assert_no_match(/ruby -e/, @err)
+  end
+
+  def test_block_verbose_true_should_show_command
+    in_environment("PWD" => "test/data/verbose") do
+      rake "block_verbose_true"
+    end
+    assert_match(/ruby -e/, @err)
+  end
+
+  def test_standalone_verbose_true_should_show_command
+    in_environment("PWD" => "test/data/verbose") do
+      rake "standalone_verbose_true"
+    end
+    assert_match(/ruby -e/, @err)
+  end
+
+  def test_standalone_verbose_false_should_not_show_command
+    in_environment("PWD" => "test/data/verbose") do
+      rake "standalone_verbose_false"
+    end
+    assert_no_match(/ruby -e/, @err)
   end
 
   def test_dry_run
@@ -299,8 +355,37 @@ class FunctionalTest < Test::Unit::TestCase
     end
   end
 
+  def test_comment_before_task_acts_like_desc
+    Dir.chdir("test/data/comments") { rake("-T")}
+    assert_match("comment for t1", @out)
+  end
+  
+  def test_comment_separated_from_task_by_blank_line_is_not_picked_up
+    Dir.chdir("test/data/comments") { rake("-T")}
+    assert_not_match("t2", @out)
+  end
+
+  def test_comment_after_desc_is_ignored
+    Dir.chdir("test/data/comments") { rake("-T")}
+    assert_match("override comment for t3", @out)
+  end
+  
+  def test_comment_before_desc_is_ignored
+    Dir.chdir("test/data/comments") { rake("-T")}
+    assert_match("override comment for t4", @out)
+  end
+  
+  def test_correct_number_of_tasks_reported
+    Dir.chdir("test/data/comments") { rake("-T")}
+    assert_equal(3, @out.split(/\n/).grep(/t\d/).size)
+  end
+  
   private
 
+  def assert_not_match(pattern, string, comment="'#{pattern}' was found (incorrectly) in '#{string}.inspect")
+    assert_nil Regexp.new(pattern).match(string), comment
+  end
+  
   def remove_chaining_files
     %w(play.scpt play.app base).each do |fn|
       FileUtils.rm_f File.join("test/data/chains", fn)

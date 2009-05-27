@@ -95,26 +95,10 @@ module Rake
 
     # Create the tasks defined by this task lib.
     def define
-      lib_path = @libs.join(File::PATH_SEPARATOR)
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
-        run_code = ''
         RakeFileUtils.verbose(@verbose) do
-          run_code =
-            case @loader
-            when :direct
-              "-e 'ARGV.each{|f| load f}'"
-            when :testrb
-              "-S testrb #{fix}"
-            when :rake
-              rake_loader
-            end
-          @ruby_opts.unshift( "-I\"#{lib_path}\"" )
-          @ruby_opts.unshift( "-w" ) if @warning
-          ruby @ruby_opts.join(" ") +
-            " \"#{run_code}\" " +
-            file_list.collect { |fn| "\"#{fn}\"" }.join(' ') +
-            " #{option_list}"
+          ruby "#{ruby_opts_string} #{run_code} #{file_list_string} #{option_list}"
         end
       end
       self
@@ -122,6 +106,21 @@ module Rake
 
     def option_list # :nodoc:
       ENV['TESTOPTS'] || @options || ""
+    end
+
+    def ruby_opts_string
+      opts = @ruby_opts.dup
+      opts.unshift( "-I\"#{lib_path}\"" ) unless @libs.empty?
+      opts.unshift( "-w" ) if @warning
+      opts.join(" ")
+    end
+
+    def lib_path
+      @libs.join(File::PATH_SEPARATOR)
+    end
+    
+    def file_list_string
+      file_list.collect { |fn| "\"#{fn}\"" }.join(' ')
     end
 
     def file_list # :nodoc:
@@ -136,12 +135,27 @@ module Rake
     end
 
     def fix # :nodoc:
-      case RUBY_VERSION
+      case ruby_version
       when '1.8.2'
-        find_file 'rake/ruby182_test_unit_fix'
+        "\"#{find_file 'rake/ruby182_test_unit_fix'}\""
       else
         nil
       end || ''
+    end
+
+    def ruby_version
+      RUBY_VERSION
+    end
+
+    def run_code
+      case @loader
+      when :direct
+        "-e \"ARGV.each{|f| load f}\""
+      when :testrb
+        "-S testrb #{fix}"
+      when :rake
+        "\"#{rake_loader}\""
+      end
     end
 
     def rake_loader # :nodoc:

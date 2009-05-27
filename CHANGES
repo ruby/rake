@@ -1,5 +1,27 @@
-
 = Rake Changelog
+
+== Pre-Version 0.9.x
+
+* Allow single line comments immediately prior to a task to be used in
+  place of +desc+.
+
+* Split rake.rb into individual files.
+
+* Support for the --where (-W) flag for showing where a task is defined.
+
+* Fixed quoting in test task.
+  (http://onestepback.org/redmine/issues/show/44)
+
+* Fixed the silent option parsing problem.
+  (http://onestepback.org/redmine/issues/show/47)
+
+* Fixed :verbose=>false flag on sh and ruby commands.
+
+* Rake command line options may be given by default in a RAKEOPT
+  environment variable.
+
+* Errors in Rake will now display the task invocation chain in effect
+  at the time of the error.
 
 == Version 0.8.7
 
@@ -9,6 +31,10 @@
 
 * Minor fixes to the RDoc generation (removed dependency on darkfish
   and removed inline source option).
+
+== PreVersion 0.8.6
+
+* Now allow # comments to comment a task definition.
 
 == Version 0.8.5
 

@@ -34,6 +34,7 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_display_tasks
+    @app.options.show_tasks = :tasks
     @app.options.show_task_pattern = //
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "t")
@@ -44,6 +45,7 @@ class TestApplication < Test::Unit::TestCase
 
   def test_display_tasks_with_long_comments
     in_environment('RAKE_COLUMNS' => '80') do
+      @app.options.show_tasks = :tasks
       @app.options.show_task_pattern = //
       @app.last_description = "1234567890" * 8
       @app.define_task(Rake::Task, "t")
@@ -55,6 +57,7 @@ class TestApplication < Test::Unit::TestCase
 
   def test_display_tasks_with_task_name_wider_than_tty_display
     in_environment('RAKE_COLUMNS' => '80') do
+      @app.options.show_tasks = :tasks
       @app.options.show_task_pattern = //
       description = "something short"
       task_name = "task name" * 80
@@ -67,6 +70,7 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_display_tasks_with_very_long_task_name_to_a_non_tty_shows_name_and_comment
+    @app.options.show_tasks = :tasks
     @app.options.show_task_pattern = //
     @app.tty_output = false
     description = "something short"
@@ -79,6 +83,7 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_display_tasks_with_long_comments_to_a_non_tty_shows_entire_comment
+    @app.options.show_tasks = :tasks
     @app.options.show_task_pattern = //
     @app.tty_output = false
     @app.last_description = "1234567890" * 8
@@ -90,6 +95,7 @@ class TestApplication < Test::Unit::TestCase
 
   def test_display_tasks_with_long_comments_to_a_non_tty_with_columns_set_truncates_comments
     in_environment("RAKE_COLUMNS" => '80') do
+      @app.options.show_tasks = :tasks
       @app.options.show_task_pattern = //
       @app.tty_output = false
       @app.last_description = "1234567890" * 8
@@ -100,14 +106,24 @@ class TestApplication < Test::Unit::TestCase
     end
   end
 
-  def test_display_tasks_with_full_descriptions
+  def test_describe_tasks
+    @app.options.show_tasks = :describe
     @app.options.show_task_pattern = //
-    @app.options.full_description = true
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "t")
     out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
     assert_match(/^rake t$/, out)
     assert_match(/^ {4}COMMENT$/, out)
+  end
+
+  def test_show_lines
+    @app.options.show_tasks = :lines
+    @app.options.show_task_pattern = //
+    @app.last_description = "COMMENT"
+    @app.define_task(Rake::Task, "t")
+    @app['t'].locations << "HERE:1"
+    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+    assert_match(/^rake t +[^:]+:\d+ *$/, out)
   end
 
   def test_finding_rakefile
@@ -296,6 +312,7 @@ end
 class TestApplicationOptions < Test::Unit::TestCase
   include CaptureStdout
   include TestMethods
+  include InEnvironment
 
   def setup
     clear_argv
@@ -317,22 +334,23 @@ class TestApplicationOptions < Test::Unit::TestCase
   end
 
   def test_default_options
-    opts = command_line
-    assert_nil opts.classic_namespace
-    assert_nil opts.dryrun
-    assert_nil opts.full_description
-    assert_nil opts.ignore_system
-    assert_nil opts.load_system
-    assert_nil opts.nosearch
-    assert_equal ['rakelib'], opts.rakelib
-    assert_nil opts.show_prereqs
-    assert_nil opts.show_task_pattern
-    assert_nil opts.show_tasks
-    assert_nil opts.silent
-    assert_nil opts.trace
-    assert_equal ['rakelib'], opts.rakelib
-    assert ! RakeFileUtils.verbose_flag
-    assert ! RakeFileUtils.nowrite_flag
+    in_environment("RAKEOPT" => nil) do
+      opts = command_line
+      assert_nil opts.classic_namespace
+      assert_nil opts.dryrun
+      assert_nil opts.ignore_system
+      assert_nil opts.load_system
+      assert_nil opts.nosearch
+      assert_equal ['rakelib'], opts.rakelib
+      assert_nil opts.show_prereqs
+      assert_nil opts.show_task_pattern
+      assert_nil opts.show_tasks
+      assert_nil opts.silent
+      assert_nil opts.trace
+      assert_equal ['rakelib'], opts.rakelib
+      assert ! RakeFileUtils.verbose_flag
+      assert ! RakeFileUtils.nowrite_flag
+    end
   end
 
   def test_dry_run
@@ -346,16 +364,14 @@ class TestApplicationOptions < Test::Unit::TestCase
 
   def test_describe
     flags('--describe') do |opts|
-      assert opts.full_description
-      assert opts.show_tasks
+      assert_equal :describe, opts.show_tasks
       assert_equal(//.to_s, opts.show_task_pattern.to_s)
     end
   end
 
   def test_describe_with_pattern
     flags('--describe=X') do |opts|
-      assert opts.full_description
-      assert opts.show_tasks
+      assert_equal :describe, opts.show_tasks
       assert_equal(/X/.to_s, opts.show_task_pattern.to_s)
     end
   end
@@ -490,11 +506,11 @@ class TestApplicationOptions < Test::Unit::TestCase
 
   def test_tasks
     flags('--tasks', '-T') do |opts|
-      assert opts.show_tasks
+      assert_equal :tasks, opts.show_tasks
       assert_equal(//.to_s, opts.show_task_pattern.to_s)
     end
     flags(['--tasks', 'xyz'], ['-Txyz']) do |opts|
-      assert opts.show_tasks
+      assert_equal :tasks, opts.show_tasks
       assert_equal(/xyz/, opts.show_task_pattern)
     end
   end
@@ -526,7 +542,7 @@ class TestApplicationOptions < Test::Unit::TestCase
   end
 
   def test_bad_option
-    capture_stderr do
+    error_output = capture_stderr do
       ex = assert_exception(OptionParser::InvalidOption) do
         flags('--bad-option') 
       end
@@ -537,6 +553,7 @@ class TestApplicationOptions < Test::Unit::TestCase
         assert_match(/--bad-option/, ex.message)
       end
     end
+    assert_equal '', error_output
   end
 
   def test_task_collection
@@ -678,6 +695,32 @@ class TestTaskArgumentParsing < Test::Unit::TestCase
     flexmock(app).should_receive(:unix?).and_throw(RuntimeError)
     in_environment('RAKE_COLUMNS' => nil) do
       assert_equal 80, app.terminal_width
+    end
+  end
+
+  def test_no_rakeopt
+    in_environment do
+      ARGV << '--trace'
+      app = Rake::Application.new
+      app.init
+      assert !app.options.silent
+    end
+  end
+
+  def test_rakeopt_with_blank_options
+    in_environment("RAKEOPT" => "") do
+      ARGV << '--trace'
+      app = Rake::Application.new
+      app.init
+      assert !app.options.silent
+    end
+  end
+
+  def test_rakeopt_with_silent_options
+    in_environment("RAKEOPT" => "-s") do
+      app = Rake::Application.new
+      app.init
+      assert app.options.silent
     end
   end
 end

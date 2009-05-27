@@ -1,4 +1,4 @@
-= Rakefile Format (as of version 0.8.3)
+= Rakefile Format (as of version 0.8.7)
 
 First of all, there is no special format for a Rakefile.  A Rakefile
 contains executable Ruby code.  Anything legal in a ruby script is
@@ -189,6 +189,22 @@ argument string should be quoted.  Something like this:
 (Quoting rules vary between operating systems and shells, so make sure
 you consult the proper docs for your OS/shell).
 
+=== Tasks Arguments and the Environment
+
+Task argument values can also be picked up from the environment.  For
+example, if the "release" task expected a parameter named
+"release_version", then either
+
+   rake release[0.8.2]
+
+or
+
+   RELEASE_VERSION rake release
+
+will work.  Environment variable names must either match the task
+parameter exactly, or match an all uppcase version of the task
+parameter.
+
 === Tasks that Expect Parameters
 
 Parameters are only given to tasks that are setup to expect them.  In
@@ -216,7 +232,8 @@ The first argument of the block "t" is always bound to the current
 task object.  The second argument "args" is an open-struct like object
 that allows access to the task arguments.  Extra command line
 arguments to a task are ignored.  Missing command line arguments are
-given the nil value.
+picked up from matching environment variables.  If there are no
+matching environment variables, they are given the nil value.
 
 If you wish to specify default values for the arguments, you can use
 the with_defaults method in the task body.  Here is the above example
@@ -245,7 +262,8 @@ for tasks with arguments.  For example:
 There is an older format for declaring task parameters that omitted
 the task argument array and used the :needs keyword to introduce the
 dependencies.  That format is still supported for compatibility, but
-is not recommended for use.
+is not recommended for use.  The older format may be dropped in future
+versions of rake.
 
 == Accessing Task Programatically
 
@@ -371,18 +389,32 @@ loading.
 
 Standard Ruby comments (beginning with "#") can be used anywhere it is
 legal in Ruby source code, including comments for tasks and rules.
-However, if you wish a task to be described using the "-T" switch,
-then you need to use the +desc+ command to describe the task.
+A single-line comment immediately before a task (with no blank line
+between it and the task) will be used as that task's description, and
+the task and description will appear in the list displayed
+using the "-T" switch.
 
 === Example:
 
-  desc "Create a distribution package"
+  # Create a distribution package
   task :package => [ ... ] do ... end
 
+You can also use the +desc+ command before a task to set the
+description for the task. In this case, intervening blank lines
+are allowed
+
+=== Example:
+
+  desc 'Create a distribution package'
+  
+  task :package => [ ... ] do ... end
+
+The +desc+ comment takes priority over the comment for of description.
+
 The "-T" switch (or "--tasks" if you like to spell things out) will
-display a list of tasks that have a defined comment.  If you use
-+desc+ to describe your major tasks, you have a semi-automatic way of
-generating a summary of your Rake file.
+display a list of tasks that have a description.  If you use
+comments or +desc+ to describe your major tasks, you have a 
+semi-automatic way of generating a summary of your Rake file.
 
   traken$ rake -T
   (in /home/.../rake)
@@ -537,4 +569,4 @@ This is the proper way to specify the task ...
 
 == See
 
-* README -- Main documentation for Rake.
+* README.rdoc -- Main documentation for Rake.
