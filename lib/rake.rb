@@ -23,7 +23,7 @@
 # IN THE SOFTWARE.
 #++
 
-RAKEVERSION = '0.8.7.1'
+RAKEVERSION = '0.8.99.1'
 
 require 'rbconfig'
 require 'fileutils'
