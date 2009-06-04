@@ -126,4 +126,4 @@ module Rake::DSL
   end
 end
 
-include Rake::DSL
+#include Rake::DSL

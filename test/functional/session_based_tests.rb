@@ -113,7 +113,7 @@ class SessionBasedTests < Test::Unit::TestCase
 
   def test_by_default_rakelib_files_are_include
     in_environment('RAKE_SYSTEM' => 'test/data/sys') do
-      rake '-T', 'extra'
+      rake '-T', 'extra', '--trace'
     end
     assert_match %r{extra:extra}, @out
   end

@@ -15,6 +15,10 @@ module Rake
       def load_string(code, file_name=nil)
         module_eval(code, file_name || "(eval)")
       end
+
+      def run(&block)
+        module_eval(&block)
+      end
     end
   end
 end

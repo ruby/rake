@@ -428,7 +428,7 @@ module Rake
         fn = file_name + ".rake"
         full_path = File.join(path, fn)
         if File.exist?(full_path)
-          load full_path
+          Rake::Environment.load_rakefile(full_path)
           loaded << fn
           return true
         end
