@@ -356,7 +356,9 @@ class SessionBasedTests < Test::Unit::TestCase
   end
 
   def test_comment_before_task_acts_like_desc
-    Dir.chdir("test/data/comments") { rake("-T")}
+    in_environment("PWD" => "test/data/comments") do
+      rake "-T"
+    end
     assert_match("comment for t1", @out)
   end
   

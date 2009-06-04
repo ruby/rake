@@ -7,8 +7,13 @@ module Rake
     extend Rake::DSL
 
     class << self
-      def load_string(code)
-        module_eval(code)
+      def load_rakefile(rakefile_path)
+        rakefile = open(rakefile_path) { |f| f.read }
+        load_string(rakefile, rakefile_path)
+      end
+
+      def load_string(code, file_name=nil)
+        module_eval(code, file_name || "(eval)")
       end
     end
   end

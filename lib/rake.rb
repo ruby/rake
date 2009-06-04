@@ -56,6 +56,7 @@ require 'rake/early_time'
 require 'rake/name_space'
 require 'rake/task_manager'
 require 'rake/application'
+require 'rake/environment'
 
 $trace = false
 

@@ -466,7 +466,7 @@ module Rake
         Dir.chdir(location)
         puts "(in #{Dir.pwd})" unless options.silent
         $rakefile = @rakefile if options.classic_namespace
-        load File.expand_path(@rakefile) if @rakefile && @rakefile != ''
+        Rake::Environment.load_rakefile(File.expand_path(@rakefile)) if @rakefile && @rakefile != ''
         options.rakelib.each do |rlib|
           glob("#{rlib}/*.rake") do |name|
             add_import name
