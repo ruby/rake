@@ -320,6 +320,7 @@ module Rake
     end
 
     def comment_from_file(file_name, line)
+      return if file_name == '(eval)'
       @file_cache ||= {}
       content = (@file_cache[file_name] ||= File.readlines(file_name))
       line -= 2
