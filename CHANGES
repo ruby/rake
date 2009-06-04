@@ -2,6 +2,10 @@
 
 == Pre-Version 0.9.x
 
+* Removed Rake's DSL methods from the top level scope.  If you need to
+  call 'task :xzy' in your code, include Rake::DSL into your class, or
+  put the code in a Rake::DSL.environment do ... end block.
+
 * Allow single line comments immediately prior to a task to be used in
   place of +desc+.
 

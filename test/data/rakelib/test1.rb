@@ -1,4 +1,4 @@
-Rake::Environment.run do
+Rake::DSL.environment do
   task :default do
     puts "TEST1"
   end

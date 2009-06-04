@@ -15,7 +15,7 @@
 
 require 'rake'
 
-Rake::Environment.run do
+Rake::DSL.environment do
   CLEAN = Rake::FileList["**/*~", "**/*.bak", "**/core"]
   CLEAN.clear_exclude.exclude { |fn| 
     fn.pathmap("%f") == 'core' && File.directory?(fn) 
