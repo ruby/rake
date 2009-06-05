@@ -12,6 +12,7 @@ module Rake
       @rules = Array.new
       @scope = Array.new
       @last_description = nil
+      @need_descriptions = true
     end
 
     def create_rule(*args, &block)
@@ -27,11 +28,11 @@ module Rake
       deps = deps.collect {|d| d.to_s }
       task = intern(task_class, task_name)
       task.set_arg_names(arg_names) unless arg_names.empty?
-      task.add_description(get_description)
+      if @need_descriptions
+        add_location(task)
+        task.add_description(get_description(task))
+      end
       task.enhance(deps, &block)
-      with_location {
-        task
-      }
     end
 
     # Lookup a task.  Return an existing task if found, otherwise
@@ -208,25 +209,20 @@ module Rake
 
     private
     
-    # Add a location to the locations field of the yield object.
-    def with_location
-      result = yield
+    # Add a location to the locations field of the given task.
+    def add_location(task)
       loc = find_location
-      result.locations << loc if loc
-      result
+      task.locations << loc if loc
+      task
     end
     
     # Find the location that called into the dsl layer.
     def find_location
-      begin
-        raise StandardError.new
-      rescue StandardError => ex
-        locations = ex.backtrace
-        i = 0
-        while locations[i]
-          return locations[i+1] if locations[i] =~ /rake\/dsl.rb/
-          i += 1
-        end
+      locations = caller
+      i = 0
+      while locations[i]
+        return locations[i+1] if locations[i] =~ /rake\/dsl.rb/
+        i += 1
       end
       nil
     end
@@ -294,25 +290,21 @@ module Rake
     # Return the current description. If there isn't one, try to find it
     # by reading in the source file and looking for a comment immediately
     # prior to the task definition
-    def get_description
-      desc = @last_description || find_preceding_comment_for_task
+    def get_description(task)
+      desc = @last_description || find_preceding_comment_for_task(task)
       @last_description = nil
       desc
     end
     
-    def find_preceding_comment_for_task
-      stack = caller
-      begin
-        where = stack.shift
-      end until stack.empty? || where =~ /in `task'/
-      return nil if stack.empty?
-      file_name, line = parse_stack_line(stack.shift)
+    def find_preceding_comment_for_task(task)
+      loc = task.locations.last
+      file_name, line = parse_location(loc)
       return nil unless file_name
       comment_from_file(file_name, line)
     end
     
-    def parse_stack_line(where)
-      if where =~ /^(.*):(\d+)/
+    def parse_location(loc)
+      if loc =~ /^(.*):(\d+)/
         [ $1, Integer($2) ]
       else
         nil

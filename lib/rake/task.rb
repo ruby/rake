@@ -31,8 +31,9 @@ module Rake
     # Array of nested namespaces names used for task lookup by this task.
     attr_reader :scope
 
-    # File/Line location of the the task definition (only valid if the
-    # task was defined with the detect location option set).
+    # File/Line locations of each of the task definitions for this
+    # task (only valid if the task was defined with the detect
+    # location option set).
     attr_reader :locations
 
     # Return task name
