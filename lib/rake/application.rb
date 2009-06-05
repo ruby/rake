@@ -369,6 +369,11 @@ module Rake
             Rake::TaskManager.record_task_metadata = true
           }
         ],
+        ['--top-level-dsl', '-X', "Put Rake DSL commands in the top level scope.",
+          lambda { |value|
+            Rake::DSL.include_in_top_scope
+          }
+        ],
         ['--trace', '-t', "Turn on invoke/execute tracing, enable full backtrace.",
           lambda { |value|
             options.trace = true
