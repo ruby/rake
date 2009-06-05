@@ -12,7 +12,6 @@ module Rake
       @rules = Array.new
       @scope = Array.new
       @last_description = nil
-      @need_descriptions = true
     end
 
     def create_rule(*args, &block)
@@ -28,7 +27,7 @@ module Rake
       deps = deps.collect {|d| d.to_s }
       task = intern(task_class, task_name)
       task.set_arg_names(arg_names) unless arg_names.empty?
-      if @need_descriptions
+      if Rake::TaskManager.record_task_metadata
         add_location(task)
         task.add_description(get_description(task))
       end
@@ -318,6 +317,11 @@ module Rake
       line -= 2
       return nil unless content[line] =~ /^\s*#\s*(.*)/
       $1
+    end
+
+    class << self
+      attr_accessor :record_task_metadata
+      TaskManager.record_task_metadata = false
     end
   end
 

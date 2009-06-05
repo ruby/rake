@@ -9,6 +9,7 @@ require 'fileutils'
 require 'session'
 require 'test/in_environment'
 require 'test/rake_test_setup'
+require 'rake'
 
 # Version 2.1.9 of session has a bug where the @debug instance
 # variable is not initialized, causing warning messages.  This snippet
@@ -111,9 +112,9 @@ class SessionBasedTests < Test::Unit::TestCase
     assert_no_match %r{extra:extra}, @out
   end
 
-  def test_by_default_rakelib_files_are_include
+  def test_by_default_rakelib_files_are_included
     in_environment('RAKE_SYSTEM' => 'test/data/sys') do
-      rake '-T', 'extra', '--trace'
+      rake '-T', 'extra'
     end
     assert_match %r{extra:extra}, @out
   end

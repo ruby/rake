@@ -282,6 +282,7 @@ module Rake
           lambda { |value|
             options.show_tasks = :describe
             options.show_task_pattern = Regexp.new(value || '')
+            TaskManager.record_task_metadata = true
           }
         ],
         ['--dry-run', '-n', "Do a dry run without executing actions.",
@@ -365,6 +366,7 @@ module Rake
           lambda { |value|
             options.show_tasks = :tasks
             options.show_task_pattern = Regexp.new(value || '')
+            Rake::TaskManager.record_task_metadata = true
           }
         ],
         ['--trace', '-t', "Turn on invoke/execute tracing, enable full backtrace.",
@@ -386,6 +388,7 @@ module Rake
           lambda { |value|
             options.show_tasks = :lines
             options.show_task_pattern = Regexp.new(value || '')
+            Rake::TaskManager.record_task_metadata = true
           }
         ],
       ]
