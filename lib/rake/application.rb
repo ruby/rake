@@ -371,7 +371,7 @@ module Rake
         ],
         ['--top-level-dsl', '-X', "Put Rake DSL commands in the top level scope.",
           lambda { |value|
-            Rake::DSL.include_in_top_scope
+            options.top_level_dsl = value
           }
         ],
         ['--trace', '-t', "Turn on invoke/execute tracing, enable full backtrace.",
@@ -416,6 +416,8 @@ module Rake
         standard_rake_options.each { |args| opts.on(*args) }
         opts.environment('RAKEOPT')
       end.parse!
+
+      Rake::DSL.include_in_top_scope if options.top_level_dsl
 
       # If class namespaces are requested, set the global options
       # according to the values in the options structure.
