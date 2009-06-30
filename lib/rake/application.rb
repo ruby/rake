@@ -45,15 +45,16 @@ module Rake
       @tty_output = STDOUT.tty?
     end
 
-    # Run the Rake application.  The run method performs the following three steps:
+    # Run the Rake application.  The run method performs the following
+    # three steps:
     #
     # * Initialize the command line options (+init+).
     # * Define the tasks (+load_rakefile+).
     # * Run the top level tasks (+run_tasks+).
     #
-    # If you wish to build a custom rake command, you should call +init+ on your
-    # application.  The define any tasks.  Finally, call +top_level+ to run your top
-    # level tasks.
+    # If you wish to build a custom rake command, you should call
+    # +init+ on your application.  The define any tasks.  Finally,
+    # call +top_level+ to run your top level tasks.
     def run
       standard_exception_handling do
         init
@@ -369,7 +370,12 @@ module Rake
             Rake::TaskManager.record_task_metadata = true
           }
         ],
-        ['--top-level-dsl', '-X', "Put Rake DSL commands in the top level scope.",
+        ['--no-top-level-dsl', '-X', "Do no put Rake DSL commands in the top level scope.",
+          lambda { |value|
+            options.top_level_dsl = ! value
+          }
+        ],
+        ['--top-level-dsl', "Put Rake DSL commands in the top level scope.",
           lambda { |value|
             options.top_level_dsl = value
           }
@@ -402,6 +408,7 @@ module Rake
     # Read and handle the command line options.
     def handle_options
       options.rakelib = ['rakelib']
+      options.top_level_dsl = true
 
       OptionParser.new do |opts|
         opts.banner = "rake [-f rakefile] {options} targets..."
