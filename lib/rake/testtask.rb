@@ -129,8 +129,8 @@ module Rake
       else
         result = []
         result += @test_files.to_a if @test_files
-        result += FileList[ @pattern ].to_a if @pattern
-        FileList[result]
+        result << @pattern if @pattern
+        result
       end
     end
 
