@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require 'rake'
 
 # Load the test files from the command line.
 
