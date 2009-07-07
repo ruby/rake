@@ -23,6 +23,9 @@
 * Errors in Rake will now display the task invocation chain in effect
   at the time of the error.
 
+* Accepted change by warnickr to not expand test patterns in shell
+  (allowing more files in the test suite).
+
 == Version 0.8.7
 
 * Fixed EXEEXT for JRuby on windows.
