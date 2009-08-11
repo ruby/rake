@@ -29,14 +29,14 @@ short answer is probably that +multitask+ was easy to implement, while
 dynamically finding parallelizable tasks and safely executing them in
 separate threads requires a little more code.
 
-Rake now supports the -j option which does exactly this.  To run up to
+Drake supports the -j option which does exactly this.  To run up to
 three tasks in parallel,
 
-  % rake -j3
+  % drake -j3
 
 or equivalently,
 
-  % rake --threads 3
+  % drake --threads 3
 
 == A Note on Dependencies
 
@@ -50,11 +50,11 @@ Consider
 
    task :a => [:x, :y, :z]
 
-When Rake runs in single-threaded mode (the default), _x_,_y_,_z_ will
+When Drake runs in single-threaded mode (the default), _x_,_y_,_z_ will
 be invoked <em>in that order</em> before _a_ is invoked, assuming no
 other rules exist involving these tasks.  However with -j _N_ for
 _N_ > 1, one should not expect any particular order of execution.
-Since there is no dependency specified between _x_,_y_,_z_ above, Rake
+Since there is no dependency specified between _x_,_y_,_z_ above, Drake
 is free to run them in any order.
 
 The problem of underspecified dependencies plagues Makefiles as well
@@ -70,11 +70,11 @@ If on the other hand your build takes twenty minutes to complete, you
 may be interested in getting the full dependency graph correct in
 order to take advantage of multiple CPUs or cores.
 
-Though Rake cannot fathom what <em>you</em> mean by a correct
+Though Drake cannot fathom what <em>you</em> mean by a correct
 dependency, there is a tool available which may help you get closer to
 saying what you mean:
 
-  % rake --randomize[=SEED]
+  % drake --randomize[=SEED]
 
 This will randomize the order of sibling prerequisites for each task.
 When SEED is given, <tt>srand(SEED.hash)</tt> will be called so that

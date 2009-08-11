@@ -154,7 +154,7 @@ user must do whatever is necessary to prevent race conditions.
 
 Rake now supports the command-line option -j for automatically
 detecting non-dependent tasks and safely executing them in parallel.
-See doc/parallel.rdoc[http://rake.rubyforge.org/files/doc/parallel_rdoc.html].
+See doc/parallel.rdoc[http://drake.rubyforge.org/files/doc/parallel_rdoc.html].
 
 == Tasks with Arguments
 
