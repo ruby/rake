@@ -9,7 +9,7 @@
 # arguments.  A computation tree is then built with the gathered
 # tasks.
 #
-# Note that prerequisites are context-dependent; it is therefore not
+# Note that prerequisites are context-dependent.  It is therefore not
 # possible to create a 1-to-1 mapping between Rake::Tasks and
 # CompTree::Nodes.
 #
@@ -68,10 +68,13 @@ module Rake
           needed_prereq_names = Array.new
 
           @tasks.each_pair do |task, (task_args, prereqs)|
-            # if a prereq is not needed then it didn't get into @tasks
             needed_prereq_names.clear
+
             prereqs.each do |prereq|
-              needed_prereq_names << prereq.name if @tasks.has_key? prereq
+              # if a prereq is not needed then it didn't get into @tasks
+              if @tasks.has_key? prereq
+                needed_prereq_names << prereq.name
+              end
             end
 
             # define a computation node which executes the task
