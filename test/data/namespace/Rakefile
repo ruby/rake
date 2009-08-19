@@ -55,3 +55,12 @@ namespace "file2" do
   end
 end
 
+namespace "scopedep" do
+  task :prepare do
+    touch "scopedep.rb"
+    puts "PREPARE"
+  end
+  file "scopedep.rb" => [:prepare] do
+    puts "SCOPEDEP"
+  end
+end

@@ -341,6 +341,15 @@ class SessionBasedTests < Test::Unit::TestCase
     end
   end
   
+  def test_file_task_dependencies_scoped_by_namespaces
+    in_environment("PWD" => "test/data/namespace") do
+      rake "scopedep.rb"
+      assert_match(/^PREPARE\nSCOPEDEP$/m, @out)
+    end
+  ensure
+    remove_namespace_files
+  end
+  
   def test_rake_returns_status_error_values
     in_environment("PWD" => "test/data/statusreturn") do
       rake "exit5"
@@ -389,6 +398,12 @@ class SessionBasedTests < Test::Unit::TestCase
   def remove_chaining_files
     %w(play.scpt play.app base).each do |fn|
       FileUtils.rm_f File.join("test/data/chains", fn)
+    end
+  end
+  
+  def remove_namespace_files
+    %w(scopedep.rb).each do |fn|
+      FileUtils.rm_f File.join("test/data/namespace", fn)
     end
   end
 
