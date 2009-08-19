@@ -205,7 +205,7 @@ module Rake
     # Timestamp for this task.  Basic tasks return the current time for their
     # time stamp.  Other tasks can be more sophisticated.
     def timestamp
-      @prerequisites.collect { |p| application[p].timestamp }.max || Time.now
+      @prerequisites.collect { |p| application[p, @scope].timestamp }.max || Time.now
     end
 
     # Add a description to the task.  The description can consist of an option
@@ -253,12 +253,12 @@ module Rake
       result <<  "task needed: #{needed?}\n"
       result <<  "timestamp: #{timestamp}\n"
       result << "pre-requisites: \n"
-      prereqs = @prerequisites.collect {|name| application[name]}
+      prereqs = @prerequisites.collect {|name| application[name, @scope]}
       prereqs.sort! {|a,b| a.timestamp <=> b.timestamp}
       prereqs.each do |p|
         result << "--#{p.name} (#{p.timestamp})\n"
       end
-      latest_prereq = @prerequisites.collect{|n| application[n].timestamp}.max
+      latest_prereq = @prerequisites.collect{|n| application[n, @scope].timestamp}.max
       result <<  "latest-prerequisite time: #{latest_prereq}\n"
       result << "................................\n\n"
       return result
