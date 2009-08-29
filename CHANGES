@@ -26,6 +26,9 @@
 * Accepted change by warnickr to not expand test patterns in shell
   (allowing more files in the test suite).
 
+* Fixed that file tasks did not perform prereq lookups in scope
+  (Redmine #57).
+
 == Version 0.8.7
 
 * Fixed EXEEXT for JRuby on windows.
