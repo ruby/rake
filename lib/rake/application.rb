@@ -375,7 +375,7 @@ module Rake
             options.top_level_dsl = ! value
           }
         ],
-        ['--top-level-dsl', "Put Rake DSL commands in the top level scope.",
+        ['--top-level-dsl', "Put Rake DSL commands in the top level scope (default).",
           lambda { |value|
             options.top_level_dsl = value
           }
