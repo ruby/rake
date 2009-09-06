@@ -45,15 +45,16 @@ module Rake
       @tty_output = STDOUT.tty?
     end
 
-    # Run the Rake application.  The run method performs the following three steps:
+    # Run the Rake application.  The run method performs the following
+    # three steps:
     #
     # * Initialize the command line options (+init+).
     # * Define the tasks (+load_rakefile+).
     # * Run the top level tasks (+run_tasks+).
     #
-    # If you wish to build a custom rake command, you should call +init+ on your
-    # application.  The define any tasks.  Finally, call +top_level+ to run your top
-    # level tasks.
+    # If you wish to build a custom rake command, you should call
+    # +init+ on your application.  The define any tasks.  Finally,
+    # call +top_level+ to run your top level tasks.
     def run
       standard_exception_handling do
         init
@@ -282,6 +283,7 @@ module Rake
           lambda { |value|
             options.show_tasks = :describe
             options.show_task_pattern = Regexp.new(value || '')
+            TaskManager.record_task_metadata = true
           }
         ],
         ['--dry-run', '-n', "Do a dry run without executing actions.",
@@ -365,6 +367,17 @@ module Rake
           lambda { |value|
             options.show_tasks = :tasks
             options.show_task_pattern = Regexp.new(value || '')
+            Rake::TaskManager.record_task_metadata = true
+          }
+        ],
+        ['--no-top-level-dsl', '-X', "Do no put Rake DSL commands in the top level scope.",
+          lambda { |value|
+            options.top_level_dsl = ! value
+          }
+        ],
+        ['--top-level-dsl', "Put Rake DSL commands in the top level scope (default).",
+          lambda { |value|
+            options.top_level_dsl = value
           }
         ],
         ['--trace', '-t', "Turn on invoke/execute tracing, enable full backtrace.",
@@ -386,6 +399,7 @@ module Rake
           lambda { |value|
             options.show_tasks = :lines
             options.show_task_pattern = Regexp.new(value || '')
+            Rake::TaskManager.record_task_metadata = true
           }
         ],
       ]
@@ -394,6 +408,7 @@ module Rake
     # Read and handle the command line options.
     def handle_options
       options.rakelib = ['rakelib']
+      options.top_level_dsl = true
 
       OptionParser.new do |opts|
         opts.banner = "rake [-f rakefile] {options} targets..."
@@ -408,6 +423,8 @@ module Rake
         standard_rake_options.each { |args| opts.on(*args) }
         opts.environment('RAKEOPT')
       end.parse!
+
+      Rake::DSL.include_in_top_scope if options.top_level_dsl
 
       # If class namespaces are requested, set the global options
       # according to the values in the options structure.
@@ -428,7 +445,7 @@ module Rake
         fn = file_name + ".rake"
         full_path = File.join(path, fn)
         if File.exist?(full_path)
-          load full_path
+          Rake::Environment.load_rakefile(full_path)
           loaded << fn
           return true
         end
@@ -466,7 +483,7 @@ module Rake
         Dir.chdir(location)
         puts "(in #{Dir.pwd})" unless options.silent
         $rakefile = @rakefile if options.classic_namespace
-        load File.expand_path(@rakefile) if @rakefile && @rakefile != ''
+        Rake::Environment.load_rakefile(File.expand_path(@rakefile)) if @rakefile && @rakefile != ''
         options.rakelib.each do |rlib|
           glob("#{rlib}/*.rake") do |name|
             add_import name

@@ -23,7 +23,7 @@
 # IN THE SOFTWARE.
 #++
 
-RAKEVERSION = '0.8.7.1'
+RAKEVERSION = '0.8.99.3'
 
 require 'rbconfig'
 require 'fileutils'
@@ -56,6 +56,7 @@ require 'rake/early_time'
 require 'rake/name_space'
 require 'rake/task_manager'
 require 'rake/application'
+require 'rake/environment'
 
 $trace = false
 
