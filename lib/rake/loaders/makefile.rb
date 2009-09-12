@@ -4,6 +4,8 @@ module Rake
 
   # Makefile loader to be used with the import file loader.
   class MakefileLoader
+    include Rake::DSL
+
     SPACE_MARK = "__&NBSP;__"
 
     # Load the makefile dependencies in +fn+.

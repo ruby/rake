@@ -9,6 +9,7 @@ require 'fileutils'
 require 'session'
 require 'test/in_environment'
 require 'test/rake_test_setup'
+require 'rake'
 
 # Version 2.1.9 of session has a bug where the @debug instance
 # variable is not initialized, causing warning messages.  This snippet
@@ -111,7 +112,7 @@ class SessionBasedTests < Test::Unit::TestCase
     assert_no_match %r{extra:extra}, @out
   end
 
-  def test_by_default_rakelib_files_are_include
+  def test_by_default_rakelib_files_are_included
     in_environment('RAKE_SYSTEM' => 'test/data/sys') do
       rake '-T', 'extra'
     end
@@ -341,6 +342,15 @@ class SessionBasedTests < Test::Unit::TestCase
     end
   end
   
+  def test_file_task_dependencies_scoped_by_namespaces
+    in_environment("PWD" => "test/data/namespace") do
+      rake "scopedep.rb"
+      assert_match(/^PREPARE\nSCOPEDEP$/m, @out)
+    end
+  ensure
+    remove_namespace_files
+  end
+  
   def test_rake_returns_status_error_values
     in_environment("PWD" => "test/data/statusreturn") do
       rake "exit5"
@@ -356,7 +366,9 @@ class SessionBasedTests < Test::Unit::TestCase
   end
 
   def test_comment_before_task_acts_like_desc
-    Dir.chdir("test/data/comments") { rake("-T")}
+    in_environment("PWD" => "test/data/comments") do
+      rake "-T"
+    end
     assert_match("comment for t1", @out)
   end
   
@@ -389,6 +401,12 @@ class SessionBasedTests < Test::Unit::TestCase
   def remove_chaining_files
     %w(play.scpt play.app base).each do |fn|
       FileUtils.rm_f File.join("test/data/chains", fn)
+    end
+  end
+  
+  def remove_namespace_files
+    %w(scopedep.rb).each do |fn|
+      FileUtils.rm_f File.join("test/data/namespace", fn)
     end
   end
 

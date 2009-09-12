@@ -24,6 +24,7 @@ class TestApplication < Test::Unit::TestCase
     @app = Rake::Application.new
     @app.options.threads = Rake.application.options.threads
     @app.options.rakelib = []
+    Rake::TaskManager.record_task_metadata = true
   end
 
   def test_constant_warning

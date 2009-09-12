@@ -7,7 +7,7 @@ module Rake
     private
     def invoke_prerequisites(args, invocation_chain)
       threads = @prerequisites.collect { |p|
-        Thread.new(p) { |r| application[r].invoke_with_call_chain(args, invocation_chain) }
+        Thread.new(p) { |r| application[r, @scope].invoke_with_call_chain(args, invocation_chain) }
       }
       threads.each { |t| t.join }
     end
