@@ -73,7 +73,7 @@ namespace :test do
     t.warning = true
     t.verbose = false
   end
-
+  
   Rake::TestTask.new(:parallel) do |t|
     t.test_files = ['test/parallel_setup.rb'] + all_test_files
     t.warning = true
