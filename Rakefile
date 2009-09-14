@@ -201,7 +201,7 @@ else
 
     #### Dependencies and requirements.
 
-    s.add_dependency('comp_tree', '>= 0.7.6')
+    s.add_dependency('comp_tree', '>= 1.0.0')
     #s.add_dependency('log4r', '> 1.0.4')
     #s.requirements << ""
 
