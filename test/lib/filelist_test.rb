@@ -323,6 +323,12 @@ class TestFileList < Test::Unit::TestCase
       f.sort
   end
 
+  def test_egrep_returns_0_if_no_matches
+    files = FileList['test/lib/*_test.rb']
+    the_line_number = __LINE__ + 1
+    assert_equal 0, files.egrep(/XYZZY/) { }
+  end
+
   def test_egrep_with_output
     files = FileList['test/lib/*_test.rb']
     the_line_number = __LINE__ + 1

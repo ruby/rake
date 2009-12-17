@@ -280,8 +280,9 @@ module Rake
     # block is given, call the block on each matching line, passing the file
     # name, line number, and the matching line of text.  If no block is given,
     # a standard emac style file:linenumber:line message will be printed to
-    # standard out.
+    # standard out.  Returns the number of matched items.
     def egrep(pattern, *options)
+      matched = 0
       each do |fn|
         begin
           open(fn, "rb", *options) do |inf|
@@ -289,6 +290,7 @@ module Rake
             inf.each do |line|
               count += 1
               if pattern.match(line)
+                matched += 1
                 if block_given?
                   yield fn, count, line
                 else
@@ -301,8 +303,9 @@ module Rake
           puts "Error while processing '#{fn}': #{ex}"
         end
       end
+      matched
     end
-
+    
     # Return a new file list that only contains file names from the current
     # file list that exist on the file system.
     def existing
