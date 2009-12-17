@@ -154,7 +154,7 @@ module Rake
       when :testrb
         "-S testrb #{fix}"
       when :rake
-        "\"#{rake_loader}\""
+        "-I\"#{rake_lib_dir}\" \"#{rake_loader}\""
       end
     end
 
@@ -167,6 +167,19 @@ module Rake
       $LOAD_PATH.each do |path|
         file_path = File.join(path, "#{fn}.rb")
         return file_path if File.exist? file_path
+      end
+      nil
+    end
+    
+    def rake_lib_dir # :nodoc:
+      find_dir('rake') or
+        fail "unable to find rake lib"
+    end
+
+    def find_dir(fn) # :nodoc:
+      $LOAD_PATH.each do |path|
+        file_path = File.join(path, "#{fn}.rb")
+        return path if File.exist? file_path
       end
       nil
     end
