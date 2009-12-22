@@ -18,7 +18,7 @@ if RUBY_VERSION >= "1.9.0"
 end
 
 module TestMethods
-  def assert_exception(ex, msg=nil, &block)
+  def assert_exception(ex, msg="", &block)
     assert_raise(ex, msg, &block)
   end
 end
