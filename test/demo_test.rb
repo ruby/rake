@@ -5,8 +5,8 @@ class DemoTest < Test::Unit::TestCase
   include TestMethods
 
   def test_demo
-    assert_exception RuntimeError do
-      raise "OUCH"
-    end
+    ex = nil
+    e = StandardError.new
+    ex.instance_of?(Module) ? e.kind_of?(ex) : ex == e.class
   end
 end
