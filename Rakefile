@@ -62,12 +62,13 @@ task :test => "test:units"
 namespace :test do
   Rake::TestTask.new(:all) do |t|
     t.test_files = FileList[
+      'test/*_test.rb',
       'test/lib/*_test.rb',
       'test/contrib/*_test.rb',
       'test/functional/*_test.rb'
     ]
     t.warning = true
-    t.verbose = false
+    t.verbose = true
   end
   
   Rake::TestTask.new(:units) do |t|
