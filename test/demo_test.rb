@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'rake_test_setup'
+require 'test/rake_test_setup'
 
 class DemoTest < Test::Unit::TestCase
   include TestMethods
