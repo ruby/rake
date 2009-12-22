@@ -47,7 +47,11 @@ SRC_RB = FileList['lib/**/*.rb']
 # The default task is run if rake is given no explicit arguments.
 
 desc "Default Task"
-task :default => "test:all"
+# task :default => "test:all"
+
+task :default do
+  ruby "demo.rb"
+end
 
 # Test Tasks ---------------------------------------------------------
 
