@@ -50,7 +50,7 @@ desc "Default Task"
 # task :default => "test:all"
 
 task :default do
-  ruby "test/demo_test.rb"
+  ruby "-Ilib:test test/demo_test.rb"
 end
 
 # Test Tasks ---------------------------------------------------------

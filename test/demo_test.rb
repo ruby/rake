@@ -1,8 +1,11 @@
 require 'test/unit'
+require 'rake_test_setup'
 
 class DemoTest < Test::Unit::TestCase
+  include TestMethods
+
   def test_demo
-    assert_raises RuntimeError do
+    assert_exception RuntimeError do
       raise "OUCH"
     end
   end
