@@ -3,6 +3,7 @@
 # added to the FileUtils utility functions.
 #
 module FileUtils
+  # Path to the currently running ruby.
   RUBY = File.join(
     Config::CONFIG['bindir'],
     Config::CONFIG['ruby_install_name'] + Config::CONFIG['EXEEXT']).
