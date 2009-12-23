@@ -8,16 +8,11 @@ rescue LoadError
 end
 
 require 'flexmock/test_unit'
-
-if RUBY_VERSION >= "1.9.0"
-  class Test::Unit::TestCase
-#    def passed?
-#      true
-#    end
-  end
-end
+require 'test/filecreation'
+require 'test/capture_stdout'
 
 module TestMethods
+  # Shim method for compatibility
   def assert_exception(ex, msg="", &block)
     assert_raise(ex, msg, &block)
   end
