@@ -3,8 +3,6 @@
 require 'test/unit'
 require 'fileutils'
 require 'rake'
-require 'test/filecreation'
-require 'test/capture_stdout'
 require 'test/rake_test_setup'
 
 ######################################################################
@@ -12,9 +10,16 @@ class TestTask < Test::Unit::TestCase
   include CaptureStdout
   include Rake
   include TestMethods
+  include Rake::DSL
 
   def setup
     Task.clear
+    Rake::TaskManager.record_task_metadata = true
+  end
+  
+  def teardown
+    super
+    Rake::TaskManager.record_task_metadata = false
   end
 
   def test_create
@@ -175,6 +180,56 @@ class TestTask < Test::Unit::TestCase
     task :a => FileList.new.include("b", "c")
     assert_equal ["b", "c"], Task[:a].prerequisites
   end
+  
+  def test_prerequiste_tasks_returns_tasks_not_strings
+    a = task :a => ["b", "c"]
+    b = task :b
+    c = task :c
+    assert_equal [b, c], a.prerequisite_tasks    
+  end
+
+  def test_prerequiste_tasks_fails_if_prerequisites_are_undefined
+    a = task :a => ["b", "c"]
+    b = task :b
+    assert_exception(RuntimeError) do
+      a.prerequisite_tasks
+    end
+  end
+
+  def test_prerequiste_tasks_honors_namespaces
+    a = b = nil
+    namespace "X" do
+      a = task :a => ["b", "c"]
+      b = task :b
+    end
+    c = task :c
+
+    assert_equal [b, c], a.prerequisite_tasks
+  end
+  
+  def test_timestamp_returns_now_if_all_prereqs_have_no_times
+    a = task :a => ["b", "c"]
+    b = task :b
+    c = task :c
+
+    faux_stamp = 100
+    flexmock(Time, :now => faux_stamp)
+
+    assert_equal faux_stamp, a.timestamp
+  end
+
+  def test_timestamp_returns_latest_prereq_timestamp
+    a = task :a => ["b", "c"]
+    b = task :b
+    c = task :c
+
+    faux_stamp = 100
+    flexmock(Time, :now => faux_stamp-10)
+    flexmock(b, :timestamp => faux_stamp - 1)
+    flexmock(c, :timestamp => faux_stamp)
+
+    assert_equal faux_stamp, a.timestamp
+  end
 
   def test_investigation_output
     t1 = task(:t1 => [:t2, :t3]) { |t| runlist << t.name; 3321 }
@@ -223,9 +278,17 @@ class TestTaskWithArguments < Test::Unit::TestCase
   include CaptureStdout
   include Rake
   include TestMethods
+  include Rake::DSL
 
   def setup
+    super
     Task.clear
+    Rake::TaskManager.record_task_metadata = true
+  end
+  
+  def teardown
+    Rake::TaskManager.record_task_metadata = false
+    super
   end
 
   def test_no_args_given
