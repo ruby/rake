@@ -50,12 +50,16 @@ module Rake
     def sources
       @sources ||= []
     end
+    
+    def prerequisite_tasks
+      prerequisites.collect { |pre| application[pre, @scope] }
+    end
 
     # First source from a rule (nil if no sources)
     def source
       @sources.first if defined?(@sources)
     end
-
+    
     # Create a task named +task_name+ with no actions or prerequisites. Use
     # +enhance+ to add actions and prerequisites.
     def initialize(task_name, app)
