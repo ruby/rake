@@ -51,9 +51,15 @@ module Rake
       @sources ||= []
     end
     
+    # List of prerequisite tasks
     def prerequisite_tasks
-      prerequisites.collect { |pre| application[pre, @scope] }
+      prerequisites.collect { |pre| lookup_prerequisite(pre) }
     end
+    
+    def lookup_prerequisite(prerequisite_name)
+      application[prerequisite_name, @scope]
+    end
+    private :lookup_prerequisite
 
     # First source from a rule (nil if no sources)
     def source
@@ -165,8 +171,7 @@ module Rake
 
     # Invoke all the prerequisites of a task.
     def invoke_prerequisites(task_args, invocation_chain) # :nodoc:
-      @prerequisites.each { |n|
-        prereq = application[n, @scope]
+      prerequisite_tasks.each { |prereq|
         prereq_args = task_args.new_scope(prereq.arg_names)
         prereq.invoke_with_call_chain(prereq_args, invocation_chain)
       }
@@ -210,7 +215,7 @@ module Rake
     # Timestamp for this task.  Basic tasks return the current time for their
     # time stamp.  Other tasks can be more sophisticated.
     def timestamp
-      @prerequisites.collect { |p| application[p, @scope].timestamp }.max || Time.now
+      prerequisite_tasks.collect { |pre| pre.timestamp }.max || Time.now
     end
 
     # Add a description to the task.  The description can consist of an option
@@ -258,12 +263,12 @@ module Rake
       result <<  "task needed: #{needed?}\n"
       result <<  "timestamp: #{timestamp}\n"
       result << "pre-requisites: \n"
-      prereqs = @prerequisites.collect {|name| application[name, @scope]}
+      prereqs = prerequisite_tasks
       prereqs.sort! {|a,b| a.timestamp <=> b.timestamp}
       prereqs.each do |p|
         result << "--#{p.name} (#{p.timestamp})\n"
       end
-      latest_prereq = @prerequisites.collect{|n| application[n, @scope].timestamp}.max
+      latest_prereq = prerequisite_tasks.collect { |pre| pre.timestamp }.max
       result <<  "latest-prerequisite time: #{latest_prereq}\n"
       result << "................................\n\n"
       return result
