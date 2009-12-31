@@ -37,9 +37,9 @@ def installBIN(from, opfile)
   end
 
   opfile += ".rb" if CONFIG["target_os"] =~ /mswin/i
-  FileUtils::install(tmp_file, File.join($bindir, opfile),
+  FileUtils.install(tmp_file, File.join($bindir, opfile),
     {:mode => 0755, :verbose => true})
-  File::unlink(tmp_file)
+  File.unlink(tmp_file)
 end
 
 $sitedir = CONFIG["sitelibdir"]
@@ -63,13 +63,13 @@ if (destdir = ENV['DESTDIR'])
   $bindir  = destdir + $bindir
   $sitedir = destdir + $sitedir
   
-  FileUtils::mkdir_p($bindir)
-  FileUtils::mkdir_p($sitedir)
+  FileUtils.mkdir_p($bindir)
+  FileUtils.mkdir_p($sitedir)
 end
 
 rake_dest = File.join($sitedir, "rake")
 FileUtils.mkdir_p(rake_dest, {:verbose => true})
-File::chmod(0755, rake_dest)
+File.chmod(0755, rake_dest)
 
 # The library files
 
@@ -81,7 +81,7 @@ for fn in files
   if ! File.exist?(target_dir)
     FileUtils.mkdir_p(target_dir)
   end
-  FileUtils::install(File.join('lib', fn), File.join($sitedir, fn),
+  FileUtils.install(File.join('lib', fn), File.join($sitedir, fn),
     {:mode => 0644, :verbose => true})
 end
 
