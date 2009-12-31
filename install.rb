@@ -1,6 +1,6 @@
 require 'rbconfig'
 require 'find'
-require 'ftools'
+require 'fileutils'
 
 include Config
 
@@ -37,7 +37,8 @@ def installBIN(from, opfile)
   end
 
   opfile += ".rb" if CONFIG["target_os"] =~ /mswin/i
-  File::install(tmp_file, File.join($bindir, opfile), 0755, true)
+  FileUtils::install(tmp_file, File.join($bindir, opfile),
+    {:mode => 0755, :verbose => true})
   File::unlink(tmp_file)
 end
 
@@ -62,12 +63,12 @@ if (destdir = ENV['DESTDIR'])
   $bindir  = destdir + $bindir
   $sitedir = destdir + $sitedir
   
-  File::makedirs($bindir)
-  File::makedirs($sitedir)
+  FileUtils::mkdir_p($bindir)
+  FileUtils::mkdir_p($sitedir)
 end
 
 rake_dest = File.join($sitedir, "rake")
-File::makedirs(rake_dest, true)
+FileUtils.mkdir_p(rake_dest, {:verbose => true})
 File::chmod(0755, rake_dest)
 
 # The library files
@@ -78,9 +79,10 @@ for fn in files
   fn_dir = File.dirname(fn)
   target_dir = File.join($sitedir, fn_dir)
   if ! File.exist?(target_dir)
-    File.makedirs(target_dir)
+    FileUtils.mkdir_p(target_dir)
   end
-  File::install(File.join('lib', fn), File.join($sitedir, fn), 0644, true)
+  FileUtils::install(File.join('lib', fn), File.join($sitedir, fn),
+    {:mode => 0644, :verbose => true})
 end
 
 # and the executable
