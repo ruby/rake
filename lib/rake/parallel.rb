@@ -132,8 +132,8 @@ module Rake
       # Called from Task#invoke_with_call_chain_collector.
       #
       def invoke_prerequisites_collector(task_args, invocation_chain)
-        @prerequisites.map { |n|
-          invoke_prerequisite(n, task_args, invocation_chain)
+        prerequisite_tasks.map { |prereq|
+          invoke_prerequisite(prereq, task_args, invocation_chain)
         }
       end
     end

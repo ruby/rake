@@ -21,10 +21,16 @@ class TestApplication < Test::Unit::TestCase
   include TestMethods
 
   def setup
+    super
     @app = Rake::Application.new
     @app.options.threads = Rake.application.options.threads
     @app.options.rakelib = []
     Rake::TaskManager.record_task_metadata = true
+  end
+  
+  def teardown
+    Rake::TaskManager.record_task_metadata = false
+    super
   end
 
   def test_constant_warning

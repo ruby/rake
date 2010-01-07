@@ -59,41 +59,43 @@ task :tu => "test:units"
 task :tc => "test:contribs"
 task :test => "test:units"
 
+module TestFiles
+  UNIT = FileList['test/lib/*_test.rb']
+  FUNCTIONAL = FileList['test/functional/*_test.rb']
+  CONTRIB = FileList['test/contrib/test*.rb']
+  TOP = FileList['test/*_test.rb']
+  ALL = TOP + UNIT + FUNCTIONAL + CONTRIB
+end
+
 namespace :test do
   task :all => [:serial, :parallel]
 
-  all_test_files = FileList[
-    'test/lib/*_test.rb',
-    'test/contrib/*_test.rb',
-    'test/functional/*_test.rb'
-  ]
-
   Rake::TestTask.new(:serial) do |t|
-    t.test_files = ['test/serial_setup.rb'] + all_test_files
+    t.test_files = ['test/serial_setup.rb'] + TestFiles::ALL
     t.warning = true
     t.verbose = false
   end
   
   Rake::TestTask.new(:parallel) do |t|
-    t.test_files = ['test/parallel_setup.rb'] + all_test_files
+    t.test_files = ['test/parallel_setup.rb'] + TestFiles::ALL
     t.warning = true
     t.verbose = false
   end
 
   Rake::TestTask.new(:units) do |t|
-    t.test_files = FileList['test/lib/*_test.rb']
+    t.test_files = TestFiles::UNIT
     t.warning = true
     t.verbose = false
   end
   
   Rake::TestTask.new(:functional) do |t|
-    t.test_files = FileList['test/functional/*_test.rb']
+    t.test_files = TestFiles::FUNCTIONAL
     t.warning = true
     t.verbose = false
   end
   
   Rake::TestTask.new(:contribs) do |t|
-    t.test_files = FileList['test/contrib/test*.rb']
+    t.test_files = TestFiles::CONTRIB
     t.warning = true
     t.verbose = false
   end

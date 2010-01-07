@@ -9,17 +9,12 @@ end
 
 require 'thread'
 require 'flexmock/test_unit'
-
-if RUBY_VERSION >= "1.9.0"
-  class Test::Unit::TestCase
-#    def passed?
-#      true
-#    end
-  end
-end
+require 'test/filecreation'
+require 'test/capture_stdout'
 
 module TestMethods
-  def assert_exception(ex, msg=nil, &block)
+  # Shim method for compatibility
+  def assert_exception(ex, msg="", &block)
     assert_raise(ex, msg, &block)
   end
 end
