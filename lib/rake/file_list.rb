@@ -283,18 +283,22 @@ module Rake
     # standard out.
     def egrep(pattern, *options)
       each do |fn|
-        open(fn, "rb", *options) do |inf|
-          count = 0
-          inf.each do |line|
-            count += 1
-            if pattern.match(line)
-              if block_given?
-                yield fn, count, line
-              else
-                puts "#{fn}:#{count}:#{line}"
+        begin
+          open(fn, "rb", *options) do |inf|
+            count = 0
+            inf.each do |line|
+              count += 1
+              if pattern.match(line)
+                if block_given?
+                  yield fn, count, line
+                else
+                  puts "#{fn}:#{count}:#{line}"
+                end
               end
             end
           end
+        rescue StandardError => ex
+          puts "Error while processing '#{fn}': #{ex}"
         end
       end
     end
