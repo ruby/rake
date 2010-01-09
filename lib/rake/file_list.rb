@@ -43,7 +43,7 @@ module Rake
     ARRAY_METHODS = (Array.instance_methods - Object.instance_methods).map { |n| n.to_s }
 
     # List of additional methods that must be delegated.
-    MUST_DEFINE = %w[to_a inspect]
+    MUST_DEFINE = %w[to_a inspect <=>]
 
     # List of methods that should not be delegated here (we define special
     # versions of them explicitly below).
