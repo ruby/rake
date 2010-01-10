@@ -112,7 +112,10 @@ module Rake
       # Called from Task#invoke_with_call_chain.
       #
       def invoke_with_call_chain_collector(task_args, new_chain, previous_chain)
-        prereqs = invoke_prerequisites_collector(task_args, new_chain)
+        # call Task#invoke_prerequisites directly (avoid overrides)
+        prereqs = Task.instance_method(:invoke_prerequisites).
+          bind(self).call(task_args, new_chain)
+
         parallel = application.parallel
         if needed? or parallel.tasks[self]
           parallel.tasks[self] = [task_args, prereqs]
@@ -124,18 +127,6 @@ module Rake
             parallel.tasks[previous_chain.value] = true
           end
         end
-      end
-      
-      #
-      # Dry-run invoke prereqs and return the prereq instances.
-      # This also serves to avoid MultiTask#invoke_prerequisites.
-      #
-      # Called from Task#invoke_with_call_chain_collector.
-      #
-      def invoke_prerequisites_collector(task_args, invocation_chain)
-        prerequisite_tasks.map { |prereq|
-          invoke_prerequisite(prereq, task_args, invocation_chain)
-        }
       end
     end
   end

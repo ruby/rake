@@ -164,6 +164,7 @@ module Rake
         end
       else
         return unless prepare_invoke
+        # dry-run collector for parallel execution; see parallel.rb
         invoke_with_call_chain_collector(task_args, new_chain, invocation_chain)
       end
     rescue Exception => ex
@@ -192,15 +193,12 @@ module Rake
 
     # Invoke all the prerequisites of a task.
     def invoke_prerequisites(task_args, invocation_chain) # :nodoc:
-      prerequisite_tasks.each { |prereq|
-        invoke_prerequisite(prereq, task_args, invocation_chain)
+      prereqs = prerequisite_tasks
+      prereqs.each { |prereq|
+        prereq_args = task_args.new_scope(prereq.arg_names)
+        prereq.invoke_with_call_chain(prereq_args, invocation_chain)
       }
-    end
-
-    def invoke_prerequisite(prereq, task_args, invocation_chain) #:nodoc:
-      prereq_args = task_args.new_scope(prereq.arg_names)
-      prereq.invoke_with_call_chain(prereq_args, invocation_chain)
-      prereq
+      prereqs
     end
 
     # Format the trace flags for display.
