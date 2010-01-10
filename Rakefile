@@ -2,7 +2,9 @@
 
 # Copyright 2003, 2004, 2005 by Jim Weirich (jim@weirichhouse.org)
 # All rights reserved.
-
+#
+# Copyright 2008, 2009, 2010 by James M. Lawrence
+#
 # This file may be distributed under an MIT style license.  See
 # MIT-LICENSE for details.
 
@@ -193,7 +195,7 @@ else
     
     #### Basic information.
 
-    s.name = 'rake'
+    s.name = 'drake'
     s.version = $package_version
     s.summary = "A branch of Rake supporting automatic parallelizing of tasks."
     s.description = <<-EOF
