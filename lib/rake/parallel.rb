@@ -102,7 +102,8 @@ module Rake
       # Called from Task#invoke.
       #
       def invoke_parallel(*task_args)
-        application.parallel.invoke(application.options.threads, self, *task_args)
+        application.parallel.
+          invoke(application.options.threads, self, *task_args)
       end
 
       #
