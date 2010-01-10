@@ -138,11 +138,6 @@ module Rake
       self
     end
 
-    def invoke_serial(*args) # :nodoc:
-      task_args = TaskArguments.new(arg_names, args)
-      invoke_with_call_chain(task_args, InvocationChain::EMPTY)
-    end
-
     # Invoke the task if it is needed.  Prerequites are invoked first.
     def invoke(*args)
       if application.options.threads == 1
@@ -150,6 +145,11 @@ module Rake
       else
         invoke_parallel(*args)
       end
+    end
+
+    def invoke_serial(*args) # :nodoc:
+      task_args = TaskArguments.new(arg_names, args)
+      invoke_with_call_chain(task_args, InvocationChain::EMPTY)
     end
 
     # Same as invoke, but explicitly pass a call chain to detect
