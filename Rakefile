@@ -72,32 +72,32 @@ namespace :test do
 
   Rake::TestTask.new(:serial) do |t|
     t.test_files = ['test/serial_setup.rb'] + TestFiles::ALL
+    t.libs << "."
     t.warning = true
-    t.verbose = false
   end
   
   Rake::TestTask.new(:parallel) do |t|
     t.test_files = ['test/parallel_setup.rb'] + TestFiles::ALL
+    t.libs << "."
     t.warning = true
-    t.verbose = false
   end
 
   Rake::TestTask.new(:units) do |t|
     t.test_files = TestFiles::UNIT
+    t.libs << "."
     t.warning = true
-    t.verbose = false
   end
   
   Rake::TestTask.new(:functional) do |t|
     t.test_files = TestFiles::FUNCTIONAL
+    t.libs << "."
     t.warning = true
-    t.verbose = false
   end
   
   Rake::TestTask.new(:contribs) do |t|
     t.test_files = TestFiles::CONTRIB
+    t.libs << "."
     t.warning = true
-    t.verbose = false
   end
 end
 

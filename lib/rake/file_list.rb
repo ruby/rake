@@ -43,7 +43,7 @@ module Rake
     ARRAY_METHODS = (Array.instance_methods - Object.instance_methods).map { |n| n.to_s }
 
     # List of additional methods that must be delegated.
-    MUST_DEFINE = %w[to_a inspect]
+    MUST_DEFINE = %w[to_a inspect <=>]
 
     # List of methods that should not be delegated here (we define special
     # versions of them explicitly below).
@@ -283,18 +283,22 @@ module Rake
     # standard out.
     def egrep(pattern, *options)
       each do |fn|
-        open(fn, "rb", *options) do |inf|
-          count = 0
-          inf.each do |line|
-            count += 1
-            if pattern.match(line)
-              if block_given?
-                yield fn, count, line
-              else
-                puts "#{fn}:#{count}:#{line}"
+        begin
+          open(fn, "rb", *options) do |inf|
+            count = 0
+            inf.each do |line|
+              count += 1
+              if pattern.match(line)
+                if block_given?
+                  yield fn, count, line
+                else
+                  puts "#{fn}:#{count}:#{line}"
+                end
               end
             end
           end
+        rescue StandardError => ex
+          puts "Error while processing '#{fn}': #{ex}"
         end
       end
     end
