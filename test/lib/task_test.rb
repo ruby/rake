@@ -42,7 +42,7 @@ class TestTask < Test::Unit::TestCase
   end
 
   def test_invoke
-    runlist = SerializedArray.new
+    runlist = ThreadSafeArray.new
     t1 = task(:t1 => [:t2, :t3]) { |t| runlist << t.name; 3321 }
     t2 = task(:t2) { |t| runlist << t.name }
     t3 = task(:t3) { |t| runlist << t.name }
@@ -59,7 +59,7 @@ class TestTask < Test::Unit::TestCase
   end
 
   def test_invoke_with_circular_dependencies
-    runlist = SerializedArray.new
+    runlist = ThreadSafeArray.new
     t1 = task(:t1 => [:t2]) { |t| runlist << t.name; 3321 }
     t2 = task(:t2 => [:t1]) { |t| runlist << t.name }
     assert_equal ["t2"], t1.prerequisites
@@ -73,7 +73,7 @@ class TestTask < Test::Unit::TestCase
 
   def test_dry_run_prevents_actions
     Rake.application.options.dryrun = true
-    runlist = SerializedArray.new
+    runlist = ThreadSafeArray.new
     t1 = task(:t1) { |t| runlist << t.name; 3321 }
     out = capture_stdout { t1.invoke }
     assert_match(/execute .*t1/i, out)
@@ -97,7 +97,7 @@ class TestTask < Test::Unit::TestCase
   end
 
   def test_no_double_invoke
-    runlist = SerializedArray.new
+    runlist = ThreadSafeArray.new
     t1 = task(:t1 => [:t2, :t3]) { |t| runlist << t.name; 3321 }
     t2 = task(:t2 => [:t3]) { |t| runlist << t.name }
     t3 = task(:t3) { |t| runlist << t.name }
@@ -113,7 +113,7 @@ class TestTask < Test::Unit::TestCase
   end
 
   def test_can_double_invoke_with_reenable
-    runlist = SerializedArray.new
+    runlist = ThreadSafeArray.new
     t1 = task(:t1) { |t| runlist << t.name }
     t1.invoke
     t1.reenable
@@ -155,7 +155,7 @@ class TestTask < Test::Unit::TestCase
   end
 
   def test_multi_invocations
-    runs = SerializedArray.new
+    runs = ThreadSafeArray.new
     p = proc do |t| runs << t.name end
     task({:t1=>[:t2,:t3]}, &p)
     task({:t2=>[:t3]}, &p)
@@ -361,7 +361,7 @@ class TestTaskWithArguments < Test::Unit::TestCase
   end
 
   def test_actions_of_various_arity_are_ok_with_args
-    notes = SerializedArray.new
+    notes = ThreadSafeArray.new
     t = task(:t, :x) do
       notes << :a
     end

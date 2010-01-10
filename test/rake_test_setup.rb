@@ -19,7 +19,7 @@ module TestMethods
   end
 end
 
-class SerializedArray
+class ThreadSafeArray
   def initialize
     @mutex = Mutex.new
     @array = Array.new

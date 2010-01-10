@@ -48,7 +48,7 @@ class TestDefinitions < Test::Unit::TestCase
   end
 
   def test_incremental_definitions
-    runs = SerializedArray.new
+    runs = ThreadSafeArray.new
     task :t1 => [:t2] do runs << "A"; 4321 end
     task :t1 => [:t3] do runs << "B"; 1234 end
     task :t1 => [:t3]

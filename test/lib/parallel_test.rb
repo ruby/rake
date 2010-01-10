@@ -96,7 +96,7 @@ if Rake.application.options.threads > 1
     def test_randomize
       size = 100
       [false, true].each do |randomize|
-        memo = SerializedArray.new
+        memo = ThreadSafeArray.new
         app = Rake::Application.new
         app.define_task Rake::Task, :root
         size.times { |n|
@@ -133,7 +133,7 @@ if Rake.application.options.threads > 1
         acc.merge!(result)
       }
 
-      memo = SerializedArray.new
+      memo = ThreadSafeArray.new
 
       Rake::MultiTask.module_eval {
         originals.each_pair { |method_name, method_object|

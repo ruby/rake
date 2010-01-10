@@ -10,7 +10,7 @@ class TestMultiTask < Test::Unit::TestCase
 
   def setup
     Task.clear
-    @runs = SerializedArray.new
+    @runs = ThreadSafeArray.new
   end
 
   def test_running_multitasks
