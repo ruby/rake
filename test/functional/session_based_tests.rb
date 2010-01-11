@@ -392,6 +392,13 @@ class SessionBasedTests < Test::Unit::TestCase
     assert_equal(3, @out.split(/\n/).grep(/t\d/).size)
   end
   
+  def test_file_list_is_requirable_separately
+    @rake_path = ''
+    rake "-rrake/file_list", "-e 'puts Rake::FileList[\"a\"].size'"
+    assert_equal "1\n", @out
+    assert_equal 0, @status
+  end
+  
   private
 
   def assert_not_match(pattern, string, comment="'#{pattern}' was found (incorrectly) in '#{string}.inspect")
