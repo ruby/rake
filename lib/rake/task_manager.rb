@@ -220,7 +220,7 @@ module Rake
       locations = caller
       i = 0
       while locations[i]
-        return locations[i+1] if locations[i] =~ /rake\/dsl.rb/
+        return locations[i+1] if locations[i] =~ /rake\/dsl_definition.rb/
         i += 1
       end
       nil

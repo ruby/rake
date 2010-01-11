@@ -38,4 +38,15 @@ class DslTest < Test::Unit::TestCase
     end
     assert_not_nil Rake::Task["bob:t"]
   end
+
+  def test_dsl_not_toplevel_by_default
+    actual = TOPLEVEL_BINDING.instance_eval { defined?(task) }
+    assert_nil actual
+  end
+
+  def test_dsl_toplevel_when_require_rake_dsl
+    assert_nothing_raised {
+      ruby '-I./lib', '-rrake/dsl', '-e', 'task(:x) { }', :verbose => false
+    }
+  end
 end
