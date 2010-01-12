@@ -23,7 +23,9 @@
 # IN THE SOFTWARE.
 #++
 
-RAKEVERSION = '0.8.99.4'
+require 'rake/version'
+
+RAKEVERSION = Rake::VERSION
 
 require 'rbconfig'
 require 'fileutils'
