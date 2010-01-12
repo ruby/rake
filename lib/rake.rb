@@ -4,7 +4,7 @@
 
 # Copyright 2003-2010 by Jim Weirich (jim.weirich@gmail.com)
 #
-# Copyright 2008, 2009, 2010 by James M. Lawrence
+# Copyright 2008-2010 by James M. Lawrence
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
