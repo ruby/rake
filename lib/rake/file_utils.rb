@@ -1,3 +1,6 @@
+require 'rbconfig'
+require 'fileutils'
+
 # ###########################################################################
 # This a FileUtils extension that defines several additional commands to be
 # added to the FileUtils utility functions.

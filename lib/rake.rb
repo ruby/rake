@@ -25,7 +25,9 @@
 # IN THE SOFTWARE.
 #++
 
-RAKEVERSION = '0.8.99.4.3.0'
+require 'rake/version'
+
+RAKEVERSION = Rake::VERSION
 
 require 'rbconfig'
 require 'fileutils'
@@ -50,7 +52,7 @@ require 'rake/task'
 require 'rake/file_task'
 require 'rake/file_creation_task'
 require 'rake/multi_task'
-require 'rake/dsl'
+require 'rake/dsl_definition'
 require 'rake/rake_file_utils'
 require 'rake/file_list'
 require 'rake/default_loader'

@@ -33,7 +33,7 @@ class SessionBasedTests < Test::Unit::TestCase
   def setup
     @rake_path = File.expand_path("bin/rake")
     lib_path = File.expand_path("lib")
-    @ruby_options = "-I#{lib_path} -I."
+    @ruby_options = ["-I#{lib_path}", "-I."]
     @verbose = ! ENV['VERBOSE'].nil?
     if @verbose
       puts
@@ -392,6 +392,12 @@ class SessionBasedTests < Test::Unit::TestCase
     assert_equal(3, @out.split(/\n/).grep(/t\d/).size)
   end
   
+  def test_file_list_is_requirable_separately
+    ruby "-rrake/file_list", "-e 'puts Rake::FileList[\"a\"].size'"
+    assert_equal "1\n", @out
+    assert_equal 0, @status
+  end
+  
   private
 
   def assert_not_match(pattern, string, comment="'#{pattern}' was found (incorrectly) in '#{string}.inspect")
@@ -410,22 +416,24 @@ class SessionBasedTests < Test::Unit::TestCase
     end
   end
 
-  class << self
-    def format_command
-      @format_command ||= lambda { |ruby_options, rake_path, options|
-        "ruby #{ruby_options} #{rake_path} #{options}"
-      }
-    end
-    
-    def format_command=(fmt_command)
-      @format_command = fmt_command
-    end
+  # Run a shell Ruby command with command line options (using the
+  # default test options). Output is captured in @out, @err and
+  # @status.
+  def ruby(*option_list)
+    run_ruby(@ruby_options + option_list)
   end
-  
-  def rake(*option_list)
-    options = option_list.join(' ')
+
+  # Run a command line rake with the give rake options.  Default
+  # command line ruby options are included.  Output is captured in
+  # @out, @err and @status.
+  def rake(*rake_options)
+    run_ruby @ruby_options + [@rake_path] + rake_options
+  end
+
+  # Low level ruby command runner ...
+  def run_ruby(option_list)
     shell = Session::Shell.new
-    command = self.class.format_command[@ruby_options, @rake_path, options]
+    command = "#{RUBY_COMMAND} " + option_list.join(' ')
     puts "COMMAND: [#{command}]" if @verbose
     @out, @err = shell.execute command
     @status = shell.exit_status
