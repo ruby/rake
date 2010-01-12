@@ -164,8 +164,8 @@ module Rake
         end
       else
         return unless prepare_invoke
-        # dry-run collector for parallel execution; see parallel.rb
-        invoke_with_call_chain_collector(task_args, new_chain, invocation_chain)
+        # see parallel.rb
+        collect_for_parallel_execution(task_args, new_chain, invocation_chain)
       end
     rescue Exception => ex
       add_chain_to(ex, new_chain)

@@ -111,7 +111,7 @@ module Rake
       #
       # Called from Task#invoke_with_call_chain.
       #
-      def invoke_with_call_chain_collector(task_args, new_chain, previous_chain)
+      def collect_for_parallel_execution(task_args, new_chain, previous_chain)
         # call Task#invoke_prerequisites directly (avoid overrides)
         prereqs = Task.instance_method(:invoke_prerequisites).
           bind(self).call(task_args, new_chain)
