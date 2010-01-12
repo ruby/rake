@@ -2,7 +2,7 @@
 
 #--
 
-# Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009 by Jim Weirich (jim.weirich@gmail.com)
+# Copyright 2003-2010 by Jim Weirich (jim.weirich@gmail.com)
 #
 # Copyright 2008, 2009, 2010 by James M. Lawrence
 #
