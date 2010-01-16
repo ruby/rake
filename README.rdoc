@@ -18,7 +18,16 @@ or equivalently,
 
 == Notes
 
-See parallel.rdoc.
+Drake is fully compatible with Rake.  The code base is identical to
+that of Rake except for the addition of the -j option.
+
+For the purposes of this documentation, the 'rake' and 'drake'
+commands are interchangeable.  The drake gem will install the drake
+executable.  On your system you may alias or link drake to rake if
+desired.
+
+For more on parallelization with -j, see
+parallel.rdoc[http://drake.rubyforge.org/files/doc/parallel_rdoc.html].
 
 == Links
 
