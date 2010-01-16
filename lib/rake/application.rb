@@ -421,7 +421,7 @@ module Rake
       options.top_level_dsl = true
 
       OptionParser.new do |opts|
-        opts.banner = "rake [-f rakefile] {options} targets..."
+        opts.banner = "drake [-f rakefile] {options} targets..."
         opts.separator ""
         opts.separator "Options are ..."
 
