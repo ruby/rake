@@ -17,8 +17,13 @@ class TestRequire < Test::Unit::TestCase
 
   def test_wont_reload_rake_library
     app = Rake::Application.new
+
+    paths = ['test/data/rakelib']
+    loaded_files = []
+    app.rake_require("test2", paths, loaded_files)
+
     assert ! app.instance_eval {
-      rake_require("test2", ['test/data/rakelib'], ['test2'])
+      rake_require("test2", paths, loaded_files)
     }
   end
 

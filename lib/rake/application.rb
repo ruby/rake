@@ -440,9 +440,9 @@ module Rake
     # Similar to the regular Ruby +require+ command, but will check
     # for *.rake files in addition to *.rb files.
     def rake_require(file_name, paths=$LOAD_PATH, loaded=$")
-      return false if loaded.include?(file_name)
+      fn = file_name + ".rake"
+      return false if loaded.include?(fn)
       paths.each do |path|
-        fn = file_name + ".rake"
         full_path = File.join(path, fn)
         if File.exist?(full_path)
           Rake::Environment.load_rakefile(full_path)
