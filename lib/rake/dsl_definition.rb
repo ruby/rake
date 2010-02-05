@@ -1,5 +1,5 @@
 # Rake DSL functions.
-require 'rake/rake_file_utils'
+require 'rake/file_utils_ext'
 
 module Rake
   module DSL
@@ -8,9 +8,9 @@ module Rake
     # level module, but mark them private so that they don't
     # unintentionally define methods on other objects.
     
-    include RakeFileUtils
+    include FileUtilsExt
     private(*FileUtils.instance_methods(false))
-    private(*RakeFileUtils.instance_methods(false))
+    private(*FileUtilsExt.instance_methods(false))
 
     # Declare a basic task.
     #
@@ -142,5 +142,5 @@ module Rake
     end
   end
 
-  extend RakeFileUtils
+  extend FileUtilsExt
 end
