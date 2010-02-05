@@ -50,12 +50,12 @@ class TestTaskArguments < Test::Unit::TestCase
     assert_nil ta.cc
   end
 
-  def test_args_can_reference_env_values
+  def test_args_do_not_reference_env_values
     ta = Rake::TaskArguments.new(["aa"], [1])
     ENV['rev'] = "1.2"
     ENV['VER'] = "2.3"
-    assert_equal "1.2", ta.rev
-    assert_equal "2.3", ta.ver
+    assert_nil ta.rev
+    assert_nil ta.ver
   end
 
   def test_creating_new_argument_scopes

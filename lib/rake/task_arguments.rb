@@ -64,10 +64,6 @@ module Rake
     def lookup(name)
       if @hash.has_key?(name)
         @hash[name]
-      elsif ENV.has_key?(name.to_s)
-        ENV[name.to_s]
-      elsif ENV.has_key?(name.to_s.upcase)
-        ENV[name.to_s.upcase]
       elsif @parent
         @parent.lookup(name)
       end
