@@ -64,11 +64,3 @@ $trace = false
 
 # Alias FileList to be available at the top level.
 FileList = Rake::FileList
-
-# Include the FileUtils file manipulation functions in the top level module,
-# but mark them private so that they don't unintentionally define methods on
-# other objects.
-
-include RakeFileUtils
-private(*FileUtils.instance_methods(false))
-private(*RakeFileUtils.instance_methods(false))

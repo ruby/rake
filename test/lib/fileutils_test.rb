@@ -10,6 +10,7 @@ require 'test/rake_test_setup'
 class TestFileUtils < Test::Unit::TestCase
   include FileCreation
   include TestMethods
+  include Rake::DSL
 
   def setup
     File.chmod(0750,"test/shellcommand.rb")

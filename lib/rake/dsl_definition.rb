@@ -1,7 +1,17 @@
 # Rake DSL functions.
+require 'rake/rake_file_utils'
 
 module Rake
   module DSL
+
+    # Include the FileUtils file manipulation functions in the top
+    # level module, but mark them private so that they don't
+    # unintentionally define methods on other objects.
+    
+    include RakeFileUtils
+    private(*FileUtils.instance_methods(false))
+    private(*RakeFileUtils.instance_methods(false))
+
     # Declare a basic task.
     #
     # Example:
@@ -132,4 +142,5 @@ module Rake
     end
   end
 
+  extend RakeFileUtils
 end

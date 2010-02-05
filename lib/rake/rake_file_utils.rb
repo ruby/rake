@@ -109,13 +109,11 @@ module RakeFileUtils
     args.push defaults
     args
   end
-  private :rake_merge_option
 
   # Send the message to the default rake output (which is $stderr).
   def rake_output_message(message)
     $stderr.puts(message)
   end
-  private :rake_output_message
 
   # Check that the options do not contain options not listed in +optdecl+.  An
   # ArgumentError exception is thrown if non-declared options are found.
@@ -126,7 +124,6 @@ module RakeFileUtils
     end
     raise ArgumentError, "no such option: #{h.keys.join(' ')}" unless h.empty?
   end
-  private :rake_check_options
 
   extend self
 end
