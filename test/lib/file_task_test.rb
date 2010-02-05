@@ -97,11 +97,11 @@ class TestDirectoryTask < Test::Unit::TestCase
   include Rake
 
   def setup
-    rm_rf "testdata", :verbose=>false
+    Rake.rm_rf "testdata", :verbose=>false
   end
 
   def teardown
-    rm_rf "testdata", :verbose=>false
+    Rake.rm_rf "testdata", :verbose=>false
   end
 
   def test_directory

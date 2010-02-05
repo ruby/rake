@@ -49,7 +49,7 @@ class TestTopLevelFunctions < Test::Unit::TestCase
   end
 
   def test_when_not_writing
-    RakeFileUtils.nowrite_flag = true
+    Rake::RakeFileUtils.nowrite_flag = true
     out = capture_stdout do
       when_writing("NOTWRITING") do
         puts "WRITING"
@@ -57,7 +57,7 @@ class TestTopLevelFunctions < Test::Unit::TestCase
     end
     assert_equal "DRYRUN: NOTWRITING\n", out
   ensure
-    RakeFileUtils.nowrite_flag = false
+    Rake::RakeFileUtils.nowrite_flag = false
   end
 
   def test_missing_constants_task
