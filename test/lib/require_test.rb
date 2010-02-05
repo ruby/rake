@@ -34,7 +34,8 @@ class TestRequire < Test::Unit::TestCase
         rake_require("testx", ['test/data/rakelib'], [])
       }
     }
-    assert_match(/x/, ex.message)
+    assert_match(/(can *not|can't)\s+find/i, ex.message)
+    assert_match(/testx/, ex.message)
   end
 end
 
