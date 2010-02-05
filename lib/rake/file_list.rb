@@ -224,7 +224,7 @@ module Rake
     private :resolve_exclude
 
     # Return a new FileList with the results of running +sub+ against each
-    # element of the oringal list.
+    # element of the orignal list.
     #
     # Example:
     #   FileList['a.c', 'b.c'].sub(/\.c$/, '.o')  => ['a.o', 'b.o']
@@ -263,8 +263,8 @@ module Rake
       collect { |fn| fn.pathmap(spec) }
     end
 
-    # Return a new FileList with <tt>String#ext</tt> method applied
-    # to each member of the array.
+    # Return a new FileList with <tt>String#ext</tt> method applied to
+    # each member of the array.
     #
     # This method is a shortcut for:
     #
