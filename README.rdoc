@@ -111,13 +111,16 @@ If you wish to run the unit and functional tests that come with Rake:
 
 === Issues and Bug Reports
 
-Bugs, features requests and other issues can be logged at
+Feature requests and bug reports can be made here
 
-* http://onestepback.org/redmine/projects/show/rake
+* http://onestepback.org/cgi-bin/bugs.cgi?project=rake
+ 
+No account is needed for posting requests.  Or you can send me an
+email (at jim dot weirich at gmail dot com)
 
-You will need an account to before you can post issues.  Register at
-http://onestepback.org/redmine/account/register.  Or you can send me
-an email (at jim dot weirich at gmail dot com)
+Issues and bug reports can be tracked here:
+
+* http://www.pivotaltracker.com/projects/28469
 
 == Online Resources
 
@@ -128,6 +131,8 @@ an email (at jim dot weirich at gmail dot com)
 * Rake API Documents: http://rake.rubyforge.org
 * Rake Source Code Repo:  http://github.com/jimweirich/rake
 * Rake Git Repo Clone URL: git://github.com/jimweirich/rake.git
+* Rake Issue Tracking: http://www.pivotaltracker.com/projects/28469
+* Rake Bug Reports: http://onestepback.org/cgi-bin/bugs.cgi?project=rake
 
 === Presentations and Articles about Rake
 
