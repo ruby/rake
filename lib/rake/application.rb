@@ -288,8 +288,8 @@ module Rake
         ],
         ['--dry-run', '-n', "Do a dry run without executing actions.",
           lambda { |value|
-            verbose(true)
-            nowrite(true)
+            Rake.verbose(true)
+            Rake.nowrite(true)
             options.dryrun = true
             options.trace = true
           }
@@ -320,7 +320,7 @@ module Rake
           lambda { |value| options.show_prereqs = true }
         ],
         ['--quiet', '-q', "Do not log messages to standard output.",
-          lambda { |value| verbose(false) }
+          lambda { |value| Rake.verbose(false) }
         ],
         ['--rakefile', '-f [FILE]', "Use FILE as the rakefile.",
           lambda { |value| 
@@ -361,7 +361,7 @@ module Rake
         ],
         ['--silent', '-s', "Like --quiet, but also suppresses the 'in directory' announcement.",
           lambda { |value|
-            verbose(false)
+            Rake.verbose(false)
             options.silent = true
           }
         ],
@@ -393,11 +393,11 @@ module Rake
         ['--trace', '-t', "Turn on invoke/execute tracing, enable full backtrace.",
           lambda { |value|
             options.trace = true
-            verbose(true)
+            Rake.verbose(true)
           }
         ],
         ['--verbose', '-v', "Log message to standard output.",
-          lambda { |value| verbose(true) }
+          lambda { |value| Rake.verbose(true) }
         ],
         ['--version', '-V', "Display the program version.",
           lambda { |value|
@@ -450,9 +450,9 @@ module Rake
     # Similar to the regular Ruby +require+ command, but will check
     # for *.rake files in addition to *.rb files.
     def rake_require(file_name, paths=$LOAD_PATH, loaded=$")
-      return false if loaded.include?(file_name)
+      fn = file_name + ".rake"
+      return false if loaded.include?(fn)
       paths.each do |path|
-        fn = file_name + ".rake"
         full_path = File.join(path, fn)
         if File.exist?(full_path)
           Rake::Environment.load_rakefile(full_path)

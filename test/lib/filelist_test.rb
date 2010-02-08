@@ -323,6 +323,12 @@ class TestFileList < Test::Unit::TestCase
       f.sort
   end
 
+  def test_egrep_returns_0_if_no_matches
+    files = FileList['test/lib/*_test.rb'].exclude("test/lib/filelist_test.rb")
+    the_line_number = __LINE__ + 1
+    assert_equal 0, files.egrep(/XYZZY/) { }
+  end
+
   def test_egrep_with_output
     files = FileList['test/lib/*_test.rb']
     the_line_number = __LINE__ + 1
@@ -332,15 +338,14 @@ class TestFileList < Test::Unit::TestCase
 
   def test_egrep_with_block
     files = FileList['test/lib/*_test.rb']
-    found = false
+    found = nil
     the_line_number = __LINE__ + 1
     files.egrep(/XYZZY/) do |fn, ln, line |
-      assert_equal 'test/lib/filelist_test.rb', fn
-      assert_equal the_line_number, ln
-      assert_match(/files\.egrep/, line)
-      found = true
+      found = [fn, ln, line]
     end
-    assert found, "should have found a matching line"
+    assert_equal 'test/lib/filelist_test.rb', found[0]
+    assert_equal the_line_number, found[1]
+    assert_match(/files\.egrep/, found[2])
   end
 
   def test_existing

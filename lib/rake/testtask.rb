@@ -97,7 +97,7 @@ module Rake
     def define
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
-        RakeFileUtils.verbose(@verbose) do
+        FileUtilsExt.verbose(@verbose) do
           ruby "#{ruby_opts_string} #{run_code} #{file_list_string} #{option_list}"
         end
       end

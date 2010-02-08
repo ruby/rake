@@ -323,15 +323,15 @@ class TestApplicationOptions < Test::Unit::TestCase
 
   def setup
     clear_argv
-    RakeFileUtils.verbose_flag = false
-    RakeFileUtils.nowrite_flag = false
+    Rake::FileUtilsExt.verbose_flag = false
+    Rake::FileUtilsExt.nowrite_flag = false
     TESTING_REQUIRE.clear
   end
 
   def teardown
     clear_argv
-    RakeFileUtils.verbose_flag = false
-    RakeFileUtils.nowrite_flag = false
+    Rake::FileUtilsExt.verbose_flag = false
+    Rake::FileUtilsExt.nowrite_flag = false
   end
   
   def clear_argv
@@ -355,8 +355,8 @@ class TestApplicationOptions < Test::Unit::TestCase
       assert_nil opts.silent
       assert_nil opts.trace
       assert_equal ['rakelib'], opts.rakelib
-      assert ! RakeFileUtils.verbose_flag
-      assert ! RakeFileUtils.nowrite_flag
+      assert ! Rake::FileUtilsExt.verbose_flag
+      assert ! Rake::FileUtilsExt.nowrite_flag
     end
   end
 
@@ -365,8 +365,8 @@ class TestApplicationOptions < Test::Unit::TestCase
       flags('--dry-run', '-n') do |opts|
         assert opts.dryrun
         assert opts.trace
-        assert RakeFileUtils.verbose_flag
-        assert RakeFileUtils.nowrite_flag
+        assert Rake::FileUtilsExt.verbose_flag
+        assert Rake::FileUtilsExt.nowrite_flag
       end
     end
   end
@@ -494,7 +494,7 @@ class TestApplicationOptions < Test::Unit::TestCase
   def test_quiet
     in_environment do
       flags('--quiet', '-q') do |opts|
-        assert ! RakeFileUtils.verbose_flag
+        assert ! Rake::FileUtilsExt.verbose_flag
         assert ! opts.silent
       end
     end
@@ -511,7 +511,7 @@ class TestApplicationOptions < Test::Unit::TestCase
   def test_silent
     in_environment do
       flags('--silent', '-s') do |opts|
-        assert ! RakeFileUtils.verbose_flag
+        assert ! Rake::FileUtilsExt.verbose_flag
         assert opts.silent
       end
     end
@@ -537,8 +537,8 @@ class TestApplicationOptions < Test::Unit::TestCase
     in_environment do
       flags('--trace', '-t') do |opts|
         assert opts.trace
-        assert RakeFileUtils.verbose_flag
-        assert ! RakeFileUtils.nowrite_flag
+        assert Rake::FileUtilsExt.verbose_flag
+        assert ! Rake::FileUtilsExt.nowrite_flag
       end
     end
   end
@@ -567,7 +567,7 @@ class TestApplicationOptions < Test::Unit::TestCase
   def test_verbose
     in_environment do
       flags('--verbose', '-V') do |opts|
-        assert RakeFileUtils.verbose_flag
+        assert Rake::FileUtilsExt.verbose_flag
         assert ! opts.silent
       end
     end

@@ -19,8 +19,13 @@ class TestRequire < Test::Unit::TestCase
   def test_wont_reload_rake_library
     app = Rake::Application.new
     app.options.threads = Rake.application.options.threads
+
+    paths = ['test/data/rakelib']
+    loaded_files = []
+    app.rake_require("test2", paths, loaded_files)
+
     assert ! app.instance_eval {
-      rake_require("test2", ['test/data/rakelib'], ['test2'])
+      rake_require("test2", paths, loaded_files)
     }
   end
 
@@ -32,7 +37,8 @@ class TestRequire < Test::Unit::TestCase
         rake_require("testx", ['test/data/rakelib'], [])
       }
     }
-    assert_match(/x/, ex.message)
+    assert_match(/(can *not|can't)\s+find/i, ex.message)
+    assert_match(/testx/, ex.message)
   end
 end
 

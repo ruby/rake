@@ -45,7 +45,7 @@ require 'rake/win32'
 require 'rake/task_argument_error'
 require 'rake/rule_recursion_overflow_error'
 require 'rake/rake_module'
-require 'rake/psuedo_status'
+require 'rake/pseudo_status'
 require 'rake/task_arguments'
 require 'rake/invocation_chain'
 require 'rake/task'
@@ -53,7 +53,7 @@ require 'rake/file_task'
 require 'rake/file_creation_task'
 require 'rake/multi_task'
 require 'rake/dsl_definition'
-require 'rake/rake_file_utils'
+require 'rake/file_utils_ext'
 require 'rake/file_list'
 require 'rake/default_loader'
 require 'rake/early_time'
@@ -66,11 +66,3 @@ $trace = false
 
 # Alias FileList to be available at the top level.
 FileList = Rake::FileList
-
-# Include the FileUtils file manipulation functions in the top level module,
-# but mark them private so that they don't unintentionally define methods on
-# other objects.
-
-include RakeFileUtils
-private(*FileUtils.instance_methods(false))
-private(*RakeFileUtils.instance_methods(false))
