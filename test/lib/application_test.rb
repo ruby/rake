@@ -426,7 +426,7 @@ class TestApplicationOptions < Test::Unit::TestCase
   def test_help
     in_environment do
       flags('--help', '-H', '-h') do |opts|
-        assert_match(/\Arake/, @out)
+        assert_match(/\Adrake/, @out)
         assert_match(/\boptions\b/, @out)
         assert_match(/\btargets\b/, @out)
         assert_equal :exit, @exit
