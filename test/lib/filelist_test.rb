@@ -29,7 +29,7 @@ class TestFileList < Test::Unit::TestCase
 
   def test_create
     fl = FileList.new
-    assert_equal 0, fl.size
+    assert_equal 1, fl.size
   end
 
   def test_create_with_args
