@@ -34,7 +34,7 @@ class TestApplication < Test::Unit::TestCase
 
   def test_constant_warning
     err = capture_stderr do @app.instance_eval { const_warning("Task") } end
-    assert_match(/xwarning/i, err)
+    assert_match(/warning/i, err)
     assert_match(/deprecated/i, err)
     assert_match(/Task/i, err)
   end
