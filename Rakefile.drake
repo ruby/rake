@@ -13,9 +13,9 @@ task :drake_prerelease => [:clobber, :gemspec] do
   unless `git status` =~ %r!nothing to commit \(working directory clean\)!
     raise "Directory not clean"
   end
-  unless `git pull` =~ %r!Already up-to-date!
-    raise "New stuff from remote repository"
-  end
+  #unless `git pull` =~ %r!Already up-to-date!
+  #  raise "New stuff from remote repository"
+  #end
   %w[github.com rubyforge.org].each { |server|
     cmd = "ping " + (
       if Config::CONFIG["host"] =~ %r!darwin!
@@ -59,7 +59,7 @@ task :drake_finish_release do
   }
 
   git("tag", "drake-" + SPEC.version.to_s)
-  git(*%w(push --tags origin master))
+  git(*%w(push --tags origin))
 end
 
 task :drake_release =>
