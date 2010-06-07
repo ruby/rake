@@ -70,7 +70,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Supporting Rake version: 0.8.7.
 
 This package contains Rake, a simple ruby build program with
-capabilities similar to make.
+capabilities similar to make. 
 
 Rake has the following features:
 
