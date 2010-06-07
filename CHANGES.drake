@@ -1,6 +1,10 @@
 
 = Drake Changelog
 
+== Version 0.8.7.0.2.4
+
+* Fix for kite-shaped dep graphs; based on a patch by Heath Kehoe.
+
 == Version 0.8.7.0.2.3
 
 * update from mainline branch
