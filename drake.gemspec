@@ -1,7 +1,16 @@
 --- !ruby/object:Gem::Specification 
 name: drake
 version: !ruby/object:Gem::Version 
-  version: 0.8.7.0.2.3
+  hash: 207
+  prerelease: false
+  segments: 
+  - 0
+  - 8
+  - 7
+  - 0
+  - 2
+  - 4
+  version: 0.8.7.0.2.4
 platform: ruby
 authors: 
 - James M. Lawrence
@@ -9,20 +18,26 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2009-05-27 00:00:00 -04:00
+date: 2010-06-07 00:00:00 -04:00
 default_executable: drake
 dependencies: 
 - !ruby/object:Gem::Dependency 
   name: comp_tree
-  type: :runtime
-  version_requirement: 
-  version_requirements: !ruby/object:Gem::Requirement 
+  prerelease: false
+  requirement: &id001 !ruby/object:Gem::Requirement 
+    none: false
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        hash: 5
+        segments: 
+        - 0
+        - 7
+        - 3
         version: 0.7.3
-    version: 
-description: Rake is a Make-like program implemented in Ruby. Tasks and dependencies are specified in standard Ruby syntax.
+  type: :runtime
+  version_requirements: *id001
+description: "      Rake is a Make-like program implemented in Ruby. Tasks\n      and dependencies are specified in standard Ruby syntax. \n"
 email: quixoticsycophant@gmail.com
 executables: 
 - drake
@@ -61,9 +76,9 @@ files:
 - CHANGES
 - CHANGES.drake
 - MIT-LICENSE
+- README
 - Rakefile
 - Rakefile.drake
-- README
 - TODO
 - bin/drake
 - lib/rake/alt_system.rb
@@ -108,10 +123,10 @@ files:
 - test/test_definitions.rb
 - test/test_earlytime.rb
 - test/test_extension.rb
-- test/test_filelist.rb
-- test/test_fileutils.rb
 - test/test_file_creation_task.rb
 - test/test_file_task.rb
+- test/test_filelist.rb
+- test/test_fileutils.rb
 - test/test_ftp.rb
 - test/test_invocation_chain.rb
 - test/test_makefile_loader.rb
@@ -125,10 +140,10 @@ files:
 - test/test_rdoc_task.rb
 - test/test_require.rb
 - test/test_rules.rb
-- test/test_tasklib.rb
-- test/test_tasks.rb
 - test/test_task_arguments.rb
 - test/test_task_manager.rb
+- test/test_tasklib.rb
+- test/test_tasks.rb
 - test/test_test_task.rb
 - test/test_top_level_functions.rb
 - test/test_win32.rb
@@ -146,11 +161,11 @@ files:
 - test/data/unittest/subdir
 - doc/command_line_usage.rdoc
 - doc/example
+- doc/example/Rakefile1
+- doc/example/Rakefile2
 - doc/example/a.c
 - doc/example/b.c
 - doc/example/main.c
-- doc/example/Rakefile1
-- doc/example/Rakefile2
 - doc/glossary.rdoc
 - doc/jamis.rb
 - doc/parallel.rdoc
@@ -178,6 +193,8 @@ files:
 - doc/release_notes/rake-0.8.7.rdoc
 has_rdoc: true
 homepage: http://drake.rubyforge.org
+licenses: []
+
 post_install_message: 
 rdoc_options: 
 - --line-numbers
@@ -188,23 +205,29 @@ rdoc_options:
 require_paths: 
 - lib
 required_ruby_version: !ruby/object:Gem::Requirement 
+  none: false
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      hash: 3
+      segments: 
+      - 0
       version: "0"
-  version: 
 required_rubygems_version: !ruby/object:Gem::Requirement 
+  none: false
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      hash: 3
+      segments: 
+      - 0
       version: "0"
-  version: 
 requirements: []
 
 rubyforge_project: drake
-rubygems_version: 1.3.1
+rubygems_version: 1.3.7
 signing_key: 
-specification_version: 2
+specification_version: 3
 summary: A branch of Rake supporting automatic parallelizing of tasks.
 test_files: []
 
