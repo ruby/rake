@@ -84,6 +84,7 @@ class TestFileTask < Test::Unit::TestCase
 
     file MIDDLE_AGED_FILE => OLDFILE do |t|
       @runs << t.name
+      touch MIDDLE_AGED_FILE, :verbose => false
     end
     file OLDFILE => NEWFILE do |t|
       @runs << t.name
@@ -91,6 +92,7 @@ class TestFileTask < Test::Unit::TestCase
     end
     file NEWFILE do |t|
       @runs << t.name
+      touch NEWFILE, :verbose => false
     end
 
     Task[MIDDLE_AGED_FILE].invoke
@@ -102,6 +104,7 @@ class TestFileTask < Test::Unit::TestCase
 
     file MIDDLE_AGED_FILE => OLDFILE do |t|
       @runs << t.name
+      touch MIDDLE_AGED_FILE, :verbose => false
     end
     file OLDFILE => ANCIENT_FILE do |t|
       @runs << t.name
@@ -113,6 +116,7 @@ class TestFileTask < Test::Unit::TestCase
     end
     file NEWFILE do |t|
       @runs << t.name
+      touch NEWFILE, :verbose => false
     end
 
     Task[MIDDLE_AGED_FILE].invoke
