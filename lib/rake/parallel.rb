@@ -117,15 +117,8 @@ module Rake
           bind(self).call(task_args, new_chain)
 
         parallel = application.parallel
-        if needed? or parallel.tasks[self]
+        if needed? or prereqs.any? { |p| parallel.tasks[p] }
           parallel.tasks[self] = [task_args, prereqs]
-          unless previous_chain == InvocationChain::EMPTY
-            #
-            # Touch the parent to propagate 'needed?' upwards.  This
-            # works because the recursion is depth-first.
-            #
-            parallel.tasks[previous_chain.value] = true
-          end
         end
       end
     end

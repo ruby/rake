@@ -17,7 +17,12 @@ class TestFileTask < Test::Unit::TestCase
   def setup
     Task.clear
     @runs = ThreadSafeArray.new
-    FileUtils.rm_f FILES
+    FileUtils.rm_rf "testdata", :verbose => false
+    FileUtils.mkdir_p "testdata", :verbose => false
+  end
+
+  def teardown
+    FileUtils.rm_rf "testdata", :verbose => false
   end
 
   def test_create_dispersed_timed_files
@@ -121,6 +126,166 @@ class TestFileTask < Test::Unit::TestCase
 
     Task[MIDDLE_AGED_FILE].invoke
     assert_equal([ANCIENT_FILE, OLDFILE, MIDDLE_AGED_FILE], @runs)
+  end
+
+  def test_old_file_in_between_with_missing_leaf
+    create_dispersed_timed_files(MIDDLE_AGED_FILE, OLDFILE)
+    sleep 1
+
+    file MIDDLE_AGED_FILE => OLDFILE do |t|
+      @runs << t.name
+      touch MIDDLE_AGED_FILE, :verbose => false
+    end
+    file OLDFILE => NEWFILE do |t|
+      @runs << t.name
+      touch OLDFILE, :verbose => false
+    end
+    file NEWFILE do |t|
+      @runs << t.name
+      touch NEWFILE, :verbose => false
+    end
+
+    Task[MIDDLE_AGED_FILE].invoke
+    assert_equal([NEWFILE, OLDFILE, MIDDLE_AGED_FILE], @runs)
+  end
+
+  def test_two_old_files_in_between_with_missing_leaf
+    create_dispersed_timed_files(MIDDLE_AGED_FILE, OLDFILE, ANCIENT_FILE)
+    sleep 1
+
+    file MIDDLE_AGED_FILE => OLDFILE do |t|
+      @runs << t.name
+      touch MIDDLE_AGED_FILE, :verbose => false
+    end
+    file OLDFILE => ANCIENT_FILE do |t|
+      @runs << t.name
+      touch OLDFILE, :verbose => false
+    end
+    file ANCIENT_FILE => NEWFILE do |t|
+      @runs << t.name
+      touch ANCIENT_FILE, :verbose => false
+    end
+    file NEWFILE do |t|
+      @runs << t.name
+      touch NEWFILE, :verbose => false
+    end
+
+    Task[MIDDLE_AGED_FILE].invoke
+    assert_equal([NEWFILE, ANCIENT_FILE, OLDFILE, MIDDLE_AGED_FILE], @runs)
+  end
+
+  def test_diamond_graph_with_missing_leaf
+    a, b, c, d = %w[a b c d].map { |n| "testdata/#{n}" }
+    create_timed_files(a, b, c)
+    sleep 1
+    
+    file a => [b, c] do
+      @runs << a
+      touch a
+    end
+    file b => d do
+      @runs << b
+      touch b
+    end
+    file c => d do
+      @runs << c
+      touch c
+    end
+    file d do
+      @runs << d
+      touch d
+    end
+
+    Task[a].invoke
+    assert_equal [a, b, c, d], @runs.sort
+  end
+
+  def test_diamond_graph_with_new_leaf
+    a, b, c, d = %w[a b c d].map { |n| "testdata/#{n}" }
+    create_timed_files(a, b, c)
+    sleep 1
+    touch d
+
+    file a => [b, c] do
+      @runs << a
+      touch a
+    end
+    file b => d do
+      @runs << b
+      touch b
+    end
+    file c => d do
+      @runs << c
+      touch c
+    end
+    file d do
+      @runs << d
+      touch d
+    end
+
+    Task[a].invoke
+    assert_equal [a, b, c], @runs.sort
+  end
+
+  def test_kite_graph_with_missing_leaf
+    a, b, c, d, e = %w[a b c d e].map { |n| "testdata/#{n}" }
+    create_timed_files(a, b, c, d)
+    sleep 1
+
+    file a => [b, c] do
+      @runs << a
+      touch a
+    end
+    file b => d do
+      @runs << b
+      touch b
+    end
+    file c => d do
+      @runs << c
+      touch c
+    end
+    file d => e do
+      @runs << d
+      touch d
+    end
+    file e do
+      @runs << e
+      touch e
+    end
+
+    Task[a].invoke
+    assert_equal [a, b, c, d, e], @runs.sort
+  end
+
+  def test_kite_graph_with_new_leaf
+    a, b, c, d, e = %w[a b c d e].map { |n| "testdata/#{n}" }
+    create_timed_files(a, b, c, d)
+    sleep 1
+    touch e
+
+    file a => [b, c] do
+      @runs << a
+      touch a
+    end
+    file b => d do
+      @runs << b
+      touch b
+    end
+    file c => d do
+      @runs << c
+      touch c
+    end
+    file d => e do
+      @runs << d
+      touch d
+    end
+    file e do
+      @runs << e
+      touch e
+    end
+
+    Task[a].invoke
+    assert_equal [a, b, c, d], @runs.sort
   end
 
   # I have currently disabled this test.  I'm not convinced that
