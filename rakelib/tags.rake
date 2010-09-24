@@ -13,8 +13,6 @@ module Tags
   DIR_LIST << RVM_GEMDIR if File.exists?(RVM_GEMDIR)
   DIRS = DIR_LIST.join(" ")
 
-  OPTION_FILE = '.ctags_options'
-
   module_function
 
   # Convert key_word to --key-word.
