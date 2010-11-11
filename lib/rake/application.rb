@@ -569,11 +569,9 @@ module Rake
     end
 
     def rakefile_location
-      begin
-        fail
-      rescue RuntimeError => ex
-        ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
-      end
+      bt = caller
+      bt.map { |t| t[/([^:]+):/,1] }
+      bt.find {|str| str =~ /^#{@rakefile}$/ } || ""
     end
   end
 end
