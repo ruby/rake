@@ -154,6 +154,19 @@ class TestApplication < Test::Unit::TestCase
     end
   end
 
+  def test_load_rakefile_doesnt_print_rakefile_directory_from_same_dir
+    in_environment("PWD" => "test/data/unittest") do
+      out = capture_stdout do
+        @app.instance_eval do
+          @original_dir = File.expand_path(".") # pretend we started from the unittest dir
+          raw_load_rakefile
+        end
+      end
+      rakefile, location = @app.find_rakefile_location
+      assert_no_match(/\(in #{location}\)/, out)
+    end
+  end
+
   def test_load_rakefile_from_subdir
     in_environment("PWD" => "test/data/unittest/subdir") do
       @app.instance_eval do
@@ -163,6 +176,32 @@ class TestApplication < Test::Unit::TestCase
       end
       assert_equal "rakefile", @app.rakefile.downcase
       assert_match(%r(unittest$), Dir.pwd)
+    end
+  end
+
+  def test_load_rakefile_prints_rakefile_directory_from_subdir
+    in_environment("PWD" => "test/data/unittest/subdir") do
+      out = capture_stdout do
+        @app.instance_eval do
+          raw_load_rakefile
+        end
+      end
+      rakefile, location = @app.find_rakefile_location
+      assert_match(/\(in #{location}\)/, out)
+    end
+  end
+
+  def test_load_rakefile_doesnt_print_rakefile_directory_from_subdir_if_silent
+    in_environment("PWD" => "test/data/unittest/subdir") do
+      out = capture_stdout do
+        @app.instance_eval do
+          handle_options
+          options.silent = true
+          raw_load_rakefile
+        end
+      end
+      rakefile, location = @app.find_rakefile_location
+      assert_no_match(/\(in #{location}\)/, out)
     end
   end
 
