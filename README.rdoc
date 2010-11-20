@@ -174,7 +174,7 @@ The Rake homepage is http://rake.rubyforge.org.  You can find the Rake
 RubyForge page at http://rubyforge.org/projects/rake.
 
 Feel free to submit commits or feature requests.  If you send a patch,
-remember to update the corresponding unit tests.  If fact, I prefer
+remember to update the corresponding unit tests.  In fact, I prefer
 new feature to be submitted in the form of new unit tests.
 
 For other information, feel free to ask on the ruby-talk mailing list
