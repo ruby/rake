@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-# Define a package task libarary to aid in the definition of
+# Define a package task library to aid in the definition of
 # redistributable package files.
 
 require 'rake'

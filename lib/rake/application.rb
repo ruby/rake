@@ -53,7 +53,7 @@ module Rake
     # * Run the top level tasks (+run_tasks+).
     #
     # If you wish to build a custom rake command, you should call
-    # +init+ on your application.  The define any tasks.  Finally,
+    # +init+ on your application.  Then define any tasks.  Finally,
     # call +top_level+ to run your top level tasks.
     def run
       standard_exception_handling do
@@ -123,7 +123,7 @@ module Rake
       [name, args]
     end
 
-    # Provide standard execption handling for the given block.
+    # Provide standard exception handling for the given block.
     def standard_exception_handling
       begin
         yield
