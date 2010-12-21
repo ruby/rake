@@ -2,7 +2,7 @@ require 'rbconfig'
 require 'find'
 require 'fileutils'
 
-include Config
+include RbConfig
 
 $ruby = CONFIG['ruby_install_name']
 

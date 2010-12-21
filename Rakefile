@@ -405,7 +405,7 @@ end
 desc "Install the jamis RDoc template"
 task :install_jamis_template do
   require 'rbconfig'
-  dest_dir = File.join(Config::CONFIG['rubylibdir'], "rdoc/generators/template/html")
+  dest_dir = File.join(RbConfig::CONFIG['rubylibdir'], "rdoc/generators/template/html")
   fail "Unabled to write to #{dest_dir}" unless File.writable?(dest_dir)
   install "doc/jamis.rb", dest_dir, :verbose => true
 end
