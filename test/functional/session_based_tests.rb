@@ -2,7 +2,7 @@
 
 begin
   require 'rubygems'
-rescue LoadError => ex
+rescue LoadError
 end
 require 'test/unit'
 require 'fileutils'

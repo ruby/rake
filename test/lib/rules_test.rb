@@ -278,7 +278,6 @@ class TestRules < Test::Unit::TestCase
   end
 
   def test_rule_with_proc_dependent_will_trigger
-    ran = false
     mkdir_p("testdata/src/jw")
     create_file("testdata/src/jw/X.java")
     rule %r(classes/.*\.class) => [

@@ -49,7 +49,7 @@ module FileUtils
   def create_shell_runner(cmd)
     show_command = cmd.join(" ")
     show_command = show_command[0,42] + "..." unless $trace
-    block = lambda { |ok, status|
+    lambda { |ok, status|
       ok or fail "Command failed with status (#{status.exitstatus}): [#{show_command}]"
     }
   end
@@ -91,7 +91,7 @@ module FileUtils
     else
       begin
         ln(*args)
-      rescue StandardError, NotImplementedError => ex
+      rescue StandardError, NotImplementedError
         LN_SUPPORTED[0] = false
         cp(*args)
       end

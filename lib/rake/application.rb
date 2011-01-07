@@ -337,7 +337,7 @@ module Rake
             rescue LoadError => ex
               begin
                 rake_require value
-              rescue LoadError => ex2
+              rescue LoadError
                 raise ex
               end
             end

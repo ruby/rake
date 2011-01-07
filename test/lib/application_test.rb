@@ -65,7 +65,6 @@ class TestApplication < Test::Unit::TestCase
     in_environment('RAKE_COLUMNS' => '80') do
       @app.options.show_tasks = :tasks
       @app.options.show_task_pattern = //
-      description = "something short"
       task_name = "task name" * 80
       @app.last_description = "something short"
       @app.define_task(Rake::Task, task_name )
@@ -306,7 +305,7 @@ class TestApplication < Test::Unit::TestCase
     ARGV.clear
     ARGV << '-f' << '-s' << '--xyzzy'
     assert_exception(SystemExit) {
-      err = capture_stderr { capture_stdout { @app.run } }
+      capture_stderr { capture_stdout { @app.run } }
     }
   ensure
     ARGV.clear
@@ -635,7 +634,7 @@ class TestApplicationOptions < Test::Unit::TestCase
     sets.each do |set|
       ARGV.clear
       @out = capture_stdout { 
-        @exit = catch(:system_exit) { opts = command_line(*set) }
+        @exit = catch(:system_exit) { command_line(*set) }
       }
       yield(@app.options) if block_given?
     end

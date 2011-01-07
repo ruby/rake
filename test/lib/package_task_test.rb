@@ -43,7 +43,7 @@ class TestPackageTask < Test::Unit::TestCase
 
   def test_missing_version
     assert_exception(RuntimeError) {
-      pkg = Rake::PackageTask.new("pkgr") { |p| }
+      Rake::PackageTask.new("pkgr") { |p| }
     }
   end
 

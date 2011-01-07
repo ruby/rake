@@ -1,7 +1,6 @@
 begin
   require 'rubygems'
-rescue LoadError => ex
-  # No rubygems available
+rescue LoadError
 end
 require 'test/unit'
 require 'flexmock/test_unit'

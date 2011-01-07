@@ -15,7 +15,7 @@ module Rake
     end
 
     def create_rule(*args, &block)
-      pattern, arg_names, deps = resolve_args(args)
+      pattern, _, deps = resolve_args(args)
       pattern = Regexp.new(Regexp.quote(pattern) + '$') if String === pattern
       @rules << [pattern, deps, block]
     end
@@ -124,7 +124,7 @@ module Rake
       fail Rake::RuleRecursionOverflowError,
         "Rule Recursion Too Deep" if level >= 16
       @rules.each do |pattern, extensions, block|
-        if md = pattern.match(task_name)
+        if pattern.match(task_name)
           task = attempt_rule(task_name, extensions, block, level)
           return task if task
         end

@@ -72,7 +72,7 @@ class TestTaskManager < Test::Unit::TestCase
 
   def test_name_lookup_with_nonexistent_task
     assert_exception(RuntimeError) {
-      t = @tm["DOES NOT EXIST"]
+      @tm["DOES NOT EXIST"]
     }
   end
 

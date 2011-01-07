@@ -88,7 +88,7 @@ class TestPathMap < Test::Unit::TestCase
   end
 
   def test_undefined_percent_causes_error
-    ex = assert_exception(ArgumentError) {
+    assert_exception(ArgumentError) {
       "dir/abc.rb".pathmap("%z")
     }
   end
