@@ -22,7 +22,7 @@ require 'rbconfig'
 # in Ruby 1.8.
 #
 module Sys
-  RUBY = Config::CONFIG['ruby_install_name']
+  RUBY = RbConfig::CONFIG['ruby_install_name']
 
   # Install all the files matching +wildcard+ into the +dest_dir+
   # directory.  The permission mode is set to +mode+.

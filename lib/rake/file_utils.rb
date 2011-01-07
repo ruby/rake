@@ -8,8 +8,8 @@ require 'fileutils'
 module FileUtils
   # Path to the currently running Ruby program
   RUBY = File.join(
-    Config::CONFIG['bindir'],
-    Config::CONFIG['ruby_install_name'] + Config::CONFIG['EXEEXT']).
+    RbConfig::CONFIG['bindir'],
+    RbConfig::CONFIG['ruby_install_name'] + RbConfig::CONFIG['EXEEXT']).
     sub(/.*\s.*/m, '"\&"')
 
   OPT_TABLE['sh']  = %w(noop verbose)
