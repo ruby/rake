@@ -95,7 +95,7 @@ module Rake
     #
     def when_writing(msg=nil)
       if FileUtilsExt.nowrite_flag
-        puts "DRYRUN: #{msg}" if msg
+        $stderr.puts "DRYRUN: #{msg}" if msg
       else
         yield
       end

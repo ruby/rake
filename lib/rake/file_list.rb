@@ -300,7 +300,7 @@ module Rake
             end
           end
         rescue StandardError => ex
-          puts "Error while processing '#{fn}': #{ex}"
+          $stderr.puts "Error while processing '#{fn}': #{ex}"
         end
       end
       matched

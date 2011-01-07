@@ -472,7 +472,7 @@ module Rake
       if (! options.ignore_system) &&
           (options.load_system || rakefile.nil?) &&
           system_dir && File.directory?(system_dir)
-        puts "(in #{Dir.pwd})" unless options.silent
+        $stderr.puts "(in #{Dir.pwd})" unless options.silent
         glob("#{system_dir}/*.rake") do |name|
           add_import name
         end
@@ -481,7 +481,7 @@ module Rake
           rakefile.nil?
         @rakefile = rakefile
         Dir.chdir(location)
-        puts "(in #{Dir.pwd})" unless options.silent
+        $stderr.puts "(in #{Dir.pwd})" unless options.silent
         $rakefile = @rakefile if options.classic_namespace
         Rake::Environment.load_rakefile(File.expand_path(@rakefile)) if @rakefile && @rakefile != ''
         options.rakelib.each do |rlib|

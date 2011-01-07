@@ -234,7 +234,8 @@ module Rake
     end
 
     def trace_rule(level, message)
-      puts "#{"    "*level}#{message}" if Rake.application.options.trace_rules
+      $stderr.puts "#{"    "*level}#{message}" if
+        Rake.application.options.trace_rules
     end
 
     # Attempt to create a rule given the list of prerequisites.

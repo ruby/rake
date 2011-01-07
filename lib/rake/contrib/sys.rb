@@ -142,10 +142,10 @@ module Sys
     return split_all(head) + [tail]
   end
 
-  # Write a message to standard out if $verbose is enabled.
+  # Write a message to standard error if $verbose is enabled.
   def log(msg)
     print "  " if $trace && $verbose
-    puts msg if $verbose
+    $stderr.puts msg if $verbose
   end
 
   # Perform a block with $verbose disabled.

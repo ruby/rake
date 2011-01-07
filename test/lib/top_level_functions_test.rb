@@ -50,7 +50,7 @@ class TestTopLevelFunctions < Test::Unit::TestCase
 
   def test_when_not_writing
     Rake::FileUtilsExt.nowrite_flag = true
-    out = capture_stdout do
+    out = capture_stderr do
       when_writing("NOTWRITING") do
         puts "WRITING"
       end

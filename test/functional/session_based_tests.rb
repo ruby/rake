@@ -215,8 +215,8 @@ class SessionBasedTests < Test::Unit::TestCase
 
   def test_dry_run
     in_environment("PWD" => "test/data/default") do rake "-n", "other" end
-    assert_match %r{Execute \(dry run\) default}, @out
-    assert_match %r{Execute \(dry run\) other}, @out
+    assert_match %r{Execute \(dry run\) default}, @err
+    assert_match %r{Execute \(dry run\) other}, @err
     assert_no_match %r{DEFAULT}, @out
     assert_no_match %r{OTHER}, @out
   end
