@@ -1,12 +1,13 @@
 *.bak
 *.patch
 *.rbc
+*.swp
 .#*
 .idea
-TAGS
-coverage
-html
-pkg
+/TAGS
+/coverage
+/html
+/pkg
 r19.diff
 temp_*
 testdata
