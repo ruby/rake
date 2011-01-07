@@ -13,10 +13,11 @@ class TestFileUtils < Test::Unit::TestCase
   include Rake::DSL
 
   def setup
-    File.chmod(0750,"test/shellcommand.rb")
+    File.chmod(0750, "test/shellcommand.rb")
   end
   
   def teardown
+    File.chmod(0755, "test/shellcommand.rb")
     FileUtils.rm_rf("testdata")
     FileUtils::LN_SUPPORTED[0] = true
   end
