@@ -8,9 +8,14 @@ module Tags
   FILES = FileList['**/*.rb', '**/*.js'] + RAKEFILES
   FILES.exclude('pkg', 'dist')
 
-  RVM_GEMDIR = File.join(`rvm gemdir`.strip, "gems")
+  RVM_GEMDIR = begin
+                 File.join(`rvm gemdir`.strip, "gems")
+               rescue Errno::ENOENT
+                 nil
+               end
+
   DIR_LIST = ['.']
-  DIR_LIST << RVM_GEMDIR if File.exists?(RVM_GEMDIR)
+  DIR_LIST << RVM_GEMDIR if RVM_GEMDIR and File.exists? RVM_GEMDIR
   DIRS = DIR_LIST.join(" ")
 
   module_function

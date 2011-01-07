@@ -477,7 +477,7 @@ class TestApplicationOptions < Test::Unit::TestCase
         flags(['--require', 'test/missing']) do |opts|
         end
       end
-      assert_match(/no such file/, ex.message)
+      assert_match(/such file/, ex.message)
       assert_match(/test\/missing/, ex.message)
     end
   end
