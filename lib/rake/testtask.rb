@@ -10,7 +10,7 @@ module Rake
   # Create a task that runs a set of tests.
   #
   # Example:
-  #  
+  #
   #   Rake::TestTask.new do |t|
   #     t.libs << "test"
   #     t.test_files = FileList['test/test*.rb']
@@ -63,7 +63,7 @@ module Rake
     # * :rake -- Rake provided test loading script (default).
     # * :testrb -- Ruby provided test loading script.
     # * :direct -- Load tests using command line loader.
-    # 
+    #
     attr_accessor :loader
 
     # Array of commandline options to pass to ruby when running test loader.
@@ -118,7 +118,7 @@ module Rake
     def lib_path
       @libs.join(File::PATH_SEPARATOR)
     end
-    
+
     def file_list_string
       file_list.collect { |fn| "\"#{fn}\"" }.join(' ')
     end
@@ -170,7 +170,7 @@ module Rake
       end
       nil
     end
-    
+
     def rake_lib_dir # :nodoc:
       find_dir('rake') or
         fail "unable to find rake lib"

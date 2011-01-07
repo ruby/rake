@@ -73,19 +73,19 @@ namespace :test do
     t.libs << "."
     t.warning = true
   end
-  
+
   Rake::TestTask.new(:units) do |t|
     t.test_files = TestFiles::UNIT
     t.libs << "."
     t.warning = true
   end
-  
+
   Rake::TestTask.new(:functional) do |t|
     t.test_files = TestFiles::FUNCTIONAL
     t.libs << "."
     t.warning = true
   end
-  
+
   Rake::TestTask.new(:contribs) do |t|
     t.test_files = TestFiles::CONTRIB
     t.libs << "."
@@ -98,10 +98,10 @@ begin
 
   Rcov::RcovTask.new do |t|
     t.libs << "test"
-    dot_rakes = 
+    dot_rakes =
     t.rcov_opts = [
       '-xRakefile', '-xrakefile', '-xpublish.rf',
-      '-xlib/rake/contrib', '-x/Library', 
+      '-xlib/rake/contrib', '-x/Library',
       '--text-report',
       '--sort coverage'
     ] + FileList['rakelib/*.rake'].pathmap("-x%p")
@@ -152,7 +152,7 @@ rd = Rake::RDocTask.new("rdoc") do |rdoc|
   rdoc.title    = "Rake -- Ruby Make"
   rdoc.options = BASE_RDOC_OPTIONS.dup
   rdoc.options << '-SHN' << '-f' << 'darkfish' if DARKFISH_ENABLED
-    
+
   rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGES')
   rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
   rdoc.rdoc_files.exclude(/\bcontrib\b/)
@@ -165,8 +165,8 @@ end
 PKG_FILES = FileList[
   'install.rb',
   '[A-Z]*',
-  'bin/**/*', 
-  'lib/**/*.rb', 
+  'bin/**/*',
+  'lib/**/*.rb',
   'test/**/*.rb',
   'test/**/*.rf',
   'test/**/*.mf',
@@ -182,7 +182,7 @@ if ! defined?(Gem)
   puts "Package Target requires RubyGEMs"
 else
   SPEC = Gem::Specification.new do |s|
-    
+
     #### Basic information.
 
     s.name = 'rake'
@@ -190,7 +190,7 @@ else
     s.summary = "Ruby based make-like utility."
     s.description = <<-EOF
       Rake is a Make-like program implemented in Ruby. Tasks
-      and dependencies are specified in standard Ruby syntax. 
+      and dependencies are specified in standard Ruby syntax.
     EOF
 
     #### Dependencies and requirements.
@@ -295,7 +295,7 @@ task :todo do
 end
 
 desc "List all ruby files"
-task :rubyfiles do 
+task :rubyfiles do
   puts RUBY_FILES
   puts FileList['bin/*'].exclude('bin/*.rb')
 end
@@ -321,23 +321,23 @@ task :release, :rel, :reuse, :reltest,
     :package,
     :tag
   ] do
-  announce 
+  announce
   announce "**************************************************************"
   announce "* Release #{$package_version} Complete."
   announce "* Packages ready to upload."
   announce "**************************************************************"
-  announce 
+  announce
 end
 
 # Validate that everything is ready to go for a release.
 task :prerelease, :rel, :reuse, :reltest do |t, args|
   $package_version = args.rel
-  announce 
+  announce
   announce "**************************************************************"
   announce "* Making RubyGem Release #{$package_version}"
   announce "* (current version #{CURRENT_VERSION})"
   announce "**************************************************************"
-  announce  
+  announce
 
   # Is a release number supplied?
   unless args.rel

@@ -9,7 +9,7 @@
 #             application.  The application name (APP) is appended to
 #             this directory before using.
 # * pkgdir :: Directory on the host system where packages can be
-#             placed. 
+#             placed.
 HostInfo = Struct.new(:name, :webdir, :pkgdir)
 
 # Manage several publishers as a single entity.

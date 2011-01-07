@@ -87,7 +87,7 @@ class TestFileList < Test::Unit::TestCase
     h = f.include("y")
     assert_equal f.object_id, h.object_id
   end
-  
+
   def test_match
     fl = FileList.new
     fl.include('test/lib/*_test.rb')
@@ -153,7 +153,7 @@ class TestFileList < Test::Unit::TestCase
     fl.exclude('testdata/existing')
     assert_equal [], fl
   end
-  
+
   def test_excluding_via_block
     fl = FileList['testdata/a.c', 'testdata/b.c', 'testdata/xyz.c']
     fl.exclude { |fn| fn.pathmap('%n') == 'xyz' }
@@ -233,24 +233,24 @@ class TestFileList < Test::Unit::TestCase
     assert_equal ["testdata/abc.o", "testdata/x.o", "testdata/xyz.o"].sort,
       f3.sort
   end
-  
+
   def test_claim_to_be_a_kind_of_array
     fl = FileList['testdata/*.c']
     assert fl.is_a?(Array)
     assert fl.kind_of?(Array)
   end
-  
+
   def test_claim_to_be_a_kind_of_filelist
     fl = FileList['testdata/*.c']
     assert fl.is_a?(FileList)
     assert fl.kind_of?(FileList)
   end
-  
+
   def test_claim_to_be_a_filelist_instance
     fl = FileList['testdata/*.c']
     assert fl.instance_of?(FileList)
   end
-  
+
   def test_dont_claim_to_be_an_array_instance
     fl = FileList['testdata/*.c']
     assert ! fl.instance_of?(Array)
@@ -592,12 +592,12 @@ class TestFileList < Test::Unit::TestCase
     assert_equal ['b', 'd'], r
     assert_equal FileList, r.class
   end
-  
+
   def test_file_utils_can_use_filelists
     cfiles = FileList['testdata/*.c']
-    
+
     cp cfiles, @cdir, :verbose => false
-    
+
     assert File.exist?(File.join(@cdir, 'abc.c'))
     assert File.exist?(File.join(@cdir, 'xyz.c'))
     assert File.exist?(File.join(@cdir, 'x.c'))
@@ -605,7 +605,7 @@ class TestFileList < Test::Unit::TestCase
 
   def create_test_data
     verbose(false) do
-      
+
       mkdir "testdata" unless File.exist? "testdata"
       mkdir "testdata/CVS" rescue nil
       mkdir "testdata/.svn" rescue nil
@@ -623,5 +623,5 @@ class TestFileList < Test::Unit::TestCase
       touch "testdata/existing"
     end
   end
-  
+
 end

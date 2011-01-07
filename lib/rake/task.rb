@@ -1,7 +1,7 @@
 require 'rake/invocation_exception_mixin'
 
 module Rake
-  
+
   # #########################################################################
   # A Task is the basic unit of work in a Rakefile.  Tasks have associated
   # actions (possibly more than one) and a list of prerequisites.  When
@@ -50,12 +50,12 @@ module Rake
     def sources
       @sources ||= []
     end
-    
+
     # List of prerequisite tasks
     def prerequisite_tasks
       prerequisites.collect { |pre| lookup_prerequisite(pre) }
     end
-    
+
     def lookup_prerequisite(prerequisite_name)
       application[prerequisite_name, @scope]
     end
@@ -65,7 +65,7 @@ module Rake
     def source
       @sources.first if defined?(@sources)
     end
-    
+
     # Create a task named +task_name+ with no actions or prerequisites. Use
     # +enhance+ to add actions and prerequisites.
     def initialize(task_name, app)

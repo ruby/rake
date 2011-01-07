@@ -305,7 +305,7 @@ module Rake
       end
       matched
     end
-    
+
     # Return a new file list that only contains file names from the current
     # file list that exist on the file system.
     def existing
@@ -383,7 +383,7 @@ module Rake
         new(*args)
       end
     end
-  end 
+  end
 end
 
 module Rake

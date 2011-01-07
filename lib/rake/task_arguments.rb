@@ -58,9 +58,9 @@ module Rake
     def inspect
       to_s
     end
-    
+
     protected
-    
+
     def lookup(name)
       if @hash.has_key?(name)
         @hash[name]

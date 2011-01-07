@@ -37,5 +37,5 @@ class TestRake < Test::Unit::TestCase
   def test_original_dir_reports_current_dir
     assert_equal Dir.pwd, Rake.original_dir
   end
-    
+
 end

@@ -1,9 +1,9 @@
-= RAKE -- Ruby Make 
+= RAKE -- Ruby Make
 
 Supporting Rake version: 0.8.7.
 
 This package contains Rake, a simple ruby build program with
-capabilities similar to make. 
+capabilities similar to make.
 
 Rake has the following features:
 
@@ -52,7 +52,7 @@ First, you must write a "Rakefile" file which contains the build rules. Here's
 a simple example:
 
   task :default => [:test]
-  
+
   task :test do
     ruby "test/unittest.rb"
   end
@@ -114,7 +114,7 @@ If you wish to run the unit and functional tests that come with Rake:
 Feature requests and bug reports can be made here
 
 * http://onestepback.org/cgi-bin/bugs.cgi?project=rake
- 
+
 No account is needed for posting requests.  Or you can send me an
 email (at jim dot weirich at gmail dot com)
 

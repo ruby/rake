@@ -11,7 +11,7 @@ module Rake
   # The RDocTask will create the following targets:
   #
   # [<b><em>rdoc</em></b>]
-  #   Main task for this RDOC task.  
+  #   Main task for this RDOC task.
   #
   # [<b>:clobber_<em>rdoc</em></b>]
   #   Delete all the rdoc files.  This target is automatically
@@ -44,7 +44,7 @@ module Rake
   #   end
   #
   # The tasks would then be named :<em>rdoc_dev</em>, :clobber_<em>rdoc_dev</em>, and
-  # :re<em>rdoc_dev</em>. 
+  # :re<em>rdoc_dev</em>.
   #
   # If you wish to have completely different task names, then pass a Hash as
   # first argument. With the <tt>:rdoc</tt>, <tt>:clobber_rdoc</tt> and
@@ -81,7 +81,7 @@ module Rake
 
     # Whether to run the rdoc process as an external shell (default is false)
     attr_accessor :external
-    
+
     attr_accessor :inline_source
 
     # Create an RDoc task with the given name. See the RDocTask class overview
@@ -93,7 +93,7 @@ module Rake
           raise ArgumentError, "Invalid option(s) passed to RDocTask.new: #{invalid_options.join(", ")}"
         end
       end
-      
+
       @name = name
       @rdoc_files = Rake::FileList.new
       @rdoc_dir = 'html'
@@ -106,7 +106,7 @@ module Rake
       yield self if block_given?
       define
     end
-    
+
     # Create the tasks defined by this task lib.
     def define
       if rdoc_task_name != "rdoc"
@@ -115,17 +115,17 @@ module Rake
         desc "Build the #{rdoc_task_name} HTML Files"
       end
       task rdoc_task_name
-      
+
       desc "Force a rebuild of the RDOC files"
       task rerdoc_task_name => [clobber_task_name, rdoc_task_name]
-      
-      desc "Remove rdoc products" 
+
+      desc "Remove rdoc products"
       task clobber_task_name do
         rm_r rdoc_dir rescue nil
       end
-      
+
       task :clobber => [clobber_task_name]
-      
+
       directory @rdoc_dir
       task rdoc_task_name => [rdoc_target]
       file rdoc_target => @rdoc_files + [Rake.application.rakefile] do
@@ -164,7 +164,7 @@ module Rake
     def option_string
       option_list.join(' ')
     end
-    
+
     # The block passed to this method will be called just before running the
     # RDoc generator. It is allowed to modify RDocTask attributes inside the
     # block.
@@ -173,11 +173,11 @@ module Rake
     end
 
     private
-    
+
     def rdoc_target
       "#{rdoc_dir}/index.html"
     end
-    
+
     def rdoc_task_name
       case name
       when Hash
@@ -186,7 +186,7 @@ module Rake
         name.to_s
       end
     end
-    
+
     def clobber_task_name
       case name
       when Hash
@@ -195,7 +195,7 @@ module Rake
         "clobber_#{name}"
       end
     end
-    
+
     def rerdoc_task_name
       case name
       when Hash

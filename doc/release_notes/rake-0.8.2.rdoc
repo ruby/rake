@@ -53,7 +53,7 @@ new features and numerous bug fixes.
 
 * Changed from using Mutex to Monitor. Evidently Mutex causes thread
   join errors when Ruby is compiled with -disable-pthreads. (Patch
-  supplied by Ittay Dror) 
+  supplied by Ittay Dror)
 
 * Fixed bug in makefile parser that had problems with extra spaces in
   file task names. (Patch supplied by Ittay Dror)

@@ -7,7 +7,7 @@ module Rake
     # Include the FileUtils file manipulation functions in the top
     # level module, but mark them private so that they don't
     # unintentionally define methods on other objects.
-    
+
     include FileUtilsExt
     private(*FileUtils.instance_methods(false))
     private(*FileUtilsExt.instance_methods(false))
@@ -22,8 +22,8 @@ module Rake
     def task(*args, &block)
       Rake::Task.define_task(*args, &block)
     end
-    
-    
+
+
     # Declare a file task.
     #
     # Example:
@@ -40,13 +40,13 @@ module Rake
     def file(*args, &block)
       Rake::FileTask.define_task(*args, &block)
     end
-    
+
     # Declare a file creation task.
     # (Mainly used for the directory command).
     def file_create(args, &block)
       Rake::FileCreationTask.define_task(args, &block)
     end
-    
+
     # Declare a set of files tasks to create the given directories on
     # demand.
     #
@@ -60,7 +60,7 @@ module Rake
         end
       end
     end
-    
+
     # Declare a task that performs its prerequisites in
     # parallel. Multitasks does *not* guarantee that its prerequisites
     # will execute in any given order (which is obvious when you think
@@ -72,7 +72,7 @@ module Rake
     def multitask(args, &block)
       Rake::MultiTask.define_task(args, &block)
     end
-    
+
     # Create a new rake namespace and use it for evaluating the given
     # block.  Returns a NameSpace object that can be used to lookup
     # tasks defined in the namespace.
@@ -92,7 +92,7 @@ module Rake
       end
       Rake.application.in_namespace(name, &block)
     end
-    
+
     # Declare a rule for auto-tasks.
     #
     # Example:
@@ -103,7 +103,7 @@ module Rake
     def rule(*args, &block)
       Rake::Task.create_rule(*args, &block)
     end
-    
+
     # Describe the next rake task.
     #
     # Example:
@@ -115,7 +115,7 @@ module Rake
     def desc(description)
       Rake.application.last_description = description
     end
-    
+
     # Import the partial Rakefiles +fn+.  Imported files are loaded
     # _after_ the current file is completely loaded.  This allows the
     # import statement to appear anywhere in the importing file, and yet

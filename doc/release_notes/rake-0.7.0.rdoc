@@ -64,7 +64,7 @@ commands:
 
 Or invoke both via the :build_all command:
 
-  rake build_all  
+  rake build_all
 
 Namespaces may be nested arbitrarily.  Since the name of file tasks
 correspond to the name of a file in the external file system,

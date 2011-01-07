@@ -7,16 +7,16 @@ module Rake
   #
   module FileUtilsExt
     include FileUtils
-    
+
     class << self
       attr_accessor :verbose_flag, :nowrite_flag
     end
     FileUtilsExt.verbose_flag = nil
     FileUtilsExt.nowrite_flag = false
-    
+
     $fileutils_verbose = true
     $fileutils_nowrite = false
-    
+
     FileUtils::OPT_TABLE.each do |name, opts|
       default_options = []
       if opts.include?(:verbose) || opts.include?("verbose")
@@ -25,7 +25,7 @@ module Rake
       if opts.include?(:noop) || opts.include?("noop")
         default_options << ':noop => FileUtilsExt.nowrite_flag'
       end
-      
+
       next if default_options.empty?
       module_eval(<<-EOS, __FILE__, __LINE__ + 1)
       def #{name}( *args, &block )
@@ -36,7 +36,7 @@ module Rake
       end
       EOS
     end
-    
+
     # Get/set the verbose flag controlling output from the FileUtils utilities.
     # If verbose is true, then the utility method is echoed to standard output.
     #
@@ -57,7 +57,7 @@ module Rake
       end
       FileUtilsExt.verbose_flag
     end
-    
+
     # Get/set the nowrite flag controlling output from the FileUtils utilities.
     # If verbose is true, then the utility method is echoed to standard output.
     #
@@ -78,7 +78,7 @@ module Rake
       end
       oldvalue
     end
-    
+
     # Use this function to prevent protentially destructive ruby code from
     # running when the :nowrite flag is set.
     #
@@ -100,7 +100,7 @@ module Rake
         yield
       end
     end
-    
+
     # Merge the given options with the default values.
     def rake_merge_option(args, defaults)
       if Hash === args.last
@@ -110,12 +110,12 @@ module Rake
       args.push defaults
       args
     end
-    
+
     # Send the message to the default rake output (which is $stderr).
     def rake_output_message(message)
       $stderr.puts(message)
     end
-    
+
     # Check that the options do not contain options not listed in +optdecl+.  An
     # ArgumentError exception is thrown if non-declared options are found.
     def rake_check_options(options, *optdecl)
@@ -125,8 +125,8 @@ module Rake
       end
       raise ArgumentError, "no such option: #{h.keys.join(' ')}" unless h.empty?
     end
-    
+
     extend self
   end
-  
+
 end

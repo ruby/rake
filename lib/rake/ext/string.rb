@@ -44,7 +44,7 @@ class String
       File.join(partial_dirs)
     end
     protected :pathmap_partial
-      
+
     # Preform the pathmap replacement operations on the given path. The
     # patterns take the form 'pat1,rep1;pat2,rep2...'.
     def pathmap_replace(patterns, &block)

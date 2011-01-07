@@ -42,7 +42,7 @@ module Sys
   def ruby(*args)
     run "#{RUBY} #{args.join(' ')}"
   end
-  
+
   # Copy a single file from +file_name+ to +dest_file+.
   def copy(file_name, dest_file)
     log "Copying file #{file_name} to #{dest_file}"

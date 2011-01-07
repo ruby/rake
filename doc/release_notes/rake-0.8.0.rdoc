@@ -1,7 +1,7 @@
 = Rake 0.8.0/0.8.1 Released
 
 Rake version 0.8.0 is a new release of rake that includes serveral new
-features.  
+features.
 
 == Changes
 

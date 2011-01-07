@@ -5,7 +5,7 @@ require 'rake/task_manager'
 require 'rake/win32'
 
 module Rake
-  
+
   ######################################################################
   # Rake main application object.  When invoking +rake+ from the
   # command line, a Rake::Application object is created and run.
@@ -232,7 +232,7 @@ module Rake
       80
     end
 
-    # Calculate the dynamic width of the 
+    # Calculate the dynamic width of the
     def dynamic_width
       @dynamic_width ||= (dynamic_width_stty.nonzero? || dynamic_width_tput)
     end
@@ -248,7 +248,7 @@ module Rake
     def unix?
       RbConfig::CONFIG['host_os'] =~ /(aix|darwin|linux|(net|free|open)bsd|cygwin|solaris|irix|hpux)/i
     end
-    
+
     def windows?
       Win32.windows?
     end
@@ -308,7 +308,7 @@ module Rake
         ],
         ['--execute-continue',  '-E CODE',
           "Execute some Ruby code, then continue with normal task processing.",
-          lambda { |value| eval(value) }            
+          lambda { |value| eval(value) }
         ],
         ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
           lambda { |value| $:.push(value) }
@@ -320,9 +320,9 @@ module Rake
           lambda { |value| Rake.verbose(false) }
         ],
         ['--rakefile', '-f [FILE]', "Use FILE as the rakefile.",
-          lambda { |value| 
+          lambda { |value|
             value ||= ''
-            @rakefiles.clear 
+            @rakefiles.clear
             @rakefiles << value
           }
         ],
@@ -509,7 +509,7 @@ module Rake
           end
         end
     end
-    
+
     # The standard directory containing system wide rake files.
     if Win32.windows?
       def standard_system_dir #:nodoc:
