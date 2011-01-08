@@ -2,6 +2,7 @@
 
 require 'test/unit'
 require 'rake/packagetask'
+require 'rake/gempackagetask'
 require 'test/rake_test_setup'
 
 class TestPackageTask < Test::Unit::TestCase
@@ -62,57 +63,3 @@ class TestPackageTask < Test::Unit::TestCase
   end
 end
 
-
-begin
-  require 'rubygems'
-  require 'rake/gempackagetask'
-rescue Exception
-  puts "WARNING: RubyGems not installed"
-end
-
-if ! defined?(Gem)
-  puts "WARNING: Unable to test GemPackaging ... requires RubyGems"
-else
-  class TestGemPackageTask < Test::Unit::TestCase
-    def test_gem_package
-      gem = Gem::Specification.new do |g|
-        g.name = "pkgr"
-        g.version = "1.2.3"
-        g.files = FileList["x"].resolve
-      end
-      pkg = Rake::GemPackageTask.new(gem)  do |p|
-        p.package_files << "y"
-      end
-      assert_equal ["x", "y"], pkg.package_files
-      assert_equal "pkgr-1.2.3.gem", pkg.gem_file
-    end
-
-    def test_gem_package_with_current_platform
-      gem = Gem::Specification.new do |g|
-        g.name = "pkgr"
-        g.version = "1.2.3"
-        g.files = FileList["x"].resolve
-        g.platform = Gem::Platform::CURRENT
-      end
-      pkg = Rake::GemPackageTask.new(gem)  do |p|
-        p.package_files << "y"
-      end
-      assert_equal ["x", "y"], pkg.package_files
-      assert_match(/^pkgr-1\.2\.3-(\S+)\.gem$/, pkg.gem_file)
-    end
-
-    def test_gem_package_with_ruby_platform
-      gem = Gem::Specification.new do |g|
-        g.name = "pkgr"
-        g.version = "1.2.3"
-        g.files = FileList["x"].resolve
-        g.platform = Gem::Platform::RUBY
-      end
-      pkg = Rake::GemPackageTask.new(gem)  do |p|
-        p.package_files << "y"
-      end
-      assert_equal ["x", "y"], pkg.package_files
-      assert_equal "pkgr-1.2.3.gem", pkg.gem_file
-    end
-  end
-end

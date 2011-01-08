@@ -195,6 +195,7 @@ else
 
     #### Dependencies and requirements.
 
+    s.required_rubygems_version '>= 1.3.2'
     #s.add_dependency('log4r', '> 1.0.4')
     #s.requirements << ""
 
