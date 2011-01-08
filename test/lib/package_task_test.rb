@@ -2,7 +2,6 @@
 
 require 'test/unit'
 require 'rake/packagetask'
-require 'rake/gempackagetask'
 require 'test/rake_test_setup'
 
 class TestPackageTask < Test::Unit::TestCase

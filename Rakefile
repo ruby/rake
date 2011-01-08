@@ -8,9 +8,8 @@
 
 begin
   require 'rubygems'
-  require 'rake/gempackagetask'
+  require 'rubygems/package_task'
 rescue Exception
-  nil
 end
 require 'rake/clean'
 require 'rake/testtask'
@@ -195,7 +194,7 @@ else
 
     #### Dependencies and requirements.
 
-    s.required_rubygems_version '>= 1.3.2'
+    s.required_rubygems_version = '>= 1.3.2'
     #s.add_dependency('log4r', '> 1.0.4')
     #s.requirements << ""
 
@@ -233,7 +232,7 @@ else
 #     end
   end
 
-  package_task = Rake::GemPackageTask.new(SPEC) do |pkg|
+  package_task = Gem::PackageTask.new(SPEC) do |pkg|
     pkg.need_zip = true
     pkg.need_tar = true
   end
