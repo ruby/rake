@@ -198,8 +198,8 @@ else
     #### Dependencies and requirements.
 
     s.required_rubygems_version = '>= 1.3.2'
-    #s.add_dependency('log4r', '> 1.0.4')
-    #s.requirements << ""
+    s.add_development_dependency 'session', '~> 2.4'
+    s.add_development_dependency 'flexmock', '~> 0.8.11'
 
     #### Which files are to be included in this gem?  Everything!  (Except CVS directories.)
 
