@@ -2,6 +2,9 @@
 
 == Pre-Version 0.9.x
 
+* Rake now runs tasks when they have equal timestamps.  Patch by James M.
+  Lawrence.
+
 * Fixed "Agregious typos" in documentation.  Patch by Sean Scot August Moon
 
 * Rake now prints the Rakefile directory only when it's different from the
