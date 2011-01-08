@@ -6,14 +6,17 @@
 # This file may be distributed under an MIT style license.  See
 # MIT-LICENSE for details.
 
-begin
-  require 'rubygems'
-  require 'rubygems/package_task'
-rescue Exception
-end
+require 'rubygems'
+require 'rubygems/package_task'
 require 'rake/clean'
 require 'rake/testtask'
-require 'rake/rdoctask'
+
+begin
+  gem 'rdoc'
+  require 'rdoc/task'
+rescue Gem::LoadError
+  require 'rake/rdoctask'
+end
 
 CLEAN.include('**/*.o', '*.dot', '**/*.rbc')
 CLOBBER.include('doc/example/main', 'testdata')

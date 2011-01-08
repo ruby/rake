@@ -2,6 +2,9 @@
 
 == Pre-Version 0.9.x
 
+* Rake::RDocTask is deprecated.  Use RDoc::Task from RDoc 2.4.2+ (require
+  'rdoc/task')
+
 * Rake::GemPackageTask is deprecated.  Use Gem::PackageTask (require
   'rubygems/package_task')
 

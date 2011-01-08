@@ -64,11 +64,6 @@ class TestRDocTask < Test::Unit::TestCase
     end
   end
 
-  def test_inline_source_is_enabled_by_default
-    rd = Rake::RDocTask.new
-    assert rd.option_list.include?('--inline-source')
-  end
-
   def test_inline_source_option_is_only_appended_if_option_not_already_given
     rd = Rake::RDocTask.new
     rd.options << '--inline-source'
