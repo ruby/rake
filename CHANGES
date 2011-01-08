@@ -2,6 +2,8 @@
 
 == Pre-Version 0.9.x
 
+* Improved rakefile_location discovery on Windows.  Patch by James Tucker.
+
 * Rake now recognizes "Windows Server" as a windows system.  Patch by Matthias
   Lüdtke
 

@@ -102,6 +102,7 @@ http://github.com/jimweirich/rake. The public git clone URL is
 
 If you wish to run the unit and functional tests that come with Rake:
 
+* Install the 'flexmock' gem
 * Install the 'session' gem in order to run the functional tests.
 * CD into the top project directory of rake.
 * Type one of the following:
