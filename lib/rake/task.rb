@@ -231,7 +231,7 @@ module Rake
       add_description(description)
     end
 
-    # Add a comment to the task.  If a comment alread exists, separate
+    # Add a comment to the task.  If a comment already exists, separate
     # the new comment with " / ".
     def add_comment(comment)
       if @full_comment

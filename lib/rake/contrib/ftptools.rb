@@ -101,7 +101,7 @@ module Rake # :nodoc:
       end
     end
 
-    # Create an FTP uploader targetting the directory +path+ on +host+
+    # Create an FTP uploader targeting the directory +path+ on +host+
     # using the given account and password.  +path+ will be the root
     # path of the uploader.
     def initialize(path, host, account, password)
