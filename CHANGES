@@ -2,6 +2,9 @@
 
 == Pre-Version 0.9.x
 
+* Rake now requires (instead of loads) files in the test task.  Patch by Cezary
+  Baginski.
+
 * Rake now runs tasks when they have equal timestamps.  Patch by James M.
   Lawrence.
 
