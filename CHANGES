@@ -2,6 +2,13 @@
 
 == Pre-Version 0.9.x
 
+* Rake::GemPackageTask is deprecated.  Use Gem::PackageTask (require
+  'rubygems/package_task')
+
+* Rake now outputs various messages to $stderr instead of $stdout.
+
+* Rake no longer emits warnings for Config.  Patch by Santiago Pastorino.
+
 * Removed Rake's DSL methods from the top level scope.  If you need to
   call 'task :xzy' in your code, include Rake::DSL into your class, or
   put the code in a Rake::DSL.environment do ... end block.
