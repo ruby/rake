@@ -29,7 +29,8 @@ require 'rbconfig'
 # for ruby-1.8 and earlier.
 #
 module Rake::AltSystem
-  WINDOWS = RbConfig::CONFIG["host_os"] =~ %r!(msdos|mswin|djgpp|mingw)!
+  WINDOWS = RbConfig::CONFIG["host_os"] =~
+    %r!(msdos|mswin|djgpp|mingw|[Ww]indows)!
 
   class << self
     def define_module_function(name, &block)

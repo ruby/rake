@@ -2,6 +2,9 @@
 
 == Pre-Version 0.9.x
 
+* Rake now recognizes "Windows Server" as a windows system.  Patch by Matthias
+  Lüdtke
+
 * Rake::RDocTask is deprecated.  Use RDoc::Task from RDoc 2.4.2+ (require
   'rdoc/task')
 
