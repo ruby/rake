@@ -2,6 +2,8 @@
 
 == Pre-Version 0.9.x
 
+* Rake history is now UTF-8 encoded.
+
 * Rake now uses case-insensitive comparisons to find the Rakefile on Windows.
   Based on patch by Roger Pack.
 
