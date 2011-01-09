@@ -104,7 +104,7 @@ otherwise helpful comments.  Thanks to ...
 * Gavin Stark
 * Adam Q. Salter
 * Adam Majer
-* Emanuel Indermühle
+* Emanuel IndermÃ¼hle
 * Ittay Dror
 * Bheeshmar Redheendran (for spending an afternoon with me debugging
   windows issues)
