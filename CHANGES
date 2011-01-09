@@ -2,6 +2,9 @@
 
 == Pre-Version 0.9.x
 
+* Rake now uses case-insensitive comparisons to find the Rakefile on Windows.
+  Based on patch by Roger Pack.
+
 * Rake now requires (instead of loads) files in the test task.  Patch by Cezary
   Baginski.
 

@@ -147,7 +147,7 @@ module Rake
       if options.trace
         $stderr.puts ex.backtrace.join("\n")
       else
-        $stderr.puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
+        $stderr.puts rakefile_location(ex.backtrace)
       end
       $stderr.puts "Tasks: #{ex.chain}" if has_chain?(ex)
       $stderr.puts "(See full trace by running task with --trace)" unless options.trace
@@ -573,10 +573,13 @@ module Rake
       @const_warning = true
     end
 
-    def rakefile_location
-      bt = caller
-      bt.map { |t| t[/([^:]+):/,1] }
-      bt.find {|str| str =~ /^#{@rakefile}$/ } || ""
+    def rakefile_location backtrace = caller
+      backtrace.map { |t| t[/([^:]+):/,1] }
+
+      re = /^#{@rakefile}$/
+      re = /#{re.source}/i if windows?
+
+      backtrace.find { |str| str =~ re } || ''
     end
   end
 end

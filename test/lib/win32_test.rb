@@ -9,6 +9,7 @@ require 'rake'
 class TestWin32 < Test::Unit::TestCase
   include InEnvironment
   include TestMethods
+  include CaptureStdout
 
   Win32 = Rake::Win32
 
@@ -67,6 +68,24 @@ class TestWin32 < Test::Unit::TestCase
         Win32.win32_system_dir
       end
     end
+  end
+
+  def test_win32_backtrace_with_different_case
+    ex = nil
+    begin
+     raise 'test exception'
+    rescue => ex
+    end
+
+    ex.set_backtrace ['abc', 'rakefile']
+
+    rake = Rake::Application.new
+    rake.options.trace = true
+    rake.instance_variable_set(:@rakefile, 'Rakefile')
+
+    err = capture_stderr { rake.display_error_message(ex) }
+
+    assert_match(/rakefile/, err)
   end
 
 end
