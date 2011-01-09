@@ -135,29 +135,24 @@ end
 
 # Create a task to build the RDOC documentation tree.
 
-begin
-  require 'darkfish-rdoc'
-  DARKFISH_ENABLED = true
-rescue LoadError => ex
-  DARKFISH_ENABLED = false
-end
-
 BASE_RDOC_OPTIONS = [
-  '--line-numbers', '--inline-source',
-  '--main' , 'README.rdoc',
+  '--line-numbers', '--show-hash',
+  '--main', 'README.rdoc',
   '--title', 'Rake -- Ruby Make'
 ]
 
-rd = Rake::RDocTask.new("rdoc") do |rdoc|
-  rdoc.rdoc_dir = 'html'
-  rdoc.template = 'doc/jamis.rb'
-  rdoc.title    = "Rake -- Ruby Make"
-  rdoc.options = BASE_RDOC_OPTIONS.dup
-  rdoc.options << '-SHN' << '-f' << 'darkfish' if DARKFISH_ENABLED
+if defined?(RDoc::Task) then
+  RDoc::Task.new do |rdoc|
+    rdoc.rdoc_dir = 'html'
+    rdoc.title    = "Rake -- Ruby Make"
+    rdoc.options = BASE_RDOC_OPTIONS.dup
 
-  rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGES')
-  rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
-  rdoc.rdoc_files.exclude(/\bcontrib\b/)
+    rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGES')
+    rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
+    rdoc.rdoc_files.exclude(/\bcontrib\b/)
+  end
+else
+  warn "RDoc 2.4.2+ is required to build documentation"
 end
 
 # ====================================================================
@@ -219,8 +214,14 @@ else
 
     #### Documentation and testing.
 
-    s.has_rdoc = true
-    s.extra_rdoc_files = rd.rdoc_files.reject { |fn| fn =~ /\.rb$/ }.to_a
+    s.extra_rdoc_files = FileList[
+      'README.rdoc',
+      'MIT-LICENSE',
+      'TODO',
+      'CHANGES',
+      'doc/**/*.rdoc'
+    ]
+
     s.rdoc_options = BASE_RDOC_OPTIONS
 
     #### Author and project details.
@@ -403,14 +404,6 @@ task :tag, :rel, :reuse, :reltest,
   else
     sh %{svn copy svn+ssh://rubyforge.org/var/svn/rake/trunk svn+ssh://rubyforge.org/var/svn/rake/tags/#{reltag} -m 'Commiting release #{reltag}'} ###'
   end
-end
-
-desc "Install the jamis RDoc template"
-task :install_jamis_template do
-  require 'rbconfig'
-  dest_dir = File.join(RbConfig::CONFIG['rubylibdir'], "rdoc/generators/template/html")
-  fail "Unabled to write to #{dest_dir}" unless File.writable?(dest_dir)
-  install "doc/jamis.rb", dest_dir, :verbose => true
 end
 
 # Require experimental XForge/Metaproject support.
