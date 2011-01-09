@@ -15,7 +15,6 @@ begin
   gem 'rdoc'
   require 'rdoc/task'
 rescue Gem::LoadError
-  require 'rake/rdoctask'
 end
 
 CLEAN.include('**/*.o', '*.dot', '**/*.rbc')
@@ -375,13 +374,13 @@ task :update_version, :rel, :reuse, :reltest,
     announce "Updating Rake version to #{args.rel}"
     open("lib/rake.rb") do |rakein|
       open("lib/rake.rb.new", "w") do |rakeout|
-	rakein.each do |line|
-	  if line =~ /^RAKEVERSION\s*=\s*/
-	    rakeout.puts "RAKEVERSION = '#{args.rel}'"
-	  else
-	    rakeout.puts line
-	  end
-	end
+        rakein.each do |line|
+          if line =~ /^RAKEVERSION\s*=\s*/
+            rakeout.puts "RAKEVERSION = '#{args.rel}'"
+          else
+            rakeout.puts line
+          end
+        end
       end
     end
     mv "lib/rake.rb.new", "lib/rake.rb"
