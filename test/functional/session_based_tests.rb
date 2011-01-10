@@ -56,13 +56,13 @@ class SessionBasedTests < Test::Unit::TestCase
     assert_status(1)
   end
 
-  def test_env_availabe_at_top_scope
+  def test_env_available_at_top_scope
     Dir.chdir("test/data/default") do rake "TESTTOPSCOPE=1" end
     assert_match(/^TOPSCOPE$/, @out)
     assert_status
   end
 
-  def test_env_availabe_at_task_scope
+  def test_env_available_at_task_scope
     Dir.chdir("test/data/default") do rake "TESTTASKSCOPE=1 task_scope" end
     assert_match(/^TASKSCOPE$/, @out)
     assert_status

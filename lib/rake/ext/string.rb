@@ -91,11 +91,11 @@ class String
     #   'a/b/c/d/file.txt'.pathmap("%-2d")  => 'c/d'
     #
     # Also the %d, %p, %f, %n, %x, and %X operators can take a
-    # pattern/replacement argument to perform simple string substititions on a
+    # pattern/replacement argument to perform simple string substitutions on a
     # particular part of the path.  The pattern and replacement are separated
     # by a comma and are enclosed by curly braces.  The replacement spec comes
     # after the % character but before the operator letter.  (e.g.
-    # "%{old,new}d").  Muliple replacement specs should be separated by
+    # "%{old,new}d").  Multiple replacement specs should be separated by
     # semi-colons (e.g. "%{old,new;src,bin}d").
     #
     # Regular expressions may be used for the pattern, and back refs may be

@@ -1,7 +1,7 @@
 module Rake
 
   ####################################################################
-  # TaskAguments manage the arguments passed to a task.
+  # TaskArguments manage the arguments passed to a task.
   #
   class TaskArguments
     include Enumerable

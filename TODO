@@ -6,7 +6,7 @@ the rake-devel@rubyforge.org mailing list.
 === To Do
 * Need a nice API for accessing tasks in namespaces, namespaces in an app, etc.
 * Provide a way to disable -w warning mode.
-* Define a set of default rules that work in the absense of any Rakefile
+* Define a set of default rules that work in the absence of any Rakefile
 * What about cyclic dependencies?
 * Java support utilities
 * Installation support utilities

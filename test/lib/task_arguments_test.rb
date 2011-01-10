@@ -81,7 +81,7 @@ class TestTaskArguments < Test::Unit::TestCase
     assert_equal 'original_val', ta[:bb]
   end
 
-  def test_default_arguements_that_dont_match_names_are_ignored
+  def test_default_arguments_that_dont_match_names_are_ignored
     ta = Rake::TaskArguments.new(["aa", "bb"], [nil, "original_val"])
     ta.with_defaults({ "cc" => "default_val" })
     assert_nil ta[:cc]

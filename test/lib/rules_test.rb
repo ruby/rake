@@ -97,7 +97,7 @@ class TestRules < Test::Unit::TestCase
     assert_equal [OBJFILE], @runs
   end
 
-  def test_file_names_beginning_with_dot_can_be_tricked_into_refering_to_file
+  def test_file_names_beginning_with_dot_can_be_tricked_into_referring_to_file
     verbose(false) do
       chdir("testdata") do
         create_file('.foo')

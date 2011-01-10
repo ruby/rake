@@ -12,7 +12,7 @@ description: >
       defined in standard Ruby syntax. No XML files to edit. No quirky
       Makefile syntax to worry about (is that a tab or a space?)</li>
       <li>Users can specify tasks with prerequisites.</li>
-      <li>Rake supports rule patterns to sythesize implicit tasks.</li>
+      <li>Rake supports rule patterns to synthesize implicit tasks.</li>
       <li>Rake is lightweight. It can be distributed with other
       projects as a single file. Projects that depend upon rake do not
       require that rake be installed on target systems.</li>
