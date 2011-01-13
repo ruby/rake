@@ -33,7 +33,7 @@ module Rake
         file file_task => dependents
       end
     end
-    
+
     def respace(str)
       str.gsub(/#{SPACE_MARK}/, ' ')
     end

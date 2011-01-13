@@ -38,7 +38,7 @@ too much work.  And that was the end of that!
 ... Except I couldn't get the thought out of my head.  What exactly
 would be needed to make the about syntax work as a make file?  Hmmm, you
 would need to register the tasks, you need some way of specifying
-dependencies between tasks, and some way of kicking off the process. 
+dependencies between tasks, and some way of kicking off the process.
 Hey!  What if we did ... and fifteen minutes later I had a working
 prototype of Ruby make, complete with dependencies and actions.
 
@@ -97,7 +97,7 @@ Here's another task with dependencies ...
    end
 
 Task :clobber depends upon task :clean, so :clean will be run before
-:clobber is executed. 
+:clobber is executed.
 
 Files are specified by using the "file" command.  It is similar to the
 task command, except that the task name represents a file, and the task
@@ -115,7 +115,7 @@ Here is a file based dependency that will compile "hello.cc" to
 
 I normally specify file tasks with string (rather than symbols).  Some
 file names can't be represented by symbols.  Plus it makes the
-distinction between them more clear to the casual reader.  
+distinction between them more clear to the casual reader.
 
 Currently writing a task for each and every file in the project would be
 tedious at best.  I envision a set of libraries to make this job

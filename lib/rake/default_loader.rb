@@ -1,5 +1,5 @@
 module Rake
-  
+
   # Default Rakefile loader used by +import+.
   class DefaultLoader
     def load(fn)
