@@ -22,7 +22,7 @@ require 'rbconfig'
 # in Ruby 1.8.
 #
 module Sys
-  RUBY = Config::CONFIG['ruby_install_name']
+  RUBY = RbConfig::CONFIG['ruby_install_name']
 
   # Install all the files matching +wildcard+ into the +dest_dir+
   # directory.  The permission mode is set to +mode+.
@@ -42,7 +42,7 @@ module Sys
   def ruby(*args)
     run "#{RUBY} #{args.join(' ')}"
   end
-  
+
   # Copy a single file from +file_name+ to +dest_file+.
   def copy(file_name, dest_file)
     log "Copying file #{file_name} to #{dest_file}"
@@ -142,10 +142,10 @@ module Sys
     return split_all(head) + [tail]
   end
 
-  # Write a message to standard out if $verbose is enabled.
+  # Write a message to standard error if $verbose is enabled.
   def log(msg)
     print "  " if $trace && $verbose
-    puts msg if $verbose
+    $stderr.puts msg if $verbose
   end
 
   # Perform a block with $verbose disabled.

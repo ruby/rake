@@ -1,7 +1,7 @@
 module Rake
 
   ####################################################################
-  # TaskAguments manage the arguments passed to a task.
+  # TaskArguments manage the arguments passed to a task.
   #
   class TaskArguments
     include Enumerable
@@ -58,9 +58,9 @@ module Rake
     def inspect
       to_s
     end
-    
+
     protected
-    
+
     def lookup(name)
       if @hash.has_key?(name)
         @hash[name]

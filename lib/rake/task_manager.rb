@@ -15,7 +15,7 @@ module Rake
     end
 
     def create_rule(*args, &block)
-      pattern, arg_names, deps = resolve_args(args)
+      pattern, _, deps = resolve_args(args)
       pattern = Regexp.new(Regexp.quote(pattern) + '$') if String === pattern
       @rules << [pattern, deps, block]
     end
@@ -84,7 +84,7 @@ module Rake
       [task_name, arg_names, []]
     end
     private :resolve_args_without_dependencies
-    
+
     # Resolve task arguments for a task or rule when there are
     # dependencies declared.
     #
@@ -115,7 +115,7 @@ module Rake
       [task_name, arg_names, deps]
     end
     private :resolve_args_with_dependencies
-    
+
     # If a rule can be found that matches the task name, enhance the
     # task with the prerequisites and actions from the rule.  Set the
     # source attribute of the task appropriately for the rule.  Return
@@ -124,7 +124,7 @@ module Rake
       fail Rake::RuleRecursionOverflowError,
         "Rule Recursion Too Deep" if level >= 16
       @rules.each do |pattern, extensions, block|
-        if md = pattern.match(task_name)
+        if pattern.match(task_name)
           task = attempt_rule(task_name, extensions, block, level)
           return task if task
         end
@@ -207,14 +207,14 @@ module Rake
     end
 
     private
-    
+
     # Add a location to the locations field of the given task.
     def add_location(task)
       loc = find_location
       task.locations << loc if loc
       task
     end
-    
+
     # Find the location that called into the dsl layer.
     def find_location
       locations = caller
@@ -225,7 +225,7 @@ module Rake
       end
       nil
     end
-      
+
     # Generate an anonymous namespace name.
     def generate_name
       @seed ||= 0
@@ -234,7 +234,8 @@ module Rake
     end
 
     def trace_rule(level, message)
-      puts "#{"    "*level}#{message}" if Rake.application.options.trace_rules
+      $stderr.puts "#{"    "*level}#{message}" if
+        Rake.application.options.trace_rules
     end
 
     # Attempt to create a rule given the list of prerequisites.
@@ -284,8 +285,8 @@ module Rake
     end
 
 
-    private 
-    
+    private
+
     # Return the current description. If there isn't one, try to find it
     # by reading in the source file and looking for a comment immediately
     # prior to the task definition
@@ -294,14 +295,14 @@ module Rake
       @last_description = nil
       desc
     end
-    
+
     def find_preceding_comment_for_task(task)
       loc = task.locations.last
       file_name, line = parse_location(loc)
       return nil unless file_name
       comment_from_file(file_name, line)
     end
-    
+
     def parse_location(loc)
       if loc =~ /^(.*):(\d+)/
         [ $1, Integer($2) ]

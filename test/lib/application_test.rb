@@ -27,7 +27,7 @@ class TestApplication < Test::Unit::TestCase
     @app.options.rakelib = []
     Rake::TaskManager.record_task_metadata = true
   end
-  
+
   def teardown
     Rake::TaskManager.record_task_metadata = false
     super
@@ -66,7 +66,6 @@ class TestApplication < Test::Unit::TestCase
     in_environment('RAKE_COLUMNS' => '80') do
       @app.options.show_tasks = :tasks
       @app.options.show_task_pattern = //
-      description = "something short"
       task_name = "task name" * 80
       @app.last_description = "something short"
       @app.define_task(Rake::Task, task_name )
@@ -145,13 +144,26 @@ class TestApplication < Test::Unit::TestCase
 
   def test_load_rakefile
     in_environment("PWD" => "test/data/unittest") do
-      @app.instance_eval do 
+      @app.instance_eval do
         handle_options
         options.silent = true
         load_rakefile
       end
       assert_equal "rakefile", @app.rakefile.downcase
       assert_match(%r(unittest$), Dir.pwd)
+    end
+  end
+
+  def test_load_rakefile_doesnt_print_rakefile_directory_from_same_dir
+    in_environment("PWD" => "test/data/unittest") do
+      err = capture_stderr do
+        @app.instance_eval do
+          @original_dir = File.expand_path(".") # pretend we started from the unittest dir
+          raw_load_rakefile
+        end
+      end
+      _, location = @app.find_rakefile_location
+      assert_no_match(/\(in #{location}\)/, err)
     end
   end
 
@@ -167,14 +179,40 @@ class TestApplication < Test::Unit::TestCase
     end
   end
 
+  def test_load_rakefile_prints_rakefile_directory_from_subdir
+    in_environment("PWD" => "test/data/unittest/subdir") do
+      err = capture_stderr do
+        @app.instance_eval do
+          raw_load_rakefile
+        end
+      end
+      _, location = @app.find_rakefile_location
+      assert_match(/\(in #{location}\)/, err)
+    end
+  end
+
+  def test_load_rakefile_doesnt_print_rakefile_directory_from_subdir_if_silent
+    in_environment("PWD" => "test/data/unittest/subdir") do
+      err = capture_stderr do
+        @app.instance_eval do
+          handle_options
+          options.silent = true
+          raw_load_rakefile
+        end
+      end
+      _, location = @app.find_rakefile_location
+      assert_no_match(/\(in #{location}\)/, err)
+    end
+  end
+
   def test_load_rakefile_not_found
     in_environment("PWD" => "/", "RAKE_SYSTEM" => 'not_exist') do
       @app.instance_eval do
         handle_options
         options.silent = true
       end
-      ex = assert_exception(RuntimeError) do 
-        @app.instance_eval do raw_load_rakefile end 
+      ex = assert_exception(RuntimeError) do
+        @app.instance_eval do raw_load_rakefile end
       end
       assert_match(/no rakefile found/i, ex.message)
     end
@@ -307,7 +345,7 @@ class TestApplication < Test::Unit::TestCase
     ARGV.clear
     ARGV << '-f' << '-s' << '--xyzzy'
     assert_exception(SystemExit) {
-      err = capture_stderr { capture_stdout { @app.run } }
+      capture_stderr { capture_stdout { @app.run } }
     }
   ensure
     ARGV.clear
@@ -333,7 +371,7 @@ class TestApplicationOptions < Test::Unit::TestCase
     Rake::FileUtilsExt.verbose_flag = false
     Rake::FileUtilsExt.nowrite_flag = false
   end
-  
+
   def clear_argv
     while ! ARGV.empty?
       ARGV.pop
@@ -471,14 +509,14 @@ class TestApplicationOptions < Test::Unit::TestCase
       assert_equal 3, TESTING_REQUIRE.size
     end
   end
-  
+
   def test_missing_require
     in_environment do
       ex = assert_exception(LoadError) do
         flags(['--require', 'test/missing']) do |opts|
         end
       end
-      assert_match(/no such file/, ex.message)
+      assert_match(/such file/, ex.message)
       assert_match(/test\/missing/, ex.message)
     end
   end
@@ -582,7 +620,7 @@ class TestApplicationOptions < Test::Unit::TestCase
       end
     end
   end
-  
+
   def test_classic_namespace
     in_environment do
       flags(['--classic-namespace'], ['-C', '-T', '-P', '-n', '-s', '-t']) do |opts|
@@ -600,7 +638,7 @@ class TestApplicationOptions < Test::Unit::TestCase
     in_environment do
       error_output = capture_stderr do
         ex = assert_exception(OptionParser::InvalidOption) do
-          flags('--bad-option') 
+          flags('--bad-option')
         end
         if ex.message =~ /^While/ # Ruby 1.9 error message
           assert_match(/while parsing/i, ex.message)
@@ -617,12 +655,12 @@ class TestApplicationOptions < Test::Unit::TestCase
     command_line("a", "b")
     assert_equal ["a", "b"], @tasks.sort
   end
-  
+
   def test_default_task_collection
     command_line()
     assert_equal ["default"], @tasks
   end
-  
+
   def test_environment_definition
     ENV.delete('TESTKEY')
     command_line("a", "TESTKEY=12")
@@ -630,13 +668,13 @@ class TestApplicationOptions < Test::Unit::TestCase
     assert '12', ENV['TESTKEY']
   end
 
-  private 
+  private
 
   def flags(*sets)
     sets.each do |set|
       ARGV.clear
-      @out = capture_stdout { 
-        @exit = catch(:system_exit) { opts = command_line(*set) }
+      @out = capture_stdout {
+        @exit = catch(:system_exit) { command_line(*set) }
       }
       yield(@app.options) if block_given?
     end
@@ -663,31 +701,31 @@ class TestTaskArgumentParsing < Test::Unit::TestCase
     @app = Rake::Application.new
     @app.options.threads = Rake.application.options.threads
   end
-  
+
   def test_name_only
     name, args = @app.parse_task_string("name")
     assert_equal "name", name
     assert_equal [], args
   end
-  
+
   def test_empty_args
     name, args = @app.parse_task_string("name[]")
     assert_equal "name", name
     assert_equal [], args
   end
-  
+
   def test_one_argument
     name, args = @app.parse_task_string("name[one]")
     assert_equal "name", name
     assert_equal ["one"], args
   end
-  
+
   def test_two_arguments
     name, args = @app.parse_task_string("name[one,two]")
     assert_equal "name", name
     assert_equal ["one", "two"], args
   end
-  
+
   def test_can_handle_spaces_between_args
     name, args = @app.parse_task_string("name[one, two,\tthree , \tfour]")
     assert_equal "name", name

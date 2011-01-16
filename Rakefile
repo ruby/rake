@@ -8,15 +8,16 @@
 # This file may be distributed under an MIT style license.  See
 # MIT-LICENSE for details.
 
-begin
-  require 'rubygems'
-  require 'rake/gempackagetask'
-rescue Exception
-  nil
-end
+require 'rubygems'
+require 'rubygems/package_task'
 require 'rake/clean'
 require 'rake/testtask'
-require 'rake/rdoctask'
+
+begin
+  gem 'rdoc'
+  require 'rdoc/task'
+rescue Gem::LoadError
+end
 
 CLEAN.include('**/*.o', '*.dot', '**/*.rbc')
 CLOBBER.include('doc/example/main', 'testdata')
@@ -89,13 +90,13 @@ namespace :test do
     t.libs << "."
     t.warning = true
   end
-  
+
   Rake::TestTask.new(:functional) do |t|
     t.test_files = TestFiles::FUNCTIONAL
     t.libs << "."
     t.warning = true
   end
-  
+
   Rake::TestTask.new(:contribs) do |t|
     t.test_files = TestFiles::CONTRIB
     t.libs << "."
@@ -108,10 +109,10 @@ begin
 
   Rcov::RcovTask.new do |t|
     t.libs << "test"
-    dot_rakes = 
+    dot_rakes =
     t.rcov_opts = [
       '-xRakefile', '-xrakefile', '-xpublish.rf',
-      '-xlib/rake/contrib', '-x/Library', 
+      '-xlib/rake/contrib', '-x/Library',
       '--text-report',
       '--sort coverage'
     ] + FileList['rakelib/*.rake'].pathmap("-x%p")
@@ -143,29 +144,24 @@ end
 
 # Create a task to build the RDOC documentation tree.
 
-begin
-  require 'darkfish-rdoc'
-  DARKFISH_ENABLED = true
-rescue LoadError => ex
-  DARKFISH_ENABLED = false
-end
-
 BASE_RDOC_OPTIONS = [
-  '--line-numbers', '--inline-source',
-  '--main' , 'README.rdoc',
+  '--line-numbers', '--show-hash',
+  '--main', 'README.rdoc',
   '--title', 'Drake: Distributed Rake'
 ]
 
-rd = Rake::RDocTask.new("rdoc") do |rdoc|
-  rdoc.rdoc_dir = 'html'
-  rdoc.template = 'doc/jamis.rb'
-  rdoc.title    = "Drake: Distributed Rake"
-  rdoc.options = BASE_RDOC_OPTIONS.dup
-  rdoc.options << '-SHN' << '-f' << 'darkfish' if DARKFISH_ENABLED
-    
-  rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGES')
-  rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
-  rdoc.rdoc_files.exclude(/\bcontrib\b/)
+if defined?(RDoc::Task) then
+  RDoc::Task.new do |rdoc|
+    rdoc.rdoc_dir = 'html'
+    rdoc.title    = "Rake -- Ruby Make"
+    rdoc.options = BASE_RDOC_OPTIONS.dup
+
+    rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGES')
+    rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
+    rdoc.rdoc_files.exclude(/\bcontrib\b/)
+  end
+else
+  warn "RDoc 2.4.2+ is required to build documentation"
 end
 
 # ====================================================================
@@ -192,7 +188,7 @@ if ! defined?(Gem)
   puts "Package Target requires RubyGEMs"
 else
   SPEC = Gem::Specification.new do |s|
-    
+
     #### Basic information.
 
     s.name = 'drake'
@@ -200,14 +196,15 @@ else
     s.summary = "A branch of Rake supporting automatic parallelizing of tasks."
     s.description = <<-EOF
       Rake is a Make-like program implemented in Ruby. Tasks
-      and dependencies are specified in standard Ruby syntax. 
+      and dependencies are specified in standard Ruby syntax.
     EOF
 
     #### Dependencies and requirements.
-
     s.add_dependency('comp_tree', '>= 1.0.0')
-    #s.add_dependency('log4r', '> 1.0.4')
-    #s.requirements << ""
+
+    s.required_rubygems_version = '>= 1.3.2'
+    s.add_development_dependency 'session', '~> 2.4'
+    s.add_development_dependency 'flexmock', '~> 0.8.11'
 
     #### Which files are to be included in this gem?  Everything!  (Except CVS directories.)
 
@@ -227,8 +224,14 @@ else
 
     #### Documentation and testing.
 
-    s.has_rdoc = true
-    s.extra_rdoc_files = rd.rdoc_files.reject { |fn| fn =~ /\.rb$/ }.to_a
+    s.extra_rdoc_files = FileList[
+      'README.rdoc',
+      'MIT-LICENSE',
+      'TODO',
+      'CHANGES',
+      'doc/**/*.rdoc'
+    ]
+
     s.rdoc_options = BASE_RDOC_OPTIONS
 
     #### Author and project details.
@@ -243,7 +246,7 @@ else
 #     end
   end
 
-  package_task = Rake::GemPackageTask.new(SPEC) do |pkg|
+  package_task = Gem::PackageTask.new(SPEC) do |pkg|
     pkg.need_zip = true
     pkg.need_tar = true
   end
@@ -308,7 +311,7 @@ task :todo do
 end
 
 desc "List all ruby files"
-task :rubyfiles do 
+task :rubyfiles do
   puts RUBY_FILES
   puts FileList['bin/*'].exclude('bin/*.rb')
 end
@@ -334,23 +337,23 @@ task :release, :rel, :reuse, :reltest,
     :package,
     :tag
   ] do
-  announce 
+  announce
   announce "**************************************************************"
   announce "* Release #{$package_version} Complete."
   announce "* Packages ready to upload."
   announce "**************************************************************"
-  announce 
+  announce
 end
 
 # Validate that everything is ready to go for a release.
 task :prerelease, :rel, :reuse, :reltest do |t, args|
   $package_version = args.rel
-  announce 
+  announce
   announce "**************************************************************"
   announce "* Making RubyGem Release #{$package_version}"
   announce "* (current version #{CURRENT_VERSION})"
   announce "**************************************************************"
-  announce  
+  announce
 
   # Is a release number supplied?
   unless args.rel
@@ -384,13 +387,13 @@ task :update_version, :rel, :reuse, :reltest,
     announce "Updating Rake version to #{args.rel}"
     open("lib/rake.rb") do |rakein|
       open("lib/rake.rb.new", "w") do |rakeout|
-	rakein.each do |line|
-	  if line =~ /^RAKEVERSION\s*=\s*/
-	    rakeout.puts "RAKEVERSION = '#{args.rel}'"
-	  else
-	    rakeout.puts line
-	  end
-	end
+        rakein.each do |line|
+          if line =~ /^RAKEVERSION\s*=\s*/
+            rakeout.puts "RAKEVERSION = '#{args.rel}'"
+          else
+            rakeout.puts line
+          end
+        end
       end
     end
     mv "lib/rake.rb.new", "lib/rake.rb"
@@ -413,14 +416,6 @@ task :tag, :rel, :reuse, :reltest,
   else
     sh %{svn copy svn+ssh://rubyforge.org/var/svn/rake/trunk svn+ssh://rubyforge.org/var/svn/rake/tags/#{reltag} -m 'Commiting release #{reltag}'} ###'
   end
-end
-
-desc "Install the jamis RDoc template"
-task :install_jamis_template do
-  require 'rbconfig'
-  dest_dir = File.join(Config::CONFIG['rubylibdir'], "rdoc/generators/template/html")
-  fail "Unabled to write to #{dest_dir}" unless File.writable?(dest_dir)
-  install "doc/jamis.rb", dest_dir, :verbose => true
 end
 
 # Require experimental XForge/Metaproject support.

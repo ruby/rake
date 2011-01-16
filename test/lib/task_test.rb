@@ -75,7 +75,7 @@ class TestTask < Test::Unit::TestCase
     Rake.application.options.dryrun = true
     runlist = ThreadSafeArray.new
     t1 = task(:t1) { |t| runlist << t.name; 3321 }
-    out = capture_stdout { t1.invoke }
+    out = capture_stderr { t1.invoke }
     assert_match(/execute .*t1/i, out)
     assert_match(/dry run/i, out)
     assert_no_match(/invoke/i, out)
@@ -87,7 +87,7 @@ class TestTask < Test::Unit::TestCase
   def test_tasks_can_be_traced
     Rake.application.options.trace = true
     t1 = task(:t1)
-    out = capture_stdout {
+    out = capture_stderr {
       t1.invoke
     }
     assert_match(/invoke t1/i, out)

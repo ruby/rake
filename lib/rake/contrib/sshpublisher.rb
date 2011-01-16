@@ -12,12 +12,12 @@ module Rake
       @remote_dir = remote_dir
       @local_dir = local_dir
     end
-    
+
     def upload
       sh %{scp -rq #{@local_dir}/* #{@host}:#{@remote_dir}}
     end
   end
-  
+
   # Publish an entire directory to a fresh remote directory using SSH.
   class SshFreshDirPublisher < SshDirPublisher
     def upload
@@ -26,7 +26,7 @@ module Rake
       super
     end
   end
-  
+
   # Publish a list of files to an existing remote directory.
   class SshFilePublisher
     # Create a publisher using the give host information.
@@ -36,7 +36,7 @@ module Rake
       @local_dir = local_dir
       @files = files
     end
-    
+
     # Upload the local directory to the remote directory.
     def upload
       @files.each do |fn|

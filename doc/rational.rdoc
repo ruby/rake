@@ -44,7 +44,7 @@ prototype of Ruby make, complete with dependencies and actions.
 
 I showed the code to my coworker and we had a good laugh.  It was just
 about a page worth of code that reproduced an amazing amount of the
-functionality of make.  We were both truely stunned with the power of
+functionality of make.  We were both truly stunned with the power of
 Ruby.
 
 But it didn't do everything make did.  In particular, it didn't have
@@ -53,7 +53,7 @@ prerequisite files have a later timestamp).  Obviously THAT would be a
 pain to add and so Ruby Make would remain an interesting experiment.
 
 ... Except as I walked back to my desk, I started thinking about what
-file based dependecies would really need.  Rats!  I was hooked again,
+file based dependencies would really need.  Rats!  I was hooked again,
 and by adding a new class and two new methods, file/timestamp
 dependencies were implemented.
 
@@ -133,7 +133,7 @@ created for rake.
 That's it.  There's no documentation (other than whats in this
 message).  Does this sound interesting to anyone?  If so, I'll continue
 to clean it up and write it up and publish it on RAA.  Otherwise, I'll
-leave it as an interesting excerise and a tribute to the power of Ruby.
+leave it as an interesting exercise and a tribute to the power of Ruby.
 
 Why /might/ rake be interesting to Ruby programmers.  I don't know,
 perhaps ...

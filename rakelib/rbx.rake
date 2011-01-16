@@ -38,7 +38,7 @@ namespace "rbx" do
 
   task :check_svn do
     fail "Cannot find Ruby 1.9 SVN directory: #{Rbx::SVN}" unless
-      File.directory?(Rbx::SVN) 
+      File.directory?(Rbx::SVN)
   end
 
 

@@ -97,7 +97,7 @@ class TestRules < Test::Unit::TestCase
     assert_equal [OBJFILE], @runs
   end
 
-  def test_file_names_beginning_with_dot_can_be_tricked_into_refering_to_file
+  def test_file_names_beginning_with_dot_can_be_tricked_into_referring_to_file
     verbose(false) do
       chdir("testdata") do
         create_file('.foo')
@@ -278,7 +278,6 @@ class TestRules < Test::Unit::TestCase
   end
 
   def test_rule_with_proc_dependent_will_trigger
-    ran = false
     mkdir_p("testdata/src/jw")
     create_file("testdata/src/jw/X.java")
     rule %r(classes/.*\.class) => [

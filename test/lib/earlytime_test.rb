@@ -6,7 +6,6 @@ require 'rake'
 class TestEarlyTime < Test::Unit::TestCase
   def test_create
     early = Rake::EarlyTime.instance
-    time = Time.mktime(1970, 1, 1, 0, 0, 0)
     assert early <= Time.now
     assert early < Time.now
     assert early != Time.now
@@ -26,7 +25,7 @@ class TestEarlyTime < Test::Unit::TestCase
     assert t1 < t2
     assert t2 > t1
     assert t1 == t1
-    assert t2 == t2    
+    assert t2 == t2
   end
 
   def test_to_s

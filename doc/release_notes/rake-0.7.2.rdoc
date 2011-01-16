@@ -24,7 +24,7 @@ Rake:
   appliation instead of using its own data.
 
 * Fixed the method name leak from FileUtils (bug found by Glenn
-  Vanderburg). 
+  Vanderburg).
 
 * Added test for noop, bad_option and verbose flags to sh command.
 
@@ -40,13 +40,13 @@ Rake:
 The following new features are available in Rake version 0.7.2:
 
 * Added square and curly bracket patterns to FileList#include (Tilman
-  Sauerbeck). 
+  Sauerbeck).
 
 * FileLists can now pass a block to FileList#exclude to exclude files
   based on calculated values.
 
 * Added plain filename support to rule dependents (suggested by Nobu
-  Nakada). 
+  Nakada).
 
 * Added pathmap support to rule dependents.  In other words, if a
   pathmap format (beginning with a '%') is given as a Rake rule

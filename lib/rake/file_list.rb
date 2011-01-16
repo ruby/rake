@@ -224,7 +224,7 @@ module Rake
     private :resolve_exclude
 
     # Return a new FileList with the results of running +sub+ against each
-    # element of the orignal list.
+    # element of the original list.
     #
     # Example:
     #   FileList['a.c', 'b.c'].sub(/\.c$/, '.o')  => ['a.o', 'b.o']
@@ -244,7 +244,7 @@ module Rake
       inject(FileList.new) { |res, fn| res << fn.gsub(pat,rep) }
     end
 
-    # Same as +sub+ except that the oringal file list is modified.
+    # Same as +sub+ except that the original file list is modified.
     def sub!(pat, rep)
       each_with_index { |fn, i| self[i] = fn.sub(pat,rep) }
       self
@@ -279,7 +279,7 @@ module Rake
     # Grep each of the files in the filelist using the given pattern. If a
     # block is given, call the block on each matching line, passing the file
     # name, line number, and the matching line of text.  If no block is given,
-    # a standard emac style file:linenumber:line message will be printed to
+    # a standard emacs style file:linenumber:line message will be printed to
     # standard out.  Returns the number of matched items.
     def egrep(pattern, *options)
       matched = 0
@@ -300,12 +300,12 @@ module Rake
             end
           end
         rescue StandardError => ex
-          puts "Error while processing '#{fn}': #{ex}"
+          $stderr.puts "Error while processing '#{fn}': #{ex}"
         end
       end
       matched
     end
-    
+
     # Return a new file list that only contains file names from the current
     # file list that exist on the file system.
     def existing
@@ -383,7 +383,7 @@ module Rake
         new(*args)
       end
     end
-  end 
+  end
 end
 
 module Rake

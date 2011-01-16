@@ -1,5 +1,5 @@
 module Rake
-  
+
   ####################################################################
   # InvocationChain tracks the chain of task invocations to detect
   # circular dependencies.
@@ -47,5 +47,5 @@ module Rake
     end
 
     EMPTY = EmptyInvocationChain.new
-  end 
+  end
 end

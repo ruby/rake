@@ -6,7 +6,7 @@ require 'rake/testtask'
 class TestTestTask < Test::Unit::TestCase
   include Rake
   include TestMethods
-  
+
   def setup
     Task.clear
     ENV.delete('TEST')

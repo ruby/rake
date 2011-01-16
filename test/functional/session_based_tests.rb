@@ -2,7 +2,7 @@
 
 begin
   require 'rubygems'
-rescue LoadError => ex
+rescue LoadError
 end
 require 'test/unit'
 require 'fileutils'
@@ -56,13 +56,13 @@ class SessionBasedTests < Test::Unit::TestCase
     assert_status(1)
   end
 
-  def test_env_availabe_at_top_scope
+  def test_env_available_at_top_scope
     Dir.chdir("test/data/default") do rake "TESTTOPSCOPE=1" end
     assert_match(/^TOPSCOPE$/, @out)
     assert_status
   end
 
-  def test_env_availabe_at_task_scope
+  def test_env_available_at_task_scope
     Dir.chdir("test/data/default") do rake "TESTTASKSCOPE=1 task_scope" end
     assert_match(/^TASKSCOPE$/, @out)
     assert_status
@@ -80,7 +80,7 @@ class SessionBasedTests < Test::Unit::TestCase
     assert_no_match %r{^rake c}, @out
     assert_match %r{^rake d *# x{65}\.\.\.$}, @out
   end
-  
+
   def test_long_description
     in_environment("PWD" => "test/data/multidesc") do
       rake "--describe"
@@ -215,8 +215,8 @@ class SessionBasedTests < Test::Unit::TestCase
 
   def test_dry_run
     in_environment("PWD" => "test/data/default") do rake "-n", "other" end
-    assert_match %r{Execute \(dry run\) default}, @out
-    assert_match %r{Execute \(dry run\) other}, @out
+    assert_match %r{Execute \(dry run\) default}, @err
+    assert_match %r{Execute \(dry run\) other}, @err
     assert_no_match %r{DEFAULT}, @out
     assert_no_match %r{OTHER}, @out
   end
@@ -341,7 +341,7 @@ class SessionBasedTests < Test::Unit::TestCase
       assert_match(/^XYZ1\nXYZ2$/m, @out)
     end
   end
-  
+
   def test_file_task_dependencies_scoped_by_namespaces
     in_environment("PWD" => "test/data/namespace") do
       rake "scopedep.rb"
@@ -350,7 +350,7 @@ class SessionBasedTests < Test::Unit::TestCase
   ensure
     remove_namespace_files
   end
-  
+
   def test_rake_returns_status_error_values
     in_environment("PWD" => "test/data/statusreturn") do
       rake "exit5"
@@ -371,7 +371,7 @@ class SessionBasedTests < Test::Unit::TestCase
     end
     assert_match("comment for t1", @out)
   end
-  
+
   def test_comment_separated_from_task_by_blank_line_is_not_picked_up
     Dir.chdir("test/data/comments") { rake("-T")}
     assert_not_match("t2", @out)
@@ -381,35 +381,35 @@ class SessionBasedTests < Test::Unit::TestCase
     Dir.chdir("test/data/comments") { rake("-T")}
     assert_match("override comment for t3", @out)
   end
-  
+
   def test_comment_before_desc_is_ignored
     Dir.chdir("test/data/comments") { rake("-T")}
     assert_match("override comment for t4", @out)
   end
-  
+
   def test_correct_number_of_tasks_reported
     Dir.chdir("test/data/comments") { rake("-T")}
     assert_equal(3, @out.split(/\n/).grep(/t\d/).size)
   end
-  
+
   def test_file_list_is_requirable_separately
     ruby "-rrake/file_list", "-e 'puts Rake::FileList[\"a\"].size'"
     assert_equal "1\n", @out
     assert_equal 0, @status
   end
-  
+
   private
 
   def assert_not_match(pattern, string, comment="'#{pattern}' was found (incorrectly) in '#{string}.inspect")
     assert_nil Regexp.new(pattern).match(string), comment
   end
-  
+
   def remove_chaining_files
     %w(play.scpt play.app base).each do |fn|
       FileUtils.rm_f File.join("test/data/chains", fn)
     end
   end
-  
+
   def remove_namespace_files
     %w(scopedep.rb).each do |fn|
       FileUtils.rm_f File.join("test/data/namespace", fn)

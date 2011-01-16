@@ -70,7 +70,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Supporting Rake version: 0.8.7.
 
 This package contains Rake, a simple ruby build program with
-capabilities similar to make. 
+capabilities similar to make.
 
 Rake has the following features:
 
@@ -119,7 +119,7 @@ First, you must write a "Rakefile" file which contains the build rules. Here's
 a simple example:
 
   task :default => [:test]
-  
+
   task :test do
     ruby "test/unittest.rb"
   end
@@ -169,6 +169,7 @@ http://github.com/jimweirich/rake. The public git clone URL is
 
 If you wish to run the unit and functional tests that come with Rake:
 
+* Install the 'flexmock' gem
 * Install the 'session' gem in order to run the functional tests.
 * CD into the top project directory of rake.
 * Type one of the following:
@@ -181,7 +182,7 @@ If you wish to run the unit and functional tests that come with Rake:
 Feature requests and bug reports can be made here
 
 * http://onestepback.org/cgi-bin/bugs.cgi?project=rake
- 
+
 No account is needed for posting requests.  Or you can send me an
 email (at jim dot weirich at gmail dot com)
 
@@ -241,7 +242,7 @@ The Rake homepage is http://rake.rubyforge.org.  You can find the Rake
 RubyForge page at http://rubyforge.org/projects/rake.
 
 Feel free to submit commits or feature requests.  If you send a patch,
-remember to update the corresponding unit tests.  If fact, I prefer
+remember to update the corresponding unit tests.  In fact, I prefer
 new feature to be submitted in the form of new unit tests.
 
 For other information, feel free to ask on the ruby-talk mailing list

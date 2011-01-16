@@ -27,7 +27,7 @@ class TestPathMap < Test::Unit::TestCase
 
   def test_n_returns_basename_without_extension
     assert_equal "abc", "abc.rb".pathmap("%n")
-    assert_equal "abc", "abc".pathmap("%n") 
+    assert_equal "abc", "abc".pathmap("%n")
     assert_equal "abc", "this/is/a/dir/abc.rb".pathmap("%n")
     assert_equal "abc", "/this/is/a/dir/abc.rb".pathmap("%n")
     assert_equal "abc", "/this/is/a/dir/abc".pathmap("%n")
@@ -88,7 +88,7 @@ class TestPathMap < Test::Unit::TestCase
   end
 
   def test_undefined_percent_causes_error
-    ex = assert_exception(ArgumentError) {
+    assert_exception(ArgumentError) {
       "dir/abc.rb".pathmap("%z")
     }
   end

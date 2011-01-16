@@ -46,14 +46,14 @@ new features and numerous bug fixes.
 
 * Fixed bug with rules involving multiple source, where only the first
   dependency of a rule has any effect (Patch supplied by Emanuel
-  Indermühle)
+  IndermÃ¼hle)
 
 * FileList#clone and FileList#dup have better sematics w.r.t. taint
   and freeze.
 
 * Changed from using Mutex to Monitor. Evidently Mutex causes thread
   join errors when Ruby is compiled with -disable-pthreads. (Patch
-  supplied by Ittay Dror) 
+  supplied by Ittay Dror)
 
 * Fixed bug in makefile parser that had problems with extra spaces in
   file task names. (Patch supplied by Ittay Dror)
@@ -157,7 +157,7 @@ otherwise helpful comments.  Thanks to ...
 * Gavin Stark
 * Adam Q. Salter
 * Adam Majer
-* Emanuel Indermühle
+* Emanuel IndermÃ¼hle
 * Ittay Dror
 * Bheeshmar Redheendran (for spending an afternoon with me debugging
   windows issues)

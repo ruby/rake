@@ -1,7 +1,7 @@
 require 'rake/invocation_exception_mixin'
 
 module Rake
-  
+
   # #########################################################################
   # A Task is the basic unit of work in a Rakefile.  Tasks have associated
   # actions (possibly more than one) and a list of prerequisites.  When
@@ -50,12 +50,12 @@ module Rake
     def sources
       @sources ||= []
     end
-    
+
     # List of prerequisite tasks
     def prerequisite_tasks
       prerequisites.collect { |pre| lookup_prerequisite(pre) }
     end
-    
+
     def lookup_prerequisite(prerequisite_name)
       application[prerequisite_name, @scope]
     end
@@ -65,7 +65,7 @@ module Rake
     def source
       @sources.first if defined?(@sources)
     end
-    
+
     # Create a task named +task_name+ with no actions or prerequisites. Use
     # +enhance+ to add actions and prerequisites.
     def initialize(task_name, app)
@@ -138,7 +138,7 @@ module Rake
       self
     end
 
-    # Invoke the task if it is needed.  Prerequites are invoked first.
+    # Invoke the task if it is needed.  Prerequisites are invoked first.
     def invoke(*args)
       if application.options.threads == 1
         invoke_serial(*args)
@@ -178,7 +178,7 @@ module Rake
         @prerequisites = @prerequisites.sort_by { rand }
       end
       if application.options.trace
-        puts "** Invoke #{name} #{format_trace_flags}"
+        $stderr.puts "** Invoke #{name} #{format_trace_flags}"
       end
       return if @already_invoked
       @already_invoked = true
@@ -214,11 +214,11 @@ module Rake
     def execute(args=nil)
       args ||= EMPTY_TASK_ARGS
       if application.options.dryrun
-        puts "** Execute (dry run) #{name}"
+        $stderr.puts "** Execute (dry run) #{name}"
         return
       end
       if application.options.trace
-        puts "** Execute #{name}"
+        $stderr.puts "** Execute #{name}"
       end
       application.enhance_with_matching_rule(name) if @actions.empty?
       @actions.each do |act|
@@ -255,7 +255,7 @@ module Rake
       add_description(description)
     end
 
-    # Add a comment to the task.  If a comment alread exists, separate
+    # Add a comment to the task.  If a comment already exists, separate
     # the new comment with " / ".
     def add_comment(comment)
       if @full_comment

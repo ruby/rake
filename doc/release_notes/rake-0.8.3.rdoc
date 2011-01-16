@@ -12,7 +12,7 @@ Rake version 0.8.3 is a bug-fix release of rake.
   directory.
 
 * Added fix to handle ruby installations in directories with spaces in
-  their name.  
+  their name.
 
 == What is Rake
 
@@ -104,7 +104,7 @@ otherwise helpful comments.  Thanks to ...
 * Gavin Stark
 * Adam Q. Salter
 * Adam Majer
-* Emanuel Indermühle
+* Emanuel IndermÃ¼hle
 * Ittay Dror
 * Bheeshmar Redheendran (for spending an afternoon with me debugging
   windows issues)

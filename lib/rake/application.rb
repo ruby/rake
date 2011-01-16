@@ -5,7 +5,7 @@ require 'rake/task_manager'
 require 'rake/win32'
 
 module Rake
-  
+
   ######################################################################
   # Rake main application object.  When invoking +rake+ from the
   # command line, a Rake::Application object is created and run.
@@ -53,7 +53,7 @@ module Rake
     # * Run the top level tasks (+run_tasks+).
     #
     # If you wish to build a custom rake command, you should call
-    # +init+ on your application.  The define any tasks.  Finally,
+    # +init+ on your application.  Then define any tasks.  Finally,
     # call +top_level+ to run your top level tasks.
     def run
       standard_exception_handling do
@@ -123,7 +123,7 @@ module Rake
       [name, args]
     end
 
-    # Provide standard execption handling for the given block.
+    # Provide standard exception handling for the given block.
     def standard_exception_handling
       begin
         yield
@@ -147,7 +147,7 @@ module Rake
       if options.trace
         $stderr.puts ex.backtrace.join("\n")
       else
-        $stderr.puts ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
+        $stderr.puts rakefile_location(ex.backtrace)
       end
       $stderr.puts "Tasks: #{ex.chain}" if has_chain?(ex)
       $stderr.puts "(See full trace by running task with --trace)" unless options.trace
@@ -232,7 +232,7 @@ module Rake
       80
     end
 
-    # Calculate the dynamic width of the 
+    # Calculate the dynamic width of the
     def dynamic_width
       @dynamic_width ||= (dynamic_width_stty.nonzero? || dynamic_width_tput)
     end
@@ -246,9 +246,9 @@ module Rake
     end
 
     def unix?
-      Config::CONFIG['host_os'] =~ /(aix|darwin|linux|(net|free|open)bsd|cygwin|solaris|irix|hpux)/i
+      RbConfig::CONFIG['host_os'] =~ /(aix|darwin|linux|(net|free|open)bsd|cygwin|solaris|irix|hpux)/i
     end
-    
+
     def windows?
       Win32.windows?
     end
@@ -308,7 +308,7 @@ module Rake
         ],
         ['--execute-continue',  '-E CODE',
           "Execute some Ruby code, then continue with normal task processing.",
-          lambda { |value| eval(value) }            
+          lambda { |value| eval(value) }
         ],
         ['--threads', '-j N', "Run up to N independent tasks simultaneously in separate threads.",
           lambda { |value| options.threads = value.to_i }
@@ -323,9 +323,9 @@ module Rake
           lambda { |value| Rake.verbose(false) }
         ],
         ['--rakefile', '-f [FILE]', "Use FILE as the rakefile.",
-          lambda { |value| 
+          lambda { |value|
             value ||= ''
-            @rakefiles.clear 
+            @rakefiles.clear
             @rakefiles << value
           }
         ],
@@ -347,7 +347,7 @@ module Rake
             rescue LoadError => ex
               begin
                 rake_require value
-              rescue LoadError => ex2
+              rescue LoadError
                 raise ex
               end
             end
@@ -477,12 +477,17 @@ module Rake
       Dir.chdir(Rake.original_dir)
     end
 
+    def print_rakefile_directory(location)
+      $stderr.puts "(in #{Dir.pwd})" unless
+        options.silent or original_dir == location
+    end
+
     def raw_load_rakefile # :nodoc:
       rakefile, location = find_rakefile_location
       if (! options.ignore_system) &&
           (options.load_system || rakefile.nil?) &&
           system_dir && File.directory?(system_dir)
-        puts "(in #{Dir.pwd})" unless options.silent
+        print_rakefile_directory(location)
         glob("#{system_dir}/*.rake") do |name|
           add_import name
         end
@@ -491,7 +496,7 @@ module Rake
           rakefile.nil?
         @rakefile = rakefile
         Dir.chdir(location)
-        puts "(in #{Dir.pwd})" unless options.silent
+        print_rakefile_directory(location)
         $rakefile = @rakefile if options.classic_namespace
         Rake::Environment.load_rakefile(File.expand_path(@rakefile)) if @rakefile && @rakefile != ''
         options.rakelib.each do |rlib|
@@ -519,7 +524,7 @@ module Rake
           end
         end
     end
-    
+
     # The standard directory containing system wide rake files.
     if Win32.windows?
       def standard_system_dir #:nodoc:
@@ -578,12 +583,13 @@ module Rake
       @const_warning = true
     end
 
-    def rakefile_location
-      begin
-        fail
-      rescue RuntimeError => ex
-        ex.backtrace.find {|str| str =~ /#{@rakefile}/ } || ""
-      end
+    def rakefile_location backtrace = caller
+      backtrace.map { |t| t[/([^:]+):/,1] }
+
+      re = /^#{@rakefile}$/
+      re = /#{re.source}/i if windows?
+
+      backtrace.find { |str| str =~ re } || ''
     end
 
     #

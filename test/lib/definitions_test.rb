@@ -10,7 +10,7 @@ require 'test/rake_test_setup'
 class TestDefinitions < Test::Unit::TestCase
   include Rake
   include TestMethods
-  
+
   EXISTINGFILE = "testdata/existing"
 
   def setup
@@ -86,4 +86,4 @@ class TestDefinitions < Test::Unit::TestCase
   end
 
 end
-  
+

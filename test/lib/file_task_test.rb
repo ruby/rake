@@ -292,7 +292,7 @@ class TestFileTask < Test::Unit::TestCase
   # deleting the file target on failure is always the proper thing to
   # do.  I'm willing to hear input on this topic.
   def ztest_file_deletes_on_failure
-    task :obj 
+    task :obj
     file NEWFILE => [:obj] do |t|
       FileUtils.touch NEWFILE
       fail "Ooops"
@@ -305,6 +305,23 @@ class TestFileTask < Test::Unit::TestCase
     assert( ! File.exist?(NEWFILE), "NEWFILE should be deleted")
   end
 
+  def test_timestamp_granularity
+    a, b = %w[a b].map { |n| "testdata/#{n}" }
+    @runs = []
+
+    file a => b do
+      @runs << a
+      touch a
+    end
+    file b do
+      @runs << b
+      touch b
+    end
+
+    touch a
+    Rake::Task[a].invoke
+    assert_equal [b, a], @runs
+  end
 end
 
 ######################################################################

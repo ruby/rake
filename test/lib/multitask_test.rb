@@ -43,4 +43,4 @@ class TestMultiTask < Test::Unit::TestCase
   end
 end
 
- 
+

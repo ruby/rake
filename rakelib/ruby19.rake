@@ -44,7 +44,7 @@ namespace "ruby19" do
 
   task :check_svn do
     fail "Cannot find Ruby 1.9 SVN directory: #{Ruby19::SVN}" unless
-      File.directory?(Ruby19::SVN) 
+      File.directory?(Ruby19::SVN)
   end
 
 

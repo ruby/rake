@@ -2,7 +2,7 @@ require 'rbconfig'
 require 'find'
 require 'fileutils'
 
-include Config
+include RbConfig
 
 $ruby = CONFIG['ruby_install_name']
 
@@ -27,7 +27,7 @@ def installBIN(from, opfile)
 
   fail "Cannot find a temporary directory" unless tmp_dir
   tmp_file = File.join(tmp_dir, "_tmp")
-    
+
   File.open(from) do |ip|
     File.open(tmp_file, "w") do |op|
       ruby = File.join($realbindir, $ruby)
@@ -62,7 +62,7 @@ bindir = CONFIG["bindir"]
 if (destdir = ENV['DESTDIR'])
   $bindir  = destdir + $bindir
   $sitedir = destdir + $sitedir
-  
+
   FileUtils.mkdir_p($bindir)
   FileUtils.mkdir_p($sitedir)
 end
