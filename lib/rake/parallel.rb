@@ -24,9 +24,6 @@ module Rake
       # Tasks collected during the dry-run phase.
       attr_reader :tasks
 
-      # Prevent invoke inside invoke.
-      attr_reader :mutex
-
       def initialize
         @tasks = Hash.new
         @mutex = Mutex.new
@@ -64,11 +61,8 @@ module Rake
       #
       def compute(root_task, threads)
         CompTree.build do |driver|
-          # keep this around for optimization
-          needed_prereq_names = Array.new
-
           @tasks.each_pair do |task, (task_args, prereqs)|
-            needed_prereq_names.clear
+            needed_prereq_names = []
 
             prereqs.each do |prereq|
               # if a prereq is not needed then it didn't get into @tasks
@@ -116,9 +110,9 @@ module Rake
         prereqs = Task.instance_method(:invoke_prerequisites).
           bind(self).call(task_args, new_chain)
 
-        parallel = application.parallel
-        if needed? or prereqs.any? { |p| parallel.tasks[p] }
-          parallel.tasks[self] = [task_args, prereqs]
+        tasks = application.parallel.tasks
+        if needed? or prereqs.any? { |p| tasks[p] }
+          tasks[self] = [task_args, prereqs]
         end
       end
     end
