@@ -1,9 +1,8 @@
 # Rakefile for rake        -*- ruby -*-
 
 # Copyright 2003, 2004, 2005 by Jim Weirich (jim@weirichhouse.org)
+# Copyright 2008-2011 by James M. Lawrence (quixoticsycophant@gmail.com)
 # All rights reserved.
-#
-# Copyright 2008, 2009, 2010 by James M. Lawrence
 #
 # This file may be distributed under an MIT style license.  See
 # MIT-LICENSE for details.
