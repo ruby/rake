@@ -159,6 +159,7 @@ end
 # tar, zip and gem files.
 
 PKG_FILES = FileList[
+  '.gemtest',
   'install.rb',
   '[A-Z]*',
   'bin/**/*',
