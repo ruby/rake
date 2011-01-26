@@ -5,7 +5,7 @@ N = 2
 task :default => :run
 
 BUILD_DIR = 'build'
-task :clean do 
+task :clean do
   rm_rf 'build'
   rm_rf 'src'
 end

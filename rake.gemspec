@@ -1,11 +1,11 @@
---- !ruby/object:Gem::Specification 
+--- !ruby/object:Gem::Specification
 name: rake
-version: !ruby/object:Gem::Version 
+version: !ruby/object:Gem::Version
   version: 0.8.5
 platform: ruby
-authors: 
+authors:
 - Jim Weirich
-autorequire: 
+autorequire:
 bindir: bin
 cert_chain: []
 
@@ -15,11 +15,11 @@ dependencies: []
 
 description: Rake is a Make-like program implemented in Ruby. Tasks and dependencies are specified in standard Ruby syntax.
 email: jim@weirichhouse.org
-executables: 
+executables:
 - rake
 extensions: []
 
-extra_rdoc_files: 
+extra_rdoc_files:
 - README
 - MIT-LICENSE
 - TODO
@@ -44,7 +44,7 @@ extra_rdoc_files:
 - doc/release_notes/rake-0.8.3.rdoc
 - doc/release_notes/rake-0.8.4.rdoc
 - doc/release_notes/rake-0.8.5.rdoc
-files: 
+files:
 - install.rb
 - CHANGES
 - MIT-LICENSE
@@ -181,33 +181,33 @@ files:
 - doc/release_notes/rake-0.8.5.rdoc
 has_rdoc: true
 homepage: http://rake.rubyforge.org
-post_install_message: 
-rdoc_options: 
+post_install_message:
+rdoc_options:
 - --line-numbers
 - --inline-source
 - --main
 - README
 - --title
 - Rake -- Ruby Make
-require_paths: 
+require_paths:
 - lib
-required_ruby_version: !ruby/object:Gem::Requirement 
-  requirements: 
+required_ruby_version: !ruby/object:Gem::Requirement
+  requirements:
   - - ">="
-    - !ruby/object:Gem::Version 
+    - !ruby/object:Gem::Version
       version: "0"
-  version: 
-required_rubygems_version: !ruby/object:Gem::Requirement 
-  requirements: 
+  version:
+required_rubygems_version: !ruby/object:Gem::Requirement
+  requirements:
   - - ">="
-    - !ruby/object:Gem::Version 
+    - !ruby/object:Gem::Version
       version: "0"
-  version: 
+  version:
 requirements: []
 
 rubyforge_project: rake
 rubygems_version: 1.3.1
-signing_key: 
+signing_key:
 specification_version: 2
 summary: Ruby based make-like utility.
 test_files: []

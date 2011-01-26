@@ -12,7 +12,7 @@ require 'rake'
 require 'test/rake_test_setup'
 
 class DslTest < Test::Unit::TestCase
-  
+
   def test_namespace_command
     namespace "n" do
       task "t"

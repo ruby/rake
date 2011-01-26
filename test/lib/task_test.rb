@@ -16,7 +16,7 @@ class TestTask < Test::Unit::TestCase
     Task.clear
     Rake::TaskManager.record_task_metadata = true
   end
-  
+
   def teardown
     super
     Rake::TaskManager.record_task_metadata = false
@@ -180,12 +180,12 @@ class TestTask < Test::Unit::TestCase
     task :a => FileList.new.include("b", "c")
     assert_equal ["b", "c"], Task[:a].prerequisites
   end
-  
+
   def test_prerequiste_tasks_returns_tasks_not_strings
     a = task :a => ["b", "c"]
     b = task :b
     c = task :c
-    assert_equal [b, c], a.prerequisite_tasks    
+    assert_equal [b, c], a.prerequisite_tasks
   end
 
   def test_prerequiste_tasks_fails_if_prerequisites_are_undefined
@@ -206,7 +206,7 @@ class TestTask < Test::Unit::TestCase
 
     assert_equal [b, c], a.prerequisite_tasks
   end
-  
+
   def test_timestamp_returns_now_if_all_prereqs_have_no_times
     a = task :a => ["b", "c"]
     b = task :b
@@ -285,7 +285,7 @@ class TestTaskWithArguments < Test::Unit::TestCase
     Task.clear
     Rake::TaskManager.record_task_metadata = true
   end
-  
+
   def teardown
     Rake::TaskManager.record_task_metadata = false
     super

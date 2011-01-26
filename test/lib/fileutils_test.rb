@@ -15,13 +15,13 @@ class TestFileUtils < Test::Unit::TestCase
   def setup
     File.chmod(0750, "test/shellcommand.rb")
   end
-  
+
   def teardown
     File.chmod(0755, "test/shellcommand.rb")
     FileUtils.rm_rf("testdata")
     FileUtils::LN_SUPPORTED[0] = true
   end
-  
+
   def test_rm_one_file
     create_file("testdata/a")
     FileUtils.rm_rf "testdata/a"
@@ -159,7 +159,7 @@ class TestFileUtils < Test::Unit::TestCase
   end
 
   def test_sh_failure
-    assert_exception(RuntimeError) { 
+    assert_exception(RuntimeError) {
       verbose(false) { Sh.run %{#{FileUtils::RUBY} test/shellcommand.rb 1} }
     }
   end
@@ -235,7 +235,7 @@ class TestFileUtils < Test::Unit::TestCase
   end
 
   private
-  
+
   def redirect_stderr
     old_err = $stderr
     $stderr = StringIO.new
@@ -252,5 +252,5 @@ class TestFileUtils < Test::Unit::TestCase
   def env_var
     windows? ? '%RAKE_TEST_SH%' : '$RAKE_TEST_SH'
   end
-  
+
 end

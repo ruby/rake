@@ -1,7 +1,7 @@
 = Rake 0.5.0 Released
 
 It has been a long time in coming, but we finally have a new version
-of Rake available.  
+of Rake available.
 
 == Changes
 

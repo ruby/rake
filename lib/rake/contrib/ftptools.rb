@@ -133,7 +133,7 @@ module Rake # :nodoc:
         upload(fn)
       end
     end
-    
+
     # Close the uploader.
     def close
       @ftp.close
