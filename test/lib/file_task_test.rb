@@ -305,23 +305,6 @@ class TestFileTask < Test::Unit::TestCase
     assert( ! File.exist?(NEWFILE), "NEWFILE should be deleted")
   end
 
-  def test_timestamp_granularity
-    a, b = %w[a b].map { |n| "testdata/#{n}" }
-    @runs = []
-
-    file a => b do
-      @runs << a
-      touch a
-    end
-    file b do
-      @runs << b
-      touch b
-    end
-
-    touch a
-    Rake::Task[a].invoke
-    assert_equal [b, a], @runs
-  end
 end
 
 ######################################################################

@@ -18,14 +18,14 @@ class TestExtension < Test::Unit::TestCase
       $stderr = old_err
     end
   end
-  
+
   class Sample
     extend Redirect
 
     def duplicate_method
       :original
     end
-    
+
     OK_ERRS = error_redirect do
       rake_extension("a") do
         def ok_method

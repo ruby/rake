@@ -9,7 +9,7 @@ changes.  This release includes:
   revised for 1.8.2 test task.
 
 * Updated the docs on --trace to indicate that it also enables a full
-  backtrace on errors. 
+  backtrace on errors.
 
 * Several fixes for new warnings generated.
 

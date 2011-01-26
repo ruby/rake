@@ -6,7 +6,7 @@ module Rake
 
   class RubyForgePublisher < SshDirPublisher
     attr_reader :project, :proj_id, :user
-    
+
     def initialize(projname, user)
       super(
         "#{user}@rubyforge.org",
@@ -14,5 +14,5 @@ module Rake
         "html")
     end
   end
-  
+
 end
