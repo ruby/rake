@@ -5,10 +5,9 @@ require 'rake/packagetask'
 require 'test/rake_test_setup'
 
 class TestPackageTask < Test::Unit::TestCase
-  include Rake
   include TestMethods
 
-  def test_create
+  def test_initialize
     pkg = Rake::PackageTask.new("pkgr", "1.2.3") { |p|
       p.package_files << "install.rb"
       p.package_files.include(
@@ -27,29 +26,35 @@ class TestPackageTask < Test::Unit::TestCase
       p.need_tar_bz2 = true
       p.need_zip = true
     }
+
     assert_equal "pkg", pkg.package_dir
     assert pkg.package_files.include?("bin/rake")
-    assert "pkgr", pkg.name
-    assert "1.2.3", pkg.version
-    assert Task[:package]
-    assert Task['pkg/pkgr-1.2.3.tgz']
-    assert Task['pkg/pkgr-1.2.3.tar.gz']
-    assert Task['pkg/pkgr-1.2.3.tar.bz2']
-    assert Task['pkg/pkgr-1.2.3.zip']
-    assert Task["pkg/pkgr-1.2.3"]
-    assert Task[:clobber_package]
-    assert Task[:repackage]
+    assert_equal 'pkgr', pkg.name
+    assert_equal '1.2.3', pkg.version
+    assert Rake::Task[:package]
+    assert Rake::Task['pkg/pkgr-1.2.3.tgz']
+    assert Rake::Task['pkg/pkgr-1.2.3.tar.gz']
+    assert Rake::Task['pkg/pkgr-1.2.3.tar.bz2']
+    assert Rake::Task['pkg/pkgr-1.2.3.zip']
+    assert Rake::Task['pkg/pkgr-1.2.3']
+    assert Rake::Task[:clobber_package]
+    assert Rake::Task[:repackage]
   end
 
-  def test_missing_version
-    assert_exception(RuntimeError) {
-      Rake::PackageTask.new("pkgr") { |p| }
-    }
+  def test_initialize_no_version
+    e = assert_raises RuntimeError do
+      Rake::PackageTask.new 'pkgr'
+    end
+
+    assert_equal 'Version required (or :noversion)', e.message
   end
 
-  def test_no_version
-    pkg = Rake::PackageTask.new("pkgr", :noversion) { |p| }
-    assert "pkgr", pkg.send(:package_name)
+  def test_initialize_noversion
+    pkg = Rake::PackageTask.new 'pkgr', :noversion
+
+    assert_equal 'pkg',  pkg.package_dir
+    assert_equal 'pkgr', pkg.name
+    assert_equal nil,    pkg.version
   end
 
   def test_clone
@@ -60,5 +65,18 @@ class TestPackageTask < Test::Unit::TestCase
     assert_equal ["y"], pkg.package_files
     assert_equal ["x"], p2.package_files
   end
+
+  def test_package_name
+    pkg = Rake::PackageTask.new 'a', '1'
+
+    assert_equal 'a-1', pkg.package_name
+  end
+
+  def test_package_name_noversion
+    pkg = Rake::PackageTask.new 'a', :noversion
+
+    assert_equal 'a', pkg.package_name
+  end
+
 end
 
