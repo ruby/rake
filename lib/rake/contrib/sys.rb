@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 warn 'Sys has been deprecated in favor of FileUtils'
 
 #--

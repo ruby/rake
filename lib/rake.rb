@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 #--
 
 # Copyright 2003-2010 by Jim Weirich (jim.weirich@gmail.com)

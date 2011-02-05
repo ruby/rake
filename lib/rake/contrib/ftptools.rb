@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 # = Tools for FTP uploading.
 #
 # This file is still under development and is not released for general

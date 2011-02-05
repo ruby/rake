@@ -1,6 +1,3 @@
-#!/usr/bin/env ruby
-# -*- ruby -*-
-
 task "create:project" => ["lib", "test", "Rakefile"]
 
 directory "lib"
