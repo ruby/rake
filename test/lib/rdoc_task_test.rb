@@ -74,10 +74,4 @@ class TestRDocTask < Test::Unit::TestCase
     assert_equal 1, rd.option_list.grep('-S').size
     assert_equal 0, rd.option_list.grep('--inline-source').size
   end
-
-  def test_inline_source_option_can_be_disabled
-    rd = Rake::RDocTask.new
-    rd.inline_source = false
-    assert !rd.option_list.include?('--inline-source')
-  end
 end
