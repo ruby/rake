@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 
 begin
+  old_verbose = $VERBOSE
   require 'rubygems'
+  $VERBOSE = nil
   gem 'session'
   require 'session'
 rescue LoadError
@@ -10,6 +12,8 @@ rescue LoadError
   else
     puts "Unable to run functional tests -- please run \"gem install session\""
   end
+ensure
+  $VERBOSE = old_verbose
 end
 
 if defined?(Session)
