@@ -1,7 +1,14 @@
 #!/usr/bin/env ruby
 
 require 'test/unit'
-require 'rake/rdoctask'
+require 'test/capture_stdout'
+begin
+  old_verbose = $VERBOSE
+  $VERBOSE = nil
+  require 'rake/rdoctask'
+ensure
+  $VERBOSE = old_verbose
+end
 require 'test/rake_test_setup'
 
 class TestRDocTask < Test::Unit::TestCase
