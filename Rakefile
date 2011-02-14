@@ -6,8 +6,18 @@
 # This file may be distributed under an MIT style license.  See
 # MIT-LICENSE for details.
 
+require 'rbconfig'
 require 'rubygems'
+
+system_rake = File.join RbConfig::CONFIG['rubylibdir'], 'rake.rb'
+
+# Use our rake, not the installed rake from system
+if $".include? system_rake then
+  exec Gem.ruby, '-Ilib', 'bin/rake', *ARGV
+end
+
 require 'rubygems/package_task'
+
 require 'rake/clean'
 require 'rake/testtask'
 
