@@ -2,7 +2,13 @@
 
 require 'test/unit'
 require 'test/filecreation'
-require 'rake/contrib/sys'
+begin
+  old_verbose = $VERBOSE
+  $VERBOSE = nil
+  require 'rake/contrib/sys'
+ensure
+  $VERBOSE = old_verbose
+end
 
 class TestSys < Test::Unit::TestCase
   include FileCreation
