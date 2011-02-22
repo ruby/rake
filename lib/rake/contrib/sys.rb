@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+warn 'Sys has been deprecated in favor of FileUtils'
 
 #--
 # Copyright 2003-2010 by Jim Weirich (jim.weirich@gmail.com)

@@ -623,14 +623,17 @@ class TestApplicationOptions < Test::Unit::TestCase
 
   def test_classic_namespace
     in_environment do
-      flags(['--classic-namespace'], ['-C', '-T', '-P', '-n', '-s', '-t']) do |opts|
-        assert opts.classic_namespace
-        assert_equal opts.show_tasks, $show_tasks
-        assert_equal opts.show_prereqs, $show_prereqs
-        assert_equal opts.trace, $trace
-        assert_equal opts.dryrun, $dryrun
-        assert_equal opts.silent, $silent
+      error_output = capture_stderr do
+        flags(['--classic-namespace'], ['-C', '-T', '-P', '-n', '-s', '-t']) do |opts|
+          assert opts.classic_namespace
+          assert_equal opts.show_tasks, $show_tasks
+          assert_equal opts.show_prereqs, $show_prereqs
+          assert_equal opts.trace, $trace
+          assert_equal opts.dryrun, $dryrun
+          assert_equal opts.silent, $silent
+        end
       end
+      assert_match(/deprecated/, error_output)
     end
   end
 

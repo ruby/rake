@@ -1,7 +1,14 @@
 #!/usr/bin/env ruby
 
 require 'test/unit'
-require 'rake/rdoctask'
+require 'test/capture_stdout'
+begin
+  old_verbose = $VERBOSE
+  $VERBOSE = nil
+  require 'rake/rdoctask'
+ensure
+  $VERBOSE = old_verbose
+end
 require 'test/rake_test_setup'
 
 class TestRDocTask < Test::Unit::TestCase
@@ -73,11 +80,5 @@ class TestRDocTask < Test::Unit::TestCase
     rd.options << '-S'
     assert_equal 1, rd.option_list.grep('-S').size
     assert_equal 0, rd.option_list.grep('--inline-source').size
-  end
-
-  def test_inline_source_option_can_be_disabled
-    rd = Rake::RDocTask.new
-    rd.inline_source = false
-    assert !rd.option_list.include?('--inline-source')
   end
 end

@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 module Rake
 
   # Manage several publishers as a single entity.
@@ -20,5 +18,4 @@ module Rake
   end
 
 end
-
 

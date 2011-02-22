@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 require 'test/unit'
 require 'test/unit/assertions'
 
@@ -10,7 +8,7 @@ module Rake
     Dir["#{pattern}"].each { |fn|
       $stderr.puts fn if log_enabled
       begin
-        load fn
+        require fn
       rescue Exception => ex
         $stderr.puts "Error in #{fn}: #{ex.message}"
         $stderr.puts ex.backtrace

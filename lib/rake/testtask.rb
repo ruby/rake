@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 # Define a task library for running unit tests.
 
 require 'rake'
@@ -150,7 +148,7 @@ module Rake
     def run_code
       case @loader
       when :direct
-        "-e \"ARGV.each{|f| load f}\""
+        "-e \"ARGV.each{|f| require f}\""
       when :testrb
         "-S testrb #{fix}"
       when :rake
