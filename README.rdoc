@@ -8,10 +8,6 @@ Run up to three tasks in parallel:
 
   % drake -j3
 
-or equivalently,
-
-  % drake --threads 3
-
 == Installation
 
   % gem install drake
@@ -27,13 +23,12 @@ executable.  On your system you may alias or link drake to rake if
 desired.
 
 For more on parallelization with -j, see
-parallel.rdoc[http://drake.rubyforge.org/files/doc/parallel_rdoc.html].
+parallel.rdoc[http://quix.github.com/rake/files/doc/parallel_rdoc.html].
 
 == Links
 
-* Download: http://rubyforge.org/frs/?group_id=6530
-* Documentation: http://drake.rubyforge.org
-* Rubyforge home: http://rubyforge.org/projects/drake
+* Home: http://quix.github.com/rake
+* Feature Requests, Bug Reports: http://github.com/quix/rake/issues
 * Repository: http://github.com/quix/rake
 
 == Author
