@@ -29,8 +29,8 @@ short answer is probably that +multitask+ was easy to implement, while
 dynamically finding parallelizable tasks and safely executing them in
 separate threads requires a little more code.
 
-Rake now supports the -j option which does exactly this.  To run up to
-three tasks in parallel,
+Rake now supports the +-j+ option which does exactly this. To run up
+to three tasks in parallel,
 
   % rake -j3
 
@@ -40,31 +40,31 @@ or equivalently,
 
 == A Note on Dependencies
 
-Without +multitask+ or -j (or --randomize, explained below), Rake
-invokes tasks in a predetermined order.  Rakefile authors inevitably
-come to rely on this order.  Even though their dependency graph may be
-wide and hierarchical, the only graph which has ever been tested is
-linear: one which results from visiting each node in sequence.
+Without +multitask+ or +-j+, Rake invokes tasks in a predetermined
+order. Rakefile authors inevitably come to rely on this order. Even
+though their dependency graph may be wide and hierarchical, the only
+graph which has ever been tested is linear: one which results from
+visiting each node in sequence.
 
 Consider
 
    task :a => [:x, :y, :z]
 
-When Rake runs in single-threaded mode (the default), _x_,_y_,_z_ will
-be invoked <em>in that order</em> before _a_ is invoked, assuming no
-other rules exist involving these tasks.  However with -j _N_ for
-_N_ > 1, one should not expect any particular order of execution.
-Since there is no dependency specified between _x_,_y_,_z_ above, Rake
-is free to run them in any order.
+When Rake runs in single-threaded mode (the default), tasks
+_x_,_y_,_z_ will be invoked <em>in that order</em> before _a_ is
+invoked, assuming no other rules exist involving these tasks. However
+with +-j+ _N_ for _N_ > 1, one should not expect any
+particular order of execution. Since there is no dependency specified
+between _x_,_y_,_z_ above, Rake is free to run them in any order.
 
 The problem of underspecified dependencies plagues Makefiles as well
-(GNU make has supported -j for some time).
+(GNU make has supported +-j+ for some time).
 
-== Migrating to -j
+== Migrating to +-j+
 
-Suppose -j produces errors from insufficient dependencies in your
-Rakefile.  Do you want to bother fixing them?  If you are satisfied
-with your build time, then there is really no reason to use -j.
+Suppose +-j+ produces errors from insufficient dependencies in your
+Rakefile. Do you want to bother fixing them? If you are satisfied with
+your build time, then there is really no reason to use +-j+.
 
 If on the other hand your build takes twenty minutes to complete, you
 may be interested in getting the full dependency graph correct in
@@ -89,15 +89,15 @@ advantage of using a single thread.
 == Task#invoke inside Task#invoke
 
 Parallelizing tasks means surrendering control over the
-micro-management of their execution.  Manually invoking tasks inside
+micro-management of their execution. Manually invoking tasks inside
 other tasks is rather contrary to this notion, throwing a monkey
-wrench into the system.  An exception will be raised when this is
-attempted in -j mode.
+wrench into the system. An exception will be raised when this is
+attempted in +-j+ mode.
 
-== What is the Difference Between -j and Multitask?
+== What is the Difference Between +-j+ and Multitask?
 
 What if you replaced +task+ with +multitask+ everywhere in your
-Rakefile?  Isn't that the same as -j?
+Rakefile?  Isn't that the same as +-j+?
 
 It is effectively the same when the number of tasks is small.  However
 an all-multitask Rakefile becomes problematic as the number of tasks
@@ -107,6 +107,7 @@ Multitask blindly fires off N threads for the N prerequisites of a
 task.
 
 A simplistic +multitask+ setup for compiling 100 C files might spawn
-100 threads running 100 compiler processes all at the same time.  To
+100 threads running 100 compiler processes all at the same time. To
 reduce the load you could make several reasonably-sized multitasks
-then tie them together with a regular +task+.  Or you could just use -j.
+then tie them together with a regular +task+. Or you could just use
++-j+.
