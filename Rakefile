@@ -125,7 +125,9 @@ begin
     t.verbose = true
   end
 rescue LoadError
-  puts "RCov is not available"
+  task :rcov do
+    puts "RCov is not available"
+  end
 end
 
 directory 'testdata'
