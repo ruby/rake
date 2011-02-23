@@ -80,22 +80,34 @@ Options are:
     Use the project level Rakefile, ignoring the system-wide (global)
     rakefiles.
 
-[<tt>--tasks</tt> (-T)]
+[<tt>--tasks</tt> <em>pattern</em> (-T)]
     Display a list of the major tasks and their comments.  Comments
-    are defined using the "desc" command.
+    are defined using the "desc" command.  If a pattern is given, then
+    only tasks matching the pattern are displayed.
+
+[<tt>--no-top-level-dsl</tt> (-X)]
+    Do not put the Rake DSL commands into the top level scope.
+
+[<tt>--top-level-dsl</tt>]
+    Put the Rake DSL commands into the top level scope (default).
+
+    NOTE: Although currently Rake defaults to its DSL in the top level
+    scope, the plan is to deprecate this in the future and default ot
+    having the DSL commands *not* appear in the top level scope.
 
 [<tt>--trace</tt> (-t)]
     Turn on invoke/execute tracing. Also enable full backtrace on
     errors.
-
-[<tt>--usage</tt> (-h)]
-    Display a usage message and exit.
 
 [<tt>--verbose</tt> (-v)]
     Echo the Sys commands to standard output.
 
 [<tt>--version</tt> (-V)]
     Display the program version and exit.
+
+[<tt>--where</tt> <em>pattern</em> (-W)]
+    Display tasks that match <em>pattern</em> and the file and line
+    number where the task is defined.
 
 In addition, any command line option of the form
 <em>VAR</em>=<em>VALUE</em> will be added to the environment hash

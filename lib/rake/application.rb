@@ -313,6 +313,9 @@ module Rake
         ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
           lambda { |value| $:.push(value) }
         ],
+        ['--no-search', '--nosearch', '-N', "Do not search parent directories for the Rakefile.",
+          lambda { |value| options.nosearch = true }
+        ],
         ['--prereqs', '-P', "Display the tasks and dependencies, then exit.",
           lambda { |value| options.show_prereqs = true }
         ],
@@ -346,9 +349,6 @@ module Rake
         ['--rules', "Trace the rules resolution.",
           lambda { |value| options.trace_rules = true }
         ],
-        ['--no-search', '--nosearch', '-N', "Do not search parent directories for the Rakefile.",
-          lambda { |value| options.nosearch = true }
-        ],
         ['--silent', '-s', "Like --quiet, but also suppresses the 'in directory' announcement.",
           lambda { |value|
             Rake.verbose(false)
@@ -370,7 +370,7 @@ module Rake
             Rake::TaskManager.record_task_metadata = true
           }
         ],
-        ['--no-top-level-dsl', '-X', "Do no put Rake DSL commands in the top level scope.",
+        ['--no-top-level-dsl', '-X', "Do not put Rake DSL commands in the top level scope.",
           lambda { |value|
             options.top_level_dsl = ! value
           }
