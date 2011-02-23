@@ -45,7 +45,7 @@ end
 
 # Determine the current version of the software
 
-if `ruby -Ilib ./bin/rake --version` =~ /rake, version ([0-9.]+)$/
+if `ruby -Ilib ./bin/rake --version` =~ /rake, version ([0-9a-z.]+)$/
   CURRENT_VERSION = $1
 else
   CURRENT_VERSION = "0.0.0"

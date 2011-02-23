@@ -2,9 +2,10 @@ module Rake
   module Version
     NUMBERS = [
       MAJOR = 0,
-      MINOR = 8,
-      BUILD = 99,
-      BETA  = 5,
+      MINOR = 9,
+      BUILD = 0,
+      BETA  = 'beta',
+      BETANUM = 0,
     ]
   end
   VERSION = Version::NUMBERS.join('.')
