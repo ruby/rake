@@ -383,32 +383,18 @@ loading.
 
 Standard Ruby comments (beginning with "#") can be used anywhere it is
 legal in Ruby source code, including comments for tasks and rules.
-A single-line comment immediately before a task (with no blank line
-between it and the task) will be used as that task's description, and
-the task and description will appear in the list displayed
-using the "-T" switch.
+However, if you wish a task to be described using the "-T" switch,
+then you need to use the +desc+ command to describe the task.
 
 === Example:
 
-  # Create a distribution package
+  desc "Create a distribution package"
   task :package => [ ... ] do ... end
-
-You can also use the +desc+ command before a task to set the
-description for the task. In this case, intervening blank lines
-are allowed
-
-=== Example:
-
-  desc 'Create a distribution package'
-
-  task :package => [ ... ] do ... end
-
-The +desc+ comment takes priority over the comment for of description.
 
 The "-T" switch (or "--tasks" if you like to spell things out) will
-display a list of tasks that have a description.  If you use
-comments or +desc+ to describe your major tasks, you have a
-semi-automatic way of generating a summary of your Rake file.
+display a list of tasks that have a description.  If you use +desc+ to
+describe your major tasks, you have a semi-automatic way of generating
+a summary of your Rake file.
 
   traken$ rake -T
   (in /home/.../rake)

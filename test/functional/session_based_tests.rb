@@ -369,7 +369,7 @@ class SessionBasedTests < Test::Unit::TestCase
     in_environment("PWD" => "test/data/comments") do
       rake "-T"
     end
-    assert_match("comment for t1", @out)
+    assert_no_match(/comment for t1/, @out)
   end
 
   def test_comment_separated_from_task_by_blank_line_is_not_picked_up
@@ -389,7 +389,7 @@ class SessionBasedTests < Test::Unit::TestCase
 
   def test_correct_number_of_tasks_reported
     Dir.chdir("test/data/comments") { rake("-T")}
-    assert_equal(3, @out.split(/\n/).grep(/t\d/).size)
+    assert_equal(2, @out.split(/\n/).grep(/t\d/).size)
   end
 
   def test_file_list_is_requirable_separately
