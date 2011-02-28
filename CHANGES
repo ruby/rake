@@ -37,9 +37,6 @@
   call 'task :xzy' in your code, include Rake::DSL into your class, or
   put the code in a Rake::DSL.environment do ... end block.
 
-* Allow single line comments immediately prior to a task to be used in
-  place of +desc+.
-
 * Split rake.rb into individual files.
 
 * Support for the --where (-W) flag for showing where a task is defined.
