@@ -40,8 +40,10 @@ Options are:
 [<tt>--libdir</tt> _directory_  (-I)]
     Add _directory_ to the list of directories searched for require.
 
-[<tt>--threads</tt> _number_ (-j)]
+[<tt>--threads</tt> [_number_] (-j)]
     Run up to N independent tasks simultaneously in separate threads.
+    If _number_ is not given, run as many tasks in parallel as the
+    dependencies allow.
 
 [<tt>--nosearch</tt>  (-N)]
     Do not search for a Rakefile in parent directories.

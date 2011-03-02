@@ -8,6 +8,10 @@ Run up to three tasks in parallel:
 
   % drake -j3
 
+Run as many tasks in parallel as the dependencies allow:
+
+  % drake -j
+
 == Installation
 
   % gem install drake

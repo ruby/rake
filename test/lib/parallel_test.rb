@@ -4,7 +4,7 @@ require 'test/unit'
 require 'rake'
 require 'test/rake_test_setup'
 
-if Rake.application.options.threads > 1
+if Rake.application.options.threads != 1
   class TestParallel < Test::Unit::TestCase
     VISUALS = false
     TIME_STEP = 0.25
@@ -30,7 +30,7 @@ if Rake.application.options.threads > 1
 
       data = Hash.new { |hash, key| hash[key] = Hash.new }
       
-      (1..MAX_THREADS).each { |threads|
+      (0..MAX_THREADS).each { |threads|
         app = Rake::Application.new
         app.options.threads = threads
 
@@ -70,7 +70,7 @@ if Rake.application.options.threads > 1
       assert_order(1, data[2]["b"])
       assert_order(2, data[2]["default"])
 
-      (3..MAX_THREADS).each { |threads|
+      ([0] + (3..MAX_THREADS).to_a).each { |threads|
         assert_order(0, data[threads]["x"])
         assert_order(0, data[threads]["y"])
         assert_order(0, data[threads]["b"])

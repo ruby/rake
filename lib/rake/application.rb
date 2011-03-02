@@ -322,8 +322,11 @@ module Rake
           "Execute some Ruby code, then continue with normal task processing.",
           lambda { |value| eval(value) }
         ],
-        ['--threads', '-j N', "Run up to N independent tasks simultaneously in separate threads.",
-          lambda { |value| options.threads = value.to_i }
+        ['--threads', '-j [N]', Integer, "Run up to N tasks simultaneously; without N (or N=0), no limit.",
+         lambda { |value|
+           # nil.to_i == 0, which means unlimited threads
+           options.threads = value.to_i
+         }
         ],
         ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
           lambda { |value| $:.push(value) }
@@ -608,7 +611,8 @@ module Rake
       end
       
       def threads=(n)
-        if n > 1 and require('rake/parallel')
+        raise ArgumentError, "threads must be nonnegative" if n < 0
+        if require('rake/parallel')
           Task.module_eval { include Parallel::TaskMixin }
           Application.module_eval { include Parallel::ApplicationMixin }
         end

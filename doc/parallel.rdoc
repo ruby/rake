@@ -38,6 +38,13 @@ or equivalently,
 
   % rake --threads 3
 
+Without a number,
+
+  % rake -j
+
+means as many tasks as possible will run in parallel: the dependency
+graph alone determines the number.
+
 == A Note on Dependencies
 
 Without +multitask+ or +-j+, Rake invokes tasks in a predetermined
