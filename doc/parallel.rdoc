@@ -71,7 +71,7 @@ The problem of underspecified dependencies plagues Makefiles as well
 
 Suppose +-j+ produces errors from insufficient dependencies in your
 Rakefile. Do you want to bother fixing them? If you are satisfied with
-your build time, then there is really no reason to use +-j+.
+your build time then there is really no reason to use +-j+.
 
 If on the other hand your build takes twenty minutes to complete, you
 may be interested in getting the full dependency graph correct in
@@ -83,10 +83,10 @@ saying what you mean:
 
   % rake --randomize[=SEED]
 
-This will randomize the order of sibling prerequisites for each task.
-When SEED is given, <tt>srand(SEED.hash)</tt> will be called so that
-the same permutations will be produced for subsequent runs with the
-same SEED.
+where the optional SEED is an integer. This will randomize the order
+of sibling prerequisites for each task. Runs with the same SEED will
+produce the same sibling permutations. If no SEED is given then one
+will be generated. SEED is reported when Rake exits.
 
 Though this option may cause an error due to underspecified
 dependencies, with SEED at least it will be an error which is exactly

@@ -351,11 +351,14 @@ module Rake
           "Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')",
           lambda { |value| options.rakelib = value.split(':') }
         ],
-        ['--randomize[=SEED]', "Randomize the order of sibling prerequisites.",
+        ['--randomize[=SEED]', Integer, "Randomize the order of sibling prerequisites.",
           lambda { |value|
-            options.randomize = true
             MultiTask.class_eval { remove_method(:invoke_prerequisites) }
-            srand(value.hash) if value
+            options.randomize = value || (srand ; srand % 10_000)
+            srand options.randomize
+            at_exit do
+              $stderr.puts "Run options: --randomize=#{options.randomize}"
+            end
           }
         ],
         ['--require', '-r MODULE', "Require MODULE before executing rakefile.",

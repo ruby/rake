@@ -65,11 +65,11 @@ Options are:
 [<tt>--rakelibdir</tt> _rakelibdir_ (-R)]
     Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')
 
-[<tt>--randomize</tt>[=_seed_]]
-    Randomize the order of sibling prerequisites for each task.  When
-    _seed_ is given, <tt>srand(seed.hash)</tt> will be called so that
-    the same permutations will be produced for subsequent runs with
-    the same _seed_.
+[<tt>--randomize</tt> [_seed_]]
+    Randomize the order of sibling prerequisites for each task. Runs
+    with the same _seed_ will produce the same sibling permutations.
+    If no _seed_ is given then one will be generated. _seed_ is
+    reported when Rake exits.
 
 [<tt>--require</tt> _name_ (-r)]
     Require _name_ before executing the Rakefile.
