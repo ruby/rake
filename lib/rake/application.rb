@@ -372,7 +372,7 @@ module Rake
         ],
         ['--no-top-level-dsl', '-X', "Do not put Rake DSL commands in the top level scope.",
           lambda { |value|
-            options.top_level_dsl = ! value
+            options.top_level_dsl = value
           }
         ],
         ['--top-level-dsl', "Put Rake DSL commands in the top level scope (default).",
