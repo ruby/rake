@@ -144,3 +144,5 @@ module Rake
 
   extend FileUtilsExt
 end
+
+self.extend Rake::DSL
