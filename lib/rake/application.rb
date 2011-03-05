@@ -370,16 +370,6 @@ module Rake
             Rake::TaskManager.record_task_metadata = true
           }
         ],
-        ['--no-top-level-dsl', '-X', "Do not put Rake DSL commands in the top level scope.",
-          lambda { |value|
-            options.top_level_dsl = value
-          }
-        ],
-        ['--top-level-dsl', "Put Rake DSL commands in the top level scope (default).",
-          lambda { |value|
-            options.top_level_dsl = value
-          }
-        ],
         ['--trace', '-t', "Turn on invoke/execute tracing, enable full backtrace.",
           lambda { |value|
             options.trace = true
@@ -408,7 +398,6 @@ module Rake
     # Read and handle the command line options.
     def handle_options
       options.rakelib = ['rakelib']
-      options.top_level_dsl = true
 
       OptionParser.new do |opts|
         opts.banner = "rake [-f rakefile] {options} targets..."
@@ -423,8 +412,6 @@ module Rake
         standard_rake_options.each { |args| opts.on(*args) }
         opts.environment('RAKEOPT')
       end.parse!
-
-      Rake::DSL.include_in_top_scope if options.top_level_dsl
 
       # If class namespaces are requested, set the global options
       # according to the values in the options structure.
