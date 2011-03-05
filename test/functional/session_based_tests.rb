@@ -91,6 +91,22 @@ class SessionBasedTests < Test::Unit::TestCase
     assert_no_match %r{^rake c\n}m, @out
   end
 
+  def test_proper_namespace_access_old_style
+    in_environment("PWD" => "test/data/access") do
+      rake
+    end
+    assert_match %r{^GOOD:M}, @out
+    assert_match %r{^BAD:D}, @out
+    assert_match %r{^GOOD:C}, @out
+  end
+
+  def test_proper_namespace_access_experimental
+    in_environment("PWD" => "test/data/access") do
+      rake "--no-top-level-dsl"
+    end
+    assert_not_match %r{^BAD:}, @out
+  end
+
   def test_rbext
     in_environment("PWD" => "test/data/rbext") do
       rake "-N"
