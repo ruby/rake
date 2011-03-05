@@ -16,16 +16,16 @@ module Rake
         load_string(rakefile, rakefile_path)
       end
 
+      # Run a block of code in the Rake DSL environment.
+      def run(&block)
+        block.call
+      end
+
       # Load a string of code in the Rake DSL environment.  If the
       # string comes from a file, include the file path so that proper
       # line numbers references may be retained.
       def load_string(code, file_name=nil)
-        module_eval(code, file_name || "(eval)")
-      end
-
-      # Run a block of code in the Rake DSL environment.
-      def run(&block)
-        module_eval(&block)
+        eval(code, binding, file_name)
       end
     end
   end
