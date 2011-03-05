@@ -9,4 +9,11 @@ require 'rake'
 
 class Test::Unit::TestCase
   include Rake::DSL
+
+  def ignore_deprecations
+    Rake.application.options.ignore_deprecate = true
+    yield
+  ensure
+    Rake.application.options.ignore_deprecate = false
+  end
 end

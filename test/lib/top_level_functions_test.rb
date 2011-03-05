@@ -20,6 +20,8 @@ class TestTopLevelFunctions < Test::Unit::TestCase
     super
     @app = Rake.application
     Rake.application = flexmock("app")
+    Rake.application.should_receive(:deprecate).
+      and_return { |old, new, call| @app.deprecate(old, new, call) }
   end
 
   def teardown
@@ -36,7 +38,7 @@ class TestTopLevelFunctions < Test::Unit::TestCase
     Rake.application.should_receive(:add_import).with("x").once.ordered
     Rake.application.should_receive(:add_import).with("y").once.ordered
     Rake.application.should_receive(:add_import).with("z").once.ordered
-    import('x', 'y', 'z')
+    Rake.import('x', 'y', 'z')
   end
 
   def test_when_writing

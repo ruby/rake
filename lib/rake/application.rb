@@ -153,6 +153,18 @@ module Rake
       $stderr.puts "(See full trace by running task with --trace)" unless options.trace
     end
 
+    # Warn about deprecated usage.
+    #
+    # Example:
+    #    Rake.application.deprecate("import", "Rake.import", caller.first)
+    #
+    def deprecate(old_usage, new_usage, call_site)
+      return if options.ignore_deprecate
+      $stderr.puts "WARNING: '#{old_usage}' is deprecated.  " +
+        "Please use '#{new_usage}' instead.\n" +
+        "    at #{call_site}"
+    end
+
     # Does the exception have a task invocation chain?
     def has_chain?(exception)
       exception.respond_to?(:chain) && exception.chain
@@ -390,6 +402,11 @@ module Rake
             options.show_tasks = :lines
             options.show_task_pattern = Regexp.new(value || '')
             Rake::TaskManager.record_task_metadata = true
+          }
+        ],
+        ['--no-deprecation-warnings', '-X', "Disable the deprecation warnings.",
+          lambda { |value|
+            options.ignore_deprecate = true
           }
         ],
       ]

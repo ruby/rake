@@ -103,6 +103,10 @@ module Rake
         arg_names = []
         deps = value
       elsif key == :needs
+        Rake.application.deprecate(
+          "task :t, arg, :needs => [deps]",
+          "task :t, [args] => [deps]",
+          caller.detect { |c| c !~ /\blib\/rake\b/ })
         task_name = args.shift
         arg_names = args
         deps = value

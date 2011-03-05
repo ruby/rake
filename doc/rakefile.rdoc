@@ -358,12 +358,17 @@ invoked.  This make generated dependency files difficult to use.  By
 the time rake gets around to updating the dependencies file, it is too
 late to load it.
 
-The +import+ command addresses this by specifying a file to be loaded
-_after_ the main rakefile is loaded, but _before_ any targets on the
-command line are specified.  In addition, if the file name matches an
-explicit task, that task is invoked before loading the file.  This
-allows dependency files to be generated and used in a single rake
-command invocation.
+The +Rake.import+ command addresses this by specifying a file to be
+loaded _after_ the main rakefile is loaded, but _before_ any targets
+on the command line are invoked.  In addition, if the file name
+matches an explicit task, that task is invoked before loading the
+file.  This allows dependency files to be generated and used in a
+single rake command invocation.
+
+<b>NOTE:</b> Starting in Rake version 0.9.0, the top level +import+
+command is deprecated and we recommend using the scoped
+"+Rake.import+" command mentioned above.  Future versions of Rake will
+drop support for the top level +import+ command.
 
 === Example:
 
@@ -373,7 +378,7 @@ command invocation.
     sh "makedepend -f- -- #{CFLAGS} -- #{t.prerequisites} > #{t.name}"
   end
 
-  import ".depends.mf"
+  Rake.import ".depends.mf"
 
 If ".depends" does not exist, or is out of date w.r.t. the source
 files, a new ".depends" file is generated using +makedepend+ before

@@ -116,24 +116,31 @@ module Rake
       Rake.application.last_description = description
     end
 
-    # Import the partial Rakefiles +fn+.  Imported files are loaded
-    # _after_ the current file is completely loaded.  This allows the
-    # import statement to appear anywhere in the importing file, and yet
-    # allowing the imported files to depend on objects defined in the
-    # importing file.
-    #
-    # A common use of the import statement is to include files
-    # containing dependency declarations.
-    #
-    # See also the --rakelibdir command line option.
-    #
-    # Example:
-    #   import ".depend", "my_rules"
-    #
-    def import(*fns)
-      fns.each do |fn|
-        Rake.application.add_import(fn)
-      end
+    # The DSL level import command is now deprecated and moved the
+    # Rake.import.
+    def import(*fn)
+      Rake.application.deprecate("import", "Rake.import", caller.first)
+      Rake.import(*fn)
+    end
+  end
+
+  # Import the partial Rakefiles +fn+.  Imported files are loaded
+  # _after_ the current file is completely loaded.  This allows the
+  # import statement to appear anywhere in the importing file, and yet
+  # allowing the imported files to depend on objects defined in the
+  # importing file.
+  #
+  # A common use of the import statement is to include files
+  # containing dependency declarations.
+  #
+  # See also the --rakelibdir command line option.
+  #
+  # Example:
+  #   import ".depend", "my_rules"
+  #
+  def Rake.import(*fns)
+    fns.each do |fn|
+      Rake.application.add_import(fn)
     end
   end
 
