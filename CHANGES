@@ -2,6 +2,12 @@
 
 == Pre-Version 0.9.x
 
+* Moved Rake DSL commands to top level ruby object 'main'.  Rake DSL
+  commands are no longer private methods in Object. (Suggested by
+  James M. Lawrence/quix)
+
+* Deprecated 'import'.  Use 'Rake.import' instead.
+
 * Rake history is now UTF-8 encoded.
 
 * Rake now uses case-insensitive comparisons to find the Rakefile on Windows.
