@@ -328,8 +328,7 @@ task :noop
 #plugin "release_manager"
 
 desc "Make a new release"
-task :release, :rel, :reuse, :reltest,
-  :needs => [
+task :release, [:rel, :reuse, :reltest] => [
     :prerelease,
     :clobber,
     "test:all",
@@ -379,8 +378,7 @@ task :prerelease, :rel, :reuse, :reltest do |t, args|
   end
 end
 
-task :update_version, :rel, :reuse, :reltest,
-  :needs => [:prerelease] do |t, args|
+task :update_version, [:rel, :reuse, :reltest] => [:prerelease] do |t, args|
   if args.rel == CURRENT_VERSION
     announce "No version change ... skipping version update"
   else
@@ -406,8 +404,7 @@ task :update_version, :rel, :reuse, :reltest,
 end
 
 desc "Tag all the CVS files with the latest release number (REL=x.y.z)"
-task :tag, :rel, :reuse, :reltest,
-  :needs => [:prerelease] do |t, args|
+task :tag, [:rel, :reuse, :reltest] => [:prerelease] do |t, args|
   reltag = "REL_#{args.rel.gsub(/\./, '_')}"
   reltag << args.reuse.gsub(/\./, '_') if args.reuse
   announce "Tagging Repository with [#{reltag}]"
