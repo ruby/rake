@@ -3,7 +3,7 @@
 require 'test/unit'
 require 'fileutils'
 require 'rake'
-require 'test/filecreation'
+require 'test/file_creation'
 require 'test/rake_test_setup'
 
 ######################################################################
