@@ -121,7 +121,6 @@ begin
 
   Rcov::RcovTask.new do |t|
     t.libs << "test"
-    dot_rakes =
     t.rcov_opts = [
       '-xRakefile', '-xrakefile', '-xpublish.rf',
       '-xlib/rake/contrib', '-x/Library', '-x.rvm',
@@ -261,7 +260,7 @@ else
 #     end
   end
 
-  package_task = Gem::PackageTask.new(SPEC) do |pkg|
+  Gem::PackageTask.new(SPEC) do |pkg|
     pkg.need_zip = true
     pkg.need_tar = true
   end
