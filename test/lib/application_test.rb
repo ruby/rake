@@ -349,6 +349,17 @@ class TestApplication < Test::Unit::TestCase
   ensure
     ARGV.clear
   end
+
+  def test_deprecation_message
+    in_environment do
+      error_messages = capture_stderr do
+        @app.deprecate("a", "b", "c")
+      end
+      assert_match(/'a' is deprecated/i, error_messages)
+      assert_match(/use 'b' instead/i, error_messages)
+      assert_match(/at c$/i, error_messages)
+    end
+  end
 end
 
 
