@@ -238,8 +238,7 @@ module Rake
     end
 
     def trace_rule(level, message)
-      $stderr.puts "#{"    "*level}#{message}" if
-        Rake.application.options.trace_rules
+      $stderr.puts "#{"    "*level}#{message}" if Rake.application.options.trace_rules
     end
 
     # Attempt to create a rule given the list of prerequisites.
@@ -266,7 +265,7 @@ module Rake
     # Make a list of sources from the list of file name extensions /
     # translation procs.
     def make_sources(task_name, extensions)
-      extensions.collect { |ext|
+      result = extensions.collect { |ext|
         case ext
         when /%/
           task_name.pathmap(ext)
@@ -285,7 +284,8 @@ module Rake
         else
           fail "Don't know how to handle rule dependent: #{ext.inspect}"
         end
-      }.flatten
+      }
+      result.flatten
     end
 
 
