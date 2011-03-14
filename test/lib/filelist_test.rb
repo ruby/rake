@@ -347,6 +347,16 @@ class TestFileList < Test::Unit::TestCase
     assert_match(/files\.egrep/, found[2])
   end
 
+  def test_egrep_with_error
+    files = FileList['test/lib/*_test.rb']
+    error_messages = capture_stderr do
+      files.egrep(/XYZZY/) do |fn, ln, line |
+        fail "_EGREP_FAILURE_"
+      end
+    end
+    assert_match(/_EGREP_FAILURE_/, error_messages)
+  end
+
   def test_existing
     fl = FileList['testdata/abc.c', 'testdata/notthere.c']
     assert_equal ["testdata/abc.c"], fl.existing
