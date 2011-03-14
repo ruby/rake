@@ -106,6 +106,18 @@ end
 
 begin
   require 'rcov/rcovtask'
+  IGNORE_COVERAGE_IN = FileList[
+    'lib/rake/rdoctask.rb',
+    'lib/rake/testtask.rb',
+    'lib/rake/packagetask.rb',
+    'lib/rake/clean.rb',
+  ]
+
+  unless File::ALT_SEPARATOR
+    IGNORE_COVERAGE_IN.include(
+      'lib/rake/alt_system.rb',
+      'lib/rake/win32.rb')
+  end
 
   Rcov::RcovTask.new do |t|
     t.libs << "test"
@@ -115,7 +127,8 @@ begin
       '-xlib/rake/contrib', '-x/Library', '-x.rvm',
       '--text-report',
       '--sort coverage'
-    ] + FileList['rakelib/*.rake'].pathmap("-x%p")
+    ] + FileList['rakelib/*.rake'].pathmap("-x%p") +
+      IGNORE_COVERAGE_IN.map { |fn| "-x#{fn}" }
     t.test_files = FileList[
       'test/lib/*_test.rb',
       'test/contrib/*_test.rb',
