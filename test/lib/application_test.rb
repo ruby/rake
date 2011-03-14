@@ -232,6 +232,21 @@ class TestApplication < Test::Unit::TestCase
     end
   end
 
+  def test_load_from_calculated_system_rakefile
+    flexmock(@app, :standard_system_dir => "__STD_SYS_DIR__")
+    in_environment('RAKE_SYSTEM' => nil) do
+      @app.options.rakelib = []
+      @app.instance_eval do
+        handle_options
+        options.silent = true
+        options.load_system = true
+        options.rakelib = []
+        load_rakefile
+      end
+      assert_equal "__STD_SYS_DIR__", @app.system_dir
+    end
+  end
+
   def test_windows
     assert ! (@app.windows? && @app.unix?)
   end
@@ -607,7 +622,28 @@ class TestApplicationOptions < Test::Unit::TestCase
       end
       flags(['--tasks', 'xyz'], ['-Txyz']) do |opts|
         assert_equal :tasks, opts.show_tasks
-        assert_equal(/xyz/, opts.show_task_pattern)
+        assert_equal(/xyz/.to_s, opts.show_task_pattern.to_s)
+      end
+    end
+  end
+
+  def test_where
+    in_environment do
+      flags('--where', '-W') do |opts|
+        assert_equal :lines, opts.show_tasks
+        assert_equal(//.to_s, opts.show_task_pattern.to_s)
+      end
+      flags(['--where', 'xyz'], ['-Wxyz']) do |opts|
+        assert_equal :lines, opts.show_tasks
+        assert_equal(/xyz/.to_s, opts.show_task_pattern.to_s)
+      end
+    end
+  end
+
+  def test_no_deprecated_messages
+    in_environment do
+      flags('--no-deprecation-warnings', '-X') do |opts|
+        assert opts.ignore_deprecate
       end
     end
   end
