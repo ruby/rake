@@ -112,7 +112,7 @@ begin
     dot_rakes =
     t.rcov_opts = [
       '-xRakefile', '-xrakefile', '-xpublish.rf',
-      '-xlib/rake/contrib', '-x/Library',
+      '-xlib/rake/contrib', '-x/Library', '-x.rvm',
       '--text-report',
       '--sort coverage'
     ] + FileList['rakelib/*.rake'].pathmap("-x%p")
