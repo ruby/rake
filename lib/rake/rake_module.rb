@@ -20,6 +20,10 @@ module Rake
       application.original_dir
     end
 
+    # Load a rakefile.
+    def load_rakefile(path)
+      load(path)
+    end
   end
 
 end

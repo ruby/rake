@@ -449,7 +449,7 @@ module Rake
       paths.each do |path|
         full_path = File.join(path, fn)
         if File.exist?(full_path)
-          Rake::Environment.load_rakefile(full_path)
+          Rake.load_rakefile(full_path)
           loaded << fn
           return true
         end
@@ -492,7 +492,7 @@ module Rake
         Dir.chdir(location)
         print_rakefile_directory(location)
         $rakefile = @rakefile if options.classic_namespace
-        Rake::Environment.load_rakefile(File.expand_path(@rakefile)) if @rakefile && @rakefile != ''
+        Rake.load_rakefile(File.expand_path(@rakefile)) if @rakefile && @rakefile != ''
         options.rakelib.each do |rlib|
           glob("#{rlib}/*.rake") do |name|
             add_import name
