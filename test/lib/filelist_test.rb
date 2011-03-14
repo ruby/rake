@@ -350,7 +350,7 @@ class TestFileList < Test::Unit::TestCase
   def test_egrep_with_error
     files = FileList['test/lib/*_test.rb']
     error_messages = capture_stderr do
-      files.egrep(/XYZZY/) do |fn, ln, line |
+      files.egrep(/ANYTHING/) do |fn, ln, line |
         fail "_EGREP_FAILURE_"
       end
     end
