@@ -1,14 +1,12 @@
 = Rake Changelog
 
-== Pre-Version 0.9.x
+== Version 0.9.0
 
 * Rake now warns when the deprecated :needs syntax used.
 
 * Moved Rake DSL commands to top level ruby object 'main'.  Rake DSL
   commands are no longer private methods in Object. (Suggested by
   James M. Lawrence/quix)
-
-* Deprecated 'import'.  Use 'Rake.import' instead.
 
 * Rake history is now UTF-8 encoded.
 
