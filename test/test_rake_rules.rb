@@ -7,7 +7,7 @@ require 'test/file_creation'
 require 'test/rake_test_setup'
 
 ######################################################################
-class TestRules < Test::Unit::TestCase
+class TestRakeRules < Test::Unit::TestCase
   include Rake
   include FileCreation
   include TestMethods

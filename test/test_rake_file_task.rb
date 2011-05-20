@@ -7,7 +7,7 @@ require 'test/file_creation'
 require 'test/rake_test_setup'
 
 ######################################################################
-class TestFileTask < Test::Unit::TestCase
+class TestRakeFileTask < Test::Unit::TestCase
   include Rake
   include FileCreation
   include TestMethods
@@ -93,7 +93,7 @@ class TestFileTask < Test::Unit::TestCase
 end
 
 ######################################################################
-class TestDirectoryTask < Test::Unit::TestCase
+class TestRakeDirectoryTask < Test::Unit::TestCase
   include Rake
 
   def setup

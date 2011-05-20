@@ -4,7 +4,7 @@ require 'test/unit'
 require 'rake/packagetask'
 require 'test/rake_test_setup'
 
-class TestPackageTask < Test::Unit::TestCase
+class TestRakePackageTask < Test::Unit::TestCase
   include TestMethods
 
   def test_initialize

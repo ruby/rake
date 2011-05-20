@@ -6,7 +6,7 @@ require 'rake'
 require 'test/rake_test_setup'
 
 ######################################################################
-class TestTask < Test::Unit::TestCase
+class TestRakeTask < Test::Unit::TestCase
   include CaptureStdout
   include Rake
   include TestMethods
@@ -275,7 +275,7 @@ class TestTask < Test::Unit::TestCase
 end
 
 ######################################################################
-class TestTaskWithArguments < Test::Unit::TestCase
+class TestRakeTaskWithArguments < Test::Unit::TestCase
   include CaptureStdout
   include Rake
   include TestMethods

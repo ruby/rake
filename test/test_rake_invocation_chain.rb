@@ -5,7 +5,7 @@ require 'rake'
 require 'test/rake_test_setup'
 
 ######################################################################
-class TestAnEmptyInvocationChain < Test::Unit::TestCase
+class TestRakeAnEmptyInvocationChain < Test::Unit::TestCase
   include TestMethods
 
   def setup
@@ -24,7 +24,7 @@ class TestAnEmptyInvocationChain < Test::Unit::TestCase
 end
 
 ######################################################################
-class TestAnInvocationChainWithOneMember < Test::Unit::TestCase
+class TestRakeAnInvocationChainWithOneMember < Test::Unit::TestCase
   include TestMethods
 
   def setup
@@ -52,7 +52,7 @@ class TestAnInvocationChainWithOneMember < Test::Unit::TestCase
 end
 
 ######################################################################
-class TestAnInvocationChainWithMultipleMember < Test::Unit::TestCase
+class TestRakeAnInvocationChainWithMultipleMember < Test::Unit::TestCase
   include TestMethods
 
   def setup

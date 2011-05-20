@@ -11,7 +11,7 @@ require 'flexmock/test_unit'
 require 'rake'
 require 'test/rake_test_setup'
 
-class DslTest < Test::Unit::TestCase
+class TestRakeDsl < Test::Unit::TestCase
 
   def test_namespace_command
     namespace "n" do

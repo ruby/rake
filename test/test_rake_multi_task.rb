@@ -5,7 +5,7 @@ require 'thread'
 require 'rake'
 
 ######################################################################
-class TestMultiTask < Test::Unit::TestCase
+class TestRakeMultiTask < Test::Unit::TestCase
   include Rake
 
   def setup

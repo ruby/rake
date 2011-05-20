@@ -4,7 +4,7 @@ require 'test/unit'
 require 'rake'
 
 ######################################################################
-class TestTaskArguments < Test::Unit::TestCase
+class TestRakeTaskArguments < Test::Unit::TestCase
   def teardown
     ENV.delete('rev')
     ENV.delete('VER')

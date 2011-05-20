@@ -12,7 +12,7 @@ require 'test/capture_stdout'
 require 'test/rake_test_setup'
 require 'rake'
 
-class TestTopLevelFunctions < Test::Unit::TestCase
+class TestRakeTopLevelFunctions < Test::Unit::TestCase
   include CaptureStdout
   include TestMethods
 

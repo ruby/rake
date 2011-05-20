@@ -11,7 +11,7 @@ ensure
 end
 require 'test/rake_test_setup'
 
-class TestRDocTask < Test::Unit::TestCase
+class TestRakeRDocTask < Test::Unit::TestCase
   include Rake
   include TestMethods
 

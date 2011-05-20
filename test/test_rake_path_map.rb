@@ -5,7 +5,7 @@ require 'test/rake_test_setup'
 require 'rake'
 
 # ====================================================================
-class TestPathMap < Test::Unit::TestCase
+class TestRakePathMap < Test::Unit::TestCase
   include TestMethods
 
   def test_returns_self_with_no_args
@@ -161,7 +161,7 @@ class TestPathMap < Test::Unit::TestCase
   end
 end
 
-class TestPathMapExplode < Test::Unit::TestCase
+class TestRakePathMapExplode < Test::Unit::TestCase
   def setup
     String.class_eval { public :pathmap_explode }
   end
@@ -188,7 +188,7 @@ class TestPathMapExplode < Test::Unit::TestCase
   end
 end
 
-class TestPathMapPartial < Test::Unit::TestCase
+class TestRakePathMapPartial < Test::Unit::TestCase
   def test_pathmap_partial
     @path = "1/2/file"
     def @path.call(n)
@@ -204,7 +204,7 @@ class TestPathMapPartial < Test::Unit::TestCase
   end
 end
 
-class TestFileListPathMap < Test::Unit::TestCase
+class TestRakeFileListPathMap < Test::Unit::TestCase
   def test_file_list_supports_pathmap
     assert_equal ['a', 'b'], FileList['dir/a.rb', 'dir/b.rb'].pathmap("%n")
   end

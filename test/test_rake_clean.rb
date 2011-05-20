@@ -4,7 +4,7 @@ require 'test/unit'
 require 'rake'
 require 'rake/clean'
 
-class TestClean < Test::Unit::TestCase
+class TestRakeClean < Test::Unit::TestCase
   include Rake
   def test_clean
     assert Task['clean'], "Should define clean"

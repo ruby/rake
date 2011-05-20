@@ -3,7 +3,7 @@
 require 'test/unit'
 require 'rake'
 
-class TestEarlyTime < Test::Unit::TestCase
+class TestRakeEarlyTime < Test::Unit::TestCase
   def test_create
     early = Rake::EarlyTime.instance
     assert early <= Time.now

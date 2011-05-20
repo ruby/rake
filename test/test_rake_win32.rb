@@ -6,7 +6,7 @@ require 'test/in_environment'
 
 require 'rake'
 
-class TestWin32 < Test::Unit::TestCase
+class TestRakeWin32 < Test::Unit::TestCase
   include InEnvironment
   include TestMethods
   include CaptureStdout

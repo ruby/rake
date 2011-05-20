@@ -6,7 +6,7 @@ require 'rake'
 require 'test/file_creation'
 
 ######################################################################
-class TestFileCreationTask < Test::Unit::TestCase
+class TestRakeFileCreationTask < Test::Unit::TestCase
   include Rake
   include FileCreation
 

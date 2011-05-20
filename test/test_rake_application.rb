@@ -15,7 +15,7 @@ require 'test/in_environment'
 TESTING_REQUIRE = [ ]
 
 ######################################################################
-class TestApplication < Test::Unit::TestCase
+class TestRakeApplication < Test::Unit::TestCase
   include CaptureStdout
   include InEnvironment
   include TestMethods
@@ -379,7 +379,7 @@ end
 
 
 ######################################################################
-class TestApplicationOptions < Test::Unit::TestCase
+class TestRakeApplicationOptions < Test::Unit::TestCase
   include CaptureStdout
   include TestMethods
   include InEnvironment
@@ -744,7 +744,7 @@ class TestApplicationOptions < Test::Unit::TestCase
   end
 end
 
-class TestTaskArgumentParsing < Test::Unit::TestCase
+class TestRakeTaskArgumentParsing < Test::Unit::TestCase
   def setup
     @app = Rake::Application.new
   end
@@ -787,7 +787,7 @@ class TestTaskArgumentParsing < Test::Unit::TestCase
 
 end
 
-class TestTaskArgumentParsing < Test::Unit::TestCase
+class TestRakeTaskArgumentParsing < Test::Unit::TestCase
   include InEnvironment
 
   def test_terminal_width_using_env

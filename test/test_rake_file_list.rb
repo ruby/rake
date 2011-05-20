@@ -6,7 +6,7 @@ require 'rake'
 require 'test/capture_stdout'
 require 'test/rake_test_setup'
 
-class TestFileList < Test::Unit::TestCase
+class TestRakeFileList < Test::Unit::TestCase
   FileList = Rake::FileList
   include CaptureStdout
   include TestMethods
@@ -90,8 +90,8 @@ class TestFileList < Test::Unit::TestCase
 
   def test_match
     fl = FileList.new
-    fl.include('test/lib/*_test.rb')
-    assert fl.include?("test/lib/filelist_test.rb")
+    fl.include('test/test_*.rb')
+    assert fl.include?("test/test_rake_file_list.rb")
     assert fl.size > 3
     fl.each { |fn| assert_match(/\.rb$/, fn) }
   end
@@ -99,10 +99,10 @@ class TestFileList < Test::Unit::TestCase
   def test_add_matching
     fl = FileList.new
     fl << "a.java"
-    fl.include("test/lib/*.rb")
+    fl.include("test/*.rb")
     assert_equal "a.java", fl[0]
     assert fl.size > 2
-    assert fl.include?("test/lib/filelist_test.rb")
+    assert fl.include?("test/test_rake_file_list.rb")
   end
 
   def test_multiple_patterns
@@ -329,26 +329,26 @@ class TestFileList < Test::Unit::TestCase
   end
 
   def test_egrep_with_output
-    files = FileList['test/lib/*_test.rb']
+    files = FileList['test/test_*.rb']
     the_line_number = __LINE__ + 1
     out = capture_stdout do files.egrep(/PUGH/) end
     assert_match(/:#{the_line_number}:/, out)
   end
 
   def test_egrep_with_block
-    files = FileList['test/lib/*_test.rb']
+    files = FileList['test/test_*.rb']
     found = nil
     the_line_number = __LINE__ + 1
     files.egrep(/XYZZY/) do |fn, ln, line |
       found = [fn, ln, line]
     end
-    assert_equal 'test/lib/filelist_test.rb', found[0]
+    assert_equal 'test/test_rake_file_list.rb', found[0]
     assert_equal the_line_number, found[1]
     assert_match(/files\.egrep/, found[2])
   end
 
   def test_egrep_with_error
-    files = FileList['test/lib/*_test.rb']
+    files = FileList['test/test_*.rb']
     error_messages = capture_stderr do
       files.egrep(/ANYTHING/) do |fn, ln, line |
         fail "_EGREP_FAILURE_"

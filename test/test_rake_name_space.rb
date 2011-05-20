@@ -11,7 +11,7 @@ require 'flexmock/test_unit'
 require 'rake'
 require 'test/rake_test_setup'
 
-class TestNameSpace < Test::Unit::TestCase
+class TestRakeNameSpace < Test::Unit::TestCase
   include TestMethods
 
   class TM

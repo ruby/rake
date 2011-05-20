@@ -5,7 +5,7 @@ require 'rake'
 require 'test/rake_test_setup'
 
 # ====================================================================
-class TestRequire < Test::Unit::TestCase
+class TestRakeRequire < Test::Unit::TestCase
   include TestMethods
 
   def test_can_load_rake_library

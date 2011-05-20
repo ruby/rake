@@ -7,7 +7,7 @@ require 'fileutils'
 require 'stringio'
 require 'test/rake_test_setup'
 
-class TestFileUtils < Test::Unit::TestCase
+class TestRakeFileUtils < Test::Unit::TestCase
   include FileCreation
   include TestMethods
   include Rake::DSL

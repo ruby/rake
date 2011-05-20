@@ -71,11 +71,10 @@ task :tc => "test:contribs"
 task :test => "test:units"
 
 module TestFiles
-  UNIT = FileList['test/lib/*_test.rb']
+  UNIT = FileList['test/test_*.rb']
   FUNCTIONAL = FileList['test/functional/*_test.rb']
   CONTRIB = FileList['test/contrib/test*.rb']
-  TOP = FileList['test/*_test.rb']
-  ALL = TOP + UNIT + FUNCTIONAL + CONTRIB
+  ALL = UNIT + FUNCTIONAL + CONTRIB
 end
 
 namespace :test do

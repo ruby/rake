@@ -8,7 +8,7 @@ class TaskManager
   include Rake::TaskManager
 end
 
-class TestTaskManager < Test::Unit::TestCase
+class TestRakeTaskManager < Test::Unit::TestCase
   include TestMethods
 
   def setup
@@ -150,7 +150,7 @@ class TestTaskManager < Test::Unit::TestCase
 
 end
 
-class TestTaskManagerArgumentResolution < Test::Unit::TestCase
+class TestRakeTaskManagerArgumentResolution < Test::Unit::TestCase
   def setup
     super
     Rake.application.options.ignore_deprecate = true
