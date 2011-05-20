@@ -58,40 +58,25 @@ SRC_RB = FileList['lib/**/*.rb']
 # The default task is run if rake is given no explicit arguments.
 
 desc "Default Task"
-task :default => "test:all"
+task :default => :test
 
 # Test Tasks ---------------------------------------------------------
 
 # Common Abbreviations ...
 
-task :ta => "test:all"
-task :tf => "test:functional"
-task :tu => "test:units"
+task :tu => "test:all"
 task :tc => "test:contribs"
-task :test => "test:units"
+task :test => "test:all"
 
 module TestFiles
   UNIT = FileList['test/test_*.rb']
-  FUNCTIONAL = FileList['test/functional/*_test.rb']
   CONTRIB = FileList['test/contrib/test*.rb']
-  ALL = UNIT + FUNCTIONAL + CONTRIB
+  ALL = UNIT + CONTRIB
 end
 
 namespace :test do
   Rake::TestTask.new(:all) do |t|
     t.test_files = TestFiles::ALL
-    t.libs << "."
-    t.warning = true
-  end
-
-  Rake::TestTask.new(:units) do |t|
-    t.test_files = TestFiles::UNIT
-    t.libs << "."
-    t.warning = true
-  end
-
-  Rake::TestTask.new(:functional) do |t|
-    t.test_files = TestFiles::FUNCTIONAL
     t.libs << "."
     t.warning = true
   end
@@ -142,7 +127,7 @@ rescue LoadError
 end
 
 directory 'testdata'
-["test:all", :test_units, :test_contribs, :test_functional].each do |t|
+["test:all", "test:contrib"].each do |t|
   task t => ['testdata']
 end
 
@@ -341,7 +326,7 @@ desc "Make a new release"
 task :release, [:rel, :reuse, :reltest] => [
     :prerelease,
     :clobber,
-    "test:all",
+    :test,
     :update_version,
     :package,
     :tag

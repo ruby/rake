@@ -1,12 +1,29 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
+
 begin
-  require 'rubygems'
+  old_verbose = $VERBOSE
+  $VERBOSE = nil
+  require 'session'
 rescue LoadError
+  if File::ALT_SEPARATOR
+    puts "Unable to run functional tests on MS Windows. Skipping."
+  else
+    puts "Unable to run functional tests -- please run \"gem install session\""
+  end
+ensure
+  $VERBOSE = old_verbose
 end
+
+if defined?(Session)
+  if File::ALT_SEPARATOR
+    puts "Unable to run functional tests on MS Windows. Skipping."
+  end
+end
+
 require 'test/unit'
 require 'fileutils'
-require 'session'
 require 'test/in_environment'
 require 'test/rake_test_setup'
 require 'rake'
@@ -22,9 +39,9 @@ module Session
       old_initialize(*args)
     end
   end
-end
+end if defined? Session
 
-class SessionBasedTests < Test::Unit::TestCase
+class TestRakeFunctional < Test::Unit::TestCase
   include InEnvironment
   include TestMethods
 
@@ -454,4 +471,4 @@ class SessionBasedTests < Test::Unit::TestCase
   def assert_status(expected_status=0)
     assert_equal expected_status, @status
   end
-end
+end if defined?(Session)
