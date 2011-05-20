@@ -234,7 +234,6 @@ else
 
     s.bindir = "bin"                               # Use these for applications.
     s.executables = ["rake"]
-    s.default_executable = "rake"
 
     #### Documentation and testing.
 
