@@ -21,9 +21,6 @@ restructured and improved.
 * Rake now requires (instead of loads) files in the test task.  Patch by Cezary
   Baginski.
 
-* Rake now runs tasks when they have equal timestamps.  Patch by James M.
-  Lawrence.
-
 * Fixed typos.  Patches by Sean Scot August Moon and R.T. Lechow.
 
 * Rake now prints the Rakefile directory only when it's different from the
