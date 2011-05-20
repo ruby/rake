@@ -254,22 +254,6 @@ class SessionBasedTests < Test::Unit::TestCase
     assert_status
   end
 
-  def test_deprecated_import
-    in_environment("PWD" => "test/data/deprecated_import") do
-      rake "imported"
-    end
-    assert_match(/deprecated/, @err)
-    assert_match(/imported!/, @out)
-  end
-
-  def test_suppressed_deprecated_message
-    in_environment("PWD" => "test/data/deprecated_import") do
-      rake "imported -X"
-    end
-    assert_not_match(/deprecated/, @err)
-    assert_match(/imported!/, @out)
-  end
-
   def test_imports
     open("test/data/imports/static_deps", "w") do |f|
       f.puts 'puts "STATIC"'

@@ -38,13 +38,7 @@ class TestTopLevelFunctions < Test::Unit::TestCase
     Rake.application.should_receive(:add_import).with("x").once.ordered
     Rake.application.should_receive(:add_import).with("y").once.ordered
     Rake.application.should_receive(:add_import).with("z").once.ordered
-    Rake.import('x', 'y', 'z')
-  end
-
-  def test_deprecated_import
-    Rake.application.should_receive(:add_import).with("x").once.ordered
-    error_messages = capture_stderr { import('x') }
-    assert_match(/deprecated/, error_messages)
+    import('x', 'y', 'z')
   end
 
   def test_when_writing
