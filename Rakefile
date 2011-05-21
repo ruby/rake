@@ -224,7 +224,7 @@ else
     EOF
 
     #### Dependencies and requirements.
-    s.add_dependency('comp_tree', '>= 1.0.0')
+    s.add_dependency('comp_tree', '>= 1.1.3')
 
     s.required_rubygems_version = '>= 1.3.2'
     s.add_development_dependency 'session', '~> 2.4'
