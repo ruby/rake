@@ -1,9 +1,8 @@
 require 'test/helper'
 require 'test/in_environment'
 
-class TestRakeWin32 < Test::Unit::TestCase
+class TestRakeWin32 < Rake::TestCase
   include InEnvironment
-  include TestMethods
   include CaptureStdout
 
   Win32 = Rake::Win32

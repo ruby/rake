@@ -13,7 +13,7 @@ class FakeDate
 end
 
 
-class TestRakeFtpFile < Test::Unit::TestCase
+class TestRakeFtpFile < Rake::TestCase
 
   def setup
     Rake::FtpFile.class_eval { @date_class = FakeDate; @time_class = FakeDate }

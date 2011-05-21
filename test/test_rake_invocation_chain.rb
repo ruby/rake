@@ -1,8 +1,7 @@
 require 'test/helper'
 
 ######################################################################
-class TestRakeAnEmptyInvocationChain < Test::Unit::TestCase
-  include TestMethods
+class TestRakeAnEmptyInvocationChain < Rake::TestCase
 
   def setup
     @empty = Rake::InvocationChain::EMPTY
@@ -20,8 +19,7 @@ class TestRakeAnEmptyInvocationChain < Test::Unit::TestCase
 end
 
 ######################################################################
-class TestRakeAnInvocationChainWithOneMember < Test::Unit::TestCase
-  include TestMethods
+class TestRakeAnInvocationChainWithOneMember < Rake::TestCase
 
   def setup
     @empty = Rake::InvocationChain::EMPTY
@@ -48,8 +46,7 @@ class TestRakeAnInvocationChainWithOneMember < Test::Unit::TestCase
 end
 
 ######################################################################
-class TestRakeAnInvocationChainWithMultipleMember < Test::Unit::TestCase
-  include TestMethods
+class TestRakeAnInvocationChainWithMultipleMember < Rake::TestCase
 
   def setup
     @first_member = "A"

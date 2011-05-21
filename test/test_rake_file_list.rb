@@ -1,10 +1,9 @@
 require 'test/helper'
 require 'test/capture_stdout'
 
-class TestRakeFileList < Test::Unit::TestCase
+class TestRakeFileList < Rake::TestCase
   FileList = Rake::FileList
   include CaptureStdout
-  include TestMethods
 
   def setup
     create_test_data

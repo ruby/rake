@@ -3,10 +3,8 @@ require 'test/file_creation'
 require 'fileutils'
 require 'stringio'
 
-class TestRakeFileUtils < Test::Unit::TestCase
+class TestRakeFileUtils < Rake::TestCase
   include FileCreation
-  include TestMethods
-  include Rake::DSL
 
   def setup
     File.chmod(0750, "test/shellcommand.rb")

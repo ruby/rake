@@ -35,9 +35,8 @@ module Session
   end
 end if defined? Session
 
-class TestRakeFunctional < Test::Unit::TestCase
+class TestRakeFunctional < Rake::TestCase
   include InEnvironment
-  include TestMethods
 
   RUBY_COMMAND = 'ruby'
 

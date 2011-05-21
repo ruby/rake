@@ -1,8 +1,7 @@
 require 'test/helper'
 
 # ====================================================================
-class TestRakeRequire < Test::Unit::TestCase
-  include TestMethods
+class TestRakeRequire < Rake::TestCase
 
   def test_can_load_rake_library
     app = Rake::Application.new

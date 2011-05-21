@@ -3,9 +3,8 @@ require 'fileutils'
 require 'test/file_creation'
 
 ######################################################################
-class TestRakeDefinitions < Test::Unit::TestCase
+class TestRakeDefinitions < Rake::TestCase
   include Rake
-  include TestMethods
 
   EXISTINGFILE = "testdata/existing"
 

@@ -2,11 +2,9 @@ require 'test/helper'
 require 'fileutils'
 
 ######################################################################
-class TestRakeTask < Test::Unit::TestCase
+class TestRakeTask < Rake::TestCase
   include CaptureStdout
   include Rake
-  include TestMethods
-  include Rake::DSL
 
   def setup
     Task.clear
@@ -271,11 +269,9 @@ class TestRakeTask < Test::Unit::TestCase
 end
 
 ######################################################################
-class TestRakeTaskWithArguments < Test::Unit::TestCase
+class TestRakeTaskWithArguments < Rake::TestCase
   include CaptureStdout
   include Rake
-  include TestMethods
-  include Rake::DSL
 
   def setup
     super

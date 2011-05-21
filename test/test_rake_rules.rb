@@ -3,10 +3,9 @@ require 'fileutils'
 require 'test/file_creation'
 
 ######################################################################
-class TestRakeRules < Test::Unit::TestCase
+class TestRakeRules < Rake::TestCase
   include Rake
   include FileCreation
-  include TestMethods
 
   SRCFILE  = "testdata/abc.c"
   SRCFILE2 =  "testdata/xyz.c"

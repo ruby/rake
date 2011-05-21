@@ -1,7 +1,6 @@
 require 'test/helper'
 
-class TestRakeNameSpace < Test::Unit::TestCase
-  include TestMethods
+class TestRakeNameSpace < Rake::TestCase
 
   class TM
     include Rake::TaskManager

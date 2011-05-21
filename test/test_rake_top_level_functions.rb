@@ -1,9 +1,8 @@
 require 'test/helper'
 require 'test/capture_stdout'
 
-class TestRakeTopLevelFunctions < Test::Unit::TestCase
+class TestRakeTopLevelFunctions < Rake::TestCase
   include CaptureStdout
-  include TestMethods
 
   def setup
     super

@@ -3,10 +3,9 @@ require 'fileutils'
 require 'test/file_creation'
 
 ######################################################################
-class TestRakeFileTask < Test::Unit::TestCase
+class TestRakeFileTask < Rake::TestCase
   include Rake
   include FileCreation
-  include TestMethods
 
   def setup
     Task.clear
@@ -89,7 +88,7 @@ class TestRakeFileTask < Test::Unit::TestCase
 end
 
 ######################################################################
-class TestRakeDirectoryTask < Test::Unit::TestCase
+class TestRakeDirectoryTask < Rake::TestCase
   include Rake
 
   def setup

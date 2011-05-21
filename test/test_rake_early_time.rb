@@ -1,6 +1,6 @@
 require 'test/helper'
 
-class TestRakeEarlyTime < Test::Unit::TestCase
+class TestRakeEarlyTime < Rake::TestCase
   def test_create
     early = Rake::EarlyTime.instance
     assert early <= Time.now

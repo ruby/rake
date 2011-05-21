@@ -2,7 +2,7 @@ require 'test/helper'
 require 'stringio'
 
 ######################################################################
-class TestRakeExtension < Test::Unit::TestCase
+class TestRakeExtension < Rake::TestCase
 
   module Redirect
     def error_redirect

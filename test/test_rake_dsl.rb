@@ -1,6 +1,6 @@
 require 'test/helper'
 
-class TestRakeDsl < Test::Unit::TestCase
+class TestRakeDsl < Rake::TestCase
 
   def test_namespace_command
     namespace "n" do

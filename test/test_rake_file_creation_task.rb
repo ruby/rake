@@ -3,7 +3,7 @@ require 'fileutils'
 require 'test/file_creation'
 
 ######################################################################
-class TestRakeFileCreationTask < Test::Unit::TestCase
+class TestRakeFileCreationTask < Rake::TestCase
   include Rake
   include Rake::DSL
   include FileCreation

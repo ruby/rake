@@ -1,7 +1,7 @@
 require 'test/helper'
 
 ######################################################################
-class TestRakeTaskArguments < Test::Unit::TestCase
+class TestRakeTaskArguments < Rake::TestCase
   def teardown
     ENV.delete('rev')
     ENV.delete('VER')

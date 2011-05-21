@@ -8,7 +8,7 @@ ensure
   $VERBOSE = old_verbose
 end
 
-class TestSys < Test::Unit::TestCase
+class TestSys < Rake::TestCase
   include FileCreation
 
   def test_split_all

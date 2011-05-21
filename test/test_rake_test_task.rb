@@ -1,9 +1,8 @@
 require 'test/helper'
 require 'rake/testtask'
 
-class TestRakeTestTask < Test::Unit::TestCase
+class TestRakeTestTask < Rake::TestCase
   include Rake
-  include TestMethods
 
   def setup
     Task.clear

@@ -1,7 +1,7 @@
 require 'test/helper'
 require 'test/capture_stdout'
 
-class TestRakePseudoStatus < Test::Unit::TestCase
+class TestRakePseudoStatus < Rake::TestCase
   def test_with_zero_exit_status
     s = Rake::PseudoStatus.new
     assert_equal 0, s.exitstatus

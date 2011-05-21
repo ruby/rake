@@ -2,7 +2,7 @@ require 'test/helper'
 require 'thread'
 
 ######################################################################
-class TestRakeMultiTask < Test::Unit::TestCase
+class TestRakeMultiTask < Rake::TestCase
   include Rake
   include Rake::DSL
 

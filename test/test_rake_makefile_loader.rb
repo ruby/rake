@@ -1,7 +1,7 @@
 require 'test/helper'
 require 'rake/loaders/makefile'
 
-class TestRakeMakefileLoader < Test::Unit::TestCase
+class TestRakeMakefileLoader < Rake::TestCase
   include Rake
 
   def test_parse

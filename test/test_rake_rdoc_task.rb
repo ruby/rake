@@ -8,9 +8,8 @@ ensure
   $VERBOSE = old_verbose
 end
 
-class TestRakeRDocTask < Test::Unit::TestCase
+class TestRakeRDocTask < Rake::TestCase
   include Rake
-  include TestMethods
 
   def setup
     Task.clear

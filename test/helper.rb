@@ -7,14 +7,7 @@ require 'test/file_creation'
 
 require 'rake'
 
-module TestMethods
-  # Shim method for compatibility
-  def assert_exception(ex, msg="", &block)
-    assert_raise(ex, msg, &block)
-  end
-end
-
-class Test::Unit::TestCase
+class Rake::TestCase < Test::Unit::TestCase
   include Rake::DSL
 
   def ignore_deprecations
@@ -22,5 +15,9 @@ class Test::Unit::TestCase
     yield
   ensure
     Rake.application.options.ignore_deprecate = false
+  end
+
+  def assert_exception(ex, msg="", &block)
+    assert_raise(ex, msg, &block)
   end
 end

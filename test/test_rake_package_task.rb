@@ -1,8 +1,7 @@
 require 'test/helper'
 require 'rake/packagetask'
 
-class TestRakePackageTask < Test::Unit::TestCase
-  include TestMethods
+class TestRakePackageTask < Rake::TestCase
 
   def test_initialize
     pkg = Rake::PackageTask.new("pkgr", "1.2.3") { |p|
