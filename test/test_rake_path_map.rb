@@ -1,8 +1,4 @@
-#!/usr/bin/env ruby
-
-require 'test/unit'
-require 'test/rake_test_setup'
-require 'rake'
+require 'test/helper'
 
 # ====================================================================
 class TestRakePathMap < Test::Unit::TestCase

@@ -1,6 +1,4 @@
-#!/usr/bin/env ruby
-
-require 'test/unit'
+require 'test/helper'
 require 'test/capture_stdout'
 begin
   old_verbose = $VERBOSE
@@ -9,7 +7,6 @@ begin
 ensure
   $VERBOSE = old_verbose
 end
-require 'test/rake_test_setup'
 
 class TestRakeRDocTask < Test::Unit::TestCase
   include Rake

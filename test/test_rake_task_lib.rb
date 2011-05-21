@@ -1,8 +1,5 @@
-#!/usr/bin/env ruby
-
-require 'test/unit'
+require 'test/helper'
 require 'rake/tasklib'
-
 
 class TestRakeTaskLib < Test::Unit::TestCase
   def test_paste

@@ -1,14 +1,4 @@
-#!/usr/bin/env ruby
-
-begin
-  require 'rubygems'
-rescue LoadError
-  # got no gems
-end
-
-require 'test/unit'
-require 'rake'
-require 'test/rake_test_setup'
+require 'test/helper'
 require 'test/capture_stdout'
 require 'test/in_environment'
 

@@ -1,13 +1,11 @@
-#!/usr/bin/env ruby
-
-require 'test/unit'
+require 'test/helper'
 require 'fileutils'
-require 'rake'
 require 'test/file_creation'
 
 ######################################################################
 class TestRakeFileCreationTask < Test::Unit::TestCase
   include Rake
+  include Rake::DSL
   include FileCreation
 
   DUMMY_DIR = 'testdata/dummy_dir'

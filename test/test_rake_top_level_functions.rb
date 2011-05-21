@@ -1,16 +1,5 @@
-#!/usr/bin/env ruby
-
-begin
-  require 'rubygems'
-rescue LoadError
-  # got no gems
-end
-
-require 'test/unit'
-require 'flexmock/test_unit'
+require 'test/helper'
 require 'test/capture_stdout'
-require 'test/rake_test_setup'
-require 'rake'
 
 class TestRakeTopLevelFunctions < Test::Unit::TestCase
   include CaptureStdout

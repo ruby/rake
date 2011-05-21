@@ -1,11 +1,7 @@
-#!/usr/bin/env ruby
-
-require 'rake'
-require 'test/unit'
+require 'test/helper'
 require 'test/file_creation'
 require 'fileutils'
 require 'stringio'
-require 'test/rake_test_setup'
 
 class TestRakeFileUtils < Test::Unit::TestCase
   include FileCreation

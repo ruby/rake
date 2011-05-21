@@ -1,10 +1,5 @@
-#!/usr/bin/env ruby
-
-require 'test/unit'
-require 'rake'
-
+require 'test/helper'
 require 'test/capture_stdout'
-require 'test/rake_test_setup'
 
 class TestRakePseudoStatus < Test::Unit::TestCase
   def test_with_zero_exit_status

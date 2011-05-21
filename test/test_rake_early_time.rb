@@ -1,7 +1,4 @@
-#!/usr/bin/env ruby
-
-require 'test/unit'
-require 'rake'
+require 'test/helper'
 
 class TestRakeEarlyTime < Test::Unit::TestCase
   def test_create

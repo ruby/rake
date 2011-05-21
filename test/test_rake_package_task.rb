@@ -1,8 +1,5 @@
-#!/usr/bin/env ruby
-
-require 'test/unit'
+require 'test/helper'
 require 'rake/packagetask'
-require 'test/rake_test_setup'
 
 class TestRakePackageTask < Test::Unit::TestCase
   include TestMethods

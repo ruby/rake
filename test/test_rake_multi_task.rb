@@ -1,12 +1,10 @@
-#!/usr/bin/env ruby
-
-require 'test/unit'
+require 'test/helper'
 require 'thread'
-require 'rake'
 
 ######################################################################
 class TestRakeMultiTask < Test::Unit::TestCase
   include Rake
+  include Rake::DSL
 
   def setup
     Task.clear

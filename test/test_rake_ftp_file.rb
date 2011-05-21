@@ -1,8 +1,6 @@
-#!/usr/bin/env ruby
-
+require 'test/helper'
 require 'date'
 require 'time'
-require 'test/unit'
 require 'rake/contrib/ftptools'
 
 class FakeDate

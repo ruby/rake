@@ -1,7 +1,4 @@
-#!/usr/bin/env ruby
-
-require 'test/unit'
-require 'rake'
+require 'test/helper'
 
 class TestRake < Test::Unit::TestCase
   def test_each_dir_parent

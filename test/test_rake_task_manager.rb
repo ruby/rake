@@ -1,8 +1,4 @@
-#!/usr/bin/env ruby
-
-require 'test/unit'
-require 'rake'
-require 'test/rake_test_setup'
+require 'test/helper'
 
 class TaskManager
   include Rake::TaskManager

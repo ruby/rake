@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 if ENV['TESTTOPSCOPE']
   puts "TOPSCOPE"
 end

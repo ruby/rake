@@ -1,10 +1,5 @@
-#!/usr/bin/env ruby
-
-require 'test/unit'
-require 'test/rake_test_setup'
+require 'test/helper'
 require 'test/in_environment'
-
-require 'rake'
 
 class TestRakeWin32 < Test::Unit::TestCase
   include InEnvironment

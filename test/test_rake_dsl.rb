@@ -1,15 +1,4 @@
-#!/usr/bin/env ruby
-
-begin
-  require 'rubygems'
-rescue LoadError
-  # got no gems
-end
-
-require 'test/unit'
-require 'flexmock/test_unit'
-require 'rake'
-require 'test/rake_test_setup'
+require 'test/helper'
 
 class TestRakeDsl < Test::Unit::TestCase
 

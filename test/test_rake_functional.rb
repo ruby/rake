@@ -1,7 +1,3 @@
-#!/usr/bin/env ruby
-
-require 'rubygems'
-
 begin
   old_verbose = $VERBOSE
   $VERBOSE = nil
@@ -22,11 +18,9 @@ if defined?(Session)
   end
 end
 
-require 'test/unit'
+require 'test/helper'
 require 'fileutils'
 require 'test/in_environment'
-require 'test/rake_test_setup'
-require 'rake'
 
 # Version 2.1.9 of session has a bug where the @debug instance
 # variable is not initialized, causing warning messages.  This snippet

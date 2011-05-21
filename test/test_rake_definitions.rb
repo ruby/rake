@@ -1,10 +1,6 @@
-#!/usr/bin/env ruby
-
-require 'test/unit'
+require 'test/helper'
 require 'fileutils'
-require 'rake'
 require 'test/file_creation'
-require 'test/rake_test_setup'
 
 ######################################################################
 class TestRakeDefinitions < Test::Unit::TestCase
