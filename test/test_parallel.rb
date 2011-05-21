@@ -6,6 +6,8 @@ require 'test/helper'
 
 if Rake.application.options.threads != 1
   class TestParallel < Test::Unit::TestCase
+    include Rake::DSL
+
     VISUALS = false
     TIME_STEP = 0.25
     TIME_EPSILON = 0.05
