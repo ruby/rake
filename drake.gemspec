@@ -1,7 +1,8 @@
 --- !ruby/object:Gem::Specification 
-name: rake
+name: drake
 version: !ruby/object:Gem::Version 
-  version: 0.8.7.1.2.4
+  prerelease: 
+  version: 0.9.0.0.3.0
 platform: ruby
 authors: 
 - James M. Lawrence
@@ -9,20 +10,42 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2009-05-27 00:00:00 -04:00
-default_executable: drake
+date: 2011-05-21 00:00:00 Z
 dependencies: 
 - !ruby/object:Gem::Dependency 
   name: comp_tree
-  type: :runtime
-  version_requirement: 
-  version_requirements: !ruby/object:Gem::Requirement 
+  prerelease: false
+  requirement: &id001 !ruby/object:Gem::Requirement 
+    none: false
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
-        version: 0.7.6
-    version: 
-description: Rake is a Make-like program implemented in Ruby. Tasks and dependencies are specified in standard Ruby syntax.
+        version: 1.1.3
+  type: :runtime
+  version_requirements: *id001
+- !ruby/object:Gem::Dependency 
+  name: session
+  prerelease: false
+  requirement: &id002 !ruby/object:Gem::Requirement 
+    none: false
+    requirements: 
+    - - ~>
+      - !ruby/object:Gem::Version 
+        version: "2.4"
+  type: :development
+  version_requirements: *id002
+- !ruby/object:Gem::Dependency 
+  name: flexmock
+  prerelease: false
+  requirement: &id003 !ruby/object:Gem::Requirement 
+    none: false
+    requirements: 
+    - - ~>
+      - !ruby/object:Gem::Version 
+        version: 0.8.11
+  type: :development
+  version_requirements: *id003
+description: "      Rake is a Make-like program implemented in Ruby. Tasks\n      and dependencies are specified in standard Ruby syntax.\n"
 email: quixoticsycophant@gmail.com
 executables: 
 - drake
@@ -33,6 +56,7 @@ extra_rdoc_files:
 - MIT-LICENSE
 - TODO
 - CHANGES
+- CHANGES-drake
 - doc/command_line_usage.rdoc
 - doc/glossary.rdoc
 - doc/parallel.rdoc
@@ -56,14 +80,16 @@ extra_rdoc_files:
 - doc/release_notes/rake-0.8.5.rdoc
 - doc/release_notes/rake-0.8.6.rdoc
 - doc/release_notes/rake-0.8.7.rdoc
+- doc/release_notes/rake-0.9.0.rdoc
 files: 
+- .gemtest
 - install.rb
 - CHANGES
-- CHANGES.drake
+- CHANGES-drake
 - MIT-LICENSE
-- Rakefile
-- Rakefile.drake
 - README.rdoc
+- Rakefile
+- Rakefile-drake
 - TODO
 - bin/drake
 - lib/rake/alt_system.rb
@@ -79,7 +105,9 @@ files:
 - lib/rake/contrib/sys.rb
 - lib/rake/default_loader.rb
 - lib/rake/dsl.rb
+- lib/rake/dsl_definition.rb
 - lib/rake/early_time.rb
+- lib/rake/ext/core.rb
 - lib/rake/ext/module.rb
 - lib/rake/ext/string.rb
 - lib/rake/ext/time.rb
@@ -87,6 +115,7 @@ files:
 - lib/rake/file_list.rb
 - lib/rake/file_task.rb
 - lib/rake/file_utils.rb
+- lib/rake/file_utils_ext.rb
 - lib/rake/gempackagetask.rb
 - lib/rake/invocation_chain.rb
 - lib/rake/invocation_exception_mixin.rb
@@ -95,8 +124,8 @@ files:
 - lib/rake/name_space.rb
 - lib/rake/packagetask.rb
 - lib/rake/parallel.rb
-- lib/rake/psuedo_status.rb
-- lib/rake/rake_file_utils.rb
+- lib/rake/pathmap.rb
+- lib/rake/pseudo_status.rb
 - lib/rake/rake_module.rb
 - lib/rake/rake_test_loader.rb
 - lib/rake/rdoctask.rb
@@ -104,11 +133,12 @@ files:
 - lib/rake/rule_recursion_overflow_error.rb
 - lib/rake/runtest.rb
 - lib/rake/task.rb
-- lib/rake/tasklib.rb
-- lib/rake/task_arguments.rb
 - lib/rake/task_argument_error.rb
+- lib/rake/task_arguments.rb
 - lib/rake/task_manager.rb
+- lib/rake/tasklib.rb
 - lib/rake/testtask.rb
+- lib/rake/version.rb
 - lib/rake/win32.rb
 - lib/rake.rb
 - test/capture_stdout.rb
@@ -117,7 +147,7 @@ files:
 - test/contrib/test_sys.rb
 - test/data/rakelib/test1.rb
 - test/data/rbext/rakefile.rb
-- test/filecreation.rb
+- test/file_creation.rb
 - test/functional/functional_test.rb
 - test/functional/session_based_tests.rb
 - test/in_environment.rb
@@ -127,10 +157,10 @@ files:
 - test/lib/dsl_test.rb
 - test/lib/earlytime_test.rb
 - test/lib/extension_test.rb
-- test/lib/filelist_test.rb
-- test/lib/fileutils_test.rb
 - test/lib/file_creation_task_test.rb
 - test/lib/file_task_test.rb
+- test/lib/filelist_test.rb
+- test/lib/fileutils_test.rb
 - test/lib/ftp_test.rb
 - test/lib/invocation_chain_test.rb
 - test/lib/makefile_loader_test.rb
@@ -144,26 +174,29 @@ files:
 - test/lib/rdoc_task_test.rb
 - test/lib/require_test.rb
 - test/lib/rules_test.rb
-- test/lib/tasklib_test.rb
 - test/lib/task_arguments_test.rb
 - test/lib/task_manager_test.rb
 - test/lib/task_test.rb
-- test/lib/testtask_test.rb
+- test/lib/tasklib_test.rb
 - test/lib/test_task_test.rb
+- test/lib/testtask_test.rb
 - test/lib/top_level_functions_test.rb
 - test/lib/win32_test.rb
 - test/parallel_setup.rb
 - test/rake_test_setup.rb
 - test/reqfile.rb
 - test/reqfile2.rb
+- test/ruby_version_test.rb
 - test/serial_setup.rb
 - test/shellcommand.rb
 - test/test_helper.rb
 - test/data/imports/deps.mf
 - test/data/sample.mf
+- test/data/access/Rakefile
 - test/data/chains/Rakefile
 - test/data/comments/Rakefile
 - test/data/default/Rakefile
+- test/data/deprecated_import/Rakefile
 - test/data/dryrun/Rakefile
 - test/data/file_creation_task/Rakefile
 - test/data/imports/Rakefile
@@ -175,11 +208,11 @@ files:
 - test/data/unittest/subdir
 - doc/command_line_usage.rdoc
 - doc/example
+- doc/example/Rakefile1
+- doc/example/Rakefile2
 - doc/example/a.c
 - doc/example/b.c
 - doc/example/main.c
-- doc/example/Rakefile1
-- doc/example/Rakefile2
 - doc/glossary.rdoc
 - doc/jamis.rb
 - doc/parallel.rdoc
@@ -205,12 +238,14 @@ files:
 - doc/release_notes/rake-0.8.5.rdoc
 - doc/release_notes/rake-0.8.6.rdoc
 - doc/release_notes/rake-0.8.7.rdoc
-has_rdoc: true
+- doc/release_notes/rake-0.9.0.rdoc
 homepage: http://drake.rubyforge.org
+licenses: []
+
 post_install_message: 
 rdoc_options: 
 - --line-numbers
-- --inline-source
+- --show-hash
 - --main
 - README.rdoc
 - --title
@@ -218,23 +253,23 @@ rdoc_options:
 require_paths: 
 - lib
 required_ruby_version: !ruby/object:Gem::Requirement 
+  none: false
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
       version: "0"
-  version: 
 required_rubygems_version: !ruby/object:Gem::Requirement 
+  none: false
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
-      version: "0"
-  version: 
+      version: 1.3.2
 requirements: []
 
 rubyforge_project: drake
-rubygems_version: 1.3.1
+rubygems_version: 1.8.2
 signing_key: 
-specification_version: 2
+specification_version: 3
 summary: A branch of Rake supporting automatic parallelizing of tasks.
 test_files: []
 
