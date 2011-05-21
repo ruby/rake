@@ -62,30 +62,10 @@ task :default => :test
 
 # Test Tasks ---------------------------------------------------------
 
-# Common Abbreviations ...
-
-task :tu => "test:all"
-task :tc => "test:contribs"
-task :test => "test:all"
-
-module TestFiles
-  UNIT = FileList['test/test_*.rb']
-  CONTRIB = FileList['test/contrib/test*.rb']
-  ALL = UNIT + CONTRIB
-end
-
-namespace :test do
-  Rake::TestTask.new(:all) do |t|
-    t.test_files = TestFiles::ALL
-    t.libs << "."
-    t.warning = true
-  end
-
-  Rake::TestTask.new(:contribs) do |t|
-    t.test_files = TestFiles::CONTRIB
-    t.libs << "."
-    t.warning = true
-  end
+Rake::TestTask.new do |t|
+  t.test_files = FileList['test/test_*.rb']
+  t.libs << "."
+  t.warning = true
 end
 
 begin
@@ -127,9 +107,7 @@ rescue LoadError
 end
 
 directory 'testdata'
-["test:all", "test:contrib"].each do |t|
-  task t => ['testdata']
-end
+task :test => ['testdata']
 
 # CVS Tasks ----------------------------------------------------------
 
