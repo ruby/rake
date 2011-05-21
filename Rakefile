@@ -176,10 +176,10 @@ BASE_RDOC_OPTIONS = [
 if defined?(RDoc::Task) then
   RDoc::Task.new do |rdoc|
     rdoc.rdoc_dir = 'html'
-    rdoc.title    = "Rake -- Ruby Make"
+    rdoc.title    = "Drake -- Distributed Rake"
     rdoc.options = BASE_RDOC_OPTIONS.dup
 
-    rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGES')
+    rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGES', 'CHANGES-drake')
     rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
     rdoc.rdoc_files.exclude(/\bcontrib\b/)
   end
@@ -252,6 +252,7 @@ else
       'MIT-LICENSE',
       'TODO',
       'CHANGES',
+      'CHANGES-drake',
       'doc/**/*.rdoc'
     ]
 
