@@ -263,7 +263,7 @@ else
 
     s.author = "James M. Lawrence"
     s.email = "quixoticsycophant@gmail.com"
-    s.homepage = "http://drake.rubyforge.org"
+    s.homepage = "http://quix.github.com/rake"
     s.rubyforge_project = "drake"
 #     if ENV['CERT_DIR']
 #       s.signing_key = File.join(ENV['CERT_DIR'], 'gem-private_key.pem')
