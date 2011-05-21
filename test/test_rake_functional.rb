@@ -87,7 +87,7 @@ class TestRakeFunctional < Rake::TestCase
     end
     assert_match %r{^rake a *# A / A2 *$}, @out
     assert_match %r{^rake b *# B *$}, @out
-    assert_no_match %r{^rake c}, @out
+    refute_match %r{^rake c}, @out
     assert_match %r{^rake d *# x{65}\.\.\.$}, @out
   end
 
@@ -98,7 +98,7 @@ class TestRakeFunctional < Rake::TestCase
     assert_match %r{^rake a\n *A / A2 *$}m, @out
     assert_match %r{^rake b\n *B *$}m, @out
     assert_match %r{^rake d\n *x{80}}m, @out
-    assert_no_match %r{^rake c\n}m, @out
+    refute_match %r{^rake c\n}m, @out
   end
 
   def test_proper_namespace_access
@@ -126,7 +126,7 @@ class TestRakeFunctional < Rake::TestCase
     in_environment('RAKE_SYSTEM' => 'test/data/sys') do
       rake '-g', "sys1", '-T', 'extra'
     end
-    assert_no_match %r{extra:extra}, @out
+    refute_match %r{extra:extra}, @out
   end
 
   def test_by_default_rakelib_files_are_included
@@ -199,14 +199,14 @@ class TestRakeFunctional < Rake::TestCase
     in_environment("PWD" => "test/data/verbose") do
       rake "inline_verbose_false"
     end
-    assert_no_match(/ruby -e/, @err)
+    refute_match(/ruby -e/, @err)
   end
 
   def test_block_verbose_false_should_not_show_command
     in_environment("PWD" => "test/data/verbose") do
       rake "block_verbose_false"
     end
-    assert_no_match(/ruby -e/, @err)
+    refute_match(/ruby -e/, @err)
   end
 
   def test_block_verbose_true_should_show_command
@@ -227,15 +227,15 @@ class TestRakeFunctional < Rake::TestCase
     in_environment("PWD" => "test/data/verbose") do
       rake "standalone_verbose_false"
     end
-    assert_no_match(/ruby -e/, @err)
+    refute_match(/ruby -e/, @err)
   end
 
   def test_dry_run
     in_environment("PWD" => "test/data/default") do rake "-n", "other" end
     assert_match %r{Execute \(dry run\) default}, @err
     assert_match %r{Execute \(dry run\) other}, @err
-    assert_no_match %r{DEFAULT}, @out
-    assert_no_match %r{OTHER}, @out
+    refute_match %r{DEFAULT}, @out
+    refute_match %r{OTHER}, @out
   end
 
   # Test for the trace/dry_run bug found by Brian Chandler
@@ -247,7 +247,7 @@ class TestRakeFunctional < Rake::TestCase
     in_environment("PWD" => "test/data/dryrun") do
       rake "--dry-run"
     end
-    assert_no_match(/No such file/, @out)
+    refute_match(/No such file/, @out)
     assert_status
   end
 
@@ -260,7 +260,7 @@ class TestRakeFunctional < Rake::TestCase
     in_environment("PWD" => "test/data/dryrun") do
       rake "--trace"
     end
-    assert_no_match(/No such file/, @out)
+    refute_match(/No such file/, @out)
     assert_status
   end
 
@@ -386,7 +386,7 @@ class TestRakeFunctional < Rake::TestCase
     in_environment("PWD" => "test/data/comments") do
       rake "-T"
     end
-    assert_no_match(/comment for t1/, @out)
+    refute_match(/comment for t1/, @out)
   end
 
   def test_comment_separated_from_task_by_blank_line_is_not_picked_up

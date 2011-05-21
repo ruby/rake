@@ -1,12 +1,10 @@
 require 'test/helper'
-require 'test/capture_stdout'
 require 'test/in_environment'
 
 TESTING_REQUIRE = [ ]
 
 ######################################################################
 class TestRakeApplication < Rake::TestCase
-  include CaptureStdout
   include InEnvironment
 
   def setup
@@ -22,10 +20,10 @@ class TestRakeApplication < Rake::TestCase
   end
 
   def test_constant_warning
-    error_messages = capture_stderr do @app.instance_eval { const_warning("Task") } end
-    assert_match(/warning/i, error_messages)
-    assert_match(/deprecated/i, error_messages)
-    assert_match(/Task/i, error_messages)
+    _, err = capture_io do @app.instance_eval { const_warning("Task") } end
+    assert_match(/warning/i, err)
+    assert_match(/deprecated/i, err)
+    assert_match(/Task/i, err)
   end
 
   def test_display_tasks
@@ -33,7 +31,7 @@ class TestRakeApplication < Rake::TestCase
     @app.options.show_task_pattern = //
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "t")
-    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+    out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
     assert_match(/^rake t/, out)
     assert_match(/# COMMENT/, out)
   end
@@ -44,7 +42,7 @@ class TestRakeApplication < Rake::TestCase
       @app.options.show_task_pattern = //
       @app.last_description = "1234567890" * 8
       @app.define_task(Rake::Task, "t")
-      out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+      out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
       assert_match(/^rake t/, out)
       assert_match(/# 12345678901234567890123456789012345678901234567890123456789012345\.\.\./, out)
     end
@@ -57,7 +55,7 @@ class TestRakeApplication < Rake::TestCase
       task_name = "task name" * 80
       @app.last_description = "something short"
       @app.define_task(Rake::Task, task_name )
-      out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+      out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
       # Ensure the entire task name is output and we end up showing no description
       assert_match(/rake #{task_name}  # .../, out)
     end
@@ -71,7 +69,7 @@ class TestRakeApplication < Rake::TestCase
     task_name = "task name" * 80
     @app.last_description = "something short"
     @app.define_task(Rake::Task, task_name )
-    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+    out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
     # Ensure the entire task name is output and we end up showing no description
     assert_match(/rake #{task_name}  # #{description}/, out)
   end
@@ -82,7 +80,7 @@ class TestRakeApplication < Rake::TestCase
     @app.tty_output = false
     @app.last_description = "1234567890" * 8
     @app.define_task(Rake::Task, "t")
-    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+    out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
     assert_match(/^rake t/, out)
     assert_match(/# #{@app.last_description}/, out)
   end
@@ -94,7 +92,7 @@ class TestRakeApplication < Rake::TestCase
       @app.tty_output = false
       @app.last_description = "1234567890" * 8
       @app.define_task(Rake::Task, "t")
-      out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+      out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
       assert_match(/^rake t/, out)
       assert_match(/# 12345678901234567890123456789012345678901234567890123456789012345\.\.\./, out)
     end
@@ -105,7 +103,7 @@ class TestRakeApplication < Rake::TestCase
     @app.options.show_task_pattern = //
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "t")
-    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+    out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
     assert_match(/^rake t$/, out)
     assert_match(/^ {4}COMMENT$/, out)
   end
@@ -116,7 +114,7 @@ class TestRakeApplication < Rake::TestCase
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "t")
     @app['t'].locations << "HERE:1"
-    out = capture_stdout do @app.instance_eval { display_tasks_and_comments } end
+    out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
     assert_match(/^rake t +[^:]+:\d+ *$/, out)
   end
 
@@ -144,14 +142,14 @@ class TestRakeApplication < Rake::TestCase
 
   def test_load_rakefile_doesnt_print_rakefile_directory_from_same_dir
     in_environment("PWD" => "test/data/unittest") do
-      error_messages = capture_stderr do
+      _, err = capture_io do
         @app.instance_eval do
           @original_dir = File.expand_path(".") # pretend we started from the unittest dir
           raw_load_rakefile
         end
       end
       _, location = @app.find_rakefile_location
-      assert_no_match(/\(in #{location}\)/, error_messages)
+      refute_match(/\(in #{location}\)/, err)
     end
   end
 
@@ -169,19 +167,19 @@ class TestRakeApplication < Rake::TestCase
 
   def test_load_rakefile_prints_rakefile_directory_from_subdir
     in_environment("PWD" => "test/data/unittest/subdir") do
-      error_messages = capture_stderr do
+      _, err = capture_io do
         @app.instance_eval do
           raw_load_rakefile
         end
       end
       _, location = @app.find_rakefile_location
-      assert_match(/\(in #{location}\)/, error_messages)
+      assert_match(/\(in #{location}\)/, err)
     end
   end
 
   def test_load_rakefile_doesnt_print_rakefile_directory_from_subdir_if_silent
     in_environment("PWD" => "test/data/unittest/subdir") do
-      error_messages = capture_stderr do
+      _, err = capture_io do
         @app.instance_eval do
           handle_options
           options.silent = true
@@ -189,7 +187,7 @@ class TestRakeApplication < Rake::TestCase
         end
       end
       _, location = @app.find_rakefile_location
-      assert_no_match(/\(in #{location}\)/, error_messages)
+      refute_match(/\(in #{location}\)/, err)
     end
   end
 
@@ -199,7 +197,7 @@ class TestRakeApplication < Rake::TestCase
         handle_options
         options.silent = true
       end
-      ex = assert_exception(RuntimeError) do
+      ex = assert_raises(RuntimeError) do
         @app.instance_eval do raw_load_rakefile end
       end
       assert_match(/no rakefile found/i, ex.message)
@@ -295,7 +293,7 @@ class TestRakeApplication < Rake::TestCase
     ARGV << '-f' << '-s' << '--tasks' << '--rakelib=""'
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "default")
-    out = capture_stdout { @app.run }
+    out, = capture_io { @app.run }
     assert @app.options.show_tasks
     assert ! ran
     assert_match(/rake default/, out)
@@ -311,7 +309,7 @@ class TestRakeApplication < Rake::TestCase
     t.enhance([:a, :b])
     @app.define_task(Rake::Task, "a")
     @app.define_task(Rake::Task, "b")
-    out = capture_stdout { @app.run }
+    out, = capture_io { @app.run }
     assert @app.options.show_prereqs
     assert ! ran
     assert_match(/rake a$/, out)
@@ -323,9 +321,9 @@ class TestRakeApplication < Rake::TestCase
     @app.intern(Rake::Task, "default").enhance { fail }
     ARGV.clear
     ARGV << '-f' << '-s' <<  '--rakelib=""'
-    assert_exception(SystemExit) {
-      error_messages = capture_stderr { @app.run }
-      assert_match(/see full trace/, error_messages)
+    assert_raises(SystemExit) {
+      _, err = capture_io { @app.run }
+      assert_match(/see full trace/, err)
     }
   ensure
     ARGV.clear
@@ -335,9 +333,9 @@ class TestRakeApplication < Rake::TestCase
     @app.intern(Rake::Task, "default").enhance { fail }
     ARGV.clear
     ARGV << '-f' << '-s' << '-t'
-    assert_exception(SystemExit) {
-      error_messages = capture_stderr { capture_stdout { @app.run } }
-      assert_no_match(/see full trace/, error_messages)
+    assert_raises(SystemExit) {
+      _, err = capture_io { @app.run }
+      refute_match(/see full trace/, err)
     }
   ensure
     ARGV.clear
@@ -347,8 +345,8 @@ class TestRakeApplication < Rake::TestCase
     @app.intern(Rake::Task, "default").enhance { fail }
     ARGV.clear
     ARGV << '-f' << '-s' << '--xyzzy'
-    assert_exception(SystemExit) {
-      capture_stderr { capture_stdout { @app.run } }
+    assert_raises(SystemExit) {
+      capture_io { @app.run }
     }
   ensure
     ARGV.clear
@@ -356,12 +354,12 @@ class TestRakeApplication < Rake::TestCase
 
   def test_deprecation_message
     in_environment do
-      error_messages = capture_stderr do
+      _, err = capture_io do
         @app.deprecate("a", "b", "c")
       end
-      assert_match(/'a' is deprecated/i, error_messages)
-      assert_match(/use 'b' instead/i, error_messages)
-      assert_match(/at c$/i, error_messages)
+      assert_match(/'a' is deprecated/i, err)
+      assert_match(/use 'b' instead/i, err)
+      assert_match(/at c$/i, err)
     end
   end
 end
@@ -369,7 +367,6 @@ end
 
 ######################################################################
 class TestRakeApplicationOptions < Rake::TestCase
-  include CaptureStdout
   include InEnvironment
 
   def setup
@@ -456,7 +453,7 @@ class TestRakeApplicationOptions < Rake::TestCase
       $xyzzy = 0
       flags('--execute-continue=$xyzzy=1', '-E $xyzzy=1') do |opts|
         assert_equal 1, $xyzzy
-        assert_not_equal :exit, @exit
+        refute_equal :exit, @exit
         $xyzzy = 0
       end
     end
@@ -465,24 +462,28 @@ class TestRakeApplicationOptions < Rake::TestCase
   def test_execute_and_print
     in_environment do
       $xyzzy = 0
-      flags('--execute-print=$xyzzy="pugh"', '-p $xyzzy="pugh"') do |opts|
-        assert_equal 'pugh', $xyzzy
-        assert_equal :exit, @exit
-        assert_match(/^pugh$/, @out)
-        $xyzzy = 0
+      out, = capture_io do
+        flags('--execute-print=$xyzzy="pugh"', '-p $xyzzy="pugh"') do |opts|
+          assert_equal 'pugh', $xyzzy
+          assert_equal :exit, @exit
+          $xyzzy = 0
+        end
       end
+
+      assert_match(/^pugh$/, out)
     end
   end
 
   def test_help
     in_environment do
-      flags('--help', '-H', '-h') do |opts|
-        assert_match(/\Arake/, @out)
-        assert_match(/\boptions\b/, @out)
-        assert_match(/\btargets\b/, @out)
-        assert_equal :exit, @exit
-        assert_equal :exit, @exit
+      out, = capture_io do
+        flags '--help', '-H', '-h'
       end
+
+      assert_match(/\Arake/, out)
+      assert_match(/\boptions\b/, out)
+      assert_match(/\btargets\b/, out)
+      assert_equal :exit, @exit
     end
   end
 
@@ -525,7 +526,7 @@ class TestRakeApplicationOptions < Rake::TestCase
 
   def test_missing_require
     in_environment do
-      ex = assert_exception(LoadError) do
+      ex = assert_raises(LoadError) do
         flags(['--require', 'test/missing']) do |opts|
         end
       end
@@ -638,27 +639,34 @@ class TestRakeApplicationOptions < Rake::TestCase
 
   def test_verbose
     in_environment do
-      flags('--verbose', '-V') do |opts|
-        assert Rake::FileUtilsExt.verbose_flag
-        assert ! opts.silent
+      out, = capture_io do
+        flags('--verbose', '-V') do |opts|
+          assert Rake::FileUtilsExt.verbose_flag
+          assert ! opts.silent
+        end
       end
+
+      assert_equal "rake, version 0.9.0\n", out
     end
   end
 
   def test_version
     in_environment do
-      flags('--version', '-V') do |opts|
-        assert_match(/\bversion\b/, @out)
-        assert_match(/\b#{RAKEVERSION}\b/, @out)
-        assert_equal :exit, @exit
+      out, = capture_io do
+        flags '--version', '-V'
       end
+
+      assert_match(/\bversion\b/, out)
+      assert_match(/\b#{RAKEVERSION}\b/, out)
+      assert_equal :exit, @exit
     end
   end
 
   def test_classic_namespace
     in_environment do
-      error_messages = capture_stderr do
-        flags(['--classic-namespace'], ['-C', '-T', '-P', '-n', '-s', '-t']) do |opts|
+      _, err = capture_io do
+        flags(['--classic-namespace'],
+              ['-C', '-T', '-P', '-n', '-s', '-t']) do |opts|
           assert opts.classic_namespace
           assert_equal opts.show_tasks, $show_tasks
           assert_equal opts.show_prereqs, $show_prereqs
@@ -667,14 +675,15 @@ class TestRakeApplicationOptions < Rake::TestCase
           assert_equal opts.silent, $silent
         end
       end
-      assert_match(/deprecated/, error_messages)
+
+      assert_match(/deprecated/, err)
     end
   end
 
   def test_bad_option
     in_environment do
-      error_messages = capture_stderr do
-        ex = assert_exception(OptionParser::InvalidOption) do
+      _, err = capture_io do
+        ex = assert_raises(OptionParser::InvalidOption) do
           flags('--bad-option')
         end
         if ex.message =~ /^While/ # Ruby 1.9 error message
@@ -684,7 +693,7 @@ class TestRakeApplicationOptions < Rake::TestCase
           assert_match(/--bad-option/, ex.message)
         end
       end
-      assert_equal '', error_messages
+      assert_equal '', err
     end
   end
 
@@ -710,9 +719,9 @@ class TestRakeApplicationOptions < Rake::TestCase
   def flags(*sets)
     sets.each do |set|
       ARGV.clear
-      @out = capture_stdout {
-        @exit = catch(:system_exit) { command_line(*set) }
-      }
+
+      @exit = catch(:system_exit) { command_line(*set) }
+
       yield(@app.options) if block_given?
     end
   end

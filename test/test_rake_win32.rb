@@ -3,7 +3,6 @@ require 'test/in_environment'
 
 class TestRakeWin32 < Rake::TestCase
   include InEnvironment
-  include CaptureStdout
 
   Win32 = Rake::Win32
 
@@ -58,7 +57,7 @@ class TestRakeWin32 < Rake::TestCase
       'APPDATA' => nil,
       "USERPROFILE" => nil
       ) do
-      assert_exception(Rake::Win32::Win32HomeError) do
+      assert_raises(Rake::Win32::Win32HomeError) do
         Win32.win32_system_dir
       end
     end
@@ -77,7 +76,7 @@ class TestRakeWin32 < Rake::TestCase
     rake.options.trace = true
     rake.instance_variable_set(:@rakefile, 'Rakefile')
 
-    err = capture_stderr { rake.display_error_message(ex) }
+    _, err = capture_io { rake.display_error_message(ex) }
 
     assert_match(/rakefile/, err)
   end

@@ -1,8 +1,6 @@
 require 'test/helper'
-require 'test/capture_stdout'
 
 class TestRakeTopLevelFunctions < Rake::TestCase
-  include CaptureStdout
 
   def setup
     super
@@ -30,7 +28,7 @@ class TestRakeTopLevelFunctions < Rake::TestCase
   end
 
   def test_when_writing
-    out = capture_stdout do
+    out, = capture_io do
       when_writing("NOTWRITING") do
         puts "WRITING"
       end
@@ -40,12 +38,12 @@ class TestRakeTopLevelFunctions < Rake::TestCase
 
   def test_when_not_writing
     Rake::FileUtilsExt.nowrite_flag = true
-    out = capture_stderr do
+    _, err = capture_io do
       when_writing("NOTWRITING") do
         puts "WRITING"
       end
     end
-    assert_equal "DRYRUN: NOTWRITING\n", out
+    assert_equal "DRYRUN: NOTWRITING\n", err
   ensure
     Rake::FileUtilsExt.nowrite_flag = false
   end
@@ -71,6 +69,6 @@ class TestRakeTopLevelFunctions < Rake::TestCase
   end
 
   def test_missing_other_constant
-    assert_exception(NameError) do Object.const_missing(:Xyz) end
+    assert_raises(NameError) do Object.const_missing(:Xyz) end
   end
 end

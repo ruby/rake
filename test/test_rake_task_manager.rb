@@ -11,7 +11,7 @@ class TestRakeTaskManager < Rake::TestCase
   end
 
   def test_create_task_manager
-    assert_not_nil @tm
+    refute_nil @tm
     assert_equal [], @tm.tasks
   end
 
@@ -66,7 +66,7 @@ class TestRakeTaskManager < Rake::TestCase
   end
 
   def test_name_lookup_with_nonexistent_task
-    assert_exception(RuntimeError) {
+    assert_raises(RuntimeError) {
       @tm["DOES NOT EXIST"]
     }
   end

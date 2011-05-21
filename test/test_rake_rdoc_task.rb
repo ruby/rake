@@ -1,5 +1,4 @@
 require 'test/helper'
-require 'test/capture_stdout'
 begin
   old_verbose = $VERBOSE
   $VERBOSE = nil

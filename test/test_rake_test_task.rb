@@ -19,7 +19,7 @@ class TestRakeTestTask < Rake::TestCase
 
   def test_defaults
     tt = Rake::TestTask.new do |t| end
-    assert_not_nil tt
+    refute_nil tt
     assert_equal :test, tt.name
     assert_equal ['lib'], tt.libs
     assert_equal 'test/test*.rb', tt.pattern
@@ -33,7 +33,7 @@ class TestRakeTestTask < Rake::TestCase
       t.pattern = 'test/tc_*.rb'
       t.verbose = true
     end
-    assert_not_nil tt
+    refute_nil tt
     assert_equal :example, tt.name
     assert_equal ['src', 'ext'], tt.libs
     assert_equal 'test/tc_*.rb', tt.pattern
@@ -113,6 +113,6 @@ class TestRakeTestTask < Rake::TestCase
     test_task = Rake::TestTask.new(:tx) do |t|
       t.libs = []
     end
-    assert_no_match(/-I/, test_task.ruby_opts_string)
+    refute_match(/-I/, test_task.ruby_opts_string)
   end
 end

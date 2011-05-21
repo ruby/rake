@@ -1,9 +1,7 @@
 require 'test/helper'
-require 'test/capture_stdout'
 
 class TestRakeFileList < Rake::TestCase
   FileList = Rake::FileList
-  include CaptureStdout
 
   def setup
     create_test_data
@@ -325,7 +323,7 @@ class TestRakeFileList < Rake::TestCase
   def test_egrep_with_output
     files = FileList['test/test_*.rb']
     the_line_number = __LINE__ + 1
-    out = capture_stdout do files.egrep(/PUGH/) end
+    out, = capture_io do files.egrep(/PUGH/) end
     assert_match(/:#{the_line_number}:/, out)
   end
 
@@ -343,12 +341,12 @@ class TestRakeFileList < Rake::TestCase
 
   def test_egrep_with_error
     files = FileList['test/test_*.rb']
-    error_messages = capture_stderr do
+    _, err = capture_io do
       files.egrep(/ANYTHING/) do |fn, ln, line |
         fail "_EGREP_FAILURE_"
       end
     end
-    assert_match(/_EGREP_FAILURE_/, error_messages)
+    assert_match(/_EGREP_FAILURE_/, err)
   end
 
   def test_existing
@@ -455,7 +453,7 @@ class TestRakeFileList < Rake::TestCase
     a = FileList['a', 'b', 'c']
     a.freeze
     c = a.clone
-    assert_exception(TypeError, RuntimeError) do
+    assert_raises(TypeError, RuntimeError) do
       c << 'more'
     end
   end

@@ -79,7 +79,7 @@ class TestRakeFileUtils < Rake::TestCase
   def test_safe_ln_fails_on_script_error
     FileUtils::LN_SUPPORTED[0] = true
     c = BadLink.new(ScriptError)
-    assert_exception(ScriptError) do c.safe_ln "a", "b" end
+    assert_raises(ScriptError) do c.safe_ln "a", "b" end
   end
 
   def test_verbose
@@ -112,8 +112,8 @@ class TestRakeFileUtils < Rake::TestCase
 
   def test_fileutils_methods_dont_leak
     obj = Object.new
-    assert_exception(NoMethodError) { obj.copy } # from FileUtils
-    assert_exception(NoMethodError) { obj.ruby "-v" } # from RubyFileUtils
+    assert_raises(NoMethodError) { obj.copy } # from FileUtils
+    assert_raises(NoMethodError) { obj.ruby "-v" } # from RubyFileUtils
   end
 
   def test_sh
@@ -153,7 +153,7 @@ class TestRakeFileUtils < Rake::TestCase
   end
 
   def test_sh_failure
-    assert_exception(RuntimeError) {
+    assert_raises(RuntimeError) {
       verbose(false) { Sh.run %{#{FileUtils::RUBY} test/shellcommand.rb 1} }
     }
   end
@@ -181,7 +181,7 @@ class TestRakeFileUtils < Rake::TestCase
   end
 
   def test_sh_bad_option
-    ex = assert_exception(ArgumentError) {
+    ex = assert_raises(ArgumentError) {
       verbose(false) { sh %{test/shellcommand.rb}, :bad_option=>true }
     }
     assert_match(/bad_option/, ex.message)

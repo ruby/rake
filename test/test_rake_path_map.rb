@@ -83,7 +83,7 @@ class TestRakePathMap < Rake::TestCase
   end
 
   def test_undefined_percent_causes_error
-    assert_exception(ArgumentError) {
+    assert_raises(ArgumentError) {
       "dir/abc.rb".pathmap("%z")
     }
   end
@@ -127,7 +127,7 @@ class TestRakePathMap < Rake::TestCase
   end
 
   def test_pattern_with_invalid_operator
-    ex = assert_exception(ArgumentError) do
+    ex = assert_raises(ArgumentError) do
       "abc.xyz".pathmap("%{src,bin}z")
     end
     assert_match(/unknown.*pathmap.*spec.*z/i, ex.message)

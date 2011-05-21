@@ -3,7 +3,6 @@ require 'fileutils'
 
 ######################################################################
 class TestRakeTask < Rake::TestCase
-  include CaptureStdout
   include Rake
 
   def setup
@@ -52,7 +51,7 @@ class TestRakeTask < Rake::TestCase
     t2 = task(:t2 => [:t1]) { |t| runlist << t.name }
     assert_equal ["t2"], t1.prerequisites
     assert_equal ["t1"], t2.prerequisites
-    ex = assert_exception RuntimeError do
+    ex = assert_raises RuntimeError do
       t1.invoke
     end
     assert_match(/circular dependency/i, ex.message)
@@ -63,10 +62,10 @@ class TestRakeTask < Rake::TestCase
     Rake.application.options.dryrun = true
     runlist = []
     t1 = task(:t1) { |t| runlist << t.name; 3321 }
-    out = capture_stderr { t1.invoke }
-    assert_match(/execute .*t1/i, out)
-    assert_match(/dry run/i, out)
-    assert_no_match(/invoke/i, out)
+    _, err = capture_io { t1.invoke }
+    assert_match(/execute .*t1/i, err)
+    assert_match(/dry run/i, err)
+    refute_match(/invoke/i, err)
     assert_equal [], runlist
   ensure
     Rake.application.options.dryrun = false
@@ -75,11 +74,11 @@ class TestRakeTask < Rake::TestCase
   def test_tasks_can_be_traced
     Rake.application.options.trace = true
     t1 = task(:t1)
-    out = capture_stderr {
+    _, err = capture_io {
       t1.invoke
     }
-    assert_match(/invoke t1/i, out)
-    assert_match(/execute t1/i, out)
+    assert_match(/invoke t1/i, err)
+    assert_match(/execute t1/i, err)
   ensure
     Rake.application.options.trace = false
   end
@@ -125,7 +124,7 @@ class TestRakeTask < Rake::TestCase
   def test_find
     task :tfind
     assert_equal "tfind", Task[:tfind].name
-    ex = assert_exception(RuntimeError) { Task[:leaves] }
+    ex = assert_raises(RuntimeError) { Task[:leaves] }
     assert_equal "Don't know how to build task 'leaves'", ex.message
   end
 
@@ -186,7 +185,7 @@ class TestRakeTask < Rake::TestCase
   def test_prerequiste_tasks_fails_if_prerequisites_are_undefined
     a = task :a => ["b", "c"]
     b = task :b
-    assert_exception(RuntimeError) do
+    assert_raises(RuntimeError) do
       a.prerequisite_tasks
     end
   end
@@ -270,7 +269,6 @@ end
 
 ######################################################################
 class TestRakeTaskWithArguments < Rake::TestCase
-  include CaptureStdout
   include Rake
 
   def setup
@@ -312,7 +310,7 @@ class TestRakeTaskWithArguments < Rake::TestCase
 
   def test_illegal_keys_in_task_name_hash
     ignore_deprecations do
-      assert_exception RuntimeError do
+      assert_raises RuntimeError do
         t = task(:t, :x, :y => 1, :needs => [:pre])
       end
     end
@@ -353,7 +351,7 @@ class TestRakeTaskWithArguments < Rake::TestCase
       assert_equal t, t2
       assert_equal({:x => 1}, args.to_hash)
     end
-    assert_nothing_raised do t.invoke(1) end
+    t.invoke(1)
     assert_equal [:a, :b, :c, :d], notes
   end
 

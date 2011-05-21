@@ -15,15 +15,23 @@ class TestRakeFileTask < Rake::TestCase
   end
 
   def test_file_need
+    FileUtils.mkdir_p 'testdata' # HACK use tmpdir
+
     name = "testdata/dummy"
     file name
+
     ftask = Task[name]
+
     assert_equal name.to_s, ftask.name
     File.delete(ftask.name) rescue nil
+
     assert ftask.needed?, "file should be needed"
+
     open(ftask.name, "w") { |f| f.puts "HI" }
+
     assert_equal nil, ftask.prerequisites.collect{|n| Task[n].timestamp}.max
     assert ! ftask.needed?, "file should not be needed"
+  ensure
     File.delete(ftask.name) rescue nil
   end
 
@@ -61,11 +69,19 @@ class TestRakeFileTask < Rake::TestCase
   end
 
   def test_existing_file_depends_on_non_existing_file
+    @ran = false
+
     create_file(OLDFILE)
     delete_file(NEWFILE)
-    file NEWFILE
+    file NEWFILE do
+      @ran = true
+    end
+
     file OLDFILE => NEWFILE
-    assert_nothing_raised do Task[OLDFILE].invoke end
+
+    Task[OLDFILE].invoke
+
+    assert @ran
   end
 
   # I have currently disabled this test.  I'm not convinced that

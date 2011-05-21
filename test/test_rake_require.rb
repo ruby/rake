@@ -24,7 +24,7 @@ class TestRakeRequire < Rake::TestCase
 
   def test_throws_error_if_library_not_found
     app = Rake::Application.new
-    ex = assert_exception(LoadError) {
+    ex = assert_raises(LoadError) {
       assert app.instance_eval {
         rake_require("testx", ['test/data/rakelib'], [])
       }

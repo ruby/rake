@@ -1,5 +1,4 @@
 require 'test/helper'
-require 'test/capture_stdout'
 
 class TestRakePseudoStatus < Rake::TestCase
   def test_with_zero_exit_status

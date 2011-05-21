@@ -56,7 +56,7 @@ class TestRakeDefinitions < Rake::TestCase
 
   def test_missing_dependencies
     task :x => ["testdata/missing"]
-    assert_exception(RuntimeError) { Task[:x].invoke }
+    assert_raises(RuntimeError) { Task[:x].invoke }
   end
 
   def test_implicit_file_dependencies

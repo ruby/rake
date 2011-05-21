@@ -63,7 +63,8 @@ task :default => :test
 # Test Tasks ---------------------------------------------------------
 
 Rake::TestTask.new do |t|
-  t.test_files = FileList['test/test_*.rb']
+  files = FileList['test/helper.rb', 'test/test_*.rb']
+  t.test_files = files
   t.libs << "."
   t.warning = true
 end
@@ -179,6 +180,7 @@ else
     #### Dependencies and requirements.
 
     s.required_rubygems_version = '>= 1.3.2'
+    s.add_development_dependency 'minitest', '~> 2.1'
     s.add_development_dependency 'session', '~> 2.4'
     s.add_development_dependency 'flexmock', '~> 0.8.11'
 

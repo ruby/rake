@@ -17,6 +17,7 @@ class TestRakeRules < Rake::TestCase
   def setup
     Task.clear
     @runs = []
+    FileUtils.mkdir_p 'testdata' # HACK use tmpdir
   end
 
   def teardown
@@ -187,8 +188,8 @@ class TestRakeRules < Rake::TestCase
     rule '.o' => ['.c'] do |t|
       @runs << t.name
     end
-    assert_exception(RuntimeError) { Task['testdata/x.obj'].invoke }
-    assert_exception(RuntimeError) { Task['testdata/x.xyo'].invoke }
+    assert_raises(RuntimeError) { Task['testdata/x.obj'].invoke }
+    assert_raises(RuntimeError) { Task['testdata/x.xyo'].invoke }
   end
 
   def test_rule_rebuilds_obj_when_source_is_newer
@@ -328,7 +329,7 @@ class TestRakeRules < Rake::TestCase
       rule ".#{letter}" => ".#{prev}" do |t| puts "#{t.name}" end
       prev = letter
     end
-    ex = assert_exception(Rake::RuleRecursionOverflowError) {
+    ex = assert_raises(Rake::RuleRecursionOverflowError) {
       Task["testdata/a.z"].invoke
     }
     assert_match(/a\.z => testdata\/a.y/, ex.message)
@@ -336,7 +337,7 @@ class TestRakeRules < Rake::TestCase
 
   def test_rules_with_bad_dependents_will_fail
     rule "a" => [ 1 ] do |t| puts t.name end
-    assert_exception(RuntimeError) do Task['a'].invoke end
+    assert_raises(RuntimeError) do Task['a'].invoke end
   end
 
 end

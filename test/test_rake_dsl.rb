@@ -6,11 +6,11 @@ class TestRakeDsl < Rake::TestCase
     namespace "n" do
       task "t"
     end
-    assert_not_nil Rake::Task["n:t"]
+    refute_nil Rake::Task["n:t"]
   end
 
   def test_namespace_command_with_bad_name
-    ex = assert_raise(ArgumentError) do
+    ex = assert_raises(ArgumentError) do
       namespace 1 do end
     end
     assert_match(/string/i, ex.message)
@@ -25,7 +25,7 @@ class TestRakeDsl < Rake::TestCase
     namespace name do
       task "t"
     end
-    assert_not_nil Rake::Task["bob:t"]
+    refute_nil Rake::Task["bob:t"]
   end
 
   def test_dsl_not_toplevel_by_default
@@ -34,8 +34,8 @@ class TestRakeDsl < Rake::TestCase
   end
 
   def test_dsl_toplevel_when_require_rake_dsl
-    assert_nothing_raised {
-      ruby '-I./lib', '-rrake/dsl', '-e', 'task(:x) { }', :verbose => false
-    }
+    ruby '-I./lib', '-rrake/dsl', '-e', 'task(:x) { }', :verbose => false
+
+    assert $?.exitstatus
   end
 end

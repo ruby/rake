@@ -8,9 +8,9 @@ class TestRakeAnEmptyInvocationChain < Rake::TestCase
   end
 
   def test_should_be_able_to_add_members
-    assert_nothing_raised do
-      @empty.append("A")
-    end
+    chain = @empty.append("A")
+
+    assert_equal 'TOP => A', chain.to_s # HACK
   end
 
   def test_to_s
@@ -32,7 +32,7 @@ class TestRakeAnInvocationChainWithOneMember < Rake::TestCase
   end
 
   def test_should_fail_when_adding_original_member
-    ex = assert_exception RuntimeError do
+    ex = assert_raises RuntimeError do
       @chain.append(@first_member)
     end
     assert_match(/circular +dependency/i, ex.message)
@@ -64,7 +64,7 @@ class TestRakeAnInvocationChainWithMultipleMember < Rake::TestCase
   end
 
   def test_should_fail_when_adding_original_member
-    ex = assert_exception RuntimeError do
+    ex = assert_raises RuntimeError do
       @chain.append(@first_member)
     end
     assert_match(/A.*=>.*B.*=>.*A/, ex.message)

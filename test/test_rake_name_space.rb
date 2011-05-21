@@ -9,7 +9,7 @@ class TestRakeNameSpace < Rake::TestCase
   def test_namespace_creation
     mgr = TM.new
     ns = Rake::NameSpace.new(mgr, [])
-    assert_not_nil ns
+    refute_nil ns
   end
 
   def test_namespace_lookup
@@ -18,7 +18,7 @@ class TestRakeNameSpace < Rake::TestCase
       mgr.define_task(Rake::Task, "t")
     end
 
-    assert_not_nil ns["t"]
+    refute_nil ns["t"]
     assert_equal mgr["n:t"], ns["t"]
   end
 
