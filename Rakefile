@@ -219,8 +219,9 @@ else
     s.version = $package_version
     s.summary = "A branch of Rake supporting automatic parallelizing of tasks."
     s.description = <<-EOF
-      Rake is a Make-like program implemented in Ruby. Tasks
-      and dependencies are specified in standard Ruby syntax.
+      Drake is an auto-parallelizing branch of Rake, a Make-like program
+      implemented in Ruby. Tasks and dependencies are specified in standard
+      Ruby syntax.
     EOF
 
     #### Dependencies and requirements.
