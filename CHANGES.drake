@@ -1,10 +1,12 @@
 
 = Drake Changelog
 
-== Pre-Version 0.9.x.x.x
+== Version 0.9.0.0.3.0
 
+* option -j without a value now allowed == no limit on number of threads
+* improved --randomize[=SEED] option: auto-generates SEED if none given
+  (mirrors the randomizing functionality of minitest).
 * update from mainline branch
-* minor cleanup
 
 == Version 0.8.7.0.2.3
 
