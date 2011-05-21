@@ -68,13 +68,13 @@ task :test => [:test_serial, :test_parallel]
 TEST_FILES = FileList['test/helper.rb', 'test/test_*.rb']
 
 Rake::TestTask.new :test_serial do |t|
-  t.test_files = ['test/serial_setup.rb'] + TEST_FILES
+  t.test_files = ['test/setup_serial.rb'] + TEST_FILES
   t.libs << "."
   t.warning = true
 end
 
 Rake::TestTask.new :test_parallel do |t|
-  t.test_files = ['test/parallel_setup.rb'] + TEST_FILES
+  t.test_files = ['test/setup_parallel.rb'] + TEST_FILES
   t.libs << "."
   t.warning = true
 end
