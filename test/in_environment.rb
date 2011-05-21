@@ -9,7 +9,7 @@ module InEnvironment
     original_settings = set_env(full_settings)
     yield
   ensure
-    set_env(original_settings)
+    set_env(original_settings) rescue nil
   end
 
   # Set the environment according to the settings hash.

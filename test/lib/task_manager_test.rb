@@ -152,6 +152,16 @@ class TestTaskManager < Test::Unit::TestCase
 end
 
 class TestTaskManagerArgumentResolution < Test::Unit::TestCase
+  def setup
+    super
+    Rake.application.options.ignore_deprecate = true
+  end
+
+  def teardown
+    Rake.application.options.ignore_deprecate = false
+    super
+  end
+
   def test_good_arg_patterns
     assert_equal [:t, [], []],       task(:t)
     assert_equal [:t, [], [:x]],     task(:t => :x)

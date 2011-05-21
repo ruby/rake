@@ -1,6 +1,12 @@
 = Rake Changelog
 
-== Pre-Version 0.9.x
+== Version 0.9.0
+
+* Rake now warns when the deprecated :needs syntax used.
+
+* Moved Rake DSL commands to top level ruby object 'main'.  Rake DSL
+  commands are no longer private methods in Object. (Suggested by
+  James M. Lawrence/quix)
 
 * Rake history is now UTF-8 encoded.
 
@@ -9,9 +15,6 @@
 
 * Rake now requires (instead of loads) files in the test task.  Patch by Cezary
   Baginski.
-
-* Rake now runs tasks when they have equal timestamps.  Patch by James M.
-  Lawrence.
 
 * Fixed typos.  Patches by Sean Scot August Moon and R.T. Lechow.
 
@@ -36,9 +39,6 @@
 * Removed Rake's DSL methods from the top level scope.  If you need to
   call 'task :xzy' in your code, include Rake::DSL into your class, or
   put the code in a Rake::DSL.environment do ... end block.
-
-* Allow single line comments immediately prior to a task to be used in
-  place of +desc+.
 
 * Split rake.rb into individual files.
 

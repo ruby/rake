@@ -135,12 +135,9 @@ module Rake
         Rake.application.add_import(fn)
       end
     end
-
-    # Include the Rake DSL commands in the top level Ruby scope.
-    def self.include_in_top_scope
-      Object.send(:include, Rake::DSL)
-    end
   end
 
   extend FileUtilsExt
 end
+
+self.extend Rake::DSL

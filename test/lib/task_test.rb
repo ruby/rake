@@ -37,7 +37,8 @@ class TestTask < Test::Unit::TestCase
   end
 
   def test_inspect
-    t = task(:foo, :needs => [:bar, :baz])
+#    t = task(:foo, :needs => [:bar, :baz])
+    t = task(:foo => [:bar, :baz])
     assert_equal "<Rake::Task foo => [bar, baz]>", t.inspect
   end
 
@@ -322,23 +323,20 @@ class TestTaskWithArguments < Test::Unit::TestCase
     assert_equal ["pre"], t.prerequisites
   end
 
-  def test_name_and_explicit_needs
-    t = task(:t, :needs => [:pre])
-    assert_equal "t", t.name
-    assert_equal [], t.arg_names
-    assert_equal ["pre"], t.prerequisites
-  end
-
   def test_name_args_and_explicit_needs
-    t = task(:t, :x, :y, :needs => [:pre])
-    assert_equal "t", t.name
-    assert_equal [:x, :y], t.arg_names
-    assert_equal ["pre"], t.prerequisites
+    ignore_deprecations do
+      t = task(:t, :x, :y, :needs => [:pre])
+      assert_equal "t", t.name
+      assert_equal [:x, :y], t.arg_names
+      assert_equal ["pre"], t.prerequisites
+    end
   end
 
   def test_illegal_keys_in_task_name_hash
-    assert_exception RuntimeError do
-      t = task(:t, :x, :y => 1, :needs => [:pre])
+    ignore_deprecations do
+      assert_exception RuntimeError do
+        t = task(:t, :x, :y => 1, :needs => [:pre])
+      end
     end
   end
 
@@ -429,7 +427,7 @@ class TestTaskWithArguments < Test::Unit::TestCase
   def test_named_args_are_passed_to_prereqs
     value = nil
     pre = task(:pre, :rev) { |t, args| value = args.rev }
-    t = task(:t, :name, :rev, :needs => [:pre])
+    t = task(:t, [:name, :rev] => [:pre])
     t.invoke("bill", "1.2")
     assert_equal "1.2", value
   end
@@ -439,7 +437,7 @@ class TestTaskWithArguments < Test::Unit::TestCase
       assert_equal({}, args.to_hash)
       assert_equal "bill", args.name
     }
-    t = task(:t, :name, :rev, :needs => [:pre])
+    t = task(:t, [:name, :rev] => [:pre])
     t.invoke("bill", "1.2")
   end
 
@@ -447,7 +445,7 @@ class TestTaskWithArguments < Test::Unit::TestCase
     pre = task(:pre, :rev) { |t, args|
       assert_equal({}, args.to_hash)
     }
-    t = task(:t, :needs => [:pre])
+    t = task(:t  => [:pre])
     t.invoke("bill", "1.2")
   end
 end

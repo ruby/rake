@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 
 module Tags
+  extend Rake::DSL if defined?(Rake::DSL)
+
   PROG = ENV['TAGS'] || 'ctags'
 
   RAKEFILES = FileList['Rakefile', '**/*.rake']

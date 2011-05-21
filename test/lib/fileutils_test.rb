@@ -2,7 +2,7 @@
 
 require 'rake'
 require 'test/unit'
-require 'test/filecreation'
+require 'test/file_creation'
 require 'fileutils'
 require 'stringio'
 require 'test/rake_test_setup'

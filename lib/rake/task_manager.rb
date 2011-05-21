@@ -103,6 +103,10 @@ module Rake
         arg_names = []
         deps = value
       elsif key == :needs
+        Rake.application.deprecate(
+          "task :t, arg, :needs => [deps]",
+          "task :t, [args] => [deps]",
+          caller.detect { |c| c !~ /\blib\/rake\b/ })
         task_name = args.shift
         arg_names = args
         deps = value
@@ -234,8 +238,7 @@ module Rake
     end
 
     def trace_rule(level, message)
-      $stderr.puts "#{"    "*level}#{message}" if
-        Rake.application.options.trace_rules
+      $stderr.puts "#{"    "*level}#{message}" if Rake.application.options.trace_rules
     end
 
     # Attempt to create a rule given the list of prerequisites.
@@ -262,7 +265,7 @@ module Rake
     # Make a list of sources from the list of file name extensions /
     # translation procs.
     def make_sources(task_name, extensions)
-      extensions.collect { |ext|
+      result = extensions.collect { |ext|
         case ext
         when /%/
           task_name.pathmap(ext)
@@ -281,43 +284,18 @@ module Rake
         else
           fail "Don't know how to handle rule dependent: #{ext.inspect}"
         end
-      }.flatten
+      }
+      result.flatten
     end
 
 
     private
 
-    # Return the current description. If there isn't one, try to find it
-    # by reading in the source file and looking for a comment immediately
-    # prior to the task definition
+    # Return the current description, clearing it in the process.
     def get_description(task)
-      desc = @last_description || find_preceding_comment_for_task(task)
+      desc = @last_description
       @last_description = nil
       desc
-    end
-
-    def find_preceding_comment_for_task(task)
-      loc = task.locations.last
-      file_name, line = parse_location(loc)
-      return nil unless file_name
-      comment_from_file(file_name, line)
-    end
-
-    def parse_location(loc)
-      if loc =~ /^(.*):(\d+)/
-        [ $1, Integer($2) ]
-      else
-        nil
-      end
-    end
-
-    def comment_from_file(file_name, line)
-      return if file_name == '(eval)'
-      @file_cache ||= {}
-      content = (@file_cache[file_name] ||= File.readlines(file_name))
-      line -= 2
-      return nil unless content[line] =~ /^\s*#\s*(.*)/
-      $1
     end
 
     class << self

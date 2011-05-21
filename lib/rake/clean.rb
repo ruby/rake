@@ -13,21 +13,19 @@
 
 require 'rake'
 
-Rake::DSL.environment do
-  CLEAN = Rake::FileList["**/*~", "**/*.bak", "**/core"]
-  CLEAN.clear_exclude.exclude { |fn|
-    fn.pathmap("%f") == 'core' && File.directory?(fn)
-  }
+CLEAN = Rake::FileList["**/*~", "**/*.bak", "**/core"]
+CLEAN.clear_exclude.exclude { |fn|
+  fn.pathmap("%f") == 'core' && File.directory?(fn)
+}
 
-  desc "Remove any temporary products."
-  task :clean do
-    CLEAN.each { |fn| rm_r fn rescue nil }
-  end
+desc "Remove any temporary products."
+task :clean do
+  CLEAN.each { |fn| rm_r fn rescue nil }
+end
 
-  CLOBBER = Rake::FileList.new
+CLOBBER = Rake::FileList.new
 
-  desc "Remove any generated file."
-  task :clobber => [:clean] do
-    CLOBBER.each { |fn| rm_r fn rescue nil }
-  end
+desc "Remove any generated file."
+task :clobber => [:clean] do
+  CLOBBER.each { |fn| rm_r fn rescue nil }
 end

@@ -46,7 +46,7 @@ end
 
 # Determine the current version of the software
 
-if `ruby -Ilib ./bin/drake --version` =~ /rake, version ([0-9.]+)$/
+if `ruby -Ilib ./bin/drake --version` =~ /rake, version ([0-9a-z.]+)$/
   CURRENT_VERSION = $1
 else
   CURRENT_VERSION = "0.0.0"
@@ -115,16 +115,28 @@ end
 
 begin
   require 'rcov/rcovtask'
+  IGNORE_COVERAGE_IN = FileList[
+    'lib/rake/rdoctask.rb',
+    'lib/rake/testtask.rb',
+    'lib/rake/packagetask.rb',
+    'lib/rake/clean.rb',
+  ]
+
+  unless File::ALT_SEPARATOR
+    IGNORE_COVERAGE_IN.include(
+      'lib/rake/alt_system.rb',
+      'lib/rake/win32.rb')
+  end
 
   Rcov::RcovTask.new do |t|
     t.libs << "test"
-    dot_rakes =
     t.rcov_opts = [
       '-xRakefile', '-xrakefile', '-xpublish.rf',
-      '-xlib/rake/contrib', '-x/Library',
+      '-xlib/rake/contrib', '-x/Library', '-x.rvm',
       '--text-report',
       '--sort coverage'
-    ] + FileList['rakelib/*.rake'].pathmap("-x%p")
+    ] + FileList['rakelib/*.rake'].pathmap("-x%p") +
+      IGNORE_COVERAGE_IN.map { |fn| "-x#{fn}" }
     t.test_files = FileList[
       'test/lib/*_test.rb',
       'test/contrib/*_test.rb',
@@ -134,7 +146,9 @@ begin
     t.verbose = true
   end
 rescue LoadError
-  puts "RCov is not available"
+  task :rcov do
+    puts "RCov is not available"
+  end
 end
 
 directory 'testdata'
@@ -230,7 +244,6 @@ else
 
     s.bindir = "bin"                               # Use these for applications.
     s.executables = ["drake"]
-    s.default_executable = "drake"
 
     #### Documentation and testing.
 
@@ -256,7 +269,7 @@ else
 #     end
   end
 
-  package_task = Gem::PackageTask.new(SPEC) do |pkg|
+  Gem::PackageTask.new(SPEC) do |pkg|
     pkg.need_zip = true
     pkg.need_tar = true
   end
@@ -338,8 +351,7 @@ task :noop
 #plugin "release_manager"
 
 desc "Make a new release"
-task :release, :rel, :reuse, :reltest,
-  :needs => [
+task :release, [:rel, :reuse, :reltest] => [
     :prerelease,
     :clobber,
     "test:all",
@@ -389,8 +401,7 @@ task :prerelease, :rel, :reuse, :reltest do |t, args|
   end
 end
 
-task :update_version, :rel, :reuse, :reltest,
-  :needs => [:prerelease] do |t, args|
+task :update_version, [:rel, :reuse, :reltest] => [:prerelease] do |t, args|
   if args.rel == CURRENT_VERSION
     announce "No version change ... skipping version update"
   else
@@ -416,8 +427,7 @@ task :update_version, :rel, :reuse, :reltest,
 end
 
 desc "Tag all the CVS files with the latest release number (REL=x.y.z)"
-task :tag, :rel, :reuse, :reltest,
-  :needs => [:prerelease] do |t, args|
+task :tag, [:rel, :reuse, :reltest] => [:prerelease] do |t, args|
   reltag = "REL_#{args.rel.gsub(/\./, '_')}"
   reltag << args.reuse.gsub(/\./, '_') if args.reuse
   announce "Tagging Repository with [#{reltag}]"

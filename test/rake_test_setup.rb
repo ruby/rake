@@ -9,8 +9,9 @@ end
 
 require 'thread'
 require 'flexmock/test_unit'
-require 'test/filecreation'
+require 'test/file_creation'
 require 'test/capture_stdout'
+require 'test/test_helper'
 
 module TestMethods
   # Shim method for compatibility

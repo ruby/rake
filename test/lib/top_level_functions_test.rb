@@ -20,6 +20,8 @@ class TestTopLevelFunctions < Test::Unit::TestCase
     super
     @app = Rake.application
     Rake.application = flexmock("app")
+    Rake.application.should_receive(:deprecate).
+      and_return { |old, new, call| @app.deprecate(old, new, call) }
   end
 
   def teardown

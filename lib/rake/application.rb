@@ -153,6 +153,18 @@ module Rake
       $stderr.puts "(See full trace by running task with --trace)" unless options.trace
     end
 
+    # Warn about deprecated usage.
+    #
+    # Example:
+    #    Rake.application.deprecate("import", "Rake.import", caller.first)
+    #
+    def deprecate(old_usage, new_usage, call_site)
+      return if options.ignore_deprecate
+      $stderr.puts "WARNING: '#{old_usage}' is deprecated.  " +
+        "Please use '#{new_usage}' instead.\n" +
+        "    at #{call_site}"
+    end
+
     # Does the exception have a task invocation chain?
     def has_chain?(exception)
       exception.respond_to?(:chain) && exception.chain
@@ -316,6 +328,9 @@ module Rake
         ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
           lambda { |value| $:.push(value) }
         ],
+        ['--no-search', '--nosearch', '-N', "Do not search parent directories for the Rakefile.",
+          lambda { |value| options.nosearch = true }
+        ],
         ['--prereqs', '-P', "Display the tasks and dependencies, then exit.",
           lambda { |value| options.show_prereqs = true }
         ],
@@ -356,9 +371,6 @@ module Rake
         ['--rules', "Trace the rules resolution.",
           lambda { |value| options.trace_rules = true }
         ],
-        ['--no-search', '--nosearch', '-N', "Do not search parent directories for the Rakefile.",
-          lambda { |value| options.nosearch = true }
-        ],
         ['--silent', '-s', "Like --quiet, but also suppresses the 'in directory' announcement.",
           lambda { |value|
             Rake.verbose(false)
@@ -378,16 +390,6 @@ module Rake
             options.show_tasks = :tasks
             options.show_task_pattern = Regexp.new(value || '')
             Rake::TaskManager.record_task_metadata = true
-          }
-        ],
-        ['--no-top-level-dsl', '-X', "Do no put Rake DSL commands in the top level scope.",
-          lambda { |value|
-            options.top_level_dsl = ! value
-          }
-        ],
-        ['--top-level-dsl', "Put Rake DSL commands in the top level scope (default).",
-          lambda { |value|
-            options.top_level_dsl = value
           }
         ],
         ['--trace', '-t', "Turn on invoke/execute tracing, enable full backtrace.",
@@ -412,13 +414,17 @@ module Rake
             Rake::TaskManager.record_task_metadata = true
           }
         ],
+        ['--no-deprecation-warnings', '-X', "Disable the deprecation warnings.",
+          lambda { |value|
+            options.ignore_deprecate = true
+          }
+        ],
       ]
     end
 
     # Read and handle the command line options.
     def handle_options
       options.rakelib = ['rakelib']
-      options.top_level_dsl = true
 
       OptionParser.new do |opts|
         opts.banner = "drake [-f rakefile] {options} targets..."
@@ -433,8 +439,6 @@ module Rake
         standard_rake_options.each { |args| opts.on(*args) }
         opts.environment('RAKEOPT')
       end.parse!
-
-      Rake::DSL.include_in_top_scope if options.top_level_dsl
 
       # If class namespaces are requested, set the global options
       # according to the values in the options structure.
@@ -455,7 +459,7 @@ module Rake
       paths.each do |path|
         full_path = File.join(path, fn)
         if File.exist?(full_path)
-          Rake::Environment.load_rakefile(full_path)
+          Rake.load_rakefile(full_path)
           loaded << fn
           return true
         end
@@ -498,7 +502,7 @@ module Rake
         Dir.chdir(location)
         print_rakefile_directory(location)
         $rakefile = @rakefile if options.classic_namespace
-        Rake::Environment.load_rakefile(File.expand_path(@rakefile)) if @rakefile && @rakefile != ''
+        Rake.load_rakefile(File.expand_path(@rakefile)) if @rakefile && @rakefile != ''
         options.rakelib.each do |rlib|
           glob("#{rlib}/*.rake") do |name|
             add_import name

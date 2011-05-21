@@ -34,10 +34,10 @@ class TestApplication < Test::Unit::TestCase
   end
 
   def test_constant_warning
-    err = capture_stderr do @app.instance_eval { const_warning("Task") } end
-    assert_match(/warning/i, err)
-    assert_match(/deprecated/i, err)
-    assert_match(/Task/i, err)
+    error_messages = capture_stderr do @app.instance_eval { const_warning("Task") } end
+    assert_match(/warning/i, error_messages)
+    assert_match(/deprecated/i, error_messages)
+    assert_match(/Task/i, error_messages)
   end
 
   def test_display_tasks
@@ -156,14 +156,14 @@ class TestApplication < Test::Unit::TestCase
 
   def test_load_rakefile_doesnt_print_rakefile_directory_from_same_dir
     in_environment("PWD" => "test/data/unittest") do
-      err = capture_stderr do
+      error_messages = capture_stderr do
         @app.instance_eval do
           @original_dir = File.expand_path(".") # pretend we started from the unittest dir
           raw_load_rakefile
         end
       end
       _, location = @app.find_rakefile_location
-      assert_no_match(/\(in #{location}\)/, err)
+      assert_no_match(/\(in #{location}\)/, error_messages)
     end
   end
 
@@ -181,19 +181,19 @@ class TestApplication < Test::Unit::TestCase
 
   def test_load_rakefile_prints_rakefile_directory_from_subdir
     in_environment("PWD" => "test/data/unittest/subdir") do
-      err = capture_stderr do
+      error_messages = capture_stderr do
         @app.instance_eval do
           raw_load_rakefile
         end
       end
       _, location = @app.find_rakefile_location
-      assert_match(/\(in #{location}\)/, err)
+      assert_match(/\(in #{location}\)/, error_messages)
     end
   end
 
   def test_load_rakefile_doesnt_print_rakefile_directory_from_subdir_if_silent
     in_environment("PWD" => "test/data/unittest/subdir") do
-      err = capture_stderr do
+      error_messages = capture_stderr do
         @app.instance_eval do
           handle_options
           options.silent = true
@@ -201,7 +201,7 @@ class TestApplication < Test::Unit::TestCase
         end
       end
       _, location = @app.find_rakefile_location
-      assert_no_match(/\(in #{location}\)/, err)
+      assert_no_match(/\(in #{location}\)/, error_messages)
     end
   end
 
@@ -230,6 +230,21 @@ class TestApplication < Test::Unit::TestCase
       end
       assert_equal "test/data/sys", @app.system_dir
       assert_nil @app.rakefile
+    end
+  end
+
+  def test_load_from_calculated_system_rakefile
+    flexmock(@app, :standard_system_dir => "__STD_SYS_DIR__")
+    in_environment('RAKE_SYSTEM' => nil) do
+      @app.options.rakelib = []
+      @app.instance_eval do
+        handle_options
+        options.silent = true
+        options.load_system = true
+        options.rakelib = []
+        load_rakefile
+      end
+      assert_equal "__STD_SYS_DIR__", @app.system_dir
     end
   end
 
@@ -321,8 +336,8 @@ class TestApplication < Test::Unit::TestCase
     ARGV.clear
     ARGV << '-f' << '-s' <<  '--rakelib=""'
     assert_exception(SystemExit) {
-      err = capture_stderr { @app.run }
-      assert_match(/see full trace/, err)
+      error_messages = capture_stderr { @app.run }
+      assert_match(/see full trace/, error_messages)
     }
   ensure
     ARGV.clear
@@ -333,8 +348,8 @@ class TestApplication < Test::Unit::TestCase
     ARGV.clear
     ARGV << '-f' << '-s' << '-t'
     assert_exception(SystemExit) {
-      err = capture_stderr { capture_stdout { @app.run } }
-      assert_no_match(/see full trace/, err)
+      error_messages = capture_stderr { capture_stdout { @app.run } }
+      assert_no_match(/see full trace/, error_messages)
     }
   ensure
     ARGV.clear
@@ -349,6 +364,17 @@ class TestApplication < Test::Unit::TestCase
     }
   ensure
     ARGV.clear
+  end
+
+  def test_deprecation_message
+    in_environment do
+      error_messages = capture_stderr do
+        @app.deprecate("a", "b", "c")
+      end
+      assert_match(/'a' is deprecated/i, error_messages)
+      assert_match(/use 'b' instead/i, error_messages)
+      assert_match(/at c$/i, error_messages)
+    end
   end
 end
 
@@ -597,7 +623,28 @@ class TestApplicationOptions < Test::Unit::TestCase
       end
       flags(['--tasks', 'xyz'], ['-Txyz']) do |opts|
         assert_equal :tasks, opts.show_tasks
-        assert_equal(/xyz/, opts.show_task_pattern)
+        assert_equal(/xyz/.to_s, opts.show_task_pattern.to_s)
+      end
+    end
+  end
+
+  def test_where
+    in_environment do
+      flags('--where', '-W') do |opts|
+        assert_equal :lines, opts.show_tasks
+        assert_equal(//.to_s, opts.show_task_pattern.to_s)
+      end
+      flags(['--where', 'xyz'], ['-Wxyz']) do |opts|
+        assert_equal :lines, opts.show_tasks
+        assert_equal(/xyz/.to_s, opts.show_task_pattern.to_s)
+      end
+    end
+  end
+
+  def test_no_deprecated_messages
+    in_environment do
+      flags('--no-deprecation-warnings', '-X') do |opts|
+        assert opts.ignore_deprecate
       end
     end
   end
@@ -623,7 +670,7 @@ class TestApplicationOptions < Test::Unit::TestCase
 
   def test_classic_namespace
     in_environment do
-      error_output = capture_stderr do
+      error_messages = capture_stderr do
         flags(['--classic-namespace'], ['-C', '-T', '-P', '-n', '-s', '-t']) do |opts|
           assert opts.classic_namespace
           assert_equal opts.show_tasks, $show_tasks
@@ -633,13 +680,13 @@ class TestApplicationOptions < Test::Unit::TestCase
           assert_equal opts.silent, $silent
         end
       end
-      assert_match(/deprecated/, error_output)
+      assert_match(/deprecated/, error_messages)
     end
   end
 
   def test_bad_option
     in_environment do
-      error_output = capture_stderr do
+      error_messages = capture_stderr do
         ex = assert_exception(OptionParser::InvalidOption) do
           flags('--bad-option')
         end
@@ -650,7 +697,7 @@ class TestApplicationOptions < Test::Unit::TestCase
           assert_match(/--bad-option/, ex.message)
         end
       end
-      assert_equal '', error_output
+      assert_equal '', error_messages
     end
   end
 

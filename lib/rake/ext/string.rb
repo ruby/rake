@@ -1,3 +1,5 @@
+require 'rake/ext/core'
+
 ######################################################################
 # Rake extension methods for String.
 #

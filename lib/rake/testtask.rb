@@ -103,7 +103,12 @@ module Rake
     end
 
     def option_list # :nodoc:
-      ENV['TESTOPTS'] || @options || ""
+      (ENV['TESTOPTS'] ||
+        ENV['TESTOPT'] ||
+        ENV['TEST_OPTS'] ||
+        ENV['TEST_OPT'] ||
+        @options ||
+        "")
     end
 
     def ruby_opts_string

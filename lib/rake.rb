@@ -58,9 +58,10 @@ require 'rake/early_time'
 require 'rake/name_space'
 require 'rake/task_manager'
 require 'rake/application'
-require 'rake/environment'
 
 $trace = false
 
-# Alias FileList to be available at the top level.
+# Some top level Constants.
+
 FileList = Rake::FileList
+RakeFileUtils = Rake::FileUtilsExt

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'test/unit'
-require 'test/filecreation'
+require 'test/file_creation'
 begin
   old_verbose = $VERBOSE
   $VERBOSE = nil

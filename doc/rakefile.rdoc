@@ -364,12 +364,17 @@ invoked.  This make generated dependency files difficult to use.  By
 the time rake gets around to updating the dependencies file, it is too
 late to load it.
 
-The +import+ command addresses this by specifying a file to be loaded
-_after_ the main rakefile is loaded, but _before_ any targets on the
-command line are specified.  In addition, if the file name matches an
-explicit task, that task is invoked before loading the file.  This
-allows dependency files to be generated and used in a single rake
-command invocation.
+The +Rake.import+ command addresses this by specifying a file to be
+loaded _after_ the main rakefile is loaded, but _before_ any targets
+on the command line are invoked.  In addition, if the file name
+matches an explicit task, that task is invoked before loading the
+file.  This allows dependency files to be generated and used in a
+single rake command invocation.
+
+<b>NOTE:</b> Starting in Rake version 0.9.0, the top level +import+
+command is deprecated and we recommend using the scoped
+"+Rake.import+" command mentioned above.  Future versions of Rake will
+drop support for the top level +import+ command.
 
 === Example:
 
@@ -379,7 +384,7 @@ command invocation.
     sh "makedepend -f- -- #{CFLAGS} -- #{t.prerequisites} > #{t.name}"
   end
 
-  import ".depends.mf"
+  Rake.import ".depends.mf"
 
 If ".depends" does not exist, or is out of date w.r.t. the source
 files, a new ".depends" file is generated using +makedepend+ before
@@ -389,32 +394,18 @@ loading.
 
 Standard Ruby comments (beginning with "#") can be used anywhere it is
 legal in Ruby source code, including comments for tasks and rules.
-A single-line comment immediately before a task (with no blank line
-between it and the task) will be used as that task's description, and
-the task and description will appear in the list displayed
-using the "-T" switch.
+However, if you wish a task to be described using the "-T" switch,
+then you need to use the +desc+ command to describe the task.
 
 === Example:
 
-  # Create a distribution package
+  desc "Create a distribution package"
   task :package => [ ... ] do ... end
-
-You can also use the +desc+ command before a task to set the
-description for the task. In this case, intervening blank lines
-are allowed
-
-=== Example:
-
-  desc 'Create a distribution package'
-
-  task :package => [ ... ] do ... end
-
-The +desc+ comment takes priority over the comment for of description.
 
 The "-T" switch (or "--tasks" if you like to spell things out) will
-display a list of tasks that have a description.  If you use
-comments or +desc+ to describe your major tasks, you have a
-semi-automatic way of generating a summary of your Rake file.
+display a list of tasks that have a description.  If you use +desc+ to
+describe your major tasks, you have a semi-automatic way of generating
+a summary of your Rake file.
 
   traken$ rake -T
   (in /home/.../rake)

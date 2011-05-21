@@ -1,9 +1,10 @@
 require 'rake/file_utils'
 
 module Rake
-  # ###########################################################################
-  # FileUtilsExt provides a custom version of the FileUtils methods that
-  # respond to the <tt>verbose</tt> and <tt>nowrite</tt> commands.
+  #
+  # FileUtilsExt provides a custom version of the FileUtils methods
+  # that respond to the <tt>verbose</tt> and <tt>nowrite</tt>
+  # commands.
   #
   module FileUtilsExt
     include FileUtils
@@ -37,14 +38,17 @@ module Rake
       EOS
     end
 
-    # Get/set the verbose flag controlling output from the FileUtils utilities.
-    # If verbose is true, then the utility method is echoed to standard output.
+    # Get/set the verbose flag controlling output from the FileUtils
+    # utilities.  If verbose is true, then the utility method is
+    # echoed to standard output.
     #
     # Examples:
-    #    verbose              # return the current value of the verbose flag
+    #    verbose              # return the current value of the
+    #                         # verbose flag
     #    verbose(v)           # set the verbose flag to _v_.
-    #    verbose(v) { code }  # Execute code with the verbose flag set temporarily to _v_.
-    #                         # Return to the original value when code is done.
+    #    verbose(v) { code }  # Execute code with the verbose flag set
+    #                         # temporarily to _v_.  Return to the
+    #                         # original value when code is done.
     def verbose(value=nil)
       oldvalue = FileUtilsExt.verbose_flag
       FileUtilsExt.verbose_flag = value unless value.nil?
@@ -58,14 +62,17 @@ module Rake
       FileUtilsExt.verbose_flag
     end
 
-    # Get/set the nowrite flag controlling output from the FileUtils utilities.
-    # If verbose is true, then the utility method is echoed to standard output.
+    # Get/set the nowrite flag controlling output from the FileUtils
+    # utilities.  If verbose is true, then the utility method is
+    # echoed to standard output.
     #
     # Examples:
-    #    nowrite              # return the current value of the nowrite flag
+    #    nowrite              # return the current value of the
+    #                         # nowrite flag
     #    nowrite(v)           # set the nowrite flag to _v_.
-    #    nowrite(v) { code }  # Execute code with the nowrite flag set temporarily to _v_.
-    #                         # Return to the original value when code is done.
+    #    nowrite(v) { code }  # Execute code with the nowrite flag set
+    #                         # temporarily to _v_. Return to the
+    #                         # original value when code is done.
     def nowrite(value=nil)
       oldvalue = FileUtilsExt.nowrite_flag
       FileUtilsExt.nowrite_flag = value unless value.nil?
@@ -79,8 +86,8 @@ module Rake
       oldvalue
     end
 
-    # Use this function to prevent potentially destructive ruby code from
-    # running when the :nowrite flag is set.
+    # Use this function to prevent potentially destructive ruby code
+    # from running when the :nowrite flag is set.
     #
     # Example:
     #
@@ -88,9 +95,12 @@ module Rake
     #     project.build
     #   end
     #
-    # The following code will build the project under normal conditions. If the
-    # nowrite(true) flag is set, then the example will print:
+    # The following code will build the project under normal
+    # conditions. If the nowrite(true) flag is set, then the example
+    # will print:
+    #
     #      DRYRUN: Building Project
+    #
     # instead of actually building the project.
     #
     def when_writing(msg=nil)
@@ -116,8 +126,9 @@ module Rake
       $stderr.puts(message)
     end
 
-    # Check that the options do not contain options not listed in +optdecl+.  An
-    # ArgumentError exception is thrown if non-declared options are found.
+    # Check that the options do not contain options not listed in
+    # +optdecl+.  An ArgumentError exception is thrown if non-declared
+    # options are found.
     def rake_check_options(options, *optdecl)
       h = options.dup
       optdecl.each do |name|
@@ -128,5 +139,4 @@ module Rake
 
     extend self
   end
-
 end
