@@ -1,4 +1,3 @@
-#!/usr/bin/ruby -wKU
 task :imported do
   puts "imported!"
 end

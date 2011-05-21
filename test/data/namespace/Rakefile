@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 desc "copy"
 task :copy do
   puts "COPY"

@@ -59,58 +59,24 @@ SRC_RB = FileList['lib/**/*.rb']
 # The default task is run if rake is given no explicit arguments.
 
 desc "Default Task"
-task :default => "test:all"
+task :default => :test
 
 # Test Tasks ---------------------------------------------------------
 
-# Common Abbreviations ...
+task :test => [:test_serial, :test_parallel]
 
-task :ta => "test:all"
-task :tf => "test:functional"
-task :tu => "test:units"
-task :tc => "test:contribs"
-task :test => "test:units"
+TEST_FILES = FileList['test/helper.rb', 'test/test_*.rb']
 
-module TestFiles
-  UNIT = FileList['test/lib/*_test.rb']
-  FUNCTIONAL = FileList['test/functional/*_test.rb']
-  CONTRIB = FileList['test/contrib/test*.rb']
-  TOP = FileList['test/*_test.rb']
-  ALL = TOP + UNIT + FUNCTIONAL + CONTRIB
+Rake::TestTask.new :test_serial do |t|
+  t.test_files = ['test/serial_setup.rb'] + TEST_FILES
+  t.libs << "."
+  t.warning = true
 end
 
-namespace :test do
-  task :all => [:serial, :parallel]
-
-  Rake::TestTask.new(:serial) do |t|
-    t.test_files = ['test/serial_setup.rb'] + TestFiles::ALL
-    t.libs << "."
-    t.warning = true
-  end
-  
-  Rake::TestTask.new(:parallel) do |t|
-    t.test_files = ['test/parallel_setup.rb'] + TestFiles::ALL
-    t.libs << "."
-    t.warning = true
-  end
-
-  Rake::TestTask.new(:units) do |t|
-    t.test_files = TestFiles::UNIT
-    t.libs << "."
-    t.warning = true
-  end
-
-  Rake::TestTask.new(:functional) do |t|
-    t.test_files = TestFiles::FUNCTIONAL
-    t.libs << "."
-    t.warning = true
-  end
-
-  Rake::TestTask.new(:contribs) do |t|
-    t.test_files = TestFiles::CONTRIB
-    t.libs << "."
-    t.warning = true
-  end
+Rake::TestTask.new :test_parallel do |t|
+  t.test_files = ['test/parallel_setup.rb'] + TEST_FILES
+  t.libs << "."
+  t.warning = true
 end
 
 begin
@@ -152,9 +118,7 @@ rescue LoadError
 end
 
 directory 'testdata'
-["test:all", :test_units, :test_contribs, :test_functional].each do |t|
-  task t => ['testdata']
-end
+task :test => ['testdata']
 
 # CVS Tasks ----------------------------------------------------------
 
@@ -228,6 +192,7 @@ else
     s.add_dependency('comp_tree', '>= 1.1.3')
 
     s.required_rubygems_version = '>= 1.3.2'
+    s.add_development_dependency 'minitest', '~> 2.1'
     s.add_development_dependency 'session', '~> 2.4'
     s.add_development_dependency 'flexmock', '~> 0.8.11'
 
@@ -356,7 +321,7 @@ desc "Make a new release"
 task :release, [:rel, :reuse, :reltest] => [
     :prerelease,
     :clobber,
-    "test:all",
+    :test,
     :update_version,
     :package,
     :tag

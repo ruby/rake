@@ -2,7 +2,7 @@
 require 'rbconfig'
 require 'test/unit'
 require 'rake'
-require 'test/rake_test_setup'
+require 'test/helper'
 
 if Rake.application.options.threads != 1
   class TestParallel < Test::Unit::TestCase

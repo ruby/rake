@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 module FileCreation
   ANCIENT_FILE = 'testdata/anc'
   OLDFILE = "testdata/old"
