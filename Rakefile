@@ -3,7 +3,7 @@
 # Copyright 2003, 2004, 2005 by Jim Weirich (jim@weirichhouse.org)
 # Copyright 2008-2011 by James M. Lawrence (quixoticsycophant@gmail.com)
 # All rights reserved.
-#
+
 # This file may be distributed under an MIT style license.  See
 # MIT-LICENSE for details.
 
@@ -196,7 +196,7 @@ PKG_FILES = FileList[
   'install.rb',
   '[A-Z]*',
   'bin/drake', 
-  'lib/**/*.rb', 
+  'lib/**/*.rb',
   'test/**/*.rb',
   'test/**/*.rf',
   'test/**/*.mf',
