@@ -40,7 +40,7 @@ Options are:
 [<tt>--libdir</tt> _directory_  (-I)]
     Add _directory_ to the list of directories searched for require.
 
-[<tt>--threads</tt> [_number_] (-j)]
+[<tt>--threads</tt> _number_ (-j)]
     Run up to N independent tasks simultaneously in separate threads.
     If _number_ is not given, run as many tasks in parallel as the
     dependencies allow.
@@ -65,7 +65,7 @@ Options are:
 [<tt>--rakelibdir</tt> _rakelibdir_ (-R)]
     Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')
 
-[<tt>--randomize</tt> [_seed_]]
+[<tt>--randomize</tt> _seed_]
     Randomize the order of sibling prerequisites for each task. Runs
     with the same _seed_ will produce the same sibling permutations.
     If no _seed_ is given then one will be generated. _seed_ is
