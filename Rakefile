@@ -286,7 +286,7 @@ end
 
 # Misc tasks =========================================================
 
-load 'Rakefile.drake'
+load 'Rakefile-drake'
 
 def count_lines(filename)
   lines = 0
