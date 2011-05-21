@@ -409,7 +409,7 @@ module Rake
         ],
         ['--version', '-V', "Display the program version.",
           lambda { |value|
-            puts "rake, version #{RAKEVERSION}"
+            puts "drake, version #{RAKEVERSION}"
             exit
           }
         ],
