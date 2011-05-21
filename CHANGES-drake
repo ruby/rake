@@ -6,6 +6,7 @@
 * option -j without a value now allowed == no limit on number of threads
 * improved --randomize[=SEED] option: auto-generates SEED if none given
   (mirrors the randomizing functionality of minitest).
+* --version now reports 'drake'
 * update from mainline branch
 
 == Version 0.8.7.0.2.3
