@@ -1,7 +1,6 @@
 require File.expand_path('../helper', __FILE__)
 require 'thread'
 
-######################################################################
 class TestRakeMultiTask < Rake::TestCase
   include Rake
   include Rake::DSL
@@ -49,5 +48,4 @@ class TestRakeMultiTask < Rake::TestCase
     assert @runs.index("B1") < @runs.index("B2")
   end
 end
-
 

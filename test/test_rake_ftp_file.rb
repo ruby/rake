@@ -12,7 +12,6 @@ class FakeDate
   end
 end
 
-
 class TestRakeFtpFile < Rake::TestCase
 
   def setup
@@ -57,3 +56,4 @@ class TestRakeFtpFile < Rake::TestCase
     assert !file.directory?
   end
 end
+

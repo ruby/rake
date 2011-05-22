@@ -1,6 +1,5 @@
 require File.expand_path('../helper', __FILE__)
 
-# ====================================================================
 class TestRakeRequire < Rake::TestCase
 
   def test_can_load_rake_library

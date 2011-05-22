@@ -1,7 +1,6 @@
 require File.expand_path('../helper', __FILE__)
 require 'stringio'
 
-######################################################################
 class TestRakeExtension < Rake::TestCase
 
   module Redirect

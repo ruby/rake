@@ -1,7 +1,6 @@
 require File.expand_path('../helper', __FILE__)
 require 'fileutils'
 
-######################################################################
 class TestRakeDefinitions < Rake::TestCase
   include Rake
 

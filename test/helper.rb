@@ -15,6 +15,10 @@ class Rake::TestCase < MiniTest::Unit::TestCase
 
   include Rake::DSL
 
+  class TaskManager
+    include Rake::TaskManager
+  end
+
   def setup
     @orig_PWD = Dir.pwd
   end
