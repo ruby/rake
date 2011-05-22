@@ -1,4 +1,4 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 
 # ====================================================================
 class TestRakePathMap < Rake::TestCase
@@ -158,6 +158,8 @@ end
 
 class TestRakePathMapExplode < Rake::TestCase
   def setup
+    super
+
     String.class_eval { public :pathmap_explode }
   end
 

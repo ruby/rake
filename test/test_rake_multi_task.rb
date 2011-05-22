@@ -1,4 +1,4 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 require 'thread'
 
 ######################################################################
@@ -7,6 +7,8 @@ class TestRakeMultiTask < Rake::TestCase
   include Rake::DSL
 
   def setup
+    super
+
     Task.clear
     @runs = Array.new
     @mutex = Mutex.new

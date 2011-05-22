@@ -1,5 +1,4 @@
-require 'test/helper'
-require 'test/file_creation'
+require File.expand_path('../helper', __FILE__)
 begin
   old_verbose = $VERBOSE
   $VERBOSE = nil
@@ -9,7 +8,6 @@ ensure
 end
 
 class TestSys < Rake::TestCase
-  include FileCreation
 
   def test_split_all
     assert_equal ['a'], Sys.split_all('a')

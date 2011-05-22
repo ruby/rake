@@ -1,13 +1,13 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 require 'fileutils'
-require 'test/file_creation'
 
 ######################################################################
 class TestRakeFileTask < Rake::TestCase
   include Rake
-  include FileCreation
 
   def setup
+    super
+
     Task.clear
     @runs = Array.new
     FileUtils.rm_f NEWFILE
@@ -108,11 +108,15 @@ class TestRakeDirectoryTask < Rake::TestCase
   include Rake
 
   def setup
+    super
+
     Rake.rm_rf "testdata", :verbose=>false
   end
 
   def teardown
     Rake.rm_rf "testdata", :verbose=>false
+
+    super
   end
 
   def test_directory

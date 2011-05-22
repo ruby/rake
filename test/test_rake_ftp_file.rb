@@ -1,4 +1,4 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 require 'date'
 require 'time'
 require 'rake/contrib/ftptools'
@@ -16,6 +16,8 @@ end
 class TestRakeFtpFile < Rake::TestCase
 
   def setup
+    super
+
     Rake::FtpFile.class_eval { @date_class = FakeDate; @time_class = FakeDate }
   end
 

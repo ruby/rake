@@ -1,4 +1,4 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 
 class TaskManager
   include Rake::TaskManager
@@ -7,6 +7,8 @@ end
 class TestRakeTaskManager < Rake::TestCase
 
   def setup
+    super
+
     @tm = TaskManager.new
   end
 
@@ -148,11 +150,13 @@ end
 class TestRakeTaskManagerArgumentResolution < Rake::TestCase
   def setup
     super
+
     Rake.application.options.ignore_deprecate = true
   end
 
   def teardown
     Rake.application.options.ignore_deprecate = false
+
     super
   end
 

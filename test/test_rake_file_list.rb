@@ -1,15 +1,19 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 
 class TestRakeFileList < Rake::TestCase
   FileList = Rake::FileList
 
   def setup
+    super
+
     create_test_data
   end
 
   def teardown
 #    FileList.select_default_ignore_patterns
     FileUtils.rm_rf("testdata")
+
+    super
   end
 
   def test_delegating_methods_do_not_include_to_a_or_to_ary

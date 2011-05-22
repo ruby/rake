@@ -1,6 +1,5 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 require 'fileutils'
-require 'test/file_creation'
 
 ######################################################################
 class TestRakeDefinitions < Rake::TestCase
@@ -9,6 +8,8 @@ class TestRakeDefinitions < Rake::TestCase
   EXISTINGFILE = "testdata/existing"
 
   def setup
+    super
+
     Task.clear
   end
 

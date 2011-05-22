@@ -1,4 +1,4 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 
 class TestRake < Rake::TestCase
   def test_each_dir_parent

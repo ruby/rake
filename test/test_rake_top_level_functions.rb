@@ -1,9 +1,10 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 
 class TestRakeTopLevelFunctions < Rake::TestCase
 
   def setup
     super
+
     @app = Rake.application
     Rake.application = flexmock("app")
     Rake.application.should_receive(:deprecate).
@@ -12,6 +13,7 @@ class TestRakeTopLevelFunctions < Rake::TestCase
 
   def teardown
     Rake.application = @app
+
     super
   end
 

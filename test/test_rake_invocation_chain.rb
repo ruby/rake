@@ -1,9 +1,11 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 
 ######################################################################
 class TestRakeAnEmptyInvocationChain < Rake::TestCase
 
   def setup
+    super
+
     @empty = Rake::InvocationChain::EMPTY
   end
 
@@ -22,6 +24,8 @@ end
 class TestRakeAnInvocationChainWithOneMember < Rake::TestCase
 
   def setup
+    super
+
     @empty = Rake::InvocationChain::EMPTY
     @first_member = "A"
     @chain = @empty.append(@first_member)
@@ -49,6 +53,8 @@ end
 class TestRakeAnInvocationChainWithMultipleMember < Rake::TestCase
 
   def setup
+    super
+
     @first_member = "A"
     @second_member = "B"
     ch = Rake::InvocationChain::EMPTY.append(@first_member)

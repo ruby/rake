@@ -1,5 +1,4 @@
-require 'test/helper'
-require 'test/in_environment'
+require File.expand_path('../helper', __FILE__)
 
 TESTING_REQUIRE = [ ]
 
@@ -9,6 +8,7 @@ class TestRakeApplication < Rake::TestCase
 
   def setup
     super
+
     @app = Rake::Application.new
     @app.options.rakelib = []
     Rake::TaskManager.record_task_metadata = true
@@ -16,6 +16,7 @@ class TestRakeApplication < Rake::TestCase
 
   def teardown
     Rake::TaskManager.record_task_metadata = false
+
     super
   end
 
@@ -367,9 +368,10 @@ end
 
 ######################################################################
 class TestRakeApplicationOptions < Rake::TestCase
-  include InEnvironment
 
   def setup
+    super
+
     clear_argv
     Rake::FileUtilsExt.verbose_flag = false
     Rake::FileUtilsExt.nowrite_flag = false
@@ -380,6 +382,8 @@ class TestRakeApplicationOptions < Rake::TestCase
     clear_argv
     Rake::FileUtilsExt.verbose_flag = false
     Rake::FileUtilsExt.nowrite_flag = false
+
+    super
   end
 
   def clear_argv
@@ -743,6 +747,8 @@ end
 
 class TestRakeTaskArgumentParsing < Rake::TestCase
   def setup
+    super
+
     @app = Rake::Application.new
   end
 
@@ -785,7 +791,6 @@ class TestRakeTaskArgumentParsing < Rake::TestCase
 end
 
 class TestRakeTaskArgumentParsing < Rake::TestCase
-  include InEnvironment
 
   def test_terminal_width_using_env
     app = Rake::Application.new

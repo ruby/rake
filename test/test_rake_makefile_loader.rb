@@ -1,4 +1,4 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 require 'rake/loaders/makefile'
 
 class TestRakeMakefileLoader < Rake::TestCase

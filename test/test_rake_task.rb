@@ -1,4 +1,4 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 require 'fileutils'
 
 ######################################################################
@@ -6,13 +6,16 @@ class TestRakeTask < Rake::TestCase
   include Rake
 
   def setup
+    super
+
     Task.clear
     Rake::TaskManager.record_task_metadata = true
   end
 
   def teardown
-    super
     Rake::TaskManager.record_task_metadata = false
+
+    super
   end
 
   def test_create
@@ -273,12 +276,14 @@ class TestRakeTaskWithArguments < Rake::TestCase
 
   def setup
     super
+
     Task.clear
     Rake::TaskManager.record_task_metadata = true
   end
 
   def teardown
     Rake::TaskManager.record_task_metadata = false
+
     super
   end
 
