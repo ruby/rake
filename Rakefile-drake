@@ -52,6 +52,7 @@ task :drake_publish => :rdoc do
 end
 
 task :drake_finish_release do
+  gem = "#{SPEC.name}-#{SPEC.version}.gem"
   git "tag", "drake-#{SPEC.version}"
   git "push", "--tags", "origin", "master"
   sh "gem", "push", gem
