@@ -99,6 +99,7 @@ class TestRakeTaskArgumentParsing < Rake::TestCase
     in_environment do
       ARGV << '--trace'
       app = Rake::Application.new
+      app.options.threads = Rake.application.options.threads
       app.init
       assert !app.options.silent
     end
@@ -108,6 +109,7 @@ class TestRakeTaskArgumentParsing < Rake::TestCase
     in_environment("RAKEOPT" => "") do
       ARGV << '--trace'
       app = Rake::Application.new
+      app.options.threads = Rake.application.options.threads
       app.init
       assert !app.options.silent
     end
@@ -116,6 +118,7 @@ class TestRakeTaskArgumentParsing < Rake::TestCase
   def test_rakeopt_with_silent_options
     in_environment("RAKEOPT" => "-s") do
       app = Rake::Application.new
+      app.options.threads = Rake.application.options.threads
       app.init
       assert app.options.silent
     end

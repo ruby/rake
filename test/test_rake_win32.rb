@@ -72,6 +72,7 @@ class TestRakeWin32 < Rake::TestCase
     ex.set_backtrace ['abc', 'rakefile']
 
     rake = Rake::Application.new
+    rake.options.threads = Rake.application.options.threads
     rake.options.trace = true
     rake.instance_variable_set(:@rakefile, 'Rakefile')
 
