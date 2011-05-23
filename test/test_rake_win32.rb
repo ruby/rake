@@ -1,5 +1,4 @@
-require 'test/helper'
-require 'test/in_environment'
+require File.expand_path('../helper', __FILE__)
 
 class TestRakeWin32 < Rake::TestCase
   include InEnvironment

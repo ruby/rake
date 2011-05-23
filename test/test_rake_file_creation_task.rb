@@ -1,21 +1,23 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 require 'fileutils'
-require 'test/file_creation'
 
 ######################################################################
 class TestRakeFileCreationTask < Rake::TestCase
   include Rake
   include Rake::DSL
-  include FileCreation
 
   DUMMY_DIR = 'testdata/dummy_dir'
 
   def setup
+    super
+
     Task.clear
   end
 
   def teardown
     FileUtils.rm_rf DUMMY_DIR
+
+    super
   end
 
   def test_file_needed

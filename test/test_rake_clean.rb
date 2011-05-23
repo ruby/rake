@@ -1,9 +1,9 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 
 class TestRakeClean < Rake::TestCase
   include Rake
   def test_clean
-    # since other tests call Task.clear, this is only works once
+    # since other tests call Task.clear, this only works once
     if require('rake/clean')
       assert Task['clean'], "Should define clean"
       assert Task['clobber'], "Should define clobber"

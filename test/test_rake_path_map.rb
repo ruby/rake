@@ -1,6 +1,5 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 
-# ====================================================================
 class TestRakePathMap < Rake::TestCase
 
   def test_returns_self_with_no_args
@@ -156,51 +155,3 @@ class TestRakePathMap < Rake::TestCase
   end
 end
 
-class TestRakePathMapExplode < Rake::TestCase
-  def setup
-    String.class_eval { public :pathmap_explode }
-  end
-
-  def teardown
-    String.class_eval { protected :pathmap_explode }
-  end
-
-  def test_explode
-    assert_equal ['a'], 'a'.pathmap_explode
-    assert_equal ['a', 'b'], 'a/b'.pathmap_explode
-    assert_equal ['a', 'b', 'c'], 'a/b/c'.pathmap_explode
-    assert_equal ['/', 'a'], '/a'.pathmap_explode
-    assert_equal ['/', 'a', 'b'], '/a/b'.pathmap_explode
-    assert_equal ['/', 'a', 'b', 'c'], '/a/b/c'.pathmap_explode
-    if File::ALT_SEPARATOR
-      assert_equal ['c:.', 'a'], 'c:a'.pathmap_explode
-      assert_equal ['c:.', 'a', 'b'], 'c:a/b'.pathmap_explode
-      assert_equal ['c:.', 'a', 'b', 'c'], 'c:a/b/c'.pathmap_explode
-      assert_equal ['c:/', 'a'], 'c:/a'.pathmap_explode
-      assert_equal ['c:/', 'a', 'b'], 'c:/a/b'.pathmap_explode
-      assert_equal ['c:/', 'a', 'b', 'c'], 'c:/a/b/c'.pathmap_explode
-    end
-  end
-end
-
-class TestRakePathMapPartial < Rake::TestCase
-  def test_pathmap_partial
-    @path = "1/2/file"
-    def @path.call(n)
-      pathmap_partial(n)
-    end
-    assert_equal("1", @path.call(1))
-    assert_equal("1/2", @path.call(2))
-    assert_equal("1/2", @path.call(3))
-    assert_equal(".", @path.call(0))
-    assert_equal("2", @path.call(-1))
-    assert_equal("1/2", @path.call(-2))
-    assert_equal("1/2", @path.call(-3))
-  end
-end
-
-class TestRakeFileListPathMap < Rake::TestCase
-  def test_file_list_supports_pathmap
-    assert_equal ['a', 'b'], FileList['dir/a.rb', 'dir/b.rb'].pathmap("%n")
-  end
-end

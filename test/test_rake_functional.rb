@@ -18,9 +18,8 @@ if defined?(Session)
   end
 end
 
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 require 'fileutils'
-require 'test/in_environment'
 
 # Version 2.1.9 of session has a bug where the @debug instance
 # variable is not initialized, causing warning messages.  This snippet
@@ -36,15 +35,17 @@ module Session
 end if defined? Session
 
 class TestRakeFunctional < Rake::TestCase
-  include InEnvironment
 
   RUBY_COMMAND = 'ruby'
 
   def setup
+    super
+
     @rake_path = File.expand_path("bin/rake")
     lib_path = File.expand_path("lib")
     @ruby_options = ["-I#{lib_path}", "-I."]
     @verbose = ! ENV['VERBOSE'].nil?
+
     if @verbose
       puts
       puts

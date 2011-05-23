@@ -13,10 +13,12 @@ module InEnvironment
   end
 
   # Set the environment according to the settings hash.
-  def set_env(settings)         # :nodoc:
+  def set_env(settings) # :nodoc:
     result = {}
+
     settings.each do |k, v|
       result[k] = ENV[k]
+
       if k == 'PWD'
         result[k] = Dir.pwd
         Dir.chdir(v)
@@ -26,6 +28,7 @@ module InEnvironment
         ENV[k] = v
       end
     end
+
     result
   end
 

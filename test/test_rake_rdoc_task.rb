@@ -1,4 +1,4 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 begin
   old_verbose = $VERBOSE
   $VERBOSE = nil
@@ -11,6 +11,8 @@ class TestRakeRDocTask < Rake::TestCase
   include Rake
 
   def setup
+    super
+
     Task.clear
   end
 

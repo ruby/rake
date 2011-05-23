@@ -1,12 +1,13 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 require 'thread'
 
-######################################################################
 class TestRakeMultiTask < Rake::TestCase
   include Rake
   include Rake::DSL
 
   def setup
+    super
+
     Task.clear
     @runs = ThreadSafeArray.new
   end
@@ -40,5 +41,4 @@ class TestRakeMultiTask < Rake::TestCase
     assert @runs.index("B1") < @runs.index("B2")
   end
 end
-
 

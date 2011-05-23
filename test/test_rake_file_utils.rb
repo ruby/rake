@@ -1,12 +1,12 @@
-require 'test/helper'
-require 'test/file_creation'
+require File.expand_path('../helper', __FILE__)
 require 'fileutils'
 require 'stringio'
 
 class TestRakeFileUtils < Rake::TestCase
-  include FileCreation
 
   def setup
+    super
+
     File.chmod(0750, "test/shellcommand.rb")
   end
 
@@ -14,6 +14,8 @@ class TestRakeFileUtils < Rake::TestCase
     File.chmod(0755, "test/shellcommand.rb")
     FileUtils.rm_rf("testdata")
     FileUtils::LN_SUPPORTED[0] = true
+
+    super
   end
 
   def test_rm_one_file

@@ -1,4 +1,4 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 
 class TestRakeEarlyTime < Rake::TestCase
   def test_create

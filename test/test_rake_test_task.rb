@@ -1,16 +1,20 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 require 'rake/testtask'
 
 class TestRakeTestTask < Rake::TestCase
   include Rake
 
   def setup
+    super
+
     Task.clear
     ENV.delete('TEST')
   end
 
   def teardown
     FileUtils.rm_rf("testdata")
+
+    super
   end
 
   def test_no_task

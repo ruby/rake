@@ -1,11 +1,9 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 require 'fileutils'
-require 'test/file_creation'
 
 ######################################################################
 class TestRakeRules < Rake::TestCase
   include Rake
-  include FileCreation
 
   SRCFILE  = "testdata/abc.c"
   SRCFILE2 =  "testdata/xyz.c"
@@ -15,6 +13,8 @@ class TestRakeRules < Rake::TestCase
   DOTFOOFILE = "testdata/.foo"
 
   def setup
+    super
+
     Task.clear
     @runs = ThreadSafeArray.new
     FileUtils.mkdir_p 'testdata' # HACK use tmpdir
@@ -22,6 +22,8 @@ class TestRakeRules < Rake::TestCase
 
   def teardown
     FileList['testdata/*'].uniq.each do |f| rm_r(f, :verbose=>false) end
+
+    super
   end
 
   def test_multiple_rules1

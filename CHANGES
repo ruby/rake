@@ -2,11 +2,12 @@
 
 == Version 0.9.0
 
-* Rake now warns when the deprecated :needs syntax used.
+* *Incompatible* *change*: Rake DSL commands ('task', 'file', etc.)  are
+  no longer private methods in Object.  If you need to call 'task :xzy' inside
+  your class, include Rake::DSL into the class.  The DSL is still available at
+  the top level scope (via the top level object which extends Rake::DSL).
 
-* Moved Rake DSL commands to top level ruby object 'main'.  Rake DSL
-  commands are no longer private methods in Object. (Suggested by
-  James M. Lawrence/quix)
+* Rake now warns when the deprecated :needs syntax used.
 
 * Rake history is now UTF-8 encoded.
 
@@ -35,10 +36,6 @@
 * Rake now outputs various messages to $stderr instead of $stdout.
 
 * Rake no longer emits warnings for Config.  Patch by Santiago Pastorino.
-
-* Removed Rake's DSL methods from the top level scope.  If you need to
-  call 'task :xzy' in your code, include Rake::DSL into your class, or
-  put the code in a Rake::DSL.environment do ... end block.
 
 * Split rake.rb into individual files.
 

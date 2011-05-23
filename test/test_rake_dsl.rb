@@ -1,4 +1,4 @@
-require 'test/helper'
+require File.expand_path('../helper', __FILE__)
 
 class TestRakeDsl < Rake::TestCase
 

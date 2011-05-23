@@ -3,16 +3,30 @@ require 'minitest/unit'
 require 'flexmock/test_unit_integration'
 require 'minitest/autorun'
 require 'rake'
+require File.expand_path('../file_creation', __FILE__)
+require File.expand_path('../in_environment', __FILE__)
 
 class Rake::TestCase < MiniTest::Unit::TestCase
   include FlexMock::ArgumentTypes
   include FlexMock::MockContainer
 
+  include InEnvironment
+  include FileCreation
+
   include Rake::DSL
+
+  class TaskManager
+    include Rake::TaskManager
+  end
+
+  def setup
+    @orig_PWD = Dir.pwd
+  end
 
   def teardown
     flexmock_teardown
-    super
+
+    Dir.chdir @orig_PWD
   end
 
   def ignore_deprecations
