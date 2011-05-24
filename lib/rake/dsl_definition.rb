@@ -12,6 +12,8 @@ module Rake
     private(*FileUtils.instance_methods(false))
     private(*FileUtilsExt.instance_methods(false))
 
+    private
+
     # Declare a basic task.
     #
     # Example:
