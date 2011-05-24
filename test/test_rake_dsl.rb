@@ -27,4 +27,25 @@ class TestRakeDsl < Rake::TestCase
     end
     refute_nil Rake::Task["bob:t"]
   end
+
+  class Foo
+    def initialize
+      task :foo_deprecated_a => :foo_deprecated_b do
+        print "a"
+      end
+      task :foo_deprecated_b do
+        print "b"
+      end
+    end
+  end
+
+  def test_deprecated_object_dsl
+    out, err = capture_io do
+      Foo.new
+      Rake.application.invoke_task :foo_deprecated_a
+    end
+    assert_equal("ba", out)
+    assert_match(/deprecated/, err)
+    assert_match(/Foo\#task/, err)
+  end
 end

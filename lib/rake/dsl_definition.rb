@@ -139,7 +139,21 @@ module Rake
     end
   end
 
+  module DeprecatedObjectDSL
+    dsl = Object.new.extend DSL
+    DSL.private_instance_methods(false).each do |name|
+      define_method name do |*args, &block|
+        $stderr.puts "WARNING: Relying upon the Rake DSL being accessible " <<
+          "everywhere is deprecated.  Include Rake::DSL into classes which " <<
+          "use the Rake DSL methods. (#{self.class}##{name} called.)"
+        dsl.send(name, *args, &block)
+      end
+      private name
+    end
+  end
+
   extend FileUtilsExt
 end
 
 self.extend Rake::DSL
+include Rake::DeprecatedObjectDSL
