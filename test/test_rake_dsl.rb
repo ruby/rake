@@ -28,14 +28,26 @@ class TestRakeDsl < Rake::TestCase
     refute_nil Rake::Task["bob:t"]
   end
 
-  def test_dsl_not_toplevel_by_default
-    actual = TOPLEVEL_BINDING.instance_eval { defined?(task) }
-    assert_nil actual
+  class Foo
+    def initialize
+      task :foo_deprecated_a => "foo_deprecated_b" do
+        print "a"
+      end
+      file "foo_deprecated_b" do
+        print "b"
+      end
+    end
   end
 
-  def test_dsl_toplevel_when_require_rake_dsl
-    ruby '-I./lib', '-rrake/dsl', '-e', 'task(:x) { }', :verbose => false
-
-    assert $?.exitstatus
+  def test_deprecated_object_dsl
+    out, err = capture_io do
+      Foo.new
+      Rake.application.invoke_task :foo_deprecated_a
+    end
+    assert_equal("ba", out)
+    assert_match(/deprecated/, err)
+    assert_match(/Foo\#task/, err)
+    assert_match(/Foo\#file/, err)
+    assert_match(/test_rake_dsl\.rb:\d+/, err)
   end
 end

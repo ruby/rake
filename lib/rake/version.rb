@@ -3,7 +3,7 @@ module Rake
     NUMBERS = [
       MAJOR = 0,
       MINOR = 9,
-      BUILD = 0,
+      BUILD = 1,
       DRAKE_MAJOR = 0,
       DRAKE_MINOR = 3,
       DRAKE_BUILD = 0,

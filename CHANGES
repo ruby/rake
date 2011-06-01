@@ -1,5 +1,9 @@
 = Rake Changelog
 
+== Version 0.9.1
+
+* Added deprecation warnings to the Rake DSL methods.
+
 == Version 0.9.0
 
 * *Incompatible* *change*: Rake DSL commands ('task', 'file', etc.)  are
