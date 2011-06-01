@@ -285,7 +285,7 @@ class TestRakeApplicationOptions < Rake::TestCase
         end
       end
 
-      assert_equal "rake, version 0.9.0\n", out
+      assert_equal "rake, version #{Rake::VERSION}\n", out
     end
   end
 
