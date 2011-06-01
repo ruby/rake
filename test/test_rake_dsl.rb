@@ -30,10 +30,10 @@ class TestRakeDsl < Rake::TestCase
 
   class Foo
     def initialize
-      task :foo_deprecated_a => :foo_deprecated_b do
+      task :foo_deprecated_a => "foo_deprecated_b" do
         print "a"
       end
-      task :foo_deprecated_b do
+      file "foo_deprecated_b" do
         print "b"
       end
     end
@@ -47,5 +47,7 @@ class TestRakeDsl < Rake::TestCase
     assert_equal("ba", out)
     assert_match(/deprecated/, err)
     assert_match(/Foo\#task/, err)
+    assert_match(/Foo\#file/, err)
+    assert_match(/test_rake_dsl\.rb:\d+/, err)
   end
 end
