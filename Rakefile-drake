@@ -62,7 +62,7 @@ task :drake_release =>
   [
    :drake_prerelease,
    :gem,
-   "test:all",
+   :test,
    :drake_finish_release,
   ]
 
