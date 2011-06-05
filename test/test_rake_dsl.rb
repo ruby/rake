@@ -2,6 +2,11 @@ require File.expand_path('../helper', __FILE__)
 
 class TestRakeDsl < Rake::TestCase
 
+  def setup
+    super
+    Rake::Task.clear
+  end
+
   def test_namespace_command
     namespace "n" do
       task "t"
@@ -49,5 +54,20 @@ class TestRakeDsl < Rake::TestCase
     assert_match(/Foo\#task/, err)
     assert_match(/Foo\#file/, err)
     assert_match(/test_rake_dsl\.rb:\d+/, err)
+  end
+
+  def test_deprecated_object_dsl_with_suppressed_warnings
+    Rake.application.options.ignore_deprecate = true
+    out, err = capture_io do
+      Foo.new
+      Rake.application.invoke_task :foo_deprecated_a
+    end
+    assert_equal("ba", out)
+    refute_match(/deprecated/, err)
+    refute_match(/Foo\#task/, err)
+    refute_match(/Foo\#file/, err)
+    refute_match(/test_rake_dsl\.rb:\d+/, err)
+  ensure
+    Rake.application.options.ignore_deprecate = false
   end
 end
