@@ -131,8 +131,8 @@ class TestRakeFunctional < Rake::TestCase
   end
 
   def test_by_default_rakelib_files_are_included
-    in_environment('RAKE_SYSTEM' => 'test/data/sys') do
-      rake '-T', 'extra'
+    in_environment('RAKE_SYSTEM' => 'test/data/sys', "PWD" => 'test/data/extra') do
+      rake '-T', 'extra', '--trace'
     end
     assert_match %r{extra:extra}, @out
   end
@@ -145,7 +145,7 @@ class TestRakeFunctional < Rake::TestCase
   end
 
   def test_no_system
-    in_environment('RAKE_SYSTEM' => 'test/data/sys') do
+    in_environment('RAKE_SYSTEM' => 'test/data/sys', "PWD" => "test/data/extra") do
       rake '-G', "sys1"
     end
     assert_match %r{^Don't know how to build task}, @err # emacs wart: '
