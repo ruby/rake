@@ -1,6 +1,8 @@
 # rake/rdoctask is deprecated in favor of rdoc/task
 
-warn 'rake/rdoctask is deprecated.  Use rdoc/task instead (in RDoc 2.4.2+)'
+if Rake.application
+  Rake.application.deprecate('require \'rake/rdoctask\'', 'require \'rdoc/task\' (in RDoc 2.4.2+)', __FILE__)
+end
 
 require 'rubygems'
 
