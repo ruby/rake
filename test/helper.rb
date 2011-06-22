@@ -24,7 +24,12 @@ class Rake::TestCase < MiniTest::Unit::TestCase
     ARGV.clear
 
     @orig_PWD = Dir.pwd
-    @orig_RAKE_SYSTEM = ENV['RAKE_SYSTEM']
+    @orig_RAKE_COLUMNS = ENV['RAKE_COLUMNS']
+    @orig_RAKE_SYSTEM  = ENV['RAKE_SYSTEM']
+    @orig_RAKEOPT      = ENV['RAKEOPT']
+    ENV.delete 'RAKE_COLUMNS'
+    ENV.delete 'RAKE_SYSTEM'
+    ENV.delete 'RAKEOPT'
 
     tmpdir = Dir.chdir Dir.tmpdir do Dir.pwd end
     @tempdir = File.join tmpdir, "test_rake_#{$$}"
@@ -38,10 +43,22 @@ class Rake::TestCase < MiniTest::Unit::TestCase
     Dir.chdir @orig_PWD
     FileUtils.rm_rf @tempdir
 
+    if @orig_RAKE_COLUMNS then
+      ENV['RAKE_COLUMNS'] = @orig_RAKE_COLUMNS
+    else
+      ENV.delete 'RAKE_COLUMNS'
+    end
+
     if @orig_RAKE_SYSTEM then
       ENV['RAKE_SYSTEM'] = @orig_RAKE_SYSTEM
     else
       ENV.delete 'RAKE_SYSTEM'
+    end
+
+    if @orig_RAKEOPT then
+      ENV['RAKEOPT'] = @orig_RAKEOPT
+    else
+      ENV.delete 'RAKEOPT'
     end
   end
 
@@ -52,7 +69,7 @@ class Rake::TestCase < MiniTest::Unit::TestCase
     Rake.application.options.ignore_deprecate = false
   end
 
-  def rake_system
+  def rake_system_dir
     @system_dir = File.join @tempdir, 'system'
 
     FileUtils.mkdir_p @system_dir

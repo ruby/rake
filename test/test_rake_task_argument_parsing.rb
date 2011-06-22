@@ -45,20 +45,20 @@ class TestRakeTaskArgumentParsing < Rake::TestCase
 
   def test_terminal_width_using_env
     app = Rake::Application.new
-    in_environment('RAKE_COLUMNS' => '1234') do
-      assert_equal 1234, app.terminal_width
-    end
+    app.terminal_columns = 1234
+
+    assert_equal 1234, app.terminal_width
   end
 
   def test_terminal_width_using_stty
     app = Rake::Application.new
+
     flexmock(app,
       :unix? => true,
       :dynamic_width_stty => 1235,
       :dynamic_width_tput => 0)
-    in_environment('RAKE_COLUMNS' => nil) do
-      assert_equal 1235, app.terminal_width
-    end
+
+    assert_equal 1235, app.terminal_width
   end
 
   def test_terminal_width_using_tput
@@ -67,50 +67,44 @@ class TestRakeTaskArgumentParsing < Rake::TestCase
       :unix? => true,
       :dynamic_width_stty => 0,
       :dynamic_width_tput => 1236)
-    in_environment('RAKE_COLUMNS' => nil) do
-      assert_equal 1236, app.terminal_width
-    end
+
+    assert_equal 1236, app.terminal_width
   end
 
   def test_terminal_width_using_hardcoded_80
     app = Rake::Application.new
     flexmock(app, :unix? => false)
-    in_environment('RAKE_COLUMNS' => nil) do
-      assert_equal 80, app.terminal_width
-    end
+
+    assert_equal 80, app.terminal_width
   end
 
   def test_terminal_width_with_failure
     app = Rake::Application.new
     flexmock(app).should_receive(:unix?).and_throw(RuntimeError)
-    in_environment('RAKE_COLUMNS' => nil) do
-      assert_equal 80, app.terminal_width
-    end
+
+    assert_equal 80, app.terminal_width
   end
 
   def test_no_rakeopt
-    in_environment do
-      ARGV << '--trace'
-      app = Rake::Application.new
-      app.init
-      assert !app.options.silent
-    end
+    ARGV << '--trace'
+    app = Rake::Application.new
+    app.init
+    assert !app.options.silent
   end
 
   def test_rakeopt_with_blank_options
-    in_environment("RAKEOPT" => "") do
-      ARGV << '--trace'
-      app = Rake::Application.new
-      app.init
-      assert !app.options.silent
-    end
+    ARGV << '--trace'
+    app = Rake::Application.new
+    app.init
+    assert !app.options.silent
   end
 
   def test_rakeopt_with_silent_options
-    in_environment("RAKEOPT" => "-s") do
-      app = Rake::Application.new
-      app.init
-      assert app.options.silent
-    end
+    ENV['RAKEOPT'] = '-s'
+    app = Rake::Application.new
+
+    app.init
+
+    assert app.options.silent
   end
 end

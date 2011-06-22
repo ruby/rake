@@ -219,7 +219,7 @@ class TestRakeApplication < Rake::TestCase
   end
 
   def test_load_from_system_rakefile
-    rake_system
+    rake_system_dir
 
     @app.instance_eval do
       handle_options
