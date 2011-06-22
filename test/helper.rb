@@ -24,9 +24,14 @@ class Rake::TestCase < MiniTest::Unit::TestCase
     ARGV.clear
 
     @orig_PWD = Dir.pwd
+    @orig_APPDATA      = ENV['APPDATA']
+    @orig_HOME         = ENV['HOME']
+    @orig_HOMEDRIVE    = ENV['HOMEDRIVE']
+    @orig_HOMEPATH     = ENV['HOMEPATH']
     @orig_RAKE_COLUMNS = ENV['RAKE_COLUMNS']
     @orig_RAKE_SYSTEM  = ENV['RAKE_SYSTEM']
     @orig_RAKEOPT      = ENV['RAKEOPT']
+    @orig_USERPROFILE  = ENV['USERPROFILE']
     ENV.delete 'RAKE_COLUMNS'
     ENV.delete 'RAKE_SYSTEM'
     ENV.delete 'RAKEOPT'
@@ -43,23 +48,19 @@ class Rake::TestCase < MiniTest::Unit::TestCase
     Dir.chdir @orig_PWD
     FileUtils.rm_rf @tempdir
 
-    if @orig_RAKE_COLUMNS then
-      ENV['RAKE_COLUMNS'] = @orig_RAKE_COLUMNS
+    if @orig_APPDATA then
+      ENV['APPDATA'] = @orig_APPDATA
     else
-      ENV.delete 'RAKE_COLUMNS'
+      ENV.delete 'APPDATA'
     end
 
-    if @orig_RAKE_SYSTEM then
-      ENV['RAKE_SYSTEM'] = @orig_RAKE_SYSTEM
-    else
-      ENV.delete 'RAKE_SYSTEM'
-    end
-
-    if @orig_RAKEOPT then
-      ENV['RAKEOPT'] = @orig_RAKEOPT
-    else
-      ENV.delete 'RAKEOPT'
-    end
+    ENV['HOME']         = @orig_HOME
+    ENV['HOMEDRIVE']    = @orig_HOMEDRIVE
+    ENV['HOMEPATH']     = @orig_HOMEPATH
+    ENV['RAKE_COLUMNS'] = @orig_RAKE_COLUMNS
+    ENV['RAKE_SYSTEM']  = @orig_RAKE_SYSTEM
+    ENV['RAKEOPT']      = @orig_RAKEOPT
+    ENV['USERPROFILE']  = @orig_USERPROFILE
   end
 
   def ignore_deprecations
