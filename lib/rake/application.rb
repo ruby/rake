@@ -22,6 +22,9 @@ module Rake
     # Name of the actual rakefile used.
     attr_reader :rakefile
 
+    # Number of columns on the terminal
+    attr_accessor :terminal_columns
+
     # List of the top level task names (task names from the command line).
     attr_reader :top_level_tasks
 
@@ -43,6 +46,7 @@ module Rake
       add_loader('rf', DefaultLoader.new)
       add_loader('rake', DefaultLoader.new)
       @tty_output = STDOUT.tty?
+      @terminal_columns = ENV['RAKE_COLUMNS'].to_i
     end
 
     # Run the Rake application.  The run method performs the following
@@ -198,7 +202,7 @@ module Rake
     # We will truncate output if we are outputting to a TTY or if we've been
     # given an explicit column width to honor
     def truncate_output?
-      tty_output? || ENV['RAKE_COLUMNS']
+      tty_output? || @terminal_columns.nonzero?
     end
 
     # Display the tasks and comments.
@@ -210,6 +214,7 @@ module Rake
       when :tasks
         width = displayable_tasks.collect { |t| t.name_with_args.length }.max || 10
         max_column = truncate_output? ? terminal_width - name.size - width - 7 : nil
+
         displayable_tasks.each do |t|
           printf "#{name} %-#{width}s  # %s\n",
             t.name_with_args, max_column ? truncate(t.comment, max_column) : t.comment
@@ -234,8 +239,8 @@ module Rake
     end
 
     def terminal_width
-      if ENV['RAKE_COLUMNS']
-        result = ENV['RAKE_COLUMNS'].to_i
+      if @terminal_columns.nonzero?
+        result = @terminal_columns
       else
         result = unix? ? dynamic_width : 80
       end
