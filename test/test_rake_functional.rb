@@ -56,25 +56,37 @@ class TestRakeFunctional < Rake::TestCase
   end
 
   def test_rake_default
-    Dir.chdir("test/data/default") do rake end
+    rakefile_default
+
+    rake
+
     assert_match(/^DEFAULT$/, @out)
     assert_status
   end
 
   def test_rake_error_on_bad_task
-    Dir.chdir("test/data/default") do rake "xyz" end
+    rakefile_default
+
+    rake "xyz"
+
     assert_match(/rake aborted/, @err)
     assert_status(1)
   end
 
   def test_env_available_at_top_scope
-    Dir.chdir("test/data/default") do rake "TESTTOPSCOPE=1" end
+    rakefile_default
+
+    rake "TESTTOPSCOPE=1"
+
     assert_match(/^TOPSCOPE$/, @out)
     assert_status
   end
 
   def test_env_available_at_task_scope
-    Dir.chdir("test/data/default") do rake "TESTTASKSCOPE=1 task_scope" end
+    rakefile_default
+
+    rake "TESTTASKSCOPE=1 task_scope"
+
     assert_match(/^TASKSCOPE$/, @out)
     assert_status
   end
@@ -323,13 +335,17 @@ class TestRakeFunctional < Rake::TestCase
   end
 
   def test_dash_f_with_no_arg_foils_rakefile_lookup
-    rake "-I test/data/rakelib -rtest1 -f"
+    rakefile_rakelib
+
+    rake "-I rakelib -rtest1 -f"
 
     assert_match(/^TEST1$/, @out)
   end
 
   def test_dot_rake_files_can_be_loaded_with_dash_r
-    rake "-I test/data/rakelib -rtest2 -f"
+    rakefile_rakelib
+
+    rake "-I rakelib -rtest2 -f"
 
     assert_match(/^TEST2$/, @out)
   end
@@ -423,22 +439,34 @@ class TestRakeFunctional < Rake::TestCase
   end
 
   def test_comment_separated_from_task_by_blank_line_is_not_picked_up
-    Dir.chdir("test/data/comments") { rake("-T")}
+    rakefile_comments
+
+    rake "-T"
+
     assert_not_match("t2", @out)
   end
 
   def test_comment_after_desc_is_ignored
-    Dir.chdir("test/data/comments") { rake("-T")}
+    rakefile_comments
+
+    rake "-T"
+
     assert_match("override comment for t3", @out)
   end
 
   def test_comment_before_desc_is_ignored
-    Dir.chdir("test/data/comments") { rake("-T")}
+    rakefile_comments
+
+    rake "-T"
+
     assert_match("override comment for t4", @out)
   end
 
   def test_correct_number_of_tasks_reported
-    Dir.chdir("test/data/comments") { rake("-T")}
+    rakefile_comments
+
+    rake "-T"
+
     assert_equal(2, @out.split(/\n/).grep(/t\d/).size)
   end
 

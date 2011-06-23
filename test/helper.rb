@@ -407,6 +407,38 @@ end
     FileUtils.touch 'dummy'
   end
 
+  def rakefile_rakelib
+    Dir.chdir @tempdir
+
+    FileUtils.mkdir_p 'rakelib'
+
+    Dir.chdir 'rakelib' do
+      open 'test1.rb', 'w' do |io|
+        io << <<-TEST1
+task :default do
+  puts "TEST1"
+end
+        TEST1
+      end
+
+      open 'test2.rake', 'w' do |io|
+        io << <<-TEST1
+task :default do
+  puts "TEST2"
+end
+        TEST1
+      end
+    end
+  end
+
+  def rakefile_rbext
+    open File.join(@tempdir, 'rakefile.rb'), 'w' do |io|
+      io << 'task :default do puts "OK" end'
+    end
+
+    Dir.chdir @tempdir
+  end
+
   def rakefile_statusreturn
     rakefile <<-STATUSRETURN
 task :exit5 do
@@ -416,14 +448,6 @@ end
 task :normal do
 end
     STATUSRETURN
-  end
-
-  def rakefile_rbext
-    open File.join(@tempdir, 'rakefile.rb'), 'w' do |io|
-      io << 'task :default do puts "OK" end'
-    end
-
-    Dir.chdir @tempdir
   end
 
   def rakefile_unittest
