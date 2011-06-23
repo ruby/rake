@@ -36,8 +36,6 @@ end if defined? Session
 
 class TestRakeFunctional < Rake::TestCase
 
-  RUBY_COMMAND = 'ruby'
-
   def setup
     @rake_path = File.expand_path("bin/rake")
     lib_path = File.expand_path("lib")
@@ -499,7 +497,7 @@ class TestRakeFunctional < Rake::TestCase
   # Low level ruby command runner ...
   def run_ruby(option_list)
     shell = Session::Shell.new
-    command = "#{RUBY_COMMAND} " + option_list.join(' ')
+    command = "#{Gem.ruby} #{option_list.join ' '}"
     puts "COMMAND: [#{command}]" if @verbose
     @out, @err = shell.execute command
     @status = shell.exit_status
