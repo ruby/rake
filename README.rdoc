@@ -1,9 +1,7 @@
 = RAKE -- Ruby Make
 
-Supporting Rake version: 0.8.7.
-
-This package contains Rake, a simple ruby build program with
-capabilities similar to make.
+This package contains Rake, a simple ruby build program with capabilities
+similar to make.
 
 Rake has the following features:
 
@@ -19,16 +17,17 @@ Rake has the following features:
   file names and paths.
 
 * A library of prepackaged tasks to make building rakefiles easier. For example,
-  tasks for building tarballs, gems and RDoc output are provided.
+  tasks for building tarballs and publishing to FTP or SSH sites.  (Formerly
+  tasks for building RDoc and Gems were included in rake but they're now
+  available in RDoc and RubyGems respectively.)
 
 * Supports parallel execution of tasks.
-
 
 == Installation
 
 === Gem Installation
 
-Download and install  rake with the following.
+Download and install rake with the following.
 
    gem install rake
 
@@ -114,12 +113,9 @@ If you wish to run the unit and functional tests that come with Rake:
 
 Feature requests and bug reports can be made here
 
-* http://onestepback.org/cgi-bin/bugs.cgi?project=rake
+* https://github.com/jimweirich/rake/issues
 
-No account is needed for posting requests.  Or you can send me an
-email (at jim dot weirich at gmail dot com)
-
-Issues and bug reports can be tracked here:
+Issues and bug reports can also be tracked here:
 
 * http://www.pivotaltracker.com/projects/28469
 
@@ -133,11 +129,12 @@ Issues and bug reports can be tracked here:
 * Rake Source Code Repo:  http://github.com/jimweirich/rake
 * Rake Git Repo Clone URL: git://github.com/jimweirich/rake.git
 * Rake Issue Tracking: http://www.pivotaltracker.com/projects/28469
-* Rake Bug Reports: http://onestepback.org/cgi-bin/bugs.cgi?project=rake
+* Rake Bug Reports: https://github.com/jimweirich/rake/issues
 
 === Presentations and Articles about Rake
 
-* Jim Weirich's 2003 RubyConf presentation: http://onestepback.org/articles/buildingwithrake/
+* Jim Weirich's 2003 RubyConf presentation:
+  http://onestepback.org/articles/buildingwithrake/
 * Martin Fowler's article on Rake: http://martinfowler.com/articles/rake.html
 
 == Other Make Reinvisionings ...
@@ -187,7 +184,7 @@ jim dot weirich at gmail.com.
 = Other stuff
 
 Author::   Jim Weirich <jim.weirich@gmail.com>
-Requires:: Ruby 1.8.0 or later
+Requires:: Ruby 1.8.6 or later
 License::  Copyright 2003-2008 by Jim Weirich.
            Released under an MIT-style license.  See the LICENSE file
            included in the distribution.

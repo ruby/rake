@@ -163,7 +163,7 @@ PKG_FILES.exclude('TAGS')
 PKG_FILES.exclude(%r{doc/example/main$})
 
 if ! defined?(Gem)
-  puts "Package Target requires RubyGEMs"
+  puts "Package Target requires RubyGems"
 else
   SPEC = Gem::Specification.new do |s|
 
@@ -179,6 +179,7 @@ else
 
     #### Dependencies and requirements.
 
+    s.required_ruby_version = '>= 1.8.6'
     s.required_rubygems_version = '>= 1.3.2'
     s.add_development_dependency 'minitest', '~> 2.1'
     s.add_development_dependency 'session', '~> 2.4'
