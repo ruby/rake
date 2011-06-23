@@ -154,8 +154,7 @@ class TestRakeApplication < Rake::TestCase
       end
     end
 
-    _, location = @app.find_rakefile_location
-    refute_match(/\(in #{location}\)/, err)
+    assert_empty err
   end
 
   def test_load_rakefile_from_subdir
@@ -182,7 +181,6 @@ class TestRakeApplication < Rake::TestCase
       end
     end
 
-    _, location = @app.find_rakefile_location
     assert_equal "(in #{@tempdir}\)\n", err
   end
 
@@ -198,8 +196,7 @@ class TestRakeApplication < Rake::TestCase
       end
     end
 
-    _, location = @app.find_rakefile_location
-    refute_match(/\(in #{location}\)/, err)
+    assert_empty err
   end
 
   def test_load_rakefile_not_found
