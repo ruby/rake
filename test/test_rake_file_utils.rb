@@ -7,11 +7,10 @@ class TestRakeFileUtils < Rake::TestCase
   def setup
     super
 
-    File.chmod(0750, "test/shellcommand.rb")
+    Dir.chdir @tempdir
   end
 
   def teardown
-    File.chmod(0755, "test/shellcommand.rb")
     FileUtils.rm_rf("testdata")
     FileUtils::LN_SUPPORTED[0] = true
 
@@ -119,7 +118,9 @@ class TestRakeFileUtils < Rake::TestCase
   end
 
   def test_sh
-    verbose(false) { sh %{#{FileUtils::RUBY} test/shellcommand.rb} }
+    shellcommand
+
+    verbose(false) { sh %{#{FileUtils::RUBY} shellcommand.rb} }
     assert true, "should not fail"
   end
 
@@ -141,34 +142,42 @@ class TestRakeFileUtils < Rake::TestCase
   end
 
   def test_sh_with_a_single_string_argument
+    check_expansion
+
     ENV['RAKE_TEST_SH'] = 'someval'
     verbose(false) {
-      sh %{#{FileUtils::RUBY} test/check_expansion.rb #{env_var} someval}
+      sh %{#{FileUtils::RUBY} check_expansion.rb #{env_var} someval}
     }
   end
 
   def test_sh_with_multiple_arguments
+    check_no_expansion
     ENV['RAKE_TEST_SH'] = 'someval'
+
     verbose(false) {
-      Sh.ruby 'test/check_no_expansion.rb', env_var, 'someval'
+      Sh.ruby 'check_no_expansion.rb', env_var, 'someval'
     }
   end
 
   def test_sh_failure
+    shellcommand
+
     assert_raises(RuntimeError) {
-      verbose(false) { Sh.run %{#{FileUtils::RUBY} test/shellcommand.rb 1} }
+      verbose(false) { Sh.run %{#{FileUtils::RUBY} shellcommand.rb 1} }
     }
   end
 
   def test_sh_special_handling
+    shellcommand
+
     count = 0
     verbose(false) {
-      sh(%{#{FileUtils::RUBY} test/shellcommand.rb}) do |ok, res|
+      sh(%{#{FileUtils::RUBY} shellcommand.rb}) do |ok, res|
         assert(ok)
         assert_equal 0, res.exitstatus
         count += 1
       end
-      sh(%{#{FileUtils::RUBY} test/shellcommand.rb 1}) do |ok, res|
+      sh(%{#{FileUtils::RUBY} shellcommand.rb 1}) do |ok, res|
         assert(!ok)
         assert_equal 1, res.exitstatus
         count += 1
@@ -178,46 +187,61 @@ class TestRakeFileUtils < Rake::TestCase
   end
 
   def test_sh_noop
-    verbose(false) { sh %{test/shellcommand.rb 1}, :noop=>true }
+    shellcommand
+
+    verbose(false) { sh %{shellcommand.rb 1}, :noop=>true }
     assert true, "should not fail"
   end
 
   def test_sh_bad_option
+    shellcommand
+
     ex = assert_raises(ArgumentError) {
-      verbose(false) { sh %{test/shellcommand.rb}, :bad_option=>true }
+      verbose(false) { sh %{shellcommand.rb}, :bad_option=>true }
     }
     assert_match(/bad_option/, ex.message)
   end
 
   def test_sh_verbose
-    out = redirect_stderr {
+    shellcommand
+
+    _, err = capture_io do
       verbose(true) {
-        sh %{test/shellcommand.rb}, :noop=>true
+        sh %{shellcommand.rb}, :noop=>true
       }
-    }
-    assert_match(/^test\/shellcommand\.rb$/, out)
+    end
+
+    assert_equal "shellcommand.rb\n", err
   end
 
   def test_sh_no_verbose
-    out = redirect_stderr {
+    shellcommand
+
+    _, err = capture_io do
       verbose(false) {
-        sh %{test/shellcommand.rb}, :noop=>true
+        sh %{shellcommand.rb}, :noop=>true
       }
-    }
-    assert_equal '', out
+    end
+
+    assert_equal '', err
   end
 
   def test_ruby_with_a_single_string_argument
+    check_expansion
+
     ENV['RAKE_TEST_SH'] = 'someval'
+
     verbose(false) {
-      ruby %{test/check_expansion.rb #{env_var} someval}
+      ruby %{check_expansion.rb #{env_var} someval}
     }
   end
 
   def test_ruby_with_multiple_arguments
+    check_no_expansion
+
     ENV['RAKE_TEST_SH'] = 'someval'
     verbose(false) {
-      ruby 'test/check_no_expansion.rb', env_var, 'someval'
+      ruby 'check_no_expansion.rb', env_var, 'someval'
     }
   end
 
@@ -230,23 +254,46 @@ class TestRakeFileUtils < Rake::TestCase
     assert_equal ['..', 'a', 'b'], Rake::FileUtilsExt.split_all('../a/b')
   end
 
-  private
-
-  def redirect_stderr
-    old_err = $stderr
-    $stderr = StringIO.new
-    yield
-    $stderr.string
-  ensure
-    $stderr = old_err
+  def command name, text
+    open name, 'w', 0750 do |io|
+      io << text
+    end
   end
 
-  def windows?
-    ! File::ALT_SEPARATOR.nil?
+  def check_no_expansion
+    command 'check_no_expansion.rb', <<-CHECK_EXPANSION
+if ARGV[0] != ARGV[1]
+  exit 0
+else
+  exit 1
+end
+    CHECK_EXPANSION
+  end
+
+  def check_expansion
+    command 'check_expansion.rb', <<-CHECK_EXPANSION
+if ARGV[0] != ARGV[1]
+  exit 1
+else
+  exit 0
+end
+    CHECK_EXPANSION
+  end
+
+  def shellcommand
+    command 'shellcommand.rb', <<-SHELLCOMMAND
+#!/usr/bin/env ruby
+
+exit((ARGV[0] || "0").to_i)
+    SHELLCOMMAND
   end
 
   def env_var
     windows? ? '%RAKE_TEST_SH%' : '$RAKE_TEST_SH'
+  end
+
+  def windows?
+    ! File::ALT_SEPARATOR.nil?
   end
 
 end

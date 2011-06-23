@@ -121,6 +121,8 @@ class TestRakeApplication < Rake::TestCase
   end
 
   def test_finding_rakefile
+    rakefile_default
+
     assert_match(/Rakefile/i, @app.instance_eval { have_rakefile })
   end
 
@@ -231,6 +233,7 @@ class TestRakeApplication < Rake::TestCase
   end
 
   def test_load_from_calculated_system_rakefile
+    rakefile_default
     flexmock(@app, :standard_system_dir => "__STD_SYS_DIR__")
 
     ENV['RAKE_SYSTEM'] = nil
@@ -244,6 +247,8 @@ class TestRakeApplication < Rake::TestCase
     end
 
     assert_equal "__STD_SYS_DIR__", @app.system_dir
+  rescue SystemExit
+    flunk 'failed to find system rakefile'
   end
 
   def test_terminal_columns
