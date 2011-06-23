@@ -4,16 +4,15 @@ require 'rake/packagetask'
 class TestRakePackageTask < Rake::TestCase
 
   def test_initialize
+    touch 'install.rb'
+    touch 'a.c'
+    touch 'b.c'
+    mkdir 'CVS'
+    touch 'a.rb~'
+
     pkg = Rake::PackageTask.new("pkgr", "1.2.3") { |p|
       p.package_files << "install.rb"
-      p.package_files.include(
-        '[A-Z]*',
-        'bin/**/*',
-        'lib/**/*.rb',
-        'test/**/*.rb',
-        'doc/**/*',
-        'build/rubyapp.rb',
-        '*.blurb')
+      p.package_files.include '*.c'
       p.package_files.exclude(/\bCVS\b/)
       p.package_files.exclude(/~$/)
       p.package_dir = 'pkg'
@@ -24,7 +23,9 @@ class TestRakePackageTask < Rake::TestCase
     }
 
     assert_equal "pkg", pkg.package_dir
-    assert pkg.package_files.include?("bin/rake")
+
+    assert_includes pkg.package_files, 'a.c'
+
     assert_equal 'pkgr', pkg.name
     assert_equal '1.2.3', pkg.version
     assert Rake::Task[:package]

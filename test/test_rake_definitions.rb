@@ -4,7 +4,7 @@ require 'fileutils'
 class TestRakeDefinitions < Rake::TestCase
   include Rake
 
-  EXISTINGFILE = "testdata/existing"
+  EXISTINGFILE = "existing"
 
   def setup
     super
@@ -23,10 +23,10 @@ class TestRakeDefinitions < Rake::TestCase
 
   def test_file_task
     done = false
-    file "testdata/one" => "testdata/two" do done = true end
-    file "testdata/two"
-    file "testdata/three" => ["testdata/one", "testdata/two"]
-    check_tasks("testdata/one", "testdata/two", "testdata/three")
+    file "one" => "two" do done = true end
+    file "two"
+    file "three" => ["one", "two"]
+    check_tasks("one", "two", "three")
     assert done, "Should be done"
   end
 
@@ -55,7 +55,7 @@ class TestRakeDefinitions < Rake::TestCase
   end
 
   def test_missing_dependencies
-    task :x => ["testdata/missing"]
+    task :x => ["missing"]
     assert_raises(RuntimeError) { Task[:x].invoke }
   end
 

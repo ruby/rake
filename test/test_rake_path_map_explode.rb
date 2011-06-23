@@ -9,6 +9,8 @@ class TestRakePathMapExplode < Rake::TestCase
 
   def teardown
     String.class_eval { protected :pathmap_explode }
+
+    super
   end
 
   def test_explode
@@ -18,6 +20,7 @@ class TestRakePathMapExplode < Rake::TestCase
     assert_equal ['/', 'a'], '/a'.pathmap_explode
     assert_equal ['/', 'a', 'b'], '/a/b'.pathmap_explode
     assert_equal ['/', 'a', 'b', 'c'], '/a/b/c'.pathmap_explode
+
     if File::ALT_SEPARATOR
       assert_equal ['c:.', 'a'], 'c:a'.pathmap_explode
       assert_equal ['c:.', 'a', 'b'], 'c:a/b'.pathmap_explode

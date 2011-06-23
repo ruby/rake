@@ -1,29 +1,21 @@
 require File.expand_path('../helper', __FILE__)
 require 'fileutils'
 
-######################################################################
 class TestRakeRules < Rake::TestCase
   include Rake
 
-  SRCFILE  = "testdata/abc.c"
-  SRCFILE2 =  "testdata/xyz.c"
-  FTNFILE  = "testdata/abc.f"
-  OBJFILE  = "testdata/abc.o"
-  FOOFILE  = "testdata/foo"
-  DOTFOOFILE = "testdata/.foo"
+  SRCFILE    = "abc.c"
+  SRCFILE2   = "xyz.c"
+  FTNFILE    = "abc.f"
+  OBJFILE    = "abc.o"
+  FOOFILE    = "foo"
+  DOTFOOFILE = ".foo"
 
   def setup
     super
 
     Task.clear
     @runs = []
-    FileUtils.mkdir_p 'testdata' # HACK use tmpdir
-  end
-
-  def teardown
-    FileList['testdata/*'].uniq.each do |f| rm_r(f, :verbose=>false) end
-
-    super
   end
 
   def test_multiple_rules1
@@ -97,79 +89,68 @@ class TestRakeRules < Rake::TestCase
 
   def test_file_names_beginning_with_dot_can_be_tricked_into_referring_to_file
     verbose(false) do
-      chdir("testdata") do
-        create_file('.foo')
-        rule '.o' => "./.foo" do |t|
-          @runs << t.name
-        end
-        Task[OBJFILE].invoke
-        assert_equal [OBJFILE], @runs
+      create_file('.foo')
+      rule '.o' => "./.foo" do |t|
+        @runs << t.name
       end
+      Task[OBJFILE].invoke
+      assert_equal [OBJFILE], @runs
     end
   end
 
   def test_file_names_beginning_with_dot_can_be_wrapped_in_lambda
     verbose(false) do
-      chdir("testdata") do
-        create_file(".foo")
-        rule '.o' => lambda{".foo"} do |t|
-          @runs << "#{t.name} - #{t.source}"
-        end
-        Task[OBJFILE].invoke
-        assert_equal ["#{OBJFILE} - .foo"], @runs
+
+      create_file(".foo")
+      rule '.o' => lambda{".foo"} do |t|
+        @runs << "#{t.name} - #{t.source}"
       end
+      Task[OBJFILE].invoke
+      assert_equal ["#{OBJFILE} - .foo"], @runs
     end
   end
 
   def test_file_names_containing_percent_can_be_wrapped_in_lambda
     verbose(false) do
-      chdir("testdata") do
-        create_file("foo%x")
-        rule '.o' => lambda{"foo%x"} do |t|
-          @runs << "#{t.name} - #{t.source}"
-        end
-        Task[OBJFILE].invoke
-        assert_equal ["#{OBJFILE} - foo%x"], @runs
+      create_file("foo%x")
+      rule '.o' => lambda{"foo%x"} do |t|
+        @runs << "#{t.name} - #{t.source}"
       end
+      Task[OBJFILE].invoke
+      assert_equal ["#{OBJFILE} - foo%x"], @runs
     end
   end
 
   def test_non_extension_rule_name_refers_to_file
     verbose(false) do
-      chdir("testdata") do
-        create_file("abc.c")
-        rule "abc" => '.c' do |t|
-          @runs << t.name
-        end
-        Task["abc"].invoke
-        assert_equal ["abc"], @runs
+      create_file("abc.c")
+      rule "abc" => '.c' do |t|
+        @runs << t.name
       end
+      Task["abc"].invoke
+      assert_equal ["abc"], @runs
     end
   end
 
   def test_pathmap_automatically_applies_to_name
     verbose(false) do
-      chdir("testdata") do
-        create_file("zzabc.c")
-        rule ".o" => 'zz%{x,a}n.c' do |t|
-          @runs << "#{t.name} - #{t.source}"
-        end
-        Task["xbc.o"].invoke
-        assert_equal ["xbc.o - zzabc.c"], @runs
+      create_file("zzabc.c")
+      rule ".o" => 'zz%{x,a}n.c' do |t|
+        @runs << "#{t.name} - #{t.source}"
       end
+      Task["xbc.o"].invoke
+      assert_equal ["xbc.o - zzabc.c"], @runs
     end
   end
 
   def test_plain_strings_are_just_filenames
     verbose(false) do
-      chdir("testdata") do
-        create_file("plainname")
-        rule ".o" => 'plainname' do |t|
-          @runs << "#{t.name} - #{t.source}"
-        end
-        Task["xbc.o"].invoke
-        assert_equal ["xbc.o - plainname"], @runs
+      create_file("plainname")
+      rule ".o" => 'plainname' do |t|
+        @runs << "#{t.name} - #{t.source}"
       end
+      Task["xbc.o"].invoke
+      assert_equal ["xbc.o - plainname"], @runs
     end
   end
 
@@ -186,12 +167,12 @@ class TestRakeRules < Rake::TestCase
   end
 
   def test_close_matches_on_name_do_not_trigger_rule
-    create_file("testdata/x.c")
+    create_file("x.c")
     rule '.o' => ['.c'] do |t|
       @runs << t.name
     end
-    assert_raises(RuntimeError) { Task['testdata/x.obj'].invoke }
-    assert_raises(RuntimeError) { Task['testdata/x.xyo'].invoke }
+    assert_raises(RuntimeError) { Task['x.obj'].invoke }
+    assert_raises(RuntimeError) { Task['x.xyo'].invoke }
   end
 
   def test_rule_rebuilds_obj_when_source_is_newer
@@ -276,26 +257,26 @@ class TestRakeRules < Rake::TestCase
   end
 
   def test_rule_with_proc_dependent_will_trigger
-    mkdir_p("testdata/src/jw")
-    create_file("testdata/src/jw/X.java")
+    mkdir_p("src/jw")
+    create_file("src/jw/X.java")
     rule %r(classes/.*\.class) => [
-      proc { |fn| fn.pathmap("%{classes,testdata/src}d/%n.java") }
+      proc { |fn| fn.pathmap("%{classes,src}d/%n.java") }
     ] do |task|
       assert_equal task.name, 'classes/jw/X.class'
-      assert_equal task.source, 'testdata/src/jw/X.java'
+      assert_equal task.source, 'src/jw/X.java'
       @runs << :RULE
     end
     Task['classes/jw/X.class'].invoke
     assert_equal [:RULE], @runs
   ensure
-    rm_r("testdata/src", :verbose=>false) rescue nil
+    rm_r("src", :verbose=>false) rescue nil
   end
 
   def test_proc_returning_lists_are_flattened_into_prereqs
     ran = false
-    mkdir_p("testdata/flatten")
-    create_file("testdata/flatten/a.txt")
-    task 'testdata/flatten/b.data' do |t|
+    mkdir_p("flatten")
+    create_file("flatten/a.txt")
+    task 'flatten/b.data' do |t|
       ran = true
       touch t.name, :verbose => false
     end
@@ -303,38 +284,38 @@ class TestRakeRules < Rake::TestCase
       proc { |fn|
       [
         fn.ext("txt"),
-        "testdata/flatten/b.data"
+        "flatten/b.data"
       ]
     } do |task|
     end
-    Task['testdata/flatten/a.html'].invoke
+    Task['flatten/a.html'].invoke
     assert ran, "Should have triggered flattened dependency"
   ensure
-    rm_r("testdata/flatten", :verbose=>false) rescue nil
+    rm_r("flatten", :verbose=>false) rescue nil
   end
 
   def test_recursive_rules_will_work_as_long_as_they_terminate
     actions = []
-    create_file("testdata/abc.xml")
+    create_file("abc.xml")
     rule '.y' => '.xml' do actions << 'y' end
     rule '.c' => '.y' do actions << 'c'end
     rule '.o' => '.c' do actions << 'o'end
     rule '.exe' => '.o' do actions << 'exe'end
-    Task["testdata/abc.exe"].invoke
+    Task["abc.exe"].invoke
     assert_equal ['y', 'c', 'o', 'exe'], actions
   end
 
   def test_recursive_rules_that_dont_terminate_will_overflow
-    create_file("testdata/a.a")
+    create_file("a.a")
     prev = 'a'
     ('b'..'z').each do |letter|
       rule ".#{letter}" => ".#{prev}" do |t| puts "#{t.name}" end
       prev = letter
     end
     ex = assert_raises(Rake::RuleRecursionOverflowError) {
-      Task["testdata/a.z"].invoke
+      Task["a.z"].invoke
     }
-    assert_match(/a\.z => testdata\/a.y/, ex.message)
+    assert_match(/a\.z => a.y/, ex.message)
   end
 
   def test_rules_with_bad_dependents_will_fail

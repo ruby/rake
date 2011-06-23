@@ -6,14 +6,26 @@ class TestRakeFileList < Rake::TestCase
   def setup
     super
 
-    create_test_data
-  end
+    FileUtils.mkdir "CVS" rescue nil
+    FileUtils.mkdir ".svn" rescue nil
+    @cdir = "cfiles"
+    FileUtils.mkdir @cdir rescue nil
+    FileUtils.touch ".dummy"
+    FileUtils.touch "x.bak"
+    FileUtils.touch "x~"
+    FileUtils.touch "core"
+    FileUtils.touch "x.c"
+    FileUtils.touch "xyz.c"
+    FileUtils.touch "abc.c"
+    FileUtils.touch "abc.h"
+    FileUtils.touch "abc.x"
+    FileUtils.touch "existing"
 
-  def teardown
-#    FileList.select_default_ignore_patterns
-    FileUtils.rm_rf("testdata")
+    open 'xyzzy.txt', 'w' do |io|
+      io.puts 'x'
+      io.puts 'XYZZY'
+    end
 
-    super
   end
 
   def test_delegating_methods_do_not_include_to_a_or_to_ary
@@ -29,8 +41,8 @@ class TestRakeFileList < Rake::TestCase
   end
 
   def test_create_with_args
-    fl = FileList.new("testdata/*.c", "x")
-    assert_equal ["testdata/abc.c", "testdata/x.c", "testdata/xyz.c", "x"].sort,
+    fl = FileList.new("*.c", "x")
+    assert_equal ["abc.c", "x.c", "xyz.c", "x"].sort,
       fl.sort
   end
 
@@ -40,14 +52,14 @@ class TestRakeFileList < Rake::TestCase
   end
 
   def test_create_with_brackets
-    fl = FileList["testdata/*.c", "x"]
-    assert_equal ["testdata/abc.c", "testdata/x.c", "testdata/xyz.c", "x"].sort,
+    fl = FileList["*.c", "x"]
+    assert_equal ["abc.c", "x.c", "xyz.c", "x"].sort,
       fl.sort
   end
 
   def test_create_with_brackets_and_filelist
-    fl = FileList[FileList["testdata/*.c", "x"]]
-    assert_equal ["testdata/abc.c", "testdata/x.c", "testdata/xyz.c", "x"].sort,
+    fl = FileList[FileList["*.c", "x"]]
+    assert_equal ["abc.c", "x.c", "xyz.c", "x"].sort,
       fl.sort
   end
 
@@ -57,8 +69,8 @@ class TestRakeFileList < Rake::TestCase
   end
 
   def test_include_with_another_filelist
-    fl = FileList.new.include(FileList["testdata/*.c", "x"])
-    assert_equal ["testdata/abc.c", "testdata/x.c", "testdata/xyz.c", "x"].sort,
+    fl = FileList.new.include(FileList["*.c", "x"])
+    assert_equal ["abc.c", "x.c", "xyz.c", "x"].sort,
       fl.sort
   end
 
@@ -86,86 +98,87 @@ class TestRakeFileList < Rake::TestCase
 
   def test_match
     fl = FileList.new
-    fl.include('test/test_*.rb')
-    assert fl.include?("test/test_rake_file_list.rb")
-    assert fl.size > 3
-    fl.each { |fn| assert_match(/\.rb$/, fn) }
+    fl.include '*.c'
+
+    assert_equal %w[abc.c x.c xyz.c], fl.sort
   end
 
   def test_add_matching
     fl = FileList.new
     fl << "a.java"
-    fl.include("test/*.rb")
-    assert_equal "a.java", fl[0]
-    assert fl.size > 2
-    assert fl.include?("test/test_rake_file_list.rb")
+    fl.include '*.c'
+
+    assert_equal %w[a.java abc.c x.c xyz.c], fl.sort
   end
 
   def test_multiple_patterns
-    create_test_data
     fl = FileList.new
-    fl.include('*.c', '*xist*')
+    fl.include('*.z', '*foo*')
+
     assert_equal [], fl
-    fl.include('testdata/*.c', 'testdata/*xist*')
-    assert_equal [
-      'testdata/x.c', 'testdata/xyz.c', 'testdata/abc.c', 'testdata/existing'
-    ].sort, fl.sort
+
+    fl.include('*.c', '*xist*')
+    assert_equal %w[x.c xyz.c abc.c existing].sort, fl.sort
   end
 
   def test_square_bracket_pattern
     fl = FileList.new
-    fl.include("testdata/abc.[ch]")
+    fl.include("abc.[ch]")
     assert fl.size == 2
-    assert fl.include?("testdata/abc.c")
-    assert fl.include?("testdata/abc.h")
+    assert fl.include?("abc.c")
+    assert fl.include?("abc.h")
   end
 
   def test_curly_bracket_pattern
     fl = FileList.new
-    fl.include("testdata/abc.{c,h}")
+    fl.include("abc.{c,h}")
     assert fl.size == 2
-    assert fl.include?("testdata/abc.c")
-    assert fl.include?("testdata/abc.h")
+    assert fl.include?("abc.c")
+    assert fl.include?("abc.h")
   end
 
   def test_reject
     fl = FileList.new
-    fl.include %w(testdata/x.c testdata/abc.c testdata/xyz.c testdata/existing)
-    fl.reject! { |fn| fn =~ %r{/x} }
-    assert_equal [
-      'testdata/abc.c', 'testdata/existing'
-    ], fl
+    fl.include %w(x.c abc.c xyz.c existing)
+    fl.reject! { |fn| fn =~ /^x/ }
+    assert_equal %w[abc.c existing], fl
   end
 
   def test_exclude
-    fl = FileList['testdata/x.c', 'testdata/abc.c', 'testdata/xyz.c', 'testdata/existing']
+    fl = FileList['x.c', 'abc.c', 'xyz.c', 'existing']
     fl.each { |fn| touch fn, :verbose => false }
-    x = fl.exclude(%r{/x.+\.})
+
+    x = fl.exclude(%r{^x.+\.})
+
     assert_equal FileList, x.class
-    assert_equal %w(testdata/x.c testdata/abc.c testdata/existing), fl
+    assert_equal %w(x.c abc.c existing), fl
     assert_equal fl.object_id, x.object_id
-    fl.exclude('testdata/*.c')
-    assert_equal ['testdata/existing'], fl
-    fl.exclude('testdata/existing')
+
+    fl.exclude('*.c')
+
+    assert_equal ['existing'], fl
+
+    fl.exclude('existing')
+
     assert_equal [], fl
   end
 
   def test_excluding_via_block
-    fl = FileList['testdata/a.c', 'testdata/b.c', 'testdata/xyz.c']
+    fl = FileList['a.c', 'b.c', 'xyz.c']
     fl.exclude { |fn| fn.pathmap('%n') == 'xyz' }
     assert fl.exclude?("xyz.c"), "Should exclude xyz.c"
-    assert_equal ['testdata/a.c', 'testdata/b.c'], fl
+    assert_equal ['a.c', 'b.c'], fl
   end
 
   def test_exclude_return_on_create
-    fl = FileList['testdata/*'].exclude(/.*\.[hcx]$/)
-    assert_equal ['testdata/existing', 'testdata/cfiles'].sort, fl.sort
+    fl = FileList['*'].exclude(/.*\.[hcx]$/)
+    assert_equal %w[cfiles existing xyzzy.txt], fl.sort
     assert_equal FileList, fl.class
   end
 
   def test_exclude_with_string_return_on_create
-    fl = FileList['testdata/*'].exclude('testdata/abc.c')
-    assert_equal %w(testdata/existing testdata/cfiles testdata/x.c testdata/abc.h testdata/abc.x testdata/xyz.c).sort, fl.sort
+    fl = FileList['*'].exclude('abc.c')
+    assert_equal %w[abc.h abc.x cfiles existing x.c xyz.c xyzzy.txt], fl.sort
     assert_equal FileList, fl.class
   end
 
@@ -173,8 +186,8 @@ class TestRakeFileList < Rake::TestCase
     fl = FileList.new
     fl.clear_exclude
     fl.include("**/*~", "**/*.bak", "**/core")
-    assert fl.member?("testdata/core"), "Should include core"
-    assert fl.member?("testdata/x.bak"), "Should include .bak files"
+    assert fl.member?("core"), "Should include core"
+    assert fl.member?("x.bak"), "Should include .bak files"
   end
 
   def test_unique
@@ -201,54 +214,54 @@ class TestRakeFileList < Rake::TestCase
   end
 
   def test_to_s_pending
-    fl = FileList['testdata/abc.*']
+    fl = FileList['abc.*']
     result = fl.to_s
-    assert_match(%r{testdata/abc\.c}, result)
-    assert_match(%r{testdata/abc\.h}, result)
-    assert_match(%r{testdata/abc\.x}, result)
-    assert_match(%r{(testdata/abc\..\b ?){2}}, result)
+    assert_match(%r{abc\.c}, result)
+    assert_match(%r{abc\.h}, result)
+    assert_match(%r{abc\.x}, result)
+    assert_match(%r{(abc\..\b ?){2}}, result)
   end
 
   def test_inspect_pending
-    fl = FileList['testdata/abc.*']
+    fl = FileList['abc.*']
     result = fl.inspect
-    assert_match(%r{"testdata/abc\.c"}, result)
-    assert_match(%r{"testdata/abc\.h"}, result)
-    assert_match(%r{"testdata/abc\.x"}, result)
-    assert_match(%r|^\[("testdata/abc\..", ){2}"testdata/abc\.."\]$|, result)
+    assert_match(%r{"abc\.c"}, result)
+    assert_match(%r{"abc\.h"}, result)
+    assert_match(%r{"abc\.x"}, result)
+    assert_match(%r|^\[("abc\..", ){2}"abc\.."\]$|, result)
   end
 
   def test_sub
-    fl = FileList["testdata/*.c"]
+    fl = FileList["*.c"]
     f2 = fl.sub(/\.c$/, ".o")
     assert_equal FileList, f2.class
-    assert_equal ["testdata/abc.o", "testdata/x.o", "testdata/xyz.o"].sort,
+    assert_equal ["abc.o", "x.o", "xyz.o"].sort,
       f2.sort
     f3 = fl.gsub(/\.c$/, ".o")
     assert_equal FileList, f3.class
-    assert_equal ["testdata/abc.o", "testdata/x.o", "testdata/xyz.o"].sort,
+    assert_equal ["abc.o", "x.o", "xyz.o"].sort,
       f3.sort
   end
 
   def test_claim_to_be_a_kind_of_array
-    fl = FileList['testdata/*.c']
+    fl = FileList['*.c']
     assert fl.is_a?(Array)
     assert fl.kind_of?(Array)
   end
 
   def test_claim_to_be_a_kind_of_filelist
-    fl = FileList['testdata/*.c']
+    fl = FileList['*.c']
     assert fl.is_a?(FileList)
     assert fl.kind_of?(FileList)
   end
 
   def test_claim_to_be_a_filelist_instance
-    fl = FileList['testdata/*.c']
+    fl = FileList['*.c']
     assert fl.instance_of?(FileList)
   end
 
   def test_dont_claim_to_be_an_array_instance
-    fl = FileList['testdata/*.c']
+    fl = FileList['*.c']
     assert ! fl.instance_of?(Array)
   end
 
@@ -304,18 +317,16 @@ class TestRakeFileList < Rake::TestCase
   end
 
   def test_gsub
-    create_test_data
-    fl = FileList["testdata/*.c"]
+    fl = FileList["*.c"]
     f2 = fl.gsub(/a/, "A")
-    assert_equal ["testdAtA/Abc.c", "testdAtA/x.c", "testdAtA/xyz.c"].sort,
+    assert_equal ["Abc.c", "x.c", "xyz.c"].sort,
       f2.sort
   end
 
   def test_gsub!
-    create_test_data
-    f = FileList["testdata/*.c"]
+    f = FileList["*.c"]
     f.gsub!(/a/, "A")
-    assert_equal ["testdAtA/Abc.c", "testdAtA/x.c", "testdAtA/xyz.c"].sort,
+    assert_equal ["Abc.c", "x.c", "xyz.c"].sort,
       f.sort
   end
 
@@ -325,66 +336,70 @@ class TestRakeFileList < Rake::TestCase
   end
 
   def test_egrep_with_output
-    files = FileList['test/test_*.rb']
-    the_line_number = __LINE__ + 1
-    out, = capture_io do files.egrep(/PUGH/) end
-    assert_match(/:#{the_line_number}:/, out)
+    files = FileList['*.txt']
+
+    out, = capture_io do
+      files.egrep(/XYZZY/)
+    end
+
+    assert_equal "xyzzy.txt:2:XYZZY\n", out
   end
 
   def test_egrep_with_block
-    files = FileList['test/test_*.rb']
+    files = FileList['*.txt']
     found = nil
-    the_line_number = __LINE__ + 1
-    files.egrep(/XYZZY/) do |fn, ln, line |
+
+    files.egrep(/XYZZY/) do |fn, ln, line|
       found = [fn, ln, line]
     end
-    assert_equal 'test/test_rake_file_list.rb', found[0]
-    assert_equal the_line_number, found[1]
-    assert_match(/files\.egrep/, found[2])
+
+    assert_equal ["xyzzy.txt", 2, "XYZZY\n"], found
   end
 
   def test_egrep_with_error
-    files = FileList['test/test_*.rb']
+    files = FileList['*.txt']
+
     _, err = capture_io do
-      files.egrep(/ANYTHING/) do |fn, ln, line |
-        fail "_EGREP_FAILURE_"
+      files.egrep(/XYZZY/) do |fn, ln, line |
+        raise "_EGREP_FAILURE_"
       end
     end
-    assert_match(/_EGREP_FAILURE_/, err)
+
+    assert_equal "Error while processing 'xyzzy.txt': _EGREP_FAILURE_\n", err
   end
 
   def test_existing
-    fl = FileList['testdata/abc.c', 'testdata/notthere.c']
-    assert_equal ["testdata/abc.c"], fl.existing
+    fl = FileList['abc.c', 'notthere.c']
+    assert_equal ["abc.c"], fl.existing
     assert fl.existing.is_a?(FileList)
   end
 
   def test_existing!
-    fl = FileList['testdata/abc.c', 'testdata/notthere.c']
+    fl = FileList['abc.c', 'notthere.c']
     result = fl.existing!
-    assert_equal ["testdata/abc.c"], fl
+    assert_equal ["abc.c"], fl
     assert_equal fl.object_id, result.object_id
   end
 
   def test_ignore_special
-    f = FileList['testdata/*']
-    assert ! f.include?("testdata/CVS"), "Should not contain CVS"
-    assert ! f.include?("testdata/.svn"), "Should not contain .svn"
-    assert ! f.include?("testdata/.dummy"), "Should not contain dot files"
-    assert ! f.include?("testdata/x.bak"), "Should not contain .bak files"
-    assert ! f.include?("testdata/x~"), "Should not contain ~ files"
-    assert ! f.include?("testdata/core"), "Should not contain core files"
+    f = FileList['*']
+    assert ! f.include?("CVS"), "Should not contain CVS"
+    assert ! f.include?(".svn"), "Should not contain .svn"
+    assert ! f.include?(".dummy"), "Should not contain dot files"
+    assert ! f.include?("x.bak"), "Should not contain .bak files"
+    assert ! f.include?("x~"), "Should not contain ~ files"
+    assert ! f.include?("core"), "Should not contain core files"
   end
 
   def test_clear_ignore_patterns
-    f = FileList['testdata/*', 'testdata/.svn']
+    f = FileList['*', '.svn']
     f.clear_exclude
-    assert f.include?("testdata/abc.c")
-    assert f.include?("testdata/xyz.c")
-    assert f.include?("testdata/CVS")
-    assert f.include?("testdata/.svn")
-    assert f.include?("testdata/x.bak")
-    assert f.include?("testdata/x~")
+    assert f.include?("abc.c")
+    assert f.include?("xyz.c")
+    assert f.include?("CVS")
+    assert f.include?(".svn")
+    assert f.include?("x.bak")
+    assert f.include?("x~")
   end
 
   def test_exclude_with_alternate_file_seps
@@ -422,8 +437,8 @@ class TestRakeFileList < Rake::TestCase
   end
 
   def test_flatten
-    assert_equal ['a', 'testdata/x.c', 'testdata/xyz.c', 'testdata/abc.c'].sort,
-      ['a', FileList['testdata/*.c']].flatten.sort
+    assert_equal ['a', 'x.c', 'xyz.c', 'abc.c'].sort,
+      ['a', FileList['*.c']].flatten.sort
   end
 
   def test_clone_and_dup
@@ -600,7 +615,7 @@ class TestRakeFileList < Rake::TestCase
   end
 
   def test_file_utils_can_use_filelists
-    cfiles = FileList['testdata/*.c']
+    cfiles = FileList['*.c']
 
     cp cfiles, @cdir, :verbose => false
 
@@ -609,25 +624,5 @@ class TestRakeFileList < Rake::TestCase
     assert File.exist?(File.join(@cdir, 'x.c'))
   end
 
-  def create_test_data
-    verbose(false) do
-
-      mkdir "testdata" unless File.exist? "testdata"
-      mkdir "testdata/CVS" rescue nil
-      mkdir "testdata/.svn" rescue nil
-      @cdir = "testdata/cfiles"
-      mkdir @cdir rescue nil
-      touch "testdata/.dummy"
-      touch "testdata/x.bak"
-      touch "testdata/x~"
-      touch "testdata/core"
-      touch "testdata/x.c"
-      touch "testdata/xyz.c"
-      touch "testdata/abc.c"
-      touch "testdata/abc.h"
-      touch "testdata/abc.x"
-      touch "testdata/existing"
-    end
-  end
-
 end
+

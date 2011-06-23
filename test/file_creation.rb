@@ -1,6 +1,6 @@
 module FileCreation
-  OLDFILE = "testdata/old"
-  NEWFILE = "testdata/new"
+  OLDFILE = "old"
+  NEWFILE = "new"
 
   def create_timed_files(oldfile, *newfiles)
     return if (File.exist?(oldfile) &&

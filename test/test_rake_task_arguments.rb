@@ -5,6 +5,8 @@ class TestRakeTaskArguments < Rake::TestCase
   def teardown
     ENV.delete('rev')
     ENV.delete('VER')
+
+    super
   end
 
   def test_empty_arg_list_is_empty

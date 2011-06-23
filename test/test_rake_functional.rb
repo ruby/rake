@@ -39,20 +39,20 @@ class TestRakeFunctional < Rake::TestCase
   RUBY_COMMAND = 'ruby'
 
   def setup
-    super
-
     @rake_path = File.expand_path("bin/rake")
     lib_path = File.expand_path("lib")
     @ruby_options = ["-I#{lib_path}", "-I."]
-    @verbose = ! ENV['VERBOSE'].nil?
+    @verbose = ENV['VERBOSE']
 
     if @verbose
       puts
       puts
-      puts "--------------------------------------------------------------------"
-      puts name
-      puts "--------------------------------------------------------------------"
+      puts '-' * 80
+      puts @__name__
+      puts '-' * 80
     end
+
+    super
   end
 
   def test_rake_default

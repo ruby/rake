@@ -38,6 +38,11 @@ class Rake::TestCase < MiniTest::Unit::TestCase
     @tempdir = File.join tmpdir, "test_rake_#{$$}"
 
     FileUtils.mkdir_p @tempdir
+
+    Dir.chdir @tempdir
+
+    Rake.application = Rake::Application.new
+    Rake::TaskManager.record_task_metadata = true
   end
 
   def teardown
@@ -69,7 +74,7 @@ class Rake::TestCase < MiniTest::Unit::TestCase
   end
 
   def rake_system_dir
-    @system_dir = File.join @tempdir, 'system'
+    @system_dir = 'system'
 
     FileUtils.mkdir_p @system_dir
 
@@ -82,16 +87,12 @@ end
     end
 
     ENV['RAKE_SYSTEM'] = @system_dir
-
-    Dir.chdir @tempdir
   end
 
   def rakefile contents
-    open File.join(@tempdir, 'Rakefile'), 'w' do |io|
+    open 'Rakefile', 'w' do |io|
       io << contents
     end
-
-    Dir.chdir @tempdir
   end
 
   def rakefile_access
@@ -402,14 +403,10 @@ end
   end
 
   def rakefile_nosearch
-    Dir.chdir @tempdir
-
     FileUtils.touch 'dummy'
   end
 
   def rakefile_rakelib
-    Dir.chdir @tempdir
-
     FileUtils.mkdir_p 'rakelib'
 
     Dir.chdir 'rakelib' do
@@ -432,11 +429,9 @@ end
   end
 
   def rakefile_rbext
-    open File.join(@tempdir, 'rakefile.rb'), 'w' do |io|
+    open 'rakefile.rb', 'w' do |io|
       io << 'task :default do puts "OK" end'
     end
-
-    Dir.chdir @tempdir
   end
 
   def rakefile_statusreturn
@@ -453,10 +448,9 @@ end
   def rakefile_unittest
     rakefile '# Empty Rakefile for Unit Test'
 
-    subdir = File.join @tempdir, 'subdir'
-    FileUtils.mkdir_p subdir
+    readme = File.join 'subdir', 'README'
+    FileUtils.mkdir_p File.dirname readme
 
-    readme = File.join subdir, 'README'
     FileUtils.touch readme
   end
 

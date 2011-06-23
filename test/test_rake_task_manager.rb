@@ -46,6 +46,7 @@ class TestRakeTaskManager < Rake::TestCase
       t = @tm.define_task(Rake::FileTask, "fn")
       assert_equal "fn", t.name
     end
+
     assert_equal ["fn"], @tm.tasks.collect { |t| t.name }
   end
 
@@ -58,7 +59,10 @@ class TestRakeTaskManager < Rake::TestCase
   end
 
   def test_name_lookup_with_implicit_file_tasks
+    FileUtils.touch 'README.rdoc'
+
     t = @tm["README.rdoc"]
+
     assert_equal "README.rdoc", t.name
     assert Rake::FileTask === t
   end

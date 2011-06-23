@@ -5,15 +5,8 @@ class TestRakeApplication < Rake::TestCase
   def setup
     super
 
-    @app = Rake::Application.new
+    @app = Rake.application
     @app.options.rakelib = []
-    Rake::TaskManager.record_task_metadata = true
-  end
-
-  def teardown
-    Rake::TaskManager.record_task_metadata = false
-
-    super
   end
 
   def test_constant_warning
@@ -177,8 +170,11 @@ class TestRakeApplication < Rake::TestCase
     rakefile_unittest
     Dir.chdir 'subdir'
 
+    app = Rake::Application.new
+    app.options.rakelib = []
+
     _, err = capture_io do
-      @app.instance_eval do
+      app.instance_eval do
         raw_load_rakefile
       end
     end
@@ -230,6 +226,8 @@ class TestRakeApplication < Rake::TestCase
 
     assert_equal @system_dir, @app.system_dir
     assert_nil @app.rakefile
+  rescue SystemExit
+    flunk 'failed to load rakefile'
   end
 
   def test_load_from_calculated_system_rakefile
@@ -319,9 +317,13 @@ class TestRakeApplication < Rake::TestCase
 
     rakefile_default
 
-    @app.run
+    out, err = capture_io do
+      @app.run
+    end
 
     assert ran
+    assert_empty err
+    assert_equal "DEFAULT\n", out
   end
 
   def test_display_task_run

@@ -6,18 +6,12 @@ class TestRakeFileCreationTask < Rake::TestCase
   include Rake
   include Rake::DSL
 
-  DUMMY_DIR = 'testdata/dummy_dir'
+  DUMMY_DIR = 'dummy_dir'
 
   def setup
     super
 
     Task.clear
-  end
-
-  def teardown
-    FileUtils.rm_rf DUMMY_DIR
-
-    super
   end
 
   def test_file_needed

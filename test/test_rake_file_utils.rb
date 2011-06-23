@@ -4,46 +4,40 @@ require 'stringio'
 
 class TestRakeFileUtils < Rake::TestCase
 
-  def setup
-    super
-
-    Dir.chdir @tempdir
-  end
-
   def teardown
-    FileUtils.rm_rf("testdata")
     FileUtils::LN_SUPPORTED[0] = true
 
     super
   end
 
   def test_rm_one_file
-    create_file("testdata/a")
-    FileUtils.rm_rf "testdata/a"
-    assert ! File.exist?("testdata/a")
+    create_file("a")
+    FileUtils.rm_rf "a"
+    refute File.exist?("a")
   end
 
   def test_rm_two_files
-    create_file("testdata/a")
-    create_file("testdata/b")
-    FileUtils.rm_rf ["testdata/a", "testdata/b"]
-    assert ! File.exist?("testdata/a")
-    assert ! File.exist?("testdata/b")
+    create_file("a")
+    create_file("b")
+    FileUtils.rm_rf ["a", "b"]
+    refute File.exist?("a")
+    refute File.exist?("b")
   end
 
   def test_rm_filelist
-    list = Rake::FileList.new << "testdata/a" << "testdata/b"
+    list = Rake::FileList.new << "a" << "b"
     list.each { |fn| create_file(fn) }
     FileUtils.rm_r list
-    assert ! File.exist?("testdata/a")
-    assert ! File.exist?("testdata/b")
+    refute File.exist?("a")
+    refute File.exist?("b")
   end
 
   def test_ln
-    create_dir("testdata")
-    open("testdata/a", "w") { |f| f.puts "TEST_LN" }
-    Rake::FileUtilsExt.safe_ln("testdata/a", "testdata/b", :verbose => false)
-    assert_equal "TEST_LN\n", open("testdata/b") { |f| f.read }
+    open("a", "w") { |f| f.puts "TEST_LN" }
+
+    Rake::FileUtilsExt.safe_ln("a", "b", :verbose => false)
+
+    assert_equal "TEST_LN\n", File.read('b')
   end
 
   class BadLink
@@ -106,9 +100,9 @@ class TestRakeFileUtils < Rake::TestCase
   end
 
   def test_file_utils_methods_are_available_at_top_level
-    create_file("testdata/a")
-    rm_rf "testdata/a"
-    assert ! File.exist?("testdata/a")
+    create_file("a")
+    rm_rf "a"
+    refute File.exist?("a")
   end
 
   def test_fileutils_methods_dont_leak

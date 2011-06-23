@@ -131,12 +131,21 @@ class TestRakeApplicationOptions < Rake::TestCase
   end
 
   def test_require
-    flags(['--require', 'test/reqfile'], '-rtest/reqfile2', '-rtest/reqfile3') do |opts|
-    end
-    assert TESTING_REQUIRE.include?(1)
-    assert TESTING_REQUIRE.include?(2)
-    assert TESTING_REQUIRE.include?(3)
+    $LOAD_PATH.unshift @tempdir
+
+    open 'reqfile.rb',    'w' do |io| io << 'TESTING_REQUIRE << 1' end
+    open 'reqfile2.rb',   'w' do |io| io << 'TESTING_REQUIRE << 2' end
+    open 'reqfile3.rake', 'w' do |io| io << 'TESTING_REQUIRE << 3' end
+
+    flags(['--require', 'reqfile'], '-rreqfile2', '-rreqfile3')
+
+    assert_includes TESTING_REQUIRE, 1
+    assert_includes TESTING_REQUIRE, 2
+    assert_includes TESTING_REQUIRE, 3
+
     assert_equal 3, TESTING_REQUIRE.size
+  ensure
+    $LOAD_PATH.delete @tempdir
   end
 
   def test_missing_require
@@ -298,8 +307,6 @@ class TestRakeApplicationOptions < Rake::TestCase
     assert_equal ["a"], @tasks.sort
     assert '12', ENV['TESTKEY']
   end
-
-  private
 
   def flags(*sets)
     sets.each do |set|

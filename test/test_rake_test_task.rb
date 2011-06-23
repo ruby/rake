@@ -11,12 +11,6 @@ class TestRakeTestTask < Rake::TestCase
     ENV.delete('TEST')
   end
 
-  def teardown
-    FileUtils.rm_rf("testdata")
-
-    super
-  end
-
   def test_no_task
     assert ! Task.task_defined?(:test)
   end

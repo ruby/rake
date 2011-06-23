@@ -14,9 +14,7 @@ class TestRakeFileTask < Rake::TestCase
   end
 
   def test_file_need
-    FileUtils.mkdir_p 'testdata' # HACK use tmpdir
-
-    name = "testdata/dummy"
+    name = "dummy"
     file name
 
     ftask = Task[name]

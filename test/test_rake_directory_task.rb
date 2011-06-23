@@ -4,52 +4,42 @@ require 'fileutils'
 class TestRakeDirectoryTask < Rake::TestCase
   include Rake
 
-  def setup
-    super
-
-    Rake.rm_rf "testdata", :verbose=>false
-  end
-
-  def teardown
-    Rake.rm_rf "testdata", :verbose=>false
-
-    super
-  end
-
   def test_directory
     desc "DESC"
-    directory "testdata/a/b/c"
-    assert_equal FileCreationTask, Task["testdata"].class
-    assert_equal FileCreationTask, Task["testdata/a"].class
-    assert_equal FileCreationTask, Task["testdata/a/b/c"].class
-    assert_nil             Task["testdata"].comment
-    assert_equal "DESC",   Task["testdata/a/b/c"].comment
-    assert_nil             Task["testdata/a/b"].comment
+
+    directory "a/b/c"
+
+    assert_equal FileCreationTask, Task["a"].class
+    assert_equal FileCreationTask, Task["a/b"].class
+    assert_equal FileCreationTask, Task["a/b/c"].class
+
+    assert_nil             Task["a"].comment
+    assert_nil             Task["a/b"].comment
+    assert_equal "DESC",   Task["a/b/c"].comment
+
     verbose(false) {
-      Task['testdata/a/b'].invoke
+      Task['a/b'].invoke
     }
-    assert File.exist?("testdata/a/b")
-    assert ! File.exist?("testdata/a/b/c")
+
+    assert File.exist?("a/b")
+    refute File.exist?("a/b/c")
   end
 
   if Rake::Win32.windows?
     def test_directory_win32
       desc "WIN32 DESC"
-      FileUtils.mkdir_p("testdata")
-      Dir.chdir("testdata") do
-        directory 'c:/testdata/a/b/c'
-        assert_equal FileCreationTask, Task['c:/testdata'].class
-        assert_equal FileCreationTask, Task['c:/testdata/a'].class
-        assert_equal FileCreationTask, Task['c:/testdata/a/b/c'].class
-        assert_nil             Task['c:/testdata'].comment
-        assert_equal "WIN32 DESC",   Task['c:/testdata/a/b/c'].comment
-        assert_nil             Task['c:/testdata/a/b'].comment
-        verbose(false) {
-          Task['c:/testdata/a/b'].invoke
-        }
-        assert File.exist?('c:/testdata/a/b')
-        assert ! File.exist?('c:/testdata/a/b/c')
-      end
+      directory 'c:/a/b/c'
+      assert_equal FileCreationTask, Task['c:'].class
+      assert_equal FileCreationTask, Task['c:/a'].class
+      assert_equal FileCreationTask, Task['c:/a/b/c'].class
+      assert_nil             Task['c:/'].comment
+      assert_equal "WIN32 DESC",   Task['c:/a/b/c'].comment
+      assert_nil             Task['c:/a/b'].comment
+      verbose(false) {
+        Task['c:/a/b'].invoke
+      }
+      assert File.exist?('c:/a/b')
+      refute File.exist?('c:/a/b/c')
     end
   end
 end
