@@ -1,10 +1,12 @@
 require File.expand_path('../helper', __FILE__)
 begin
-  old_verbose = $VERBOSE
-  $VERBOSE = nil
+  old_stderr = $stderr
+  dev_null = File.exist?('/dev/null') ? '/dev/null' : 'NUL'
+  $stderr = open dev_null, 'w'
   require 'rake/rdoctask'
 ensure
-  $VERBOSE = old_verbose
+  $stderr.close
+  $stderr = old_stderr
 end
 
 class TestRakeRDocTask < Rake::TestCase
