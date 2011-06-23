@@ -10,7 +10,6 @@ class Rake::TestCase < MiniTest::Unit::TestCase
   include FlexMock::ArgumentTypes
   include FlexMock::MockContainer
 
-  include InEnvironment
   include FileCreation
 
   include Rake::DSL
