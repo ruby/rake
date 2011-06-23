@@ -5,7 +5,6 @@ require 'minitest/autorun'
 require 'rake'
 require 'tmpdir'
 require File.expand_path('../file_creation', __FILE__)
-require File.expand_path('../in_environment', __FILE__)
 
 class Rake::TestCase < MiniTest::Unit::TestCase
   include FlexMock::ArgumentTypes
