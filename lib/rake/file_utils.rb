@@ -38,6 +38,7 @@ module FileUtils
     options[:noop] ||= Rake::FileUtilsExt.nowrite_flag
     Rake.rake_check_options options, :noop, :verbose
     Rake.rake_output_message cmd.join(" ") if options[:verbose]
+
     unless options[:noop]
       res = rake_system(*cmd)
       status = $?
@@ -56,8 +57,10 @@ module FileUtils
   private :create_shell_runner
 
   def set_verbose_option(options)
-    if options[:verbose].nil?
-      options[:verbose] = Rake::FileUtilsExt.verbose_flag.nil? || Rake::FileUtilsExt.verbose_flag
+    unless options.key? :verbose
+      options[:verbose] =
+        Rake::FileUtilsExt.verbose_flag == Rake::FileUtilsExt::DEFAULT ||
+        Rake::FileUtilsExt.verbose_flag
     end
   end
   private :set_verbose_option
