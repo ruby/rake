@@ -4,9 +4,11 @@ require 'rake/file_utils_ext'
 module Rake
   module DSL
 
+    #--
     # Include the FileUtils file manipulation functions in the top
     # level module, but mark them private so that they don't
     # unintentionally define methods on other objects.
+    #++
 
     include FileUtilsExt
     private(*FileUtils.instance_methods(false))
