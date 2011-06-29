@@ -2,6 +2,11 @@
 require 'rake/file_utils_ext'
 
 module Rake
+
+  ##
+  # DSL is a module that provides #task, #desc, #namespace, etc.  Use this
+  # when you'd like to use rake outside the top level scope.
+
   module DSL
 
     #--
@@ -141,7 +146,7 @@ module Rake
     end
   end
 
-  module DeprecatedObjectDSL
+  module DeprecatedObjectDSL # :nodoc:
     Commands = Object.new.extend DSL
     DSL.private_instance_methods(false).each do |name|
       line = __LINE__+1

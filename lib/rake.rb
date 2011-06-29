@@ -23,7 +23,9 @@
 
 require 'rake/version'
 
+# :stopdoc:
 RAKEVERSION = Rake::VERSION
+# :startdoc:
 
 require 'rbconfig'
 require 'fileutils'
@@ -59,6 +61,8 @@ require 'rake/application'
 
 $trace = false
 
+# :stopdoc:
+#
 # Some top level Constants.
 
 FileList = Rake::FileList
