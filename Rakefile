@@ -28,11 +28,7 @@ rescue Gem::LoadError
 end
 
 CLEAN.include('**/*.o', '*.dot', '**/*.rbc')
-CLOBBER.include('doc/example/main', 'testdata')
-CLOBBER.include('test/data/**/temp_*')
-CLOBBER.include('test/data/chains/play.*')
-CLOBBER.include('test/data/file_creation_task/build')
-CLOBBER.include('test/data/file_creation_task/src')
+CLOBBER.include('doc/example/main')
 CLOBBER.include('TAGS')
 CLOBBER.include('coverage', 'rcov_aggregate')
 
@@ -106,9 +102,6 @@ rescue LoadError
     puts "RCov is not available"
   end
 end
-
-directory 'testdata'
-task :test => ['testdata']
 
 # CVS Tasks ----------------------------------------------------------
 
