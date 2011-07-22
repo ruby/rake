@@ -183,7 +183,6 @@ else
     s.required_rubygems_version = '>= 1.3.2'
     s.add_development_dependency 'minitest', '~> 2.1'
     s.add_development_dependency 'session', '~> 2.4'
-    s.add_development_dependency 'flexmock', '~> 0.8.11'
 
     #### Which files are to be included in this gem?  Everything!  (Except CVS directories.)
 

@@ -1,15 +1,11 @@
 require 'rubygems'
 require 'minitest/unit'
-require 'flexmock/test_unit_integration'
 require 'minitest/autorun'
 require 'rake'
 require 'tmpdir'
 require File.expand_path('../file_creation', __FILE__)
 
 class Rake::TestCase < MiniTest::Unit::TestCase
-  include FlexMock::ArgumentTypes
-  include FlexMock::MockContainer
-
   include FileCreation
 
   include Rake::DSL
@@ -46,8 +42,6 @@ class Rake::TestCase < MiniTest::Unit::TestCase
   end
 
   def teardown
-    flexmock_teardown
-
     Dir.chdir @orig_PWD
     FileUtils.rm_rf @tempdir
 

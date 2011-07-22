@@ -4,8 +4,9 @@
 
 * The rake test loader now removes arguments it has processed.  Issue #51
 * Rake::TaskArguments now responds to #values_at
-* Rake tests are now directory-independent
 * RakeFileUtils.verbose_flag = nil silences output the same as 0.8.7
+* Rake tests are now directory-independent
+* Rake tests are no longer require flexmock
 
 == Version 0.9.2
 
