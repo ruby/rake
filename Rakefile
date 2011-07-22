@@ -142,13 +142,9 @@ PKG_FILES = FileList[
   '.gemtest',
   'install.rb',
   '[A-Z]*',
-  'bin/**/*',
+  'bin/rake',
   'lib/**/*.rb',
   'test/**/*.rb',
-  'test/**/*.rf',
-  'test/**/*.mf',
-  'test/**/Rakefile',
-  'test/**/subdir',
   'doc/**/*'
 ]
 PKG_FILES.exclude('doc/example/*.o')
