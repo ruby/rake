@@ -488,7 +488,3 @@ end
 
 end
 
-# workarounds for 1.8
-$" << 'test/helper.rb'
-Test::Unit.run = true if Test::Unit.respond_to? :run=
-
