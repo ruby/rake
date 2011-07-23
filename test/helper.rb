@@ -44,6 +44,7 @@ class Rake::TestCase < MiniTest::Unit::TestCase
 
     Rake.application = Rake::Application.new
     Rake::TaskManager.record_task_metadata = true
+    RakeFileUtils.verbose_flag = false
   end
 
   def teardown

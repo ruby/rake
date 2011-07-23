@@ -34,7 +34,6 @@ class TestRakeFunctional < Rake::TestCase
 
     rake '-t', 'xyz'
 
-    puts @err
     assert_match(/rake aborted/, @err)
   end
 
