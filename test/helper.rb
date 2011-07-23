@@ -1,4 +1,10 @@
 require 'rubygems'
+
+begin
+  gem 'minitest'
+rescue Gem::LoadError
+end
+
 require 'minitest/autorun'
 require 'rake'
 require 'tmpdir'
