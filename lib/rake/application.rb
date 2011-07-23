@@ -85,14 +85,12 @@ module Rake
 
     # Run the top level tasks of a Rake application.
     def top_level
-      standard_exception_handling do
-        if options.show_tasks
-          display_tasks_and_comments
-        elsif options.show_prereqs
-          display_prerequisites
-        else
-          top_level_tasks.each { |task_name| invoke_task(task_name) }
-        end
+      if options.show_tasks
+        display_tasks_and_comments
+      elsif options.show_prereqs
+        display_prerequisites
+      else
+        top_level_tasks.each { |task_name| invoke_task(task_name) }
       end
     end
 
@@ -348,6 +346,7 @@ module Rake
         ],
         ['--rakelibdir', '--rakelib', '-R RAKELIBDIR',
           "Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')",
+          # HACK Use File::PATH_SEPARATOR
           lambda { |value| options.rakelib = value.split(':') }
         ],
         ['--require', '-r MODULE', "Require MODULE before executing rakefile.",

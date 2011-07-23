@@ -12,7 +12,7 @@ require 'rubygems'
 system_rake = File.join RbConfig::CONFIG['rubylibdir'], 'rake.rb'
 
 # Use our rake, not the installed rake from system
-if $".include? system_rake then
+if $".include? system_rake or $".grep(/rake\/name_space\.rb$/).empty? then
   exec Gem.ruby, '-Ilib', 'bin/rake', *ARGV
 end
 
@@ -155,40 +155,21 @@ if ! defined?(Gem)
   puts "Package Target requires RubyGems"
 else
   SPEC = Gem::Specification.new do |s|
-
-    #### Basic information.
-
     s.name = 'rake'
     s.version = $package_version
     s.summary = "Ruby based make-like utility."
-    s.description = <<-EOF
-      Rake is a Make-like program implemented in Ruby. Tasks
-      and dependencies are specified in standard Ruby syntax.
+    s.description = <<-EOF.delete "\n"
+Rake is a Make-like program implemented in Ruby. Tasks and dependencies are
+specified in standard Ruby syntax.
     EOF
-
-    #### Dependencies and requirements.
 
     s.required_ruby_version = '>= 1.8.6'
     s.required_rubygems_version = '>= 1.3.2'
     s.add_development_dependency 'minitest', '~> 2.1'
-    s.add_development_dependency 'session', '~> 2.4'
-
-    #### Which files are to be included in this gem?  Everything!  (Except CVS directories.)
 
     s.files = PKG_FILES.to_a
 
-    #### C code extensions.
-
-    #s.extensions << "ext/rmagic/extconf.rb"
-
-    #### Load-time details: library and application (you will need one or both).
-
-    s.require_path = 'lib'                         # Use these for libraries.
-
-    s.bindir = "bin"                               # Use these for applications.
     s.executables = ["rake"]
-
-    #### Documentation and testing.
 
     s.extra_rdoc_files = FileList[
       'README.rdoc',
@@ -200,16 +181,10 @@ else
 
     s.rdoc_options = BASE_RDOC_OPTIONS
 
-    #### Author and project details.
-
     s.author = "Jim Weirich"
     s.email = "jim@weirichhouse.org"
     s.homepage = "http://rake.rubyforge.org"
     s.rubyforge_project = "rake"
-#     if ENV['CERT_DIR']
-#       s.signing_key = File.join(ENV['CERT_DIR'], 'gem-private_key.pem')
-#       s.cert_chain  = [File.join(ENV['CERT_DIR'], 'gem-public_cert.pem')]
-#     end
   end
 
   Gem::PackageTask.new(SPEC) do |pkg|

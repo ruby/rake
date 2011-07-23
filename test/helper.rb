@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'minitest/unit'
 require 'minitest/autorun'
 require 'rake'
 require 'tmpdir'
@@ -426,17 +425,6 @@ end
     open 'rakefile.rb', 'w' do |io|
       io << 'task :default do puts "OK" end'
     end
-  end
-
-  def rakefile_statusreturn
-    rakefile <<-STATUSRETURN
-task :exit5 do
-  exit(5)
-end
-
-task :normal do
-end
-    STATUSRETURN
   end
 
   def rakefile_unittest
