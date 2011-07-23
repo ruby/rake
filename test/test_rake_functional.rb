@@ -2,12 +2,6 @@ require File.expand_path('../helper', __FILE__)
 require 'fileutils'
 require 'open3'
 
-begin
-  require 'test/ruby/envutil'
-rescue LoadError
-  # for ruby trunk
-end
-
 class TestRakeFunctional < Rake::TestCase
 
   def setup
@@ -440,8 +434,7 @@ class TestRakeFunctional < Rake::TestCase
 
   # Low level ruby command runner ...
   def run_ruby(option_list)
-    ruby = defined?(EnvUtil) ? EnvUtil.rubybin : Gem.ruby
-    puts "COMMAND: [#{ruby} #{option_list.join ' '}]" if @verbose
+    puts "COMMAND: [#{RUBY} #{option_list.join ' '}]" if @verbose
 
     inn, out, err, wait = Open3.popen3(Gem.ruby, *option_list)
     inn.close

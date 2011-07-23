@@ -10,6 +10,12 @@ require 'rake'
 require 'tmpdir'
 require File.expand_path('../file_creation', __FILE__)
 
+begin
+  require 'test/ruby/envutil'
+rescue LoadError
+  # for ruby trunk
+end
+
 class Rake::TestCase < MiniTest::Unit::TestCase
   include FileCreation
 
@@ -18,6 +24,8 @@ class Rake::TestCase < MiniTest::Unit::TestCase
   class TaskManager
     include Rake::TaskManager
   end
+
+  RUBY = defined?(EnvUtil) ? EnvUtil.rubybin : Gem.ruby
 
   def setup
     ARGV.clear
