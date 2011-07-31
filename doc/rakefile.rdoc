@@ -437,7 +437,7 @@ each other.
 
 For example:
 
-  namespace "main"
+  namespace "main" do
     task :build do
       # Build the main program
     end
