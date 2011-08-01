@@ -349,6 +349,11 @@ module Rake
           # HACK Use File::PATH_SEPARATOR
           lambda { |value| options.rakelib = value.split(':') }
         ],
+        ['--reduce-compat', "Remove DSL in Object; remove Module#const_missing which defines ::Task etc.",
+          # Load-time option.
+          # Handled in bin/rake where Rake::REDUCE_COMPAT is defined (or not).
+          lambda { |_| }
+        ],
         ['--require', '-r MODULE', "Require MODULE before executing rakefile.",
           lambda { |value|
             begin
