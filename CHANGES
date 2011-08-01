@@ -8,6 +8,7 @@
 * Rake tests are now directory-independent
 * Rake tests are no longer require flexmock
 * Commands constant is no longer polluting top level namespace.
+* Show only the interesting portion of the backtrace by default (James M. Lawrence)
 
 == Version 0.9.2
 

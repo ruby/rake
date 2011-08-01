@@ -149,7 +149,7 @@ module Rake
       if options.trace
         $stderr.puts ex.backtrace.join("\n")
       else
-        $stderr.puts rakefile_location(ex.backtrace)
+        $stderr.puts Backtrace.collapse(ex.backtrace)
       end
       $stderr.puts "Tasks: #{ex.chain}" if has_chain?(ex)
       $stderr.puts "(See full trace by running task with --trace)" unless options.trace
