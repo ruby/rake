@@ -52,8 +52,8 @@ module Rake
 
     # Declare a file creation task.
     # (Mainly used for the directory command).
-    def file_create(args, &block)
-      Rake::FileCreationTask.define_task(args, &block)
+    def file_create(*args, &block)
+      Rake::FileCreationTask.define_task(*args, &block)
     end
 
     # Declare a set of files tasks to create the given directories on
