@@ -85,12 +85,14 @@ module Rake
 
     # Run the top level tasks of a Rake application.
     def top_level
-      if options.show_tasks
-        display_tasks_and_comments
-      elsif options.show_prereqs
-        display_prerequisites
-      else
-        top_level_tasks.each { |task_name| invoke_task(task_name) }
+      standard_exception_handling do
+        if options.show_tasks
+          display_tasks_and_comments
+        elsif options.show_prereqs
+          display_prerequisites
+        else
+          top_level_tasks.each { |task_name| invoke_task(task_name) }
+        end
       end
     end
 
