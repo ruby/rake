@@ -167,10 +167,10 @@ module Rake
         private :#{name}
       }, __FILE__, line
     end
-  end
+  end unless defined? Rake::REDUCE_COMPAT
 
   extend FileUtilsExt
 end
 
 self.extend Rake::DSL
-include Rake::DeprecatedObjectDSL
+include Rake::DeprecatedObjectDSL unless defined? Rake::REDUCE_COMPAT
