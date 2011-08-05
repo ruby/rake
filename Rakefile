@@ -141,7 +141,11 @@ end
 PKG_FILES = FileList[
   '.gemtest',
   'install.rb',
-  '[A-Z]*',
+  'CHANGES',
+  'MIT-LICENSE',
+  'README.rdoc',
+  'Rakefile',
+  'TODO',
   'bin/rake',
   'lib/**/*.rb',
   'test/**/*.rb',
