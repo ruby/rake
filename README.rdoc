@@ -128,7 +128,6 @@ Issues and bug reports can also be tracked here:
 * Rake API Documents: http://rake.rubyforge.org
 * Rake Source Code Repo:  http://github.com/jimweirich/rake
 * Rake Git Repo Clone URL: git://github.com/jimweirich/rake.git
-* Rake Issue Tracking: http://www.pivotaltracker.com/projects/28469
 * Rake Bug Reports: https://github.com/jimweirich/rake/issues
 
 === Presentations and Articles about Rake
@@ -160,6 +159,8 @@ other projects with similar (and not so similar) goals.
 
 [<b>Tilman Sauerbeck <tilman@code-monkey.de></b>] For the recursive rule patch.
 
+[<b>Eric Hodel</b>] For aid in maintaining rake.
+
 == License
 
 Rake is available under an MIT-style license.
@@ -185,9 +186,9 @@ jim dot weirich at gmail.com.
 
 Author::   Jim Weirich <jim.weirich@gmail.com>
 Requires:: Ruby 1.8.6 or later
-License::  Copyright 2003-2008 by Jim Weirich.
-           Released under an MIT-style license.  See the LICENSE file
-           included in the distribution.
+License::  Copyright 2003-2011 by Jim Weirich.
+           Released under an MIT-style license.  See the MIT-LICENSE
+           file included in the distribution.
 
 == Warranty
 
