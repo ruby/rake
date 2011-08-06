@@ -7,9 +7,10 @@ module Rake
 
     SUPPRESS_PATTERN = %r!(\A#{SUPPRESSED_PATHS.join('|')}|bin/rake:\d+)!
 
-    # Elide backtrace elements which match one of SUPPRESS_PATHS.
     def self.collapse(backtrace)
-      backtrace.reject { |elem| elem =~ SUPPRESS_PATTERN }
+      pattern = Rake.application.options.suppress_backtrace_pattern ||
+                SUPPRESS_PATTERN
+      backtrace.reject { |elem| elem =~ pattern }
     end
   end
 end

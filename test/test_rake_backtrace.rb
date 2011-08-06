@@ -46,4 +46,22 @@ class TestRakeBacktrace < Rake::TestCase
     assert_match %r!\A#{Regexp.quote Dir.pwd}/Rakefile:3!, lines[3]
     assert_match %r!\ATasks:!, lines[4]
   end
+
+  def test_suppress_option
+    rakefile %q{
+      task :baz do
+        raise "bazzz!"
+      end
+    }
+
+    lines = rake("baz").split("\n")
+    assert_equal "rake aborted!", lines[0]
+    assert_equal "bazzz!", lines[1]
+    assert_match %r!Rakefile!, lines[2]
+
+    lines = rake("--suppress-backtrace", "R.k.file", "baz").split("\n")
+    assert_equal "rake aborted!", lines[0]
+    assert_equal "bazzz!", lines[1]
+    refute_match %r!Rakefile!, lines[2]
+  end
 end
