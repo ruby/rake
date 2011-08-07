@@ -1,9 +1,10 @@
 module Rake
   module Backtrace
-    SUPPRESSED_PATHS = [
-      RbConfig::CONFIG["prefix"],
-      File.join(File.dirname(__FILE__), ".."),
-    ].map { |f| Regexp.quote(File.expand_path(f)) }
+    SUPPRESSED_PATHS =
+      RbConfig::CONFIG.values_at(*RbConfig::CONFIG.
+                                 keys.grep(/(prefix|libdir)/)) + [
+        File.join(File.dirname(__FILE__), ".."),
+      ].map { |f| Regexp.quote(File.expand_path(f)) }
 
     SUPPRESS_PATTERN = %r!(\A#{SUPPRESSED_PATHS.join('|')}|bin/rake:\d+)!
 
