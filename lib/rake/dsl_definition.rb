@@ -63,13 +63,14 @@ module Rake
     #   directory "testdata/doc"
     #
     def directory(*args, &block)
+      ret = file_create(*args, &block)
       dir, _ = *Rake.application.resolve_args(args)
       Rake.each_dir_parent(dir) do |d|
         file_create d do |t|
           mkdir_p t.name if ! File.exist?(t.name)
         end
       end
-      task(args, &block)
+      ret
     end
 
     # Declare a task that performs its prerequisites in

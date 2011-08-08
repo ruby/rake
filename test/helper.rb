@@ -1,4 +1,5 @@
 require 'rubygems'
+$:.unshift File.expand_path('../../lib', __FILE__)
 
 begin
   gem 'minitest'

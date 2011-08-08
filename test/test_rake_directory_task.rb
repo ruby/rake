@@ -43,4 +43,20 @@ class TestRakeDirectoryTask < Rake::TestCase
       refute File.exist?('c:/a/b/c')
     end
   end
+
+  def test_can_use_blocks
+    runlist = []
+
+    t1 = directory("a/b/c" => :t2) { |t| runlist << t.name }
+    t2 = task(:t2) { |t| runlist << t.name }
+
+    verbose(false) {
+      t1.invoke
+    }
+
+    assert_equal Task["a/b/c"], t1
+    assert_equal FileCreationTask, Task["a/b/c"].class
+    assert_equal ["t2", "a/b/c"], runlist
+    assert File.directory?("a/b/c")
+  end
 end
