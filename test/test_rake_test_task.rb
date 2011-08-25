@@ -11,6 +11,7 @@ class TestRakeTestTask < Rake::TestCase
     assert_equal ['lib'], tt.libs
     assert_equal 'test/test*.rb', tt.pattern
     assert_equal false, tt.verbose
+    assert_equal true, tt.warning
     assert Task.task_defined?(:test)
   end
 
@@ -19,14 +20,14 @@ class TestRakeTestTask < Rake::TestCase
       t.description = "Run example tests"
       t.libs = ['src', 'ext']
       t.pattern = 'test/tc_*.rb'
-      t.verbose = true
+      t.verbose = false
     end
     refute_nil tt
     assert_equal "Run example tests", tt.description
     assert_equal :example, tt.name
     assert_equal ['src', 'ext'], tt.libs
     assert_equal 'test/tc_*.rb', tt.pattern
-    assert_equal true, tt.verbose
+    assert_equal false, tt.verbose
     assert Task.task_defined?(:example)
   end
 
@@ -48,12 +49,13 @@ class TestRakeTestTask < Rake::TestCase
 
     path = %w[lib A B].join File::PATH_SEPARATOR
 
-    assert_equal "-I\"#{path}\"", test_task.ruby_opts_string
+    assert_equal "-w -I\"#{path}\"", test_task.ruby_opts_string
   end
 
   def test_libs_equals_empty
     test_task = Rake::TestTask.new do |t|
-      t.libs = []
+      t.libs    = []
+      t.warning = false
     end
 
     assert_equal '', test_task.ruby_opts_string
