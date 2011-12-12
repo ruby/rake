@@ -123,6 +123,7 @@ module Rake
     def clear
       clear_prerequisites
       clear_actions
+      clear_comments
       self
     end
 
@@ -135,6 +136,13 @@ module Rake
     # Clear the existing actions on a rake task.
     def clear_actions
       actions.clear
+      self
+    end
+
+    # Clear the existing comments on a rake task.
+    def clear_comments
+      @full_comment = nil
+      @comment = nil
       self
     end
 
