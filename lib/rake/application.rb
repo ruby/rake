@@ -146,13 +146,14 @@ module Rake
     def display_error_message(ex)
       $stderr.puts "#{name} aborted!"
       $stderr.puts ex.message
-      if options.trace
+      show_trace = options.trace || options.backtrace
+      if show_trace
         $stderr.puts ex.backtrace.join("\n")
       else
         $stderr.puts Backtrace.collapse(ex.backtrace)
       end
       $stderr.puts "Tasks: #{ex.chain}" if has_chain?(ex)
-      $stderr.puts "(See full trace by running task with --trace)" unless options.trace
+      $stderr.puts "(See full trace by running task with --trace)" unless show_trace
     end
 
     # Warn about deprecated usage.
@@ -288,6 +289,11 @@ module Rake
     # passing to OptionParser.
     def standard_rake_options
       [
+        ['--backtrace', "Enable full backtrace.",
+          lambda { |value|
+            options.backtrace = true
+          }
+        ],
         ['--classic-namespace', '-C', "Put Task and FileTask in the top level namespace",
           lambda { |value|
             require 'rake/classic_namespace'

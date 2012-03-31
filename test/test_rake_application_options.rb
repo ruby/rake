@@ -29,6 +29,7 @@ class TestRakeApplicationOptions < Rake::TestCase
 
   def test_default_options
     opts = command_line
+    assert_nil opts.backtrace
     assert_nil opts.classic_namespace
     assert_nil opts.dryrun
     assert_nil opts.ignore_system
@@ -200,6 +201,13 @@ class TestRakeApplicationOptions < Rake::TestCase
       assert opts.trace
       assert Rake::FileUtilsExt.verbose_flag
       assert ! Rake::FileUtilsExt.nowrite_flag
+    end
+  end
+
+  def test_backtrace
+    flags('--backtrace') do |opts|
+      assert opts.backtrace
+      assert ! Rake::FileUtilsExt.verbose_flag
     end
   end
 
