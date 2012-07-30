@@ -80,13 +80,13 @@ Type "rake --help" for all available options.
 === More Information
 
 * For details on Rake's command-line invocation, read
-  doc/command_line_usage.rdoc[http://rake.rubyforge.org/files/doc/command_line_usage_rdoc.html]
+  doc/command_line_usage.rdoc[https://github.com/jimweirich/rake/blob/master/doc/command_line_usage.rdoc]
 * For details on writing Rakefiles, see
-  doc/rakefile.rdoc[http://rake.rubyforge.org/files/doc/rakefile_rdoc.html].
+  doc/rakefile.rdoc[https://github.com/jimweirich/rake/blob/master/doc/rakefile.rdoc].
 * For the original announcement of Rake, see
-  doc/rational.rdoc[http://rake.rubyforge.org/files/doc/rational_rdoc.html].
+  doc/rational.rdoc[https://github.com/jimweirich/rake/blob/master/doc/rational.rdoc].
 * For a glossary of terms, see
-  doc/glossary.rdoc[http://rake.rubyforge.org/files/doc/glossary_rdoc.html].
+  doc/glossary.rdoc[https://github.com/jimweirich/rake/blob/master/doc/glossary.rdoc].
 
 == Development
 
