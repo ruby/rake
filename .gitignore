@@ -2,6 +2,7 @@
 *.patch
 *.rbc
 *.swp
+*~
 .#*
 .idea
 /TAGS
