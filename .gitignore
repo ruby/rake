@@ -9,3 +9,5 @@
 /coverage
 /html
 /pkg
+
+.DS_Store
