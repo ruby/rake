@@ -17,4 +17,5 @@ the rake-devel@rubyforge.org mailing list.
 * Trap "ln -s" commands that fail and use "cp" instead (SMB mounted
   drives have problems with "ln -s".
 
+
 (moved DONE list to CHANGES file)
