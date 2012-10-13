@@ -78,8 +78,8 @@ module Rake
     # Example:
     #   multitask :deploy => [:deploy_gem, :deploy_rdoc]
     #
-    def multitask(args, &block)
-      Rake::MultiTask.define_task(args, &block)
+    def multitask(*args, &block)
+      Rake::MultiTask.define_task(*args, &block)
     end
 
     # Create a new rake namespace and use it for evaluating the given
