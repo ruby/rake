@@ -127,7 +127,8 @@ module Rake # :nodoc:
     # Upload all files matching +wildcard+ to the uploader's root
     # path.
     def upload_files(wildcard)
-      Dir[wildcard].sort.each do |fn|
+      fail "OUCH"
+      Rake.sorted_glob(wildcard).each do |fn|
         upload(fn)
       end
     end

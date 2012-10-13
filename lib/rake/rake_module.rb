@@ -24,6 +24,10 @@ module Rake
     def load_rakefile(path)
       load(path)
     end
+
+    def sorted_glob(*args)
+      Dir.glob(*args).sort
+    end
   end
 
 end

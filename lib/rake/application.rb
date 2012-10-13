@@ -178,7 +178,7 @@ module Rake
     def have_rakefile
       @rakefiles.each do |fn|
         if File.exist?(fn)
-          others = Dir.glob(fn, File::FNM_CASEFOLD).sort
+          others = Rake.sorted_glob(fn, File::FNM_CASEFOLD)
           return others.size == 1 ? others.first : fn
         elsif fn == ''
           return fn
@@ -512,7 +512,7 @@ module Rake
     end
 
     def glob(path, &block)
-      Dir[path.gsub("\\", '/')].sort.each(&block)
+      Rake.sorted_glob(path.gsub("\\", '/')).each(&block)
     end
     private :glob
 
