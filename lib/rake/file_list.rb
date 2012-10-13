@@ -340,7 +340,7 @@ module Rake
 
     # Add matching glob patterns.
     def add_matching(pattern)
-      Rake.sorted_glob(pattern).each do |fn|
+      Rake.glob(pattern).each do |fn|
         self << fn unless exclude?(fn)
       end
     end

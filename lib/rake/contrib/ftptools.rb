@@ -128,7 +128,7 @@ module Rake # :nodoc:
     # path.
     def upload_files(wildcard)
       fail "OUCH"
-      Rake.sorted_glob(wildcard).each do |fn|
+      Rake.glob(wildcard).each do |fn|
         upload(fn)
       end
     end
