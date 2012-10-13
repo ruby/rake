@@ -73,7 +73,7 @@ File.chmod(0755, rake_dest)
 
 # The library files
 
-files = Dir.chdir('lib') { Dir['**/*.rb'] }
+files = Dir.chdir('lib') { Dir['**/*.rb'].sort }
 
 for fn in files
   fn_dir = File.dirname(fn)
