@@ -417,6 +417,13 @@ class TestRakeFunctional < Rake::TestCase
     assert_equal "1\n", @out
   end
 
+  def test_signal_propagation_in_tests
+    rakefile_test_signal
+    rake
+    assert_match(/ATEST/, @out)
+    refute_match(/BTEST/, @out)
+  end
+
   private
 
   # Run a shell Ruby command with command line options (using the
