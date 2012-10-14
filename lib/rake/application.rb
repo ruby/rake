@@ -290,7 +290,6 @@ module Rake
       end
     end
 
-
     # A list of all the standard options used in rake, suitable for
     # passing to OptionParser.
     def standard_rake_options
