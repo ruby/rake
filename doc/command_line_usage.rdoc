@@ -37,6 +37,15 @@ Options are:
 [<tt>--help</tt>  (-H)]
     Display some help text and exit.
 
+[<tt>--jobs</tt> _number_  (-j)]
+    Specifies the maximum number of concurrent tasks. The suggested
+    value is equal to the number of CPUs.
+    
+    Sample values:
+     (no -j) : unlimited concurrent tasks (standard rake behavior)
+     -j      : 2 concurrent tasks (exact number may change)
+     -j 16   : 16 concurrent tasks
+
 [<tt>--libdir</tt> _directory_  (-I)]
     Add _directory_ to the list of directories searched for require.
 
