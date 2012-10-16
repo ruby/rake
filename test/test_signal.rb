@@ -6,11 +6,12 @@ class TestSignal < Rake::TestCase
     puts "DBG: PARENT $$=#{$$.inspect}"
     fork {
       puts "DBG: CHILD $$=#{$$.inspect}"
-      Process.kill "TERM", $$
+      system "ruby -e 'puts $$; Process.kill \"TERM\", $$'"
     }
     Process.wait
-    puts "DBG: $?.respond_to?(:signaled?)=#{$?.respond_to?(:signaled?).inspect}"
-    puts "DBG: $?.signaled?=#{$?.signaled?.inspect}" if $?.respond_to?(:signaled?)
-    puts "DBG: $?=#{$?.inspect}"
+    status = $?
+    puts "DBG: status.respond_to?(:signaled?)=#{status.respond_to?(:signaled?).inspect}"
+    puts "DBG: status.signaled?=#{status.signaled?.inspect}" if status.respond_to?(:signaled?)
+    puts "DBG: status=#{status.inspect}"
   end
 end
