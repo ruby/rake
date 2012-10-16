@@ -206,7 +206,7 @@ module Rake
     # Display the tasks and comments.
     def display_tasks_and_comments
       displayable_tasks = tasks.select { |t|
-        t.comment && t.name =~ options.show_task_pattern
+        (options.show_all_tasks || t.comment) && t.name =~ options.show_task_pattern
       }
       case options.show_tasks
       when :tasks
@@ -220,7 +220,8 @@ module Rake
       when :describe
         displayable_tasks.each do |t|
           puts "#{name} #{t.name_with_args}"
-          t.full_comment.split("\n").each do |line|
+          comment = t.full_comment || ""
+          comment.split("\n").each do |line|
             puts "    #{line}"
           end
           puts
@@ -269,7 +270,9 @@ module Rake
     end
 
     def truncate(string, width)
-      if string.length <= width
+      if string.nil?
+        ""
+      elsif string.length <= width
         string
       else
         ( string[0, width-3] || "" ) + "..."
@@ -288,6 +291,16 @@ module Rake
     # passing to OptionParser.
     def standard_rake_options
       [
+        ['--all', '-A', "Show all tasks, even uncommented ones",
+          lambda { |value|
+            options.show_all_tasks = value
+          }
+        ],
+        ['--comments', "Show commented tasks only",
+          lambda { |value|
+            options.show_all_tasks = !value
+          }
+        ],
         ['--classic-namespace', '-C', "Put Task and FileTask in the top level namespace",
           lambda { |value|
             require 'rake/classic_namespace'
@@ -410,6 +423,7 @@ module Rake
         ['--where', '-W [PATTERN]', "Describe the tasks (matching optional PATTERN), then exit.",
           lambda { |value|
             select_tasks_to_show :lines, value, options
+            options.show_all_tasks = true
           }
         ],
       ]
