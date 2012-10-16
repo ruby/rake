@@ -429,7 +429,6 @@ class TestRakeFunctional < Rake::TestCase
   end
 
   def test_signal_propagation_in_tests
-    @verbose = true
     if can_detect_signals?
       rakefile_test_signal
       rake
