@@ -418,6 +418,7 @@ class TestRakeFunctional < Rake::TestCase
   end
 
   def test_signal_propagation_in_tests
+    @verbose = true
     rakefile_test_signal
     rake
     assert_match(/ATEST/, @out)
