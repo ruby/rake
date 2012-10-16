@@ -96,11 +96,7 @@ module Rake
       desc "Run tests" + (@name==:test ? "" : " for #{@name}")
       task @name do
         FileUtilsExt.verbose(@verbose) do
-          puts "DBG: here"
           ruby "#{ruby_opts_string} #{run_code} #{file_list_string} #{option_list}" do |ok, status|
-            puts "DBG: [ok, status]=#{[ok, status].inspect}"
-            puts "DBG: status.respond_to?(:signaled?)=#{status.respond_to?(:signaled?).inspect}"
-            puts "DBG: status.signaled?=#{status.signaled?.inspect}" if status.respond_to?(:signaled?)
             if !ok && status.respond_to?(:signaled?) && status.signaled?
               raise SignalException.new(status.termsig)
             end
