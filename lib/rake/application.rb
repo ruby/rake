@@ -30,6 +30,12 @@ module Rake
 
     DEFAULT_RAKEFILES = ['rakefile', 'Rakefile', 'rakefile.rb', 'Rakefile.rb'].freeze
 
+    def self.set_tasks_options(show_tasks, value, options)
+      options.show_tasks = show_tasks
+      options.show_task_pattern = Regexp.new(value || '')
+      Rake::TaskManager.record_task_metadata = true
+    end
+
     # Initialize a Rake::Application object.
     def initialize
       super
@@ -296,9 +302,17 @@ module Rake
         ],
         ['--describe', '-D [PATTERN]', "Describe the tasks (matching optional PATTERN), then exit.",
           lambda { |value|
-            options.show_tasks = :describe
-            options.show_task_pattern = Regexp.new(value || '')
-            TaskManager.record_task_metadata = true
+            Rake::Application.set_tasks_options :describe, value, options
+          }
+        ],
+        ['--tasks', '-T [PATTERN]', "Display the tasks (matching optional PATTERN) with descriptions, then exit.",
+          lambda { |value|
+            Rake::Application.set_tasks_options :tasks, value, options
+          }
+        ],
+        ['--where', '-W [PATTERN]', "Describe the tasks (matching optional PATTERN), then exit.",
+          lambda { |value|
+            Rake::Application.set_tasks_options :lines, value, options
           }
         ],
         ['--dry-run', '-n', "Do a dry run without executing actions.",
@@ -384,13 +398,6 @@ module Rake
           "Use standard project Rakefile search paths, ignore system wide rakefiles.",
           lambda { |value| options.ignore_system = true }
         ],
-        ['--tasks', '-T [PATTERN]', "Display the tasks (matching optional PATTERN) with descriptions, then exit.",
-          lambda { |value|
-            options.show_tasks = :tasks
-            options.show_task_pattern = Regexp.new(value || '')
-            Rake::TaskManager.record_task_metadata = true
-          }
-        ],
         ['--trace', '-t', "Turn on invoke/execute tracing, enable full backtrace.",
           lambda { |value|
             options.trace = true
@@ -404,13 +411,6 @@ module Rake
           lambda { |value|
             puts "rake, version #{RAKEVERSION}"
             exit
-          }
-        ],
-        ['--where', '-W [PATTERN]', "Describe the tasks (matching optional PATTERN), then exit.",
-          lambda { |value|
-            options.show_tasks = :lines
-            options.show_task_pattern = Regexp.new(value || '')
-            Rake::TaskManager.record_task_metadata = true
           }
         ],
         ['--no-deprecation-warnings', '-X', "Disable the deprecation warnings.",
