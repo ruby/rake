@@ -127,16 +127,18 @@ class TestRakeTask < Rake::TestCase
 
   def test_clear_comments
     desc "the original foo"
-    task :foo do
+    task :foo => [:x] do
+      # Dummy action
     end
 
     task(:foo).clear_comments
 
     desc "a slightly different foo"
-    task :foo do
-    end
+    task :foo
 
     assert_equal "a slightly different foo", task(:foo).comment
+    assert_equal ["x"], task(:foo).prerequisites
+    assert_equal 1, task(:foo).actions.size
   end
 
   def test_find
@@ -280,4 +282,3 @@ class TestRakeTask < Rake::TestCase
     assert_equal "HI", t.comment
   end
 end
-
