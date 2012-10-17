@@ -42,6 +42,8 @@ class TestRakeFileTask < Rake::TestCase
   end
 
   def test_file_times_new_depend_on_regular_task_timestamps
+    require 'rake/phony'
+
     name = "dummy"
     task name
 
@@ -50,10 +52,6 @@ class TestRakeFileTask < Rake::TestCase
     t1 = Rake.application.intern(FileTask, NEWFILE).enhance([name])
 
     assert t1.needed?, "depending on non-file task uses Time.now"
-
-    def (Rake::Task.define_task(:phony)).timestamp
-      Time.at 0
-    end
 
     task(name => :phony)
 
@@ -118,4 +116,3 @@ class TestRakeFileTask < Rake::TestCase
   end
 
 end
-
