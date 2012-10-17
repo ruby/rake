@@ -146,13 +146,13 @@ module Rake
     def display_error_message(ex)
       $stderr.puts "#{name} aborted!"
       $stderr.puts ex.message
-      if options.trace
+      if options.backtrace
         $stderr.puts ex.backtrace.join("\n")
       else
         $stderr.puts Backtrace.collapse(ex.backtrace)
       end
       $stderr.puts "Tasks: #{ex.chain}" if has_chain?(ex)
-      $stderr.puts "(See full trace by running task with --trace)" unless options.trace
+      $stderr.puts "(See full trace by running task with --trace)" unless options.backtrace
     end
 
     # Warn about deprecated usage.
@@ -296,15 +296,20 @@ module Rake
             options.show_all_tasks = value
           }
         ],
-        ['--comments', "Show commented tasks only",
+        ['--backtrace', "Enable full backtrace.",
           lambda { |value|
-            options.show_all_tasks = !value
+            options.backtrace = value
           }
         ],
         ['--classic-namespace', '-C', "Put Task and FileTask in the top level namespace",
           lambda { |value|
             require 'rake/classic_namespace'
             options.classic_namespace = true
+          }
+        ],
+        ['--comments', "Show commented tasks only",
+          lambda { |value|
+            options.show_all_tasks = !value
           }
         ],
         ['--no-deprecation-warnings', '-X', "Disable the deprecation warnings.",
@@ -408,6 +413,7 @@ module Rake
         ['--trace', '-t', "Turn on invoke/execute tracing, enable full backtrace.",
           lambda { |value|
             options.trace = true
+            options.backtrace = true
             Rake.verbose(true)
           }
         ],
@@ -601,7 +607,7 @@ module Rake
       @const_warning = true
     end
 
-    def rakefile_location backtrace = caller
+    def rakefile_location(backtrace=caller)
       backtrace.map { |t| t[/([^:]+):/,1] }
 
       re = /^#{@rakefile}$/
