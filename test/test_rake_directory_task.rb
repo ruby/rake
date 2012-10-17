@@ -36,11 +36,6 @@ class TestRakeDirectoryTask < Rake::TestCase
       assert_nil             Task['c:/'].comment
       assert_equal "WIN32 DESC",   Task['c:/a/b/c'].comment
       assert_nil             Task['c:/a/b'].comment
-      verbose(false) {
-        Task['c:/a/b'].invoke
-      }
-      assert File.exist?('c:/a/b')
-      refute File.exist?('c:/a/b/c')
     end
   end
 end
