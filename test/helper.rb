@@ -509,10 +509,12 @@ task :default => :test
     TEST_SIGNAL
     open 'a_test.rb', 'w' do |io|
       io << 'puts "ATEST"' << "\n"
+      io << '$stdout.flush' << "\n"
       io << 'Process.kill("TERM", $$)' << "\n"
     end
     open 'b_test.rb', 'w' do |io|
       io << 'puts "BTEST"' << "\n"
+      io << '$stdout.flush' << "\n"
     end
   end
 
