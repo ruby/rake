@@ -1,6 +1,10 @@
 require File.expand_path('../helper', __FILE__)
 require 'fileutils'
 
+def load_phony
+  load File.dirname(__FILE__) + "/../lib/rake/phony.rb"
+end
+
 class TestRakeFileTask < Rake::TestCase
   include Rake
 
@@ -42,7 +46,7 @@ class TestRakeFileTask < Rake::TestCase
   end
 
   def test_file_times_new_depend_on_regular_task_timestamps
-    require 'rake/phony'
+    load_phony
 
     name = "dummy"
     task name
