@@ -367,8 +367,7 @@ module Rake
         ],
         ['--rakelibdir', '--rakelib', '-R RAKELIBDIR',
           "Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')",
-          # HACK Use File::PATH_SEPARATOR
-          lambda { |value| options.rakelib = value.split(':') }
+          lambda { |value| options.rakelib = value.split(File::PATH_SEPARATOR) }
         ],
         ['--reduce-compat', "Remove DSL in Object; remove Module#const_missing which defines ::Task etc.",
           # Load-time option.
