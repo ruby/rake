@@ -120,5 +120,24 @@ class TestRakeTestThreadPool < Rake::TestCase
     pool.join
   end
 
+  def test_pool_reports_correct_results
+    pool = ThreadPool.new(7)
+    
+    a = 18
+    b = 5
+    c = 3
+    
+    result = a.times.collect do
+      pool.future do
+        b.times.collect do
+          pool.future { sleep rand * 0.001; c }
+        end.inject(0) { |m,f| m+f.call }
+      end
+    end.inject(0) { |m,f| m+f.call }
+    
+    assert_equal( (a*b*c), result )
+    pool.join
+  end
+
 end
 
