@@ -292,7 +292,7 @@ class TestRakeApplicationOptions < Rake::TestCase
         assert_equal opts.trace, $trace
         assert_equal opts.dryrun, $dryrun
         assert_equal opts.silent, $silent
-            end
+      end
     end
 
     assert_match(/deprecated/, err)
