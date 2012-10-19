@@ -2,6 +2,7 @@ require 'shellwords'
 require 'optparse'
 
 require 'rake/task_manager'
+require 'rake/thread_pool'
 require 'rake/win32'
 
 module Rake
@@ -64,6 +65,7 @@ module Rake
         init
         load_rakefile
         top_level
+        thread_pool.join
       end
     end
 
@@ -104,6 +106,10 @@ module Rake
     # Application options from the command line
     def options
       @options ||= OpenStruct.new
+    end
+
+    def thread_pool
+      @thread_pool ||= ThreadPool.new options.thread_pool_size
     end
 
     # private ----------------------------------------------------------------
@@ -345,6 +351,10 @@ module Rake
         ['--execute-continue',  '-E CODE',
           "Execute some Ruby code, then continue with normal task processing.",
           lambda { |value| eval(value) }
+        ],
+        ['--jobs',  '-j [NUMBER]',
+          "Specifies the maximum number of tasks to execute in parallel. (default:2)",
+          lambda { |value| options.thread_pool_size = [(value || 2).to_i,2].max }
         ],
         ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
           lambda { |value| $:.push(value) }
