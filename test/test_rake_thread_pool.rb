@@ -56,13 +56,17 @@ class TestRakeTestThreadPool < Rake::TestCase
   def test_pool_join_empties_queue
     pool = ThreadPool.new(2)
     repeat = 25
-    repeat.times { pool.future do
-        repeat.times { pool.future do
-            repeat.times { pool.future do
-              ;
-            end }
-        end }
-    end }
+    repeat.times {
+      pool.future do
+        repeat.times {
+          pool.future do
+            repeat.times {
+              pool.future do end
+            }
+          end
+        }
+      end
+    }
 
     pool.join
     assert_equal true, pool.__send__(:__queue__).empty?
@@ -116,7 +120,7 @@ class TestRakeTestThreadPool < Rake::TestCase
     common_dependency_b = pool.future { futures_a.each { |f| f.call } }
     futures_b = 10.times.collect { pool.future{ common_dependency_b.call; sleep(rand() * 0.01) } }
 
-    (futures_b).each{|f|f.call}
+    futures_b.each{|f|f.call}
     pool.join
   end
 
