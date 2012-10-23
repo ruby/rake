@@ -15,11 +15,11 @@ module Rake
       @join_cond = @threads_mon.new_cond
     end
     
-    # Creates a future to be executed in the ThreadPool.
-    # The args are passed to the block when executing (similarly to Thread#new)
-    # The return value is a Proc which may or may not be already executing in
-    # another thread. Calling Proc#call will sleep the current thread until
-    # the future is finished and will return the result (or raise an Exception
+    # Creates a future to be executed in the +ThreadPool+.
+    # The args are passed to the block when executing (similarly to <tt>Thread#new</tt>)
+    # The return value is a +Proc+ which may or may not be already executing in
+    # another thread. Calling <tt>Proc#call</tt> will sleep the current thread until
+    # the future is finished and will return the result (or raise an exception
     # thrown from the future)
     def future(*args,&block)
       # capture the local args for the block (like Thread#start)
@@ -92,7 +92,7 @@ module Rake
     end
 
   private
-    def start_thread
+    def start_thread # :nodoc:
       @threads_mon.synchronize do
         next unless @threads.count < @max_thread_count
 
@@ -118,11 +118,11 @@ module Rake
     
     # for testing only
     
-    def __queue__
+    def __queue__ # :nodoc:
       @queue
     end
     
-    def __threads__
+    def __threads__ # :nodoc:
       @threads.dup
     end
     
