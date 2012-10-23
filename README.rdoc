@@ -129,6 +129,7 @@ Issues and bug reports can also be tracked here:
 * Rake Source Code Repo:  http://github.com/jimweirich/rake
 * Rake Git Repo Clone URL: git://github.com/jimweirich/rake.git
 * Rake Bug Reports: https://github.com/jimweirich/rake/issues
+* Rake Continuous Build Server: https://travis-ci.org/#!/jimweirich/rake
 
 === Presentations and Articles about Rake
 
