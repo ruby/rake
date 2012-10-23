@@ -400,6 +400,17 @@ class TestRakeApplicationOptions < Rake::TestCase
     assert '12', ENV['TESTKEY']
   end
 
+  def test_rake_explicit_task_library
+    Rake.add_rakelib 'app/task', 'other'
+
+    libs = Rake.application.options.rakelib
+
+    assert libs.include?("app/task")
+    assert libs.include?("other")
+  end
+
+  private
+
   def flags(*sets)
     sets.each do |set|
       ARGV.clear
