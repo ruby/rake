@@ -317,7 +317,7 @@ module Rake
               options.show_all_tasks = value
             }
           ],
-          ['--backtrace [OUT]', "Enable full backtrace.",
+          ['--backtrace [OUT]', "Enable full backtrace.  OUT can be stderr (default) or stdout.",
             lambda { |value|
               options.backtrace = true
               select_trace_output(options, 'backtrace', value)
@@ -430,7 +430,7 @@ module Rake
               select_tasks_to_show(options, :tasks, value)
             }
           ],
-          ['--trace', '-t [OUT]', "Turn on invoke/execute tracing, enable full backtrace.",
+          ['--trace', '-t [OUT]', "Turn on invoke/execute tracing, enable full backtrace. OUT can be stderr (default) or stdout.",
             lambda { |value|
               options.trace = true
               options.backtrace = true
