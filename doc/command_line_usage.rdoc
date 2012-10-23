@@ -31,7 +31,7 @@ Options are:
 [<tt>--execute-print</tt> _code_ (-p)]
     Execute some Ruby code, print the result, and exit.
 
-[<tt>--execute-continue</tt> _code_ (-p)]
+[<tt>--execute-continue</tt> _code_ (-E)]
     Execute some Ruby code, then continue with normal task processing.
 
 [<tt>--help</tt>  (-H)]
