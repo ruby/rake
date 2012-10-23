@@ -5,13 +5,8 @@ module Rake
   #
   class MultiTask < Task
     private
-    def invoke_prerequisites(args, invocation_chain)
-      futures = @prerequisites.collect do |p|
-        application.thread_pool.future(p) do |r|
-          application[r, @scope].invoke_with_call_chain(args, invocation_chain)
-        end
-      end
-      futures.each { |f| f.call }
+    def invoke_prerequisites(task_args, invocation_chain) # :nodoc:
+      invoke_prerequisites_concurrently(task_args, invocation_chain)
     end
   end
 

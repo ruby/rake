@@ -223,6 +223,38 @@ class TestRakeTask < Rake::TestCase
     assert_in_delta now + 10, a.timestamp, 0.1, 'computer too slow?'
   end
 
+  def test_always_multitask
+    mx = Mutex.new
+    result = ""
+    
+    t_a = task(:a) do |t|
+      sleep 0.02
+      mx.synchronize{ result << t.name }
+    end
+    
+    t_b = task(:b) do |t|
+      mx.synchronize{ result << t.name }
+    end
+    
+    t_c = task(:c => [:a,:b]) do |t|
+      mx.synchronize{ result << t.name }
+    end
+
+    t_c.invoke
+    
+    # task should always run in order
+    assert_equal 'abc', result
+
+    [t_a, t_b, t_c].each { |t| t.reenable }
+    result.clear
+
+    Rake.application.options.always_multitask = true
+    t_c.invoke
+
+    # with multitask, task 'b' should grab the mutex first
+    assert_equal 'bac', result
+  end
+
   def test_investigation_output
     t1 = task(:t1 => [:t2, :t3]) { |t| runlist << t.name; 3321 }
     task(:t2)
