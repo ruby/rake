@@ -229,16 +229,6 @@ class TestRakeApplicationOptions < Rake::TestCase
     end
   end
 
-  def test_trace_with_error
-    flags('--trace=stdout', '-tstdout', '-t stdout') do |opts|
-      assert opts.trace, "should enable trace option"
-      assert opts.backtrace, "should enabled backtrace option"
-      assert_equal $stdout, opts.trace_output
-      assert Rake::FileUtilsExt.verbose_flag
-      assert ! Rake::FileUtilsExt.nowrite_flag
-    end
-  end
-
   def test_trace_with_stderr
     flags('--trace=stderr', '-tstderr', '-t stderr') do |opts|
       assert opts.trace, "should enable trace option"

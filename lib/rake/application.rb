@@ -320,14 +320,7 @@ module Rake
           ['--backtrace [OUT]', "Enable full backtrace.",
             lambda { |value|
               options.backtrace = true
-              case value
-              when 'stdout'
-                options.trace_output = $stdout
-              when 'stderr', nil
-                options.trace_output = $stderr
-              else
-                fail CommandLineOptionError, "Unrecognized --backtrace option '#{value}'"
-              end
+              select_trace_output(options, 'backtrace', value)
             }
           ],
           ['--classic-namespace', '-C', "Put Task and FileTask in the top level namespace",
@@ -441,16 +434,7 @@ module Rake
             lambda { |value|
               options.trace = true
               options.backtrace = true
-
-              case value
-              when / *stdout/
-                options.trace_output = $stdout
-              when / *stderr/, nil
-                options.trace_output = $stderr
-              else
-                fail CommandLineOptionError, "Unrecognized --trace option '#{value}'"
-              end
-
+              select_trace_output(options, 'trace', value)
               Rake.verbose(true)
             }
           ],
@@ -483,6 +467,18 @@ module Rake
       Rake::TaskManager.record_task_metadata = true
     end
     private :select_tasks_to_show
+
+    def select_trace_output(options, trace_option, value)
+      value = value.strip unless value.nil?
+      case value
+      when 'stdout'
+        options.trace_output = $stdout
+      when 'stderr', nil
+        options.trace_output = $stderr
+      else
+        fail CommandLineOptionError, "Unrecognized --#{trace_option} option '#{value}'"
+      end
+    end
 
     # Read and handle the command line options.
     def handle_options
