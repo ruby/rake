@@ -9,19 +9,19 @@ class TestRakeTestThreadPool < Rake::TestCase
     pool = ThreadPool.new(0)
     f = pool.future{Thread.current}
     pool.join
-    assert_equal Thread.current, f.call
+    assert_equal Thread.current, f.value
   end
   
   def test_pool_executes_in_other_thread_for_pool_of_size_one
     pool = ThreadPool.new(1)
     f = pool.future{Thread.current}
     pool.join
-    refute_equal Thread.current, f.call
+    refute_equal Thread.current, f.value
   end
   
   def test_pool_executes_in_two_other_threads_for_pool_of_size_two
     pool = ThreadPool.new(2)
-    threads = 2.times.collect{ pool.future{ sleep 0.1; Thread.current } }.each{|f|f.call}
+    threads = 2.times.collect{ pool.future{ sleep 0.1; Thread.current } }.each{|f|f.value}
     
     refute_equal threads[0], threads[1]
     refute_equal Thread.current, threads[0]
@@ -75,11 +75,11 @@ class TestRakeTestThreadPool < Rake::TestCase
 
     deep_exception_block = lambda do |count|
       next raise Exception.new if ( count < 1 )
-      pool.future(count-1, &deep_exception_block).call
+      pool.future(count-1, &deep_exception_block).value
     end
 
     assert_raises(Exception) do
-      pool.future(2, &deep_exception_block).call
+      pool.future(2, &deep_exception_block).value
     end
     
   end
@@ -90,7 +90,7 @@ class TestRakeTestThreadPool < Rake::TestCase
     pool = ThreadPool.new(2)
     initial_sleep_time = 0.2
     future1 = pool.future { sleep initial_sleep_time }
-    dependent_futures = 5.times.collect { pool.future{ future1.call } }
+    dependent_futures = 5.times.collect { pool.future{ future1.value } }
     future2 = pool.future { sleep initial_sleep_time }
     future3 = pool.future { sleep 0.01 }
 
@@ -103,7 +103,7 @@ class TestRakeTestThreadPool < Rake::TestCase
     # future 3 is in the queue because there aren't enough active threads to work on it.
     assert_equal pool.__send__(:__queue__).size, 1
     
-    [future1, dependent_futures, future2, future3].flatten.each { |f| f.call }
+    [future1, dependent_futures, future2, future3].flatten.each { |f| f.value }
     pool.join
   end
 
@@ -111,12 +111,12 @@ class TestRakeTestThreadPool < Rake::TestCase
     pool = ThreadPool.new(5)
     
     common_dependency_a = pool.future { sleep 0.2 }
-    futures_a = 10.times.collect { pool.future{ common_dependency_a.call; sleep(rand() * 0.01) } }
+    futures_a = 10.times.collect { pool.future{ common_dependency_a.value; sleep(rand() * 0.01) } }
 
-    common_dependency_b = pool.future { futures_a.each { |f| f.call } }
-    futures_b = 10.times.collect { pool.future{ common_dependency_b.call; sleep(rand() * 0.01) } }
+    common_dependency_b = pool.future { futures_a.each { |f| f.value } }
+    futures_b = 10.times.collect { pool.future{ common_dependency_b.value; sleep(rand() * 0.01) } }
 
-    (futures_b).each{|f|f.call}
+    (futures_b).each{|f|f.value}
     pool.join
   end
 
@@ -131,9 +131,9 @@ class TestRakeTestThreadPool < Rake::TestCase
       pool.future do
         b.times.collect do
           pool.future { sleep rand * 0.001; c }
-        end.inject(0) { |m,f| m+f.call }
+        end.inject(0) { |m,f| m+f.value }
       end
-    end.inject(0) { |m,f| m+f.call }
+    end.inject(0) { |m,f| m+f.value }
     
     assert_equal( (a*b*c), result )
     pool.join
