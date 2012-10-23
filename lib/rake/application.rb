@@ -336,7 +336,7 @@ module Rake
           ],
           ['--describe', '-D [PATTERN]', "Describe the tasks (matching optional PATTERN), then exit.",
             lambda { |value|
-              select_tasks_to_show :describe, value, options
+              select_tasks_to_show(options, :describe, value)
             }
           ],
           ['--dry-run', '-n', "Do a dry run without executing actions.",
@@ -427,7 +427,7 @@ module Rake
           ],
           ['--tasks', '-T [PATTERN]', "Display the tasks (matching optional PATTERN) with descriptions, then exit.",
             lambda { |value|
-              select_tasks_to_show :tasks, value, options
+              select_tasks_to_show(options, :tasks, value)
             }
           ],
           ['--trace', '-t [OUT]', "Turn on invoke/execute tracing, enable full backtrace.",
@@ -449,7 +449,7 @@ module Rake
           ],
           ['--where', '-W [PATTERN]', "Describe the tasks (matching optional PATTERN), then exit.",
             lambda { |value|
-              select_tasks_to_show :lines, value, options
+              select_tasks_to_show(options, :lines, value)
               options.show_all_tasks = true
             }
           ],
@@ -461,7 +461,7 @@ module Rake
         ])
     end
 
-    def select_tasks_to_show(show_tasks, value, options)
+    def select_tasks_to_show(options, show_tasks, value)
       options.show_tasks = show_tasks
       options.show_task_pattern = Regexp.new(value || '')
       Rake::TaskManager.record_task_metadata = true
@@ -479,6 +479,7 @@ module Rake
         fail CommandLineOptionError, "Unrecognized --#{trace_option} option '#{value}'"
       end
     end
+    private :select_trace_output
 
     # Read and handle the command line options.
     def handle_options
