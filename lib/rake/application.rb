@@ -7,6 +7,8 @@ require 'rake/win32'
 
 module Rake
 
+  CommandLineOptionError = Class.new(StandardError)
+
   ######################################################################
   # Rake main application object.  When invoking +rake+ from the
   # command line, a Rake::Application object is created and run.
@@ -150,15 +152,15 @@ module Rake
 
     # Display the error message that caused the exception.
     def display_error_message(ex)
-      $stderr.puts "#{name} aborted!"
-      $stderr.puts ex.message
+      trace "#{name} aborted!"
+      trace ex.message
       if options.backtrace
-        $stderr.puts ex.backtrace.join("\n")
+        trace ex.backtrace.join("\n")
       else
-        $stderr.puts Backtrace.collapse(ex.backtrace)
+        trace Backtrace.collapse(ex.backtrace)
       end
-      $stderr.puts "Tasks: #{ex.chain}" if has_chain?(ex)
-      $stderr.puts "(See full trace by running task with --trace)" unless options.backtrace
+      trace "Tasks: #{ex.chain}" if has_chain?(ex)
+      trace "(See full trace by running task with --trace)" unless options.backtrace
     end
 
     # Warn about deprecated usage.
@@ -293,6 +295,11 @@ module Rake
       end
     end
 
+    def trace(*str)
+      options.trace_output ||= $stderr
+      options.trace_output.puts(*str)
+    end
+
     def sort_options(options)
       options.sort_by { |opt|
         opt.select { |o| o =~ /^-/ }.map { |o| o.downcase }.sort.reverse
@@ -310,9 +317,17 @@ module Rake
               options.show_all_tasks = value
             }
           ],
-          ['--backtrace', "Enable full backtrace.",
+          ['--backtrace [OUT]', "Enable full backtrace.",
             lambda { |value|
-              options.backtrace = value
+              options.backtrace = true
+              case value
+              when 'stdout'
+                options.trace_output = $stdout
+              when 'stderr', nil
+                options.trace_output = $stderr
+              else
+                fail CommandLineOptionError, "Unrecognized --backtrace option '#{value}'"
+              end
             }
           ],
           ['--classic-namespace', '-C', "Put Task and FileTask in the top level namespace",
@@ -422,10 +437,20 @@ module Rake
               select_tasks_to_show :tasks, value, options
             }
           ],
-          ['--trace', '-t', "Turn on invoke/execute tracing, enable full backtrace.",
+          ['--trace', '-t [OUT]', "Turn on invoke/execute tracing, enable full backtrace.",
             lambda { |value|
               options.trace = true
               options.backtrace = true
+
+              case value
+              when / *stdout/
+                options.trace_output = $stdout
+              when / *stderr/, nil
+                options.trace_output = $stderr
+              else
+                fail CommandLineOptionError, "Unrecognized --trace option '#{value}'"
+              end
+
               Rake.verbose(true)
             }
           ],
@@ -462,6 +487,7 @@ module Rake
     # Read and handle the command line options.
     def handle_options
       options.rakelib = ['rakelib']
+      options.trace_output = $stderr
 
       OptionParser.new do |opts|
         opts.banner = "rake [-f rakefile] {options} targets..."

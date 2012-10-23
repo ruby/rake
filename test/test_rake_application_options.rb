@@ -213,17 +213,82 @@ class TestRakeApplicationOptions < Rake::TestCase
     flags('--trace', '-t') do |opts|
       assert opts.trace, "should enable trace option"
       assert opts.backtrace, "should enabled backtrace option"
+      assert_equal $stderr, opts.trace_output
       assert Rake::FileUtilsExt.verbose_flag
       assert ! Rake::FileUtilsExt.nowrite_flag
     end
   end
 
+  def test_trace_with_stdout
+    flags('--trace=stdout', '-tstdout', '-t stdout') do |opts|
+      assert opts.trace, "should enable trace option"
+      assert opts.backtrace, "should enabled backtrace option"
+      assert_equal $stdout, opts.trace_output
+      assert Rake::FileUtilsExt.verbose_flag
+      assert ! Rake::FileUtilsExt.nowrite_flag
+    end
+  end
+
+  def test_trace_with_error
+    flags('--trace=stdout', '-tstdout', '-t stdout') do |opts|
+      assert opts.trace, "should enable trace option"
+      assert opts.backtrace, "should enabled backtrace option"
+      assert_equal $stdout, opts.trace_output
+      assert Rake::FileUtilsExt.verbose_flag
+      assert ! Rake::FileUtilsExt.nowrite_flag
+    end
+  end
+
+  def test_trace_with_stderr
+    flags('--trace=stderr', '-tstderr', '-t stderr') do |opts|
+      assert opts.trace, "should enable trace option"
+      assert opts.backtrace, "should enabled backtrace option"
+      assert_equal $stderr, opts.trace_output
+      assert Rake::FileUtilsExt.verbose_flag
+      assert ! Rake::FileUtilsExt.nowrite_flag
+    end
+  end
+
+  def test_trace_with_error
+    ex = assert_raises(Rake::CommandLineOptionError) do
+      flags('--trace=xyzzy') do |opts| end
+    end
+    assert_match(/un(known|recognized).*\btrace\b.*xyzzy/i, ex.message)
+  end
+
+
   def test_backtrace
     flags('--backtrace') do |opts|
       assert opts.backtrace, "should enable backtrace option"
+      assert_equal $stderr, opts.trace_output
       assert ! opts.trace, "should not enable trace option"
       assert ! Rake::FileUtilsExt.verbose_flag
     end
+  end
+
+  def test_backtrace_with_stdout
+    flags('--backtrace=stdout') do |opts|
+      assert opts.backtrace, "should enable backtrace option"
+      assert_equal $stdout, opts.trace_output
+      assert ! opts.trace, "should not enable trace option"
+      assert ! Rake::FileUtilsExt.verbose_flag
+    end
+  end
+
+  def test_backtrace_with_stderr
+    flags('--backtrace=stderr') do |opts|
+      assert opts.backtrace, "should enable backtrace option"
+      assert_equal $stderr, opts.trace_output
+      assert ! opts.trace, "should not enable trace option"
+      assert ! Rake::FileUtilsExt.verbose_flag
+    end
+  end
+
+  def test_backtrace_with_error
+    ex = assert_raises(Rake::CommandLineOptionError) do
+      flags('--backtrace=xyzzy') do |opts| end
+    end
+    assert_match(/un(known|recognized).*\bbacktrace\b.*xyzzy/i, ex.message)
   end
 
   def test_trace_rules

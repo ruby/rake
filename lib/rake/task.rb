@@ -158,7 +158,7 @@ module Rake
       new_chain = InvocationChain.append(self, invocation_chain)
       @lock.synchronize do
         if application.options.trace
-          $stderr.puts "** Invoke #{name} #{format_trace_flags}"
+          application.trace "** Invoke #{name} #{format_trace_flags}"
         end
         return if @already_invoked
         @already_invoked = true
@@ -198,11 +198,11 @@ module Rake
     def execute(args=nil)
       args ||= EMPTY_TASK_ARGS
       if application.options.dryrun
-        $stderr.puts "** Execute (dry run) #{name}"
+        application.trace "** Execute (dry run) #{name}"
         return
       end
       if application.options.trace
-        $stderr.puts "** Execute #{name}"
+        application.trace "** Execute #{name}"
       end
       application.enhance_with_matching_rule(name) if @actions.empty?
       @actions.each do |act|
