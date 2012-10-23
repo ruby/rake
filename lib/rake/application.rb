@@ -417,6 +417,11 @@ module Rake
               options.silent = true
             }
           ],
+          ['--suppress-backtrace PATTERN', "Suppress backtrace lines matching regexp PATTERN. Ignored if --trace is on.",
+            lambda { |value|
+              options.suppress_backtrace_pattern = Regexp.new(value)
+            }
+          ],
           ['--system',  '-g',
             "Using system wide (global) rakefiles (usually '~/.rake/*.rake').",
             lambda { |value| options.load_system = true }
