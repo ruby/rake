@@ -126,8 +126,8 @@ module Rake
       @threads.dup
     end
     
-    NOT_SET = Object.new.freeze
-    FIXNUM_MAX = (2**(0.size * 8 - 2) - 1) # FIXNUM_MAX
+    NOT_SET = Object.new.freeze # :nodoc:
+    FIXNUM_MAX = (2**(0.size * 8 - 2) - 1) # :nodoc:
   end
   
 end
