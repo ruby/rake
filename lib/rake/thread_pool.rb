@@ -14,7 +14,7 @@ module Rake
       @queue = Queue.new
       @join_cond = @threads_mon.new_cond
     end
-    
+
     # Creates a future executed by the +ThreadPool+.
     # The args are passed to the block when executing (similarly to <tt>Thread#new</tt>)
     # The return value is an object representing a future which has been created and
@@ -34,7 +34,7 @@ module Rake
         unless promise_result.equal?(NOT_SET) && promise_error.equal?(NOT_SET)
           return promise_error.equal?(NOT_SET) ? promise_result : raise(promise_error)
         end
-        
+
         # try to get the lock and execute the promise, otherwise, sleep.
         if promise_mutex.try_lock
           if promise_result.equal?(NOT_SET) && promise_error.equal?(NOT_SET)
@@ -75,20 +75,20 @@ module Rake
       start_thread
       promise
     end
-    
+
     # Waits until the queue of futures is empty and all threads have exited.
     def join
       @threads_mon.synchronize do
         begin
             @join_cond.wait unless @threads.empty?
         rescue Exception => e
-          STDERR.puts e
-          STDERR.print "Queue contains #{@queue.size} items. Thread pool contains #{@threads.count} threads\n"
-          STDERR.print "Current Thread #{Thread.current} status = #{Thread.current.status}\n"
-          STDERR.puts e.backtrace.join("\n")
+          $stderr.puts e
+          $stderr.print "Queue contains #{@queue.size} items. Thread pool contains #{@threads.count} threads\n"
+          $stderr.print "Current Thread #{Thread.current} status = #{Thread.current.status}\n"
+          $stderr.puts e.backtrace.join("\n")
           @threads.each do |t|
-            STDERR.print "Thread #{t} status = #{t.status}\n"
-            STDERR.puts t.backtrace.join("\n") if t.respond_to? :backtrace
+            $stderr.print "Thread #{t} status = #{t.status}\n"
+            $stderr.puts t.backtrace.join("\n") if t.respond_to? :backtrace
           end
           raise e
         end
@@ -119,18 +119,18 @@ module Rake
         end
       end
     end
-    
+
     # for testing only
-    
+
     def __queue__ # :nodoc:
       @queue
     end
-    
+
     def __threads__ # :nodoc:
       @threads.dup
     end
-    
+
     NOT_SET = Object.new.freeze # :nodoc:
   end
-  
+
 end
