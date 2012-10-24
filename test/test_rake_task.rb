@@ -249,17 +249,17 @@ class TestRakeTask < Rake::TestCase
       sleep 0.02
       mx.synchronize{ result << t.name }
     end
-    
+
     t_b = task(:b) do |t|
       mx.synchronize{ result << t.name }
     end
-    
+
     t_c = task(:c => [:a,:b]) do |t|
       mx.synchronize{ result << t.name }
     end
 
     t_c.invoke
-    
+
     # task should always run in order
     assert_equal ['a', 'b', 'c'], result
 
