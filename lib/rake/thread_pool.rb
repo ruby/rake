@@ -16,11 +16,13 @@ module Rake
     end
 
     # Creates a future executed by the +ThreadPool+.
-    # The args are passed to the block when executing (similarly to <tt>Thread#new</tt>)
-    # The return value is an object representing a future which has been created and
-    # added to the queue in the pool. Sending <tt>#value</tt> to the object will sleep
-    # the current thread until the future is finished and will return the result (or
-    # raise an exception thrown from the future)
+    #
+    # The args are passed to the block when executing (similarly to
+    # <tt>Thread#new</tt>) The return value is an object representing
+    # a future which has been created and added to the queue in the
+    # pool. Sending <tt>#value</tt> to the object will sleep the
+    # current thread until the future is finished and will return the
+    # result (or raise an exception thrown from the future)
     def future(*args,&block)
       # capture the local args for the block (like Thread#start)
       local_args = args.collect { |a| begin; a.dup; rescue; a; end }
@@ -48,10 +50,11 @@ module Rake
           end
           promise_mutex.unlock
         else
-          # Even if we didn't get the lock, we need to sleep until the promise has
-          # finished executing. If, however, the current thread is part of the thread
-          # pool, we need to free up a new thread in the pool so there will
-          # always be a thread doing work.
+          # Even if we didn't get the lock, we need to sleep until the
+          # promise has finished executing. If, however, the current
+          # thread is part of the thread pool, we need to free up a
+          # new thread in the pool so there will always be a thread
+          # doing work.
 
           wait_for_promise = lambda { promise_mutex.synchronize{} }
 
@@ -103,10 +106,10 @@ module Rake
         @threads << Thread.new do
           begin
             while @threads.count <= @max_thread_count && !@queue.empty? do
-              # Even though we just asked if the queue was empty,
-              # it still could have had an item which by this statement is now gone.
-              # For this reason we pass true to Queue#deq because we will sleep
-              # indefinitely if it is empty.
+              # Even though we just asked if the queue was empty, it
+              # still could have had an item which by this statement
+              # is now gone. For this reason we pass true to Queue#deq
+              # because we will sleep indefinitely if it is empty.
               @queue.deq(true).call
             end
           rescue ThreadError # this means the queue is empty
