@@ -169,6 +169,7 @@ module Rake
     #    Rake.application.deprecate("import", "Rake.import", caller.first)
     #
     def deprecate(old_usage, new_usage, call_site)
+      fail "GONE"
       return if options.ignore_deprecate
       $stderr.puts "WARNING: '#{old_usage}' is deprecated.  " +
         "Please use '#{new_usage}' instead.\n" +
@@ -321,12 +322,6 @@ module Rake
             lambda { |value|
               options.backtrace = true
               select_trace_output(options, 'backtrace', value)
-            }
-          ],
-          ['--classic-namespace', '-C', "Put Task and FileTask in the top level namespace",
-            lambda { |value|
-              require 'rake/classic_namespace'
-              options.classic_namespace = true
             }
           ],
           ['--comments', "Show commented tasks only",
@@ -507,16 +502,6 @@ module Rake
         standard_rake_options.each { |args| opts.on(*args) }
         opts.environment('RAKEOPT')
       end.parse!
-
-      # If class namespaces are requested, set the global options
-      # according to the values in the options structure.
-      if options.classic_namespace
-        $show_tasks = options.show_tasks
-        $show_prereqs = options.show_prereqs
-        $trace = options.trace
-        $dryrun = options.dryrun
-        $silent = options.silent
-      end
     end
 
     # Similar to the regular Ruby +require+ command, but will check
@@ -569,7 +554,6 @@ module Rake
         @rakefile = rakefile
         Dir.chdir(location)
         print_rakefile_directory(location)
-        $rakefile = @rakefile if options.classic_namespace
         Rake.load_rakefile(File.expand_path(@rakefile)) if @rakefile && @rakefile != ''
         options.rakelib.each do |rlib|
           glob("#{rlib}/*.rake") do |name|
@@ -641,18 +625,6 @@ module Rake
         loader.load(fn)
         @imported << fn
       end
-    end
-
-    # Warn about deprecated use of top level constant names.
-    def const_warning(const_name)
-      @const_warning ||= false
-      if ! @const_warning
-        $stderr.puts %{WARNING: Deprecated reference to top-level constant '#{const_name}' } +
-          %{found at: #{rakefile_location}} # '
-        $stderr.puts %{    Use --classic-namespace on rake command}
-        $stderr.puts %{    or 'require "rake/classic_namespace"' in Rakefile}
-      end
-      @const_warning = true
     end
 
     def rakefile_location(backtrace=caller)

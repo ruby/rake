@@ -32,7 +32,6 @@ module Rake
       Rake::Task.define_task(*args, &block)
     end
 
-
     # Declare a file task.
     #
     # Example:
@@ -147,33 +146,8 @@ module Rake
         Rake.application.add_import(fn)
       end
     end
-
   end
-
-  DeprecatedCommands = Object.new.extend(DSL)
-
-  module DeprecatedObjectDSL # :nodoc:
-    DSL.private_instance_methods(false).each do |name|
-      line = __LINE__+1
-      class_eval %{
-        def #{name}(*args, &block)
-          unless Rake.application.options.ignore_deprecate
-            unless @rake_dsl_warning
-              $stderr.puts "WARNING: Global access to Rake DSL methods is deprecated.  Please include"
-              $stderr.puts "    ...  Rake::DSL into classes and modules which use the Rake DSL methods."
-              @rake_dsl_warning = true
-            end
-            $stderr.puts "WARNING: DSL method \#{self.class}##{name} called at \#{caller.first}"
-          end
-          Rake::DeprecatedCommands.send(:#{name}, *args, &block)
-        end
-        private :#{name}
-      }, __FILE__, line
-    end
-  end unless defined? Rake::REDUCE_COMPAT
-
   extend FileUtilsExt
 end
 
 self.extend Rake::DSL
-include Rake::DeprecatedObjectDSL unless defined? Rake::REDUCE_COMPAT

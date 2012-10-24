@@ -9,13 +9,6 @@ class TestRakeApplication < Rake::TestCase
     @app.options.rakelib = []
   end
 
-  def test_constant_warning
-    _, err = capture_io do @app.instance_eval { const_warning("Task") } end
-    assert_match(/warning/i, err)
-    assert_match(/deprecated/i, err)
-    assert_match(/Task/i, err)
-  end
-
   def test_display_tasks
     @app.options.show_tasks = :tasks
     @app.options.show_task_pattern = //
@@ -408,15 +401,6 @@ class TestRakeApplication < Rake::TestCase
     ARGV.clear
   end
 
-  def test_deprecation_message
-    _, err = capture_io do
-      @app.deprecate("a", "b", "c")
-    end
-    assert_match(/'a' is deprecated/i, err)
-    assert_match(/use 'b' instead/i, err)
-    assert_match(/at c$/i, err)
-  end
-
   def test_standard_exception_handling_invalid_option
     out, err = capture_io do
       e = assert_raises SystemExit do
@@ -498,4 +482,3 @@ class TestRakeApplication < Rake::TestCase
   end
 
 end
-

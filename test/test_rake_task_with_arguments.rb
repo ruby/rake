@@ -33,13 +33,11 @@ class TestRakeTaskWithArguments < Rake::TestCase
     assert_equal ["pre"], t.prerequisites
   end
 
-  def test_name_args_and_explicit_needs
-    ignore_deprecations do
-      t = task(:t, :x, :y, :needs => [:pre])
-      assert_equal "t", t.name
-      assert_equal [:x, :y], t.arg_names
-      assert_equal ["pre"], t.prerequisites
-    end
+  def test_name_args_and_prereqs
+    t = task(:t, [:x, :y] => [:pre])
+    assert_equal "t", t.name
+    assert_equal [:x, :y], t.arg_names
+    assert_equal ["pre"], t.prerequisites
   end
 
   def test_illegal_keys_in_task_name_hash
@@ -170,4 +168,3 @@ class TestRakeTaskWithArguments < Rake::TestCase
     # HACK no assertions
   end
 end
-

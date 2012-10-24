@@ -72,7 +72,6 @@ module Rake
     #
     #   task :t
     #   task :t, [:a]
-    #   task :t, :a                 (deprecated)
     #
     def resolve_args_without_dependencies(args)
       task_name = args.shift
@@ -92,8 +91,6 @@ module Rake
     #
     #   task :t => [:d]
     #   task :t, [a] => [:d]
-    #   task :t, :needs => [:d]                 (deprecated)
-    #   task :t, :a, :needs => [:d]             (deprecated)
     #
     def resolve_args_with_dependencies(args, hash) # :nodoc:
       fail "Task Argument Error" if hash.size != 1
@@ -101,14 +98,6 @@ module Rake
       if args.empty?
         task_name = key
         arg_names = []
-        deps = value
-      elsif key == :needs
-        Rake.application.deprecate(
-          "task :t, arg, :needs => [deps]",
-          "task :t, [args] => [deps]",
-          caller.detect { |c| c !~ /\blib\/rake\b/ })
-        task_name = args.shift
-        arg_names = args
         deps = value
       else
         task_name = args.shift
