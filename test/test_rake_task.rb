@@ -243,8 +243,8 @@ class TestRakeTask < Rake::TestCase
 
   def test_always_multitask
     mx = Mutex.new
-    result = ""
-    
+    result = []
+
     t_a = task(:a) do |t|
       sleep 0.02
       mx.synchronize{ result << t.name }
@@ -261,7 +261,7 @@ class TestRakeTask < Rake::TestCase
     t_c.invoke
     
     # task should always run in order
-    assert_equal 'abc', result
+    assert_equal ['a', 'b', 'c'], result
 
     [t_a, t_b, t_c].each { |t| t.reenable }
     result.clear
@@ -270,7 +270,7 @@ class TestRakeTask < Rake::TestCase
     t_c.invoke
 
     # with multitask, task 'b' should grab the mutex first
-    assert_equal 'bac', result
+    assert_equal ['b', 'a', 'c'], result
   end
 
   def test_investigation_output
