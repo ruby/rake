@@ -1,11 +1,11 @@
 module Rake
   module Version # :nodoc: all
     NUMBERS = [
-      MAJOR = 0,
-      MINOR = 9,
-      BUILD = 3,
+      MAJOR = 10,
+      MINOR = 0,
+      BUILD = 0,
       'beta',
-      BETA = 2,
+      BETA = 1,
     ]
   end
   VERSION = Version::NUMBERS.join('.')
