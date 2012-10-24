@@ -49,6 +49,9 @@ Options are:
 [<tt>--libdir</tt> _directory_  (-I)]
     Add _directory_ to the list of directories searched for require.
 
+[<tt>--multitask</tt> (-m)]
+    Treat all tasks as multitasks. ('make/drake' semantics)
+
 [<tt>--nosearch</tt>  (-N)]
     Do not search for a Rakefile in parent directories.
 

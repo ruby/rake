@@ -34,6 +34,7 @@ class TestRakeApplicationOptions < Rake::TestCase
     assert_nil opts.dryrun
     assert_nil opts.ignore_system
     assert_nil opts.load_system
+    assert_nil opts.always_multitask
     assert_nil opts.nosearch
     assert_equal ['rakelib'], opts.rakelib
     assert_nil opts.show_prereqs
@@ -130,6 +131,12 @@ class TestRakeApplicationOptions < Rake::TestCase
     end
   ensure
     $:.delete('xx')
+  end
+
+  def test_multitask
+    flags('--multitask', '-m') do |opts|
+      assert_equal opts.always_multitask, true
+    end
   end
 
   def test_rakefile
