@@ -111,7 +111,7 @@ module Rake
     end
 
     def thread_pool
-      @thread_pool ||= ThreadPool.new options.thread_pool_size
+      @thread_pool ||= ThreadPool.new(options.thread_pool_size||FIXNUM_MAX)
     end
 
     # private ----------------------------------------------------------------
@@ -660,5 +660,9 @@ module Rake
 
       backtrace.find { |str| str =~ re } || ''
     end
+
+  private
+    FIXNUM_MAX = (2**(0.size * 8 - 2) - 1) # :nodoc:
+    
   end
 end

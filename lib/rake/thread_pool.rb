@@ -6,21 +6,21 @@ module Rake
   class ThreadPool
 
     # Creates a ThreadPool object.
-    # The parameter is the size of the pool. By default, the pool uses unlimited threads.
-    def initialize(thread_count=nil)
-      @max_thread_count = [(thread_count||FIXNUM_MAX), 0].max
+    # The parameter is the size of the pool.
+    def initialize(thread_count)
+      @max_thread_count = [thread_count, 0].max
       @threads = Set.new
       @threads_mon = Monitor.new
       @queue = Queue.new
       @join_cond = @threads_mon.new_cond
     end
     
-    # Creates a future to be executed in the ThreadPool.
-    # The args are passed to the block when executing (similarly to Thread#new)
-    # The return value is a Proc which may or may not be already executing in
-    # another thread. Calling Proc#call will sleep the current thread until
-    # the future is finished and will return the result (or raise an Exception
-    # thrown from the future)
+    # Creates a future executed by the +ThreadPool+.
+    # The args are passed to the block when executing (similarly to <tt>Thread#new</tt>)
+    # The return value is an object representing a future which has been created and
+    # added to the queue in the pool. Sending <tt>#value</tt> to the object will sleep
+    # the current thread until the future is finished and will return the result (or
+    # raise an exception thrown from the future)
     def future(*args,&block)
       # capture the local args for the block (like Thread#start)
       local_args = args.collect { |a| begin; a.dup; rescue; a; end }
@@ -67,6 +67,10 @@ module Rake
         promise_error.equal?(NOT_SET) ? promise_result : raise(promise_error)
       end
 
+      def promise.value
+        call
+      end
+
       @queue.enq promise
       start_thread
       promise
@@ -92,7 +96,7 @@ module Rake
     end
 
   private
-    def start_thread
+    def start_thread # :nodoc:
       @threads_mon.synchronize do
         next unless @threads.count < @max_thread_count
 
@@ -118,16 +122,15 @@ module Rake
     
     # for testing only
     
-    def __queue__
+    def __queue__ # :nodoc:
       @queue
     end
     
-    def __threads__
+    def __threads__ # :nodoc:
       @threads.dup
     end
     
-    NOT_SET = Object.new.freeze
-    FIXNUM_MAX = (2**(0.size * 8 - 2) - 1) # FIXNUM_MAX
+    NOT_SET = Object.new.freeze # :nodoc:
   end
   
 end
