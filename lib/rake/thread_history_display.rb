@@ -1,6 +1,9 @@
 module Rake
 
   class ThreadHistoryDisplay
+    attr_reader :stats, :items, :threads
+    private :stats, :items, :threads
+
     def initialize(stats)
       @stats   = stats
       @items   = { :_seq_ =>  1  }
@@ -37,8 +40,6 @@ module Rake
         hash[key] = value
       end
     end
-
-    attr_reader :stats, :items, :threads
   end
 
 end
