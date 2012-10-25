@@ -175,5 +175,8 @@ module Rake
   extend FileUtilsExt
 end
 
+# Extend the main object with the DSL commands. This allows top-level
+# calls to task, etc. to work from a Rakefile without polluting the
+# object inheritance tree.
 self.extend Rake::DSL
 include Rake::DeprecatedObjectDSL unless defined? Rake::REDUCE_COMPAT
