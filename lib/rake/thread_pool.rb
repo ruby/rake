@@ -3,16 +3,21 @@ require 'set'
 
 module Rake
 
-  class ThreadPool
+  class ThreadPool              # :nodoc: all
 
     # Creates a ThreadPool object.
     # The parameter is the size of the pool.
     def initialize(thread_count)
-      @max_thread_count = [thread_count, 0].max
+      @max_active_threads = [thread_count, 0].max
       @threads = Set.new
       @threads_mon = Monitor.new
       @queue = Queue.new
       @join_cond = @threads_mon.new_cond
+
+      @history_start_time = nil
+      @history = []
+      @history_mon = Monitor.new
+      @total_threads_in_play = 0
     end
 
     # Creates a future executed by the +ThreadPool+.
@@ -56,15 +61,19 @@ module Rake
           # new thread in the pool so there will always be a thread
           # doing work.
 
-          wait_for_promise = lambda { promise_mutex.synchronize{} }
+          wait_for_promise = lambda {
+            stat :waiting, item_id: promise.object_id
+            promise_mutex.synchronize {}
+            stat :continue, item_id: promise.object_id
+          }
 
           unless @threads_mon.synchronize { @threads.include? Thread.current }
             wait_for_promise.call
           else
-            @threads_mon.synchronize { @max_thread_count += 1 }
+            @threads_mon.synchronize { @max_active_threads += 1 }
             start_thread
             wait_for_promise.call
-            @threads_mon.synchronize { @max_thread_count -= 1 }
+            @threads_mon.synchronize { @max_active_threads -= 1 }
           end
         end
         promise_error.equal?(NOT_SET) ? promise_result : raise(promise_error)
@@ -75,6 +84,7 @@ module Rake
       end
 
       @queue.enq promise
+      stat :item_queued, item_id: promise.object_id
       start_thread
       promise
     end
@@ -98,29 +108,69 @@ module Rake
       end
     end
 
-  private
+    # Enable the gathering of history events.
+    def gather_history          #:nodoc:
+      @history_start_time = Time.now if @history_start_time.nil?
+    end
+
+    # Return a array of history events for the thread pool.
+    #
+    # History gathering must be enabled to be able to see the events
+    # (see #gather_history). Best to call this when the job is
+    # complete (i.e. after ThreadPool#join is called).
+    def history                 # :nodoc:
+      @history_mon.synchronize { @history.dup }
+    end
+
+    # Return a hash of always collected statistics for the thread pool.
+    def statistics              #  :nodoc:
+      {
+        total_threads_in_play: @total_threads_in_play,
+        max_active_threads: @max_active_threads,
+      }
+    end
+
+    private
+
     def start_thread # :nodoc:
       @threads_mon.synchronize do
-        next unless @threads.count < @max_thread_count
+        next unless @threads.count < @max_active_threads
 
-        @threads << Thread.new do
+        t = Thread.new do
           begin
-            while @threads.count <= @max_thread_count && !@queue.empty? do
+            while @threads.count <= @max_active_threads && !@queue.empty? do
               # Even though we just asked if the queue was empty, it
               # still could have had an item which by this statement
               # is now gone. For this reason we pass true to Queue#deq
               # because we will sleep indefinitely if it is empty.
-              @queue.deq(true).call
+              block = @queue.deq(true)
+              stat :item_dequeued, item_id: block.object_id
+              block.call
             end
           rescue ThreadError # this means the queue is empty
           ensure
             @threads_mon.synchronize do
               @threads.delete Thread.current
+              stat :thread_deleted, thread_count: @threads.count, deleted_thread: Thread.current.object_id
               @join_cond.broadcast if @threads.empty?
             end
           end
         end
+        @threads << t
+        stat :thread_created, thread_count: @threads.count, new_thread: t.object_id
+        @total_threads_in_play = @threads.count if @threads.count > @total_threads_in_play
       end
+    end
+
+    def stat(event, data=nil) # :nodoc:
+      return if @history_start_time.nil?
+      info = {
+        event: event,
+        data: data,
+        time: (Time.now-@history_start_time),
+        thread: Thread.current.object_id,
+      }
+      @history_mon.synchronize { @history << info }
     end
 
     # for testing only

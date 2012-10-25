@@ -3,6 +3,7 @@ require 'optparse'
 
 require 'rake/task_manager'
 require 'rake/thread_pool'
+require 'rake/thread_history_display'
 require 'rake/win32'
 
 module Rake
@@ -66,8 +67,15 @@ module Rake
       standard_exception_handling do
         init
         load_rakefile
+        thread_pool.gather_history if options.job_stats == :history
         top_level
         thread_pool.join
+        if options.job_stats
+          stats = thread_pool.statistics
+          puts "Maximum active threads: #{stats[:max_active_threads]}"
+          puts "Total threads in play:  #{stats[:total_threads_in_play]}"
+        end
+        ThreadHistoryDisplay.new(thread_pool.history).show if options.job_stats == :history
       end
     end
 
@@ -110,7 +118,8 @@ module Rake
       @options ||= OpenStruct.new
     end
 
-    def thread_pool
+    # Return the thread pool used for multithreaded processing.
+    def thread_pool             # :nodoc:
       @thread_pool ||= ThreadPool.new(options.thread_pool_size||FIXNUM_MAX)
     end
 
@@ -366,6 +375,16 @@ module Rake
           ['--jobs',  '-j [NUMBER]',
             "Specifies the maximum number of tasks to execute in parallel. (default:2)",
             lambda { |value| options.thread_pool_size = [(value || 2).to_i,2].max }
+          ],
+          ['--job-stats [LEVEL]',
+            "Display job statistics. LEVEL=history displays a complete job list",
+            lambda { |value|
+              if value =~ /^history/i
+                options.job_stats = :history
+              else
+                options.job_stats = true
+              end
+            }
           ],
           ['--libdir', '-I LIBDIR', "Include LIBDIR in the search path for required modules.",
             lambda { |value| $:.push(value) }
