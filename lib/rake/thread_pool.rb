@@ -151,13 +151,13 @@ module Rake
           ensure
             @threads_mon.synchronize do
               @threads.delete Thread.current
-              stat :thread_deleted, thread_count: @threads.count, deleted_thread: Thread.current.object_id
+              stat :thread_deleted, deleted_thread: Thread.current.object_id, thread_count: @threads.count
               @join_cond.broadcast if @threads.empty?
             end
           end
         end
         @threads << t
-        stat :thread_created, thread_count: @threads.count, new_thread: t.object_id
+        stat :thread_created, new_thread: t.object_id, thread_count: @threads.count
         @total_threads_in_play = @threads.count if @threads.count > @total_threads_in_play
       end
     end
