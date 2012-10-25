@@ -13,6 +13,10 @@ module Rake
       @threads_mon = Monitor.new
       @queue = Queue.new
       @join_cond = @threads_mon.new_cond
+
+      @debug_time = nil
+      @stats = []
+      @stats_mon = Monitor.new
     end
     
     # Creates a future executed by the +ThreadPool+.
@@ -72,6 +76,7 @@ module Rake
       end
 
       @queue.enq promise
+      stat :item_queued
       start_thread
       promise
     end
@@ -107,17 +112,28 @@ module Rake
               # it still could have had an item which by this statement is now gone.
               # For this reason we pass true to Queue#deq because we will sleep
               # indefinitely if it is empty.
-              @queue.deq(true).call
+              block = @queue.deq(true)
+              stat :item_dequeued
+              block.call
             end
           rescue ThreadError # this means the queue is empty
           ensure
             @threads_mon.synchronize do
               @threads.delete Thread.current
+              stat :thread_deleted, thread_count:@threads.count
               @join_cond.broadcast if @threads.empty?
             end
           end
         end
+        
+        stat :thread_created, thread_count:@threads.count
       end
+    end
+    
+    def stat(event, data=nil) # :nodoc:
+      return if @debug_time.nil?
+      desc = {event:event,data:data,time:(Time.now-@debug_time),thread:Thread.current.to_s}
+      @stats_mon.synchronize{ @stats << desc }
     end
     
     # for testing only
@@ -128,6 +144,14 @@ module Rake
     
     def __threads__ # :nodoc:
       @threads.dup
+    end
+    
+    def __begin_stats__ #:nodoc:
+      @debug_time = Time.now if @debug_time.nil?
+    end
+    
+    def __stats__ # :nodoc:
+      @stats_mon.synchronize{ @stats.dup }
     end
     
     NOT_SET = Object.new.freeze # :nodoc:
