@@ -18,8 +18,8 @@ module Rake
         rename(stat[:data], :item_id, items)
         rename(stat[:data], :new_thread, threads)
         rename(stat[:data], :deleted_thread, threads)
-        printf("%8d %2s %-10s %s\n",
-          (stat[:time] * 100000).to_i,
+        printf("%8d %2s %-20s %s\n",
+          (stat[:time] * 1_000_000).round,
           stat[:thread],
           stat[:event],
           stat[:data].map { |k,v| "#{k}:#{v}" }.join(" "))
