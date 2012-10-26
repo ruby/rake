@@ -1,6 +1,6 @@
 module Rake
 
-  class ThreadHistoryDisplay
+  class ThreadHistoryDisplay    # :nodoc: all
     attr_reader :stats, :items, :threads
     private :stats, :items, :threads
 
