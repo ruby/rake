@@ -237,7 +237,7 @@ module Rake
     # Timestamp for this task.  Basic tasks return the current time for their
     # time stamp.  Other tasks can be more sophisticated.
     def timestamp
-      prerequisite_tasks.collect { |pre| pre.timestamp }.max || Time.now
+      Time.now
     end
 
     # Add a description to the task.  The description can consist of an option

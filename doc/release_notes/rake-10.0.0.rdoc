@@ -66,6 +66,16 @@ there are a number of features missing:
 * The deprecated <tt>rake/gempackagetask.rb</tt> library has been
   removed. Gem supplies its own package task now.
 
+There is one small behavioral change:
+
+* Non-file tasks now always report the current time as their time
+  stamp. This is different from the previous behavior where non-file
+  tasks reported current time only if there were no prerequisites, and
+  the max prerequisite timestamp otherwise. This lead to inconsistent
+  and surprising behavior when adding prerequisites to tasks that in
+  turn were prequisites to file tasks. The new behavior is more
+  consistent and predictable.
+
 == Changes (from 0.9.3)
 
 Since Rake 10 includes the changes from the last version of Rake 9,
