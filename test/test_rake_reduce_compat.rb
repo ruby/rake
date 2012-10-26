@@ -13,10 +13,6 @@ class TestRakeReduceCompat < Rake::TestCase
     rake task_name.to_s
   end
 
-  def invoke_reduce_compat(task_name)
-    rake "--reduce-compat", task_name.to_s
-  end
-
   def test_no_deprecated_dsl
     rakefile %q{
       task :check_task do
@@ -30,8 +26,5 @@ class TestRakeReduceCompat < Rake::TestCase
 
     assert_equal "nil", invoke_normal(:check_task).chomp
     assert_equal "nil", invoke_normal(:check_file).chomp
-
-    assert_equal "nil", invoke_reduce_compat(:check_task).chomp
-    assert_equal "nil", invoke_reduce_compat(:check_file).chomp
   end
 end

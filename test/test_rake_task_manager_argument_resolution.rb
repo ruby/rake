@@ -2,18 +2,6 @@ require File.expand_path('../helper', __FILE__)
 
 class TestRakeTaskManagerArgumentResolution < Rake::TestCase
 
-  def setup
-    super
-
-    Rake.application.options.ignore_deprecate = true
-  end
-
-  def teardown
-    Rake.application.options.ignore_deprecate = false
-
-    super
-  end
-
   def test_good_arg_patterns
     assert_equal [:t, [], []],       task(:t)
     assert_equal [:t, [], [:x]],     task(:t => :x)
