@@ -4,9 +4,9 @@
 
 Over the past several years I've been asked that question at
 conferences, panels and over twitter. Due to historical reasons (or
-maybe just plain laziness) Rake has been treating the second digit of
-the version as the major release number. So in my head Rake was
-already at version 9.
+maybe just plain laziness) Rake has (incorrectly) been treating the
+second digit of the version as the major release number. So in my head
+Rake was already at version 9.
 
 Well, it's time to fix things. This next version of Rake drops old,
 crufty, backwards compatibility hacks such as top level constants, DSL
