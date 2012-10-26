@@ -5,7 +5,7 @@ module Rake
       MINOR = 0,
       BUILD = 0,
       'beta',
-      BETA = 1,
+      BETA = 2,
     ]
   end
   VERSION = Version::NUMBERS.join('.')
