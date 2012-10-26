@@ -1,17 +1,59 @@
 = Rake 0.9.3 Released
 
-Rake version 0.9.3 is mainly bug fixes.
+Rake version 0.9.3 contains some new, backwards compatible features and
+a number of bug fixes.
 
 == Changes
 
-* The rake test loader now removes arguments it has processed.  Issue #51
-* Rake::TaskArguments now responds to #values_at
-* RakeFileUtils.verbose_flag = nil silences output the same as 0.8.7
-* Rake tests are now directory-independent
-* Rake tests are no longer require flexmock
-* Commands constant is no longer polluting top level namespace.
-* Show only the interesting portion of the backtrace by default (James M. Lawrence).
-* Added --reduce-compat optiont to remove backward compatible DSL hacks (James M. Lawrence).
+=== New Features
+
+* Multitask tasks now use a thread pool. Use -j to limit the number of
+  available threads.
+
+* Use -m to turn regular tasks into multitasks (use at your own risk).
+
+* You can now do "Rake.add_rakelib 'dir'" in your Rakefile to
+  programatically add rake task libraries.
+
+* You can specific backtrace suppression patterns (see
+  --supress-backtrace)
+
+* Directory tasks can now take prerequisites and actions
+
+* Use --backtrace to request a full backtrace without the task trace.
+
+* You can say "--backtrace=stdout" and "--trace=stdout" to route trace
+  output to standard output rather than standard error.
+
+* Optional 'phony' target (enable with 'require 'rake/phony'") for
+  special purpose builds.
+
+* Task#clear now clears task comments as well as actions and
+  prerequisites. Task#clear_comment will specifically target comments.
+
+* The --all option will force -T and -D to consider all the tasks,
+  with and without descriptions.
+
+=== Bug Fixes
+
+* Semi-colons in windows rakefile paths now work.
+
+* Improved Control-C support when invoking multiple test suites.
+
+* egrep method now reads files in text mode (better support for
+  Windows)
+
+* Better deprecation line number reporting.
+
+* The -W option now works with all tasks, whether they have a
+  description or not.
+
+* File globs in rake should not be sorted alphabetically, independent
+  of file system and platform.
+
+* Numerous internal improvements.
+
+* Documentation typos and fixes.
 
 == What is Rake
 
@@ -28,7 +70,7 @@ The easiest way to get and install rake is via RubyGems ...
 
 Otherwise, you can get it from the more traditional places:
 
-Home Page:: http://rake.rubyforge.org/
+Home Page:: http://github.com/jimweirich/rake
 Download::  http://rubyforge.org/project/showfiles.php?group_id=50
 GitHub::    git://github.com/jimweirich/rake.git
 
@@ -38,18 +80,23 @@ As usual, it was input from users that drove a alot of these changes. The
 following people either contributed patches, made suggestions or made
 otherwise helpful comments.  Thanks to ...
 
-* James M. Lawrence (quix)
-* Roger Pack
-* Cezary Baginski
-* Sean Scot August Moon
-* R.T. Lechow
-* Alex Chaffee
-* James Tucker
-* Matthias Lüdtke
-* Santiago Pastorino
+* Aaron Patterson
+* Dylan Smith
+* Jo Liss
+* Jonas Pfenniger
+* Kazuki Tsujimoto
+* Michael Bishop
+* Michael Elufimov
+* NAKAMURA Usaku
+* Ryan Davis
+* Sam Grönblom
+* Sam Phippen
+* Sergio Wong
+* Tay Ray Chuan
+* grosser
+* quix
 
-Also, bit thanks to Eric Hodel for assisting with getting this release
-out the door (where "assisting" includes, but is not by any means
-limited to, "pushing" me to get it done).
+Also, many thanks to Eric Hodel for assisting with getting this release
+out the door.
 
 -- Jim Weirich

@@ -11,12 +11,27 @@ Options are:
     during the execution of the <b>rake</b> command.  You can access
     the value by using ENV['<em>name</em>'].
 
+[<tt>--all</tt> (-A)]
+    Used in combination with the -T and -D options, will force
+    those options to show all the tasks, even the ones without comments.
+
+[<tt>--backtrace</tt> _output_ (-n)]
+    Enable a full backtrace (i.e. like --trace, but without the task
+    tracing details). The backtrace output will be directed to stderr
+    by default. If the options _output_ parameter is set to "stdout",
+    then the output will be directed to standard output.
+
 [<tt>--classic-namespace</tt> (-n)]
     Import the Task, FileTask, and FileCreateTask into the top-level
     scope to be compatible with older versions of Rake.  Alternatively
     you can include the line <code>require
     'rake/classic_namespace'</code> in your Rakefile to get the
     classic behavior.
+
+[<tt>--comments</tt>]
+    Used in combination with the -W options to force the output to
+    contain commented options only. This is the reverse of
+    <tt>--all</tt>.
 
 [<tt>--describe</tt> _pattern_ (-D)]
     Describe the tasks (matching optional PATTERN), then exit.
@@ -38,13 +53,26 @@ Options are:
     Display some help text and exit.
 
 [<tt>--jobs</tt> _number_  (-j)]
-    Specifies the maximum number of concurrent tasks. The suggested
-    value is equal to the number of CPUs.
-    
+    Specifies the number of active concurrent tasks used. The
+    suggested value is equal to the number of CPUs. The concurrent
+    tasks are used to execute the <tt>multitask</tt> prerequisites.
+    Also see the <tt>-m</tt> option which turns all tasks into
+    multitasks.
+
     Sample values:
      (no -j) : unlimited concurrent tasks (standard rake behavior)
      -j      : 2 concurrent tasks (exact number may change)
      -j 16   : 16 concurrent tasks
+
+[<tt>--job-stats</tt> _level_]
+
+    Display job statistics at the completion of the run. By default,
+    this will display the requested number of active tasks (from the
+    -j options) and the maximum number of tasks in play at any given
+    time.
+
+    If the optional _level_ is <tt>history</tt>, then a complete trace
+    of task history will be displayed on standard output.
 
 [<tt>--libdir</tt> _directory_  (-I)]
     Add _directory_ to the list of directories searched for require.
@@ -72,6 +100,16 @@ Options are:
 [<tt>--rakelibdir</tt> _rakelibdir_ (-R)]
     Auto-import any .rake files in RAKELIBDIR. (default is 'rakelib')
 
+[<tt>--reduce-compat</tt>]
+
+    Remove the DSL commands from the Object inheritance hierarchy and
+    do not define top level constants. This reduces the backwards
+    compatibility of Rake, but allows rake to be used with software
+    that would otherwise have conflicting definitions.
+
+    *NOTE:* The next major version of Rake will only be able to be run
+    in "reduce-compat" mode.
+
 [<tt>--require</tt> _name_ (-r)]
     Require _name_ before executing the Rakefile.
 
@@ -80,6 +118,11 @@ Options are:
 
 [<tt>--silent (-s)</tt>]
     Like --quiet, but also suppresses the 'in directory' announcement.
+
+[<tt>--suppress-backtrace _pattern_ </tt>]
+    Line matching the regular expression _pattern_ will be removed
+    from the backtrace output. Note that the --backtrace option is the
+    full backtrace without these lines suppressed.
 
 [<tt>--system</tt> (-g)]
     Use the system wide (global) rakefiles. The project Rakefile is
@@ -97,16 +140,6 @@ Options are:
     are defined using the "desc" command.  If a pattern is given, then
     only tasks matching the pattern are displayed.
 
-[<tt>--no-top-level-dsl</tt> (-X)]
-    Do not put the Rake DSL commands into the top level scope.
-
-[<tt>--top-level-dsl</tt>]
-    Put the Rake DSL commands into the top level scope (default).
-
-    NOTE: Although currently Rake defaults to its DSL in the top level
-    scope, the plan is to deprecate this in the future and default ot
-    having the DSL commands *not* appear in the top level scope.
-
 [<tt>--trace</tt> (-t)]
     Turn on invoke/execute tracing. Also enable full backtrace on
     errors.
@@ -119,7 +152,11 @@ Options are:
 
 [<tt>--where</tt> <em>pattern</em> (-W)]
     Display tasks that match <em>pattern</em> and the file and line
-    number where the task is defined.
+    number where the task is defined. By default this option will
+    display all tasks, not just the tasks that have descriptions.
+
+[<tt>--no-deprecation-warnings</tt> (-W)]
+    Do not display the deprecation warnings.
 
 In addition, any command line option of the form
 <em>VAR</em>=<em>VALUE</em> will be added to the environment hash
