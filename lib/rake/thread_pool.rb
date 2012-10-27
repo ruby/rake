@@ -119,7 +119,7 @@ module Rake
     # (see #gather_history). Best to call this when the job is
     # complete (i.e. after ThreadPool#join is called).
     def history                 # :nodoc:
-      @history_mon.synchronize { @history.dup }
+      @history_mon.synchronize { @history.dup }.sort_by { |item| item[:time] }
     end
 
     # Return a hash of always collected statistics for the thread pool.
