@@ -52,8 +52,8 @@ module Rake
 
     # Declare a file creation task.
     # (Mainly used for the directory command).
-    def file_create(args, &block)
-      Rake::FileCreationTask.define_task(args, &block)
+    def file_create(*args, &block)
+      Rake::FileCreationTask.define_task(*args, &block)
     end
 
     # Declare a set of files tasks to create the given directories on
@@ -62,12 +62,15 @@ module Rake
     # Example:
     #   directory "testdata/doc"
     #
-    def directory(dir)
+    def directory(*args, &block)
+      result = file_create(*args, &block)
+      dir, _ = *Rake.application.resolve_args(args)
       Rake.each_dir_parent(dir) do |d|
         file_create d do |t|
           mkdir_p t.name if ! File.exist?(t.name)
         end
       end
+      result
     end
 
     # Declare a task that performs its prerequisites in
@@ -172,5 +175,8 @@ module Rake
   extend FileUtilsExt
 end
 
+# Extend the main object with the DSL commands. This allows top-level
+# calls to task, etc. to work from a Rakefile without polluting the
+# object inheritance tree.
 self.extend Rake::DSL
 include Rake::DeprecatedObjectDSL unless defined? Rake::REDUCE_COMPAT

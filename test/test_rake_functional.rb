@@ -417,11 +417,26 @@ class TestRakeFunctional < Rake::TestCase
     assert_equal "1\n", @out
   end
 
+  def can_detect_signals?
+    system "ruby -e 'Process.kill \"TERM\", $$'"
+    status = $?
+    if @verbose
+      puts "    SIG status = #{$?.inspect}"
+      puts "    SIG status.respond_to?(:signaled?) = #{$?.respond_to?(:signaled?).inspect}"
+      puts "    SIG status.signaled? = #{status.signaled?}" if status.respond_to?(:signaled?)
+    end
+    status.respond_to?(:signaled?) && status.signaled?
+  end
+
   def test_signal_propagation_in_tests
-    rakefile_test_signal
-    rake
-    assert_match(/ATEST/, @out)
-    refute_match(/BTEST/, @out)
+    if can_detect_signals?
+      rakefile_test_signal
+      rake
+      assert_match(/ATEST/, @out)
+      refute_match(/BTEST/, @out)
+    else
+      puts "\nWARNING: Signal detect seems broken on this system (#{__FILE__}:#{__LINE__})"
+    end
   end
 
   private
