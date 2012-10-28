@@ -35,46 +35,40 @@ module Rake
       promise_mutex = Mutex.new
       promise_result = promise_error = NOT_SET
 
-      # (promise code builds on Ben Lavender's public-domain 'promise' gem)
-      promise = lambda do
-        # return immediately if the future has been executed
-        unless promise_result.equal?(NOT_SET) && promise_error.equal?(NOT_SET)
-          return promise_error.equal?(NOT_SET) ? promise_result : raise(promise_error)
+      # this is our id because it is what we add to the queue
+      promise_worker = nil
+
+      promise_core = lambda do
+        # can't execute more than once
+        next unless promise_result.equal?(NOT_SET) && promise_error.equal?(NOT_SET)
+        stat :promise_will_execute, :item_id => promise_worker.object_id
+        begin
+          promise_result = block.call(*local_args)
+        rescue Exception => e
+          promise_error = e
         end
+        stat :promise_did_execute, :item_id => promise_worker.object_id
+        # free up these items for the GC
+        local_args = block = nil
+      end
 
-        # try to get the lock and execute the promise, otherwise, sleep.
-        if promise_mutex.try_lock
-          if promise_result.equal?(NOT_SET) && promise_error.equal?(NOT_SET)
-            #execute the promise
-            begin
-              promise_result = block.call(*local_args)
-            rescue Exception => e
-              promise_error = e
-            end
-            block = local_args = nil # GC can now clean these up
-          end
-          promise_mutex.unlock
-        else
-          # Even if we didn't get the lock, we need to sleep until the
-          # promise has finished executing. If, however, the current
-          # thread is part of the thread pool, we need to free up a
-          # new thread in the pool so there will always be a thread
-          # doing work.
+      promise_worker = lambda do
+        # assume someone else is executing this if the lock
+        # has been obtained elsewhere
+         next if !promise_mutex.try_lock
+         promise_core.call
+         promise_mutex.unlock
+      end
 
-          wait_for_promise = lambda {
-            stat :waiting, :item_id => promise.object_id
-            promise_mutex.synchronize {}
-            stat :continue, :item_id => promise.object_id
-          }
-
-          unless @threads_mon.synchronize { @threads.include? Thread.current }
-            wait_for_promise.call
-          else
-            @threads_mon.synchronize { @max_active_threads += 1 }
-            start_thread
-            wait_for_promise.call
-            @threads_mon.synchronize { @max_active_threads -= 1 }
-          end
+      promise = lambda do
+        # (promise code builds on Ben Lavender's public-domain 'promise' gem)
+        # Return the value if it's been called and
+        # ensure it doesn't return until the result
+        # has been calculated
+        if promise_result.equal?(NOT_SET) && promise_error.equal?(NOT_SET)
+          stat :will_wait_on_promise, :item_id => promise_worker.object_id
+          promise_mutex.synchronize { promise_core.call }
+          stat :did_wait_on_promise, :item_id => promise_worker.object_id
         end
         promise_error.equal?(NOT_SET) ? promise_result : raise(promise_error)
       end
@@ -83,8 +77,8 @@ module Rake
         call
       end
 
-      @queue.enq promise
-      stat :item_queued, :item_id => promise.object_id
+      @queue.enq promise_worker
+      stat :item_queued, :item_id => promise_worker.object_id
       start_thread
       promise
     end
@@ -126,11 +120,29 @@ module Rake
     def statistics              #  :nodoc:
       {
         :total_threads_in_play => @total_threads_in_play,
-        :max_active_threads    => @max_active_threads,
+        :max_active_threads => @max_active_threads,
       }
     end
 
     private
+
+    # processes one item on the queue. Returns true if there was an
+    # item to process, false if there was no item
+    def process_queue_item      #:nodoc:
+      return false if @queue.empty?
+
+      # Even though we just asked if the queue was empty, it
+      # still could have had an item which by this statement
+      # is now gone. For this reason we pass true to Queue#deq
+      # because we will sleep indefinitely if it is empty.
+      block = @queue.deq(true)
+      stat :item_dequeued, :item_id => block.object_id
+      block.call
+      return true
+      
+      rescue ThreadError # this means the queue is empty
+      false
+    end
 
     def start_thread # :nodoc:
       @threads_mon.synchronize do
@@ -138,16 +150,9 @@ module Rake
 
         t = Thread.new do
           begin
-            while @threads.count <= @max_active_threads && !@queue.empty? do
-              # Even though we just asked if the queue was empty, it
-              # still could have had an item which by this statement
-              # is now gone. For this reason we pass true to Queue#deq
-              # because we will sleep indefinitely if it is empty.
-              block = @queue.deq(true)
-              stat :item_dequeued, :item_id => block.object_id
-              block.call
+            while @threads.count <= @max_active_threads
+              break unless process_queue_item
             end
-          rescue ThreadError # this means the queue is empty
           ensure
             @threads_mon.synchronize do
               @threads.delete Thread.current

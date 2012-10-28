@@ -88,29 +88,6 @@ class TestRakeTestThreadPool < Rake::TestCase
 
   end
 
-  def test_pool_always_has_max_threads_doing_work
-    # here we need to test that even if some threads are halted, there
-    # are always at least max_threads that are not sleeping.
-    pool = ThreadPool.new(2)
-    initial_sleep_time = 0.2
-    future1 = pool.future { sleep initial_sleep_time }
-    dependent_futures = 5.times.collect { pool.future{ future1.value } }
-    future2 = pool.future { sleep initial_sleep_time }
-    future3 = pool.future { sleep 0.01 }
-
-    sleep initial_sleep_time / 2.0 # wait for everything to queue up
-
-    # at this point, we should have 5 threads sleeping depending on future1, and
-    # two threads doing work on future1 and future 2.
-    assert_equal pool.__send__(:__threads__).count, 7
-
-    # future 3 is in the queue because there aren't enough active threads to work on it.
-    assert_equal pool.__send__(:__queue__).size, 1
-
-    [future1, dependent_futures, future2, future3].flatten.each { |f| f.value }
-    pool.join
-  end
-
   def test_pool_prevents_deadlock
     pool = ThreadPool.new(5)
 
