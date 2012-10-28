@@ -62,9 +62,9 @@ module Rake
           # doing work.
 
           wait_for_promise = lambda {
-            stat :waiting, item_id: promise.object_id
+            stat :waiting, :item_id => promise.object_id
             promise_mutex.synchronize {}
-            stat :continue, item_id: promise.object_id
+            stat :continue, :item_id => promise.object_id
           }
 
           unless @threads_mon.synchronize { @threads.include? Thread.current }
@@ -84,7 +84,7 @@ module Rake
       end
 
       @queue.enq promise
-      stat :item_queued, item_id: promise.object_id
+      stat :item_queued, :item_id => promise.object_id
       start_thread
       promise
     end
@@ -125,8 +125,8 @@ module Rake
     # Return a hash of always collected statistics for the thread pool.
     def statistics              #  :nodoc:
       {
-        total_threads_in_play: @total_threads_in_play,
-        max_active_threads: @max_active_threads,
+        :total_threads_in_play => @total_threads_in_play,
+        :max_active_threads    => @max_active_threads,
       }
     end
 
@@ -144,20 +144,20 @@ module Rake
               # is now gone. For this reason we pass true to Queue#deq
               # because we will sleep indefinitely if it is empty.
               block = @queue.deq(true)
-              stat :item_dequeued, item_id: block.object_id
+              stat :item_dequeued, :item_id => block.object_id
               block.call
             end
           rescue ThreadError # this means the queue is empty
           ensure
             @threads_mon.synchronize do
               @threads.delete Thread.current
-              stat :thread_deleted, deleted_thread: Thread.current.object_id, thread_count: @threads.count
+              stat :thread_deleted, :deleted_thread => Thread.current.object_id, :thread_count => @threads.count
               @join_cond.broadcast if @threads.empty?
             end
           end
         end
         @threads << t
-        stat :thread_created, new_thread: t.object_id, thread_count: @threads.count
+        stat :thread_created, :new_thread => t.object_id, :thread_count => @threads.count
         @total_threads_in_play = @threads.count if @threads.count > @total_threads_in_play
       end
     end
@@ -165,10 +165,10 @@ module Rake
     def stat(event, data=nil) # :nodoc:
       return if @history_start_time.nil?
       info = {
-        event: event,
-        data: data,
-        time: (Time.now-@history_start_time),
-        thread: Thread.current.object_id,
+        :event  => event,
+        :data   => data,
+        :time   => (Time.now-@history_start_time),
+        :thread => Thread.current.object_id,
       }
       @history_mon.synchronize { @history << info }
     end
