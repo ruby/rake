@@ -1,8 +1,11 @@
+require 'rake/private_reader'
+
 module Rake
 
   class ThreadHistoryDisplay    # :nodoc: all
-    attr_reader :stats, :items, :threads
-    private :stats, :items, :threads
+    include Rake::PrivateReader
+
+    private_reader :stats, :items, :threads
 
     def initialize(stats)
       @stats   = stats
