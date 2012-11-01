@@ -152,8 +152,8 @@ GitHub::    git://github.com/jimweirich/rake.git
 
 == Thanks
 
-As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
+As usual, it was input from users that drove a lot of these changes. The
+following people contributed patches, made suggestions or made
 otherwise helpful comments.  Thanks to ...
 
 * Aaron Patterson
