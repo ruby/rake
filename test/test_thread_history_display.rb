@@ -72,7 +72,7 @@ class TestThreadHistoryDisplay < Rake::TestCase
     out, _ = capture_io do
       @display.show
     end
-    assert_match(/^ *1000000 +A +thread_created +new_thread:B +thread_count:13$/, out)
+    assert_match(/^ *1000000 +A +thread_created( +new_thread:B| +thread_count:13){2}$/, out)
   end
 
   private
