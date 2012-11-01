@@ -55,7 +55,7 @@ module Rake
       promise_worker = lambda do
         # assume someone else is executing this if the lock
         # has been obtained elsewhere
-         next if !promise_mutex.try_lock
+         next if ! promise_mutex.try_lock
          promise_core.call
          promise_mutex.unlock
       end
@@ -92,7 +92,7 @@ module Rake
     def join
       @threads_mon.synchronize do
         begin
-            @join_cond.wait unless @threads.empty?
+          @join_cond.wait unless @threads.empty?
         rescue Exception => e
           $stderr.puts e
           $stderr.print "Queue contains #{@queue.size} items. Thread pool contains #{@threads.count} threads\n"
@@ -146,7 +146,7 @@ module Rake
       stat :item_dequeued, :item_id => block.object_id
       block.call
       return true
-      
+
       rescue ThreadError # this means the queue is empty
       false
     end
