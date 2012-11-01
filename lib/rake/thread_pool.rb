@@ -40,7 +40,7 @@ module Rake
 
       promise_core = lambda do
         # can't execute more than once
-        next unless promise_result.equal?(NOT_SET) && promise_error.equal?(NOT_SET)
+        next if promise_complete?(promise_result, promise_error)
         stat :promise_will_execute, :item_id => promise_worker.object_id
         begin
           promise_result = block.call(*local_args)
@@ -81,6 +81,11 @@ module Rake
       stat :item_queued, :item_id => promise_worker.object_id
       start_thread
       promise
+    end
+
+    def promise_complete?(promise_result, promise_error)
+      ! promise_result.equal?(NOT_SET) ||
+        ! promise_error.equal?(NOT_SET)
     end
 
     # Waits until the queue of futures is empty and all threads have exited.
