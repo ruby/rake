@@ -27,18 +27,27 @@ module Rake
     # synchronously. We will wait.
     def value
       unless complete?
-        stat :will_wait_on_promise, :item_id => object_id
-        @mutex.synchronize { chore }
-        stat :did_wait_on_promise, :item_id => object_id
+        stat :sleeping_on, :item_id => object_id
+        @mutex.synchronize do
+          stat :has_lock_on, :item_id => object_id
+          chore
+          stat :releasing_lock_on, :item_id => object_id
+        end
+        stat :awake_from, :item_id => object_id
       end
       error? ? raise(@error) : @result
     end
 
     # If no one else is working this promise, go ahead and do the chore.
     def work
+      stat :attempting_lock_on, :item_id => object_id
       if @mutex.try_lock
+        stat :has_lock_on, :item_id => object_id
         chore
+        stat :releasing_lock_on, :item_id => object_id
         @mutex.unlock
+      else
+        stat :bailed_on, :item_id => object_id
       end
     end
 
@@ -46,14 +55,17 @@ module Rake
 
     # Perform the chore promised
     def chore
-      return if complete?
-      stat :promise_will_execute, :item_id => object_id
+      if complete?
+        stat :found_completed, :item_id => object_id
+        return
+      end
+      stat :will_execute, :item_id => object_id
       begin
         @result = @block.call(*@args)
       rescue Exception => e
         @error = e
       end
-      stat :promise_did_execute, :item_id => object_id
+      stat :did_execute, :item_id => object_id
       discard
     end
 

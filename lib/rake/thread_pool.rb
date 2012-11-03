@@ -35,7 +35,7 @@ module Rake
       promise.recorder = lambda { |*stats| stat(*stats) }
 
       @queue.enq promise
-      stat :item_queued, :item_id => promise.object_id
+      stat :queued, :item_id => promise.object_id
       start_thread
       promise
     end
@@ -44,14 +44,18 @@ module Rake
     def join
       @threads_mon.synchronize do
         begin
+          stat :joining
           @join_cond.wait unless @threads.empty?
+          stat :joined
         rescue Exception => e
+          stat :joined
           $stderr.puts e
           $stderr.print "Queue contains #{@queue.size} items. Thread pool contains #{@threads.count} threads\n"
           $stderr.print "Current Thread #{Thread.current} status = #{Thread.current.status}\n"
           $stderr.puts e.backtrace.join("\n")
           @threads.each do |t|
             $stderr.print "Thread #{t} status = #{t.status}\n"
+            # 1.8 doesn't support Thread#backtrace
             $stderr.puts t.backtrace.join("\n") if t.respond_to? :backtrace
           end
           raise e
@@ -95,7 +99,7 @@ module Rake
       # is now gone. For this reason we pass true to Queue#deq
       # because we will sleep indefinitely if it is empty.
       promise = @queue.deq(true)
-      stat :item_dequeued, :item_id => promise.object_id
+      stat :dequeued, :item_id => promise.object_id
       promise.work
       return true
 
@@ -115,13 +119,13 @@ module Rake
           ensure
             @threads_mon.synchronize do
               @threads.delete Thread.current
-              stat :thread_deleted, :deleted_thread => Thread.current.object_id, :thread_count => @threads.count
+              stat :ended, :thread_count => @threads.count
               @join_cond.broadcast if @threads.empty?
             end
           end
         end
         @threads << t
-        stat :thread_created, :new_thread => t.object_id, :thread_count => @threads.count
+        stat :spawned, :new_thread => t.object_id, :thread_count => @threads.count
         @total_threads_in_play = @threads.count if @threads.count > @total_threads_in_play
       end
     end
