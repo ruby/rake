@@ -65,12 +65,12 @@ module Rake
         # Return the value if it's been called and
         # ensure it doesn't return until the result
         # has been calculated
-        if promise_result.equal?(NOT_SET) && promise_error.equal?(NOT_SET)
+        unless promise_complete?(promise_result, promise_error)
           stat :will_wait_on_promise, :item_id => promise_worker.object_id
           promise_mutex.synchronize { promise_core.call }
           stat :did_wait_on_promise, :item_id => promise_worker.object_id
         end
-        promise_error.equal?(NOT_SET) ? promise_result : raise(promise_error)
+        promise_error?(promise_error) ? raise(promise_error) : promise_result
       end
 
       def promise.value
@@ -81,11 +81,6 @@ module Rake
       stat :item_queued, :item_id => promise_worker.object_id
       start_thread
       promise
-    end
-
-    def promise_complete?(promise_result, promise_error)
-      ! promise_result.equal?(NOT_SET) ||
-        ! promise_error.equal?(NOT_SET)
     end
 
     # Waits until the queue of futures is empty and all threads have exited.
@@ -132,6 +127,18 @@ module Rake
     end
 
     private
+
+    def promise_result?(promise_result)
+      ! promise_result.equal?(NOT_SET)
+    end
+
+    def promise_error?(promise_error)
+      ! promise_error.equal?(NOT_SET)
+    end
+
+    def promise_complete?(promise_result, promise_error)
+      promise_result?(promise_result) || promise_error?(promise_error)
+    end
 
     # processes one item on the queue. Returns true if there was an
     # item to process, false if there was no item
