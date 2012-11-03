@@ -33,7 +33,6 @@ module Rake
           chore
           stat :releasing_lock_on, :item_id => object_id
         end
-        stat :awake_from, :item_id => object_id
       end
       error? ? raise(@error) : @result
     end
