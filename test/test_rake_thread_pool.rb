@@ -69,7 +69,7 @@ class TestRakeTestThreadPool < Rake::TestCase
     }
 
     pool.join
-    assert_equal true, pool.__send__(:__queue__).empty?
+    assert_equal true, pool.__send__(:__queue__).empty?, "queue should be empty"
   end
 
   # test that throwing an exception way down in the blocks propagates
