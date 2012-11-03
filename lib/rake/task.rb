@@ -196,7 +196,7 @@ module Rake
           application[r, @scope].invoke_with_call_chain(args, invocation_chain)
         end
       end
-      futures.each { |f| f.call }
+      futures.each { |f| f.value }
     end
 
     # Format the trace flags for display.
