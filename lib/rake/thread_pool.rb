@@ -1,83 +1,11 @@
 require 'thread'
 require 'set'
 
+require 'rake/promise'
+
 module Rake
 
   class ThreadPool              # :nodoc: all
-
-    class Promise               # :nodoc: all
-      attr_reader :worker
-      attr_accessor :recorder
-
-      def initialize(args, block)
-        # capture the local args for the block (like Thread#start)
-        local_args = args.collect { |a| begin; a.dup; rescue; a; end }
-
-        promise_mutex = Mutex.new
-        @promise_result = @promise_error = NOT_SET
-
-        # this is our id because it is what we add to the queue
-        @worker = nil
-
-        promise_core = lambda do
-          # can't execute more than once
-          next if complete?
-          stat :promise_will_execute, :item_id => @worker.object_id
-          begin
-            @promise_result = block.call(*local_args)
-          rescue Exception => e
-            @promise_error = e
-          end
-          stat :promise_did_execute, :item_id => @worker.object_id
-          # free up these items for the GC
-          local_args = block = nil
-        end
-
-        @worker = lambda do
-          # assume someone else is executing this if the lock
-          # has been obtained elsewhere
-          next if ! promise_mutex.try_lock
-          promise_core.call
-          promise_mutex.unlock
-        end
-
-        @promise = lambda do
-          # (promise code builds on Ben Lavender's public-domain 'promise' gem)
-          # Return the value if it's been called and
-          # ensure it doesn't return until the result
-          # has been calculated
-          unless complete?
-            stat :will_wait_on_promise, :item_id => @worker.object_id
-            promise_mutex.synchronize { promise_core.call }
-            stat :did_wait_on_promise, :item_id => @worker.object_id
-          end
-          error? ? raise(@promise_error) : @promise_result
-        end
-      end
-
-      def value
-        @promise.call
-      end
-
-      private
-
-      def stat(*args)
-        @recorder.call(*args) if @recorder
-      end
-
-      def result?
-        ! @promise_result.equal?(NOT_SET)
-      end
-
-      def error?
-        ! @promise_error.equal?(NOT_SET)
-      end
-
-      def complete?
-        result? || error?
-      end
-
-    end
 
     # Creates a ThreadPool object.
     # The parameter is the size of the pool.
@@ -102,12 +30,12 @@ module Rake
     # pool. Sending <tt>#value</tt> to the object will sleep the
     # current thread until the future is finished and will return the
     # result (or raise an exception thrown from the future)
-    def future(*args,&block)
-      promise = Promise.new(args, block)
+    def future(*args, &block)
+      promise = Promise.new(args, &block)
       promise.recorder = lambda { |*stats| stat(*stats) }
 
-      @queue.enq promise.worker
-      stat :item_queued, :item_id => promise.worker.object_id
+      @queue.enq promise
+      stat :item_queued, :item_id => promise.object_id
       start_thread
       promise
     end
@@ -166,9 +94,9 @@ module Rake
       # still could have had an item which by this statement
       # is now gone. For this reason we pass true to Queue#deq
       # because we will sleep indefinitely if it is empty.
-      block = @queue.deq(true)
-      stat :item_dequeued, :item_id => block.object_id
-      block.call
+      promise = @queue.deq(true)
+      stat :item_dequeued, :item_id => promise.object_id
+      promise.work
       return true
 
       rescue ThreadError # this means the queue is empty
@@ -218,8 +146,6 @@ module Rake
     def __threads__ # :nodoc:
       @threads.dup
     end
-
-    NOT_SET = Object.new.freeze # :nodoc:
   end
 
 end
