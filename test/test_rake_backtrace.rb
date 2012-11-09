@@ -24,8 +24,8 @@ class TestRakeBacktrace < Rake::TestCase
 
     assert_equal "rake aborted!", lines[0]
     assert_equal "foooo!", lines[1]
-    assert_match %r!\A#{Regexp.quote Dir.pwd}/Rakefile:3!, lines[2]
-    assert_match %r!\ATasks:!, lines[3]
+    assert_something_matches %r!\A#{Regexp.quote Dir.pwd}/Rakefile:3!i, lines
+    assert_something_matches %r!\ATasks:!, lines
   end
 
   def test_multi_collapse
@@ -42,9 +42,9 @@ class TestRakeBacktrace < Rake::TestCase
 
     assert_equal "rake aborted!", lines[0]
     assert_equal "barrr!", lines[1]
-    assert_match %r!\A#{Regexp.quote Dir.pwd}/Rakefile:6!, lines[2]
-    assert_match %r!\A#{Regexp.quote Dir.pwd}/Rakefile:3!, lines[3]
-    assert_match %r!\ATasks:!, lines[4]
+    assert_something_matches %r!\A#{Regexp.quote Dir.pwd}/Rakefile:6!i, lines
+    assert_something_matches %r!\A#{Regexp.quote Dir.pwd}/Rakefile:3!i, lines
+    assert_something_matches %r!\ATasks:!, lines
   end
 
   def test_suppress_option
@@ -57,11 +57,25 @@ class TestRakeBacktrace < Rake::TestCase
     lines = rake("baz").split("\n")
     assert_equal "rake aborted!", lines[0]
     assert_equal "bazzz!", lines[1]
-    assert_match %r!Rakefile!, lines[2]
+    assert_something_matches %r!Rakefile!i, lines
 
-    lines = rake("--suppress-backtrace", "R.k.file", "baz").split("\n")
+    lines = rake("--suppress-backtrace", ".ak.file", "baz").split("\n")
     assert_equal "rake aborted!", lines[0]
     assert_equal "bazzz!", lines[1]
-    refute_match %r!Rakefile!, lines[2]
+    refute_match %r!Rakefile!i, lines[2]
   end
+
+  private
+
+  # Assert that the pattern matches at least one line in +lines+.
+  def assert_something_matches(pattern, lines)
+    lines.each do |ln|
+      if pattern =~ ln
+        assert_match pattern, ln
+        return
+      end
+    end
+    flunk "expected #{pattern.inspect} to match something in:\n    #{lines.join("\n    ")}"
+  end
+
 end
