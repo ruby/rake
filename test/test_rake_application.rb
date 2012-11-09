@@ -498,4 +498,3 @@ class TestRakeApplication < Rake::TestCase
   end
 
 end
-
