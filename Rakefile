@@ -60,6 +60,7 @@ task :default => :test
 
 Rake::TestTask.new do |t|
   files = FileList['test/helper.rb', 'test/test_*.rb']
+  t.loader = :testrb
   t.test_files = files
   t.libs << "."
   t.warning = true

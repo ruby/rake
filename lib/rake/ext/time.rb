@@ -11,4 +11,3 @@ class Time
     end
   end
 end
-
