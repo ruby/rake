@@ -16,7 +16,7 @@ module Rake
     def show
       puts "Job History:"
       stats.each do |stat|
-        stat[:data] ||= []
+        stat[:data] ||= {}
         rename(stat, :thread, threads)
         rename(stat[:data], :item_id, items)
         rename(stat[:data], :new_thread, threads)

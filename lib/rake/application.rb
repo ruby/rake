@@ -58,7 +58,7 @@ module Rake
     #
     # * Initialize the command line options (+init+).
     # * Define the tasks (+load_rakefile+).
-    # * Run the top level tasks (+run_tasks+).
+    # * Run the top level tasks (+top_level+).
     #
     # If you wish to build a custom rake command, you should call
     # +init+ on your application.  Then define any tasks.  Finally,
@@ -67,15 +67,7 @@ module Rake
       standard_exception_handling do
         init
         load_rakefile
-        thread_pool.gather_history if options.job_stats == :history
         top_level
-        thread_pool.join
-        if options.job_stats
-          stats = thread_pool.statistics
-          puts "Maximum active threads: #{stats[:max_active_threads]}"
-          puts "Total threads in play:  #{stats[:total_threads_in_play]}"
-        end
-        ThreadHistoryDisplay.new(thread_pool.history).show if options.job_stats == :history
       end
     end
 
@@ -97,13 +89,30 @@ module Rake
 
     # Run the top level tasks of a Rake application.
     def top_level
-      if options.show_tasks
-        display_tasks_and_comments
-      elsif options.show_prereqs
-        display_prerequisites
-      else
-        top_level_tasks.each { |task_name| invoke_task(task_name) }
+      run_with_threads do
+        if options.show_tasks
+          display_tasks_and_comments
+        elsif options.show_prereqs
+          display_prerequisites
+        else
+          top_level_tasks.each { |task_name| invoke_task(task_name) }
+        end
       end
+    end
+
+    # Run the given block with the thread startup and shutdown.
+    def run_with_threads
+      thread_pool.gather_history if options.job_stats == :history
+
+      yield
+
+      thread_pool.join
+      if options.job_stats
+        stats = thread_pool.statistics
+        puts "Maximum active threads: #{stats[:max_active_threads]}"
+        puts "Total threads in play:  #{stats[:total_threads_in_play]}"
+      end
+      ThreadHistoryDisplay.new(thread_pool.history).show if options.job_stats == :history
     end
 
     # Add a loader to handle imported files ending in the extension
