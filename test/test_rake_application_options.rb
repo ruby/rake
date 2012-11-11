@@ -146,7 +146,8 @@ class TestRakeApplicationOptions < Rake::TestCase
   end
 
   def test_rakelib
-    flags(['--rakelibdir', 'A:B:C'], ['--rakelibdir=A:B:C'], ['-R', 'A:B:C'], ['-RA:B:C']) do |opts|
+    dirs = %w(A B C).join(File::PATH_SEPARATOR)
+    flags(['--rakelibdir', dirs], ["--rakelibdir=#{dirs}"], ['-R', dirs], ["-R#{dirs}"]) do |opts|
       assert_equal ['A', 'B', 'C'], opts.rakelib
     end
   end
