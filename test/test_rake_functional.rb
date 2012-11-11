@@ -435,7 +435,7 @@ class TestRakeFunctional < Rake::TestCase
       assert_match(/ATEST/, @out)
       refute_match(/BTEST/, @out)
     else
-      puts "\nWARNING: Signal detect seems broken on this system (#{__FILE__}:#{__LINE__})"
+      skip "Signal detect seems broken on this system"
     end
   end
 
