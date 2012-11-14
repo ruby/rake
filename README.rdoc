@@ -31,18 +31,6 @@ Download and install rake with the following.
 
    gem install rake
 
-=== Normal Installation
-
-You can download the source tarball of the latest version of Rake from
-
-* http://rubyforge.org/project/showfiles.php?group_id=50
-
-Extract the tarball and run
-
-  % ruby install.rb
-
-from its distribution directory.
-
 == Usage
 
 === Simple Example
