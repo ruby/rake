@@ -538,4 +538,12 @@ end
     end
   end
 
+  def rakefile_stand_alone_filelist
+    open 'stand_alone_filelist.rb', 'w' do |io|
+      io << "require 'rake/file_list'\n"
+      io << "FL = Rake::FileList['*.rb']\n"
+      io << "puts FL\n"
+    end
+  end
+
 end

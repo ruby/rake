@@ -445,6 +445,15 @@ class TestRakeFunctional < Rake::TestCase
     assert_equal 1, @exit.exitstatus
   end
 
+  def test_stand_alone_filelist
+    rakefile_stand_alone_filelist
+
+    run_ruby @ruby_options + ["stand_alone_filelist.rb"]
+
+    assert_match(/^stand_alone_filelist\.rb$/, @out)
+    assert_equal 0, @exit.exitstatus
+  end
+
   private
 
   # Run a shell Ruby command with command line options (using the
