@@ -204,7 +204,7 @@ module Rake
     def have_rakefile
       @rakefiles.each do |fn|
         if File.exist?(fn)
-          others = Rake.glob(fn, File::FNM_CASEFOLD)
+          others = FileList.glob(fn, File::FNM_CASEFOLD)
           return others.size == 1 ? others.first : fn
         elsif fn == ''
           return fn
@@ -609,7 +609,7 @@ module Rake
     end
 
     def glob(path, &block)
-      Rake.glob(path.gsub("\\", '/')).each(&block)
+      FileList.glob(path.gsub("\\", '/')).each(&block)
     end
     private :glob
 
