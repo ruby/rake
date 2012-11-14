@@ -519,4 +519,23 @@ task :default => :test
     end
   end
 
+  def rakefile_failing_test_task
+    rakefile <<-TEST_TASK
+require 'rake/testtask'
+
+task :default => :test
+Rake::TestTask.new(:test) do |t|
+  t.test_files = ['a_test.rb']
+end
+    TEST_TASK
+    open 'a_test.rb', 'w' do |io|
+      io << "require 'minitest/autorun'\n"
+      io << "class ExitTaskTest < MiniTest::Unit::TestCase\n"
+      io << "  def test_exit\n"
+      io << "    assert false, 'this should fail'\n"
+      io << "  end\n"
+      io << "end\n"
+    end
+  end
+
 end
