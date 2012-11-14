@@ -5,6 +5,7 @@
 
 require 'date'
 require 'net/ftp'
+require 'rake/file_list'
 
 module Rake # :nodoc:
 

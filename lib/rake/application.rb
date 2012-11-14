@@ -2,6 +2,7 @@ require 'shellwords'
 require 'optparse'
 
 require 'rake/task_manager'
+require 'rake/file_list'
 require 'rake/thread_pool'
 require 'rake/thread_history_display'
 require 'rake/win32'

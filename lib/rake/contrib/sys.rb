@@ -10,6 +10,7 @@ begin
 rescue LoadError
 end
 require 'rbconfig'
+require 'rake/file_list'
 
 ######################################################################
 # Sys provides a number of file manipulation tools for the convenience

@@ -1,5 +1,6 @@
 require 'test/unit'
 require 'test/unit/assertions'
+require 'rake/file_list'
 
 module Rake
   include Test::Unit::Assertions
