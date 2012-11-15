@@ -1,10 +1,6 @@
 require File.expand_path('../helper', __FILE__)
 require 'fileutils'
 
-def load_phony
-  load File.dirname(__FILE__) + "/../lib/rake/phony.rb"
-end
-
 class TestRakeFileTask < Rake::TestCase
   include Rake
 
@@ -117,6 +113,10 @@ class TestRakeFileTask < Rake::TestCase
     rescue Exception
     end
     assert( ! File.exist?(NEWFILE), "NEWFILE should be deleted")
+  end
+
+  def load_phony
+    load File.join(@orig_PWD, "lib/rake/phony.rb")
   end
 
 end
