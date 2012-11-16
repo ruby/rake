@@ -21,7 +21,7 @@ Options are:
     specified it controls where the backtrace output is sent. If
     _output_ is <tt>stdout</tt>, then backtrace output is directed to
     stardard output. If _output_ is <tt>stderr</tt>, or if it is
-    messing, then the backtrace output is sent to standard error.
+    missing, then the backtrace output is sent to standard error.
 
 [<tt>--classic-namespace</tt> (-n)]
     Import the Task, FileTask, and FileCreateTask into the top-level
@@ -147,7 +147,7 @@ Options are:
     errors. The _output_ parameter is optional, but if specified it
     controls where the trace output is sent. If _output_ is
     <tt>stdout</tt>, then trace output is directed to stardard output.
-    If _output_ is <tt>stderr</tt>, or if it is messing, then trace
+    If _output_ is <tt>stderr</tt>, or if it is missing, then trace
     output is sent to standard error.
 
 [<tt>--verbose</tt> (-v)]
