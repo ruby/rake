@@ -337,7 +337,7 @@ module Rake
               options.show_all_tasks = value
             }
           ],
-          ['--backtrace [OUT]', "Enable full backtrace.  OUT can be stderr (default) or stdout.",
+          ['--backtrace=[OUT]', "Enable full backtrace.  OUT can be stderr (default) or stdout.",
             lambda { |value|
               options.backtrace = true
               select_trace_output(options, 'backtrace', value)
