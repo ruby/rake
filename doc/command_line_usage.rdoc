@@ -15,11 +15,13 @@ Options are:
     Used in combination with the -T and -D options, will force
     those options to show all the tasks, even the ones without comments.
 
-[<tt>--backtrace</tt> _output_ (-n)]
+[<tt>--backtrace</tt>{=_output_} (-n)]
     Enable a full backtrace (i.e. like --trace, but without the task
-    tracing details). The backtrace output will be directed to stderr
-    by default. If the options _output_ parameter is set to "stdout",
-    then the output will be directed to standard output.
+    tracing details). The _output_ parameter is optional, but if
+    specified it controls where the backtrace output is sent. If
+    _output_ is <tt>stdout</tt>, then backtrace output is directed to
+    stardard output. If _output_ is <tt>stderr</tt>, or if it is
+    missing, then the backtrace output is sent to standard error.
 
 [<tt>--comments</tt>]
     Used in combination with the -W options to force the output to
@@ -123,9 +125,13 @@ Options are:
     are defined using the "desc" command.  If a pattern is given, then
     only tasks matching the pattern are displayed.
 
-[<tt>--trace</tt> (-t)]
+[<tt>--trace</tt>{=_output_} (-t)]
     Turn on invoke/execute tracing. Also enable full backtrace on
-    errors.
+    errors. The _output_ parameter is optional, but if specified it
+    controls where the trace output is sent. If _output_ is
+    <tt>stdout</tt>, then trace output is directed to stardard output.
+    If _output_ is <tt>stderr</tt>, or if it is missing, then trace
+    output is sent to standard error.
 
 [<tt>--verbose</tt> (-v)]
     Echo the Sys commands to standard output.
