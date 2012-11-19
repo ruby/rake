@@ -2,7 +2,7 @@
 
 Rake is invoked from the command line using:
 
-   % rake [<em>options</em> ...]  [<em>VAR</em>=<em>VALUE</em>]  [<em>targets</em> ...]
+    % rake [options ...]  [VAR=VALUE ...]  [targets ...]
 
 Options are:
 
