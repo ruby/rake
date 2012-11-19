@@ -3,7 +3,7 @@ module Rake
     NUMBERS = [
       MAJOR = 0,
       MINOR = 9,
-      BUILD = 4,
+      BUILD = 5,
     ]
   end
   VERSION = Version::NUMBERS.join('.')
