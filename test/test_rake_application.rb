@@ -340,6 +340,44 @@ class TestRakeApplication < Rake::TestCase
     assert @app.options.trace
   end
 
+  def test_trace_output_does_not_combine_messages_on_a_single_line
+    assert !@app.options.trace
+    @app.options.trace = true
+    output = StringIO.new
+
+    # simulate the slow IO of writing to a file stream. This will
+    # exacerbate the problem
+    class << output
+      alias :old_write :write
+      def write (*args)
+        sleep(rand * 0.0001)
+        self.old_write(*args)
+      end
+    end
+
+    @app.options.trace_output = output
+    assert_equal output, @app.options.trace_output
+    
+    (1..100).to_a.each do |i|
+      task i.to_s do
+      end
+      multitask :doit => i.to_s
+    end
+    
+    # invoke all tasks simultaneously, if it behaves exactly
+    # like #puts, the trace will write a message and then before
+    # it writes the \n, another thread will
+    # write a trace message and output.string will look like:
+    #
+    # ** Execute 56** Execute 72   << We regex for number followed by **
+    #
+    # ** Execute 74
+    
+    Rake::Task[:doit].invoke
+    
+    refute( /[\d]+\*\*/ =~ output.string, "trace does not write single, atomic lines!")
+  end
+
   def test_good_run
     ran = false
 
