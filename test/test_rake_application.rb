@@ -1,5 +1,4 @@
 require File.expand_path('../helper', __FILE__)
-require 'stringio'
 
 class TestRakeApplication < Rake::TestCase
 
@@ -339,46 +338,6 @@ class TestRakeApplication < Rake::TestCase
     @app.handle_options
     assert ARGV.include?("sometask")
     assert @app.options.trace
-  end
-
-  class PrintSpy
-    attr_reader :result, :calls
-    def initialize
-      @result = ""
-      @calls = 0
-    end
-    def print(string)
-      @result << string
-      @calls += 1
-    end
-  end
-
-  def test_trace_issues_single_io_for_args_with_empty_args
-    spy = PrintSpy.new
-    @app.options.trace_output = spy
-    @app.trace
-    assert_equal "\n", spy.result
-    assert_equal 1, spy.calls
-  end
-
-  def test_trace_issues_single_io_for_args_multiple_strings
-    spy = PrintSpy.new
-    @app.options.trace_output = spy
-    @app.trace("HI\n", "LO")
-    assert_equal "HI\nLO\n", spy.result
-    assert_equal 1, spy.calls
-  end
-
-  def test_trace_issues_single_io_for_args_multiple_strings_and_alternate_sep
-    old_sep = $\
-    $\ = "\r"
-    spy = PrintSpy.new
-    @app.options.trace_output = spy
-    @app.trace("HI\r", "LO")
-    assert_equal "HI\rLO\r", spy.result
-    assert_equal 1, spy.calls
-  ensure
-    $\ = old_sep
   end
 
   def test_good_run

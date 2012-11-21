@@ -5,6 +5,7 @@ require 'rake/task_manager'
 require 'rake/file_list'
 require 'rake/thread_pool'
 require 'rake/thread_history_display'
+require 'rake/trace_output'
 require 'rake/win32'
 
 module Rake
@@ -17,6 +18,7 @@ module Rake
   #
   class Application
     include TaskManager
+    include TraceOutput
 
     # The name of the application (typically 'rake')
     attr_reader :name
@@ -316,13 +318,7 @@ module Rake
 
     def trace(*strings)
       options.trace_output ||= $stderr
-      sep = $\ || "\n"
-      if strings.empty?
-        output = sep
-      else
-        output = strings.map { |s| s.end_with?(sep) ? s : s + sep }.join
-      end
-      options.trace_output.print(output)
+      trace_on(options.trace_output, *strings)
     end
 
     def sort_options(options)
