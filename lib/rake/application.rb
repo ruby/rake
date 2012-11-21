@@ -190,10 +190,11 @@ module Rake
     #    Rake.application.deprecate("import", "Rake.import", caller.first)
     #
     def deprecate(old_usage, new_usage, call_site)
-      return if options.ignore_deprecate
-      $stderr.puts "WARNING: '#{old_usage}' is deprecated.  " +
-        "Please use '#{new_usage}' instead.\n" +
-        "    at #{call_site}"
+      unless options.ignore_deprecate
+        $stderr.puts "WARNING: '#{old_usage}' is deprecated.  " +
+          "Please use '#{new_usage}' instead.\n" +
+          "    at #{call_site}"
+      end
     end
 
     # Does the exception have a task invocation chain?
