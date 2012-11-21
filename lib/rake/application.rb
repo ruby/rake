@@ -316,7 +316,19 @@ module Rake
 
     def trace(*str)
       options.trace_output ||= $stderr
-      options.trace_output.puts(*str)
+
+      # use the same semantics as puts, but use print and append a CR to the end to
+      # make sure the entire string is output as a single unit.
+      sep = ($\||"\n")
+      if str.empty?
+        options.trace_output.print sep
+      else
+        msgs = str.flatten.collect do |m|
+          next m + sep if m.is_a?(String) && !m.end_with?("\n")
+          m
+        end
+        options.trace_output.print(*msgs)
+      end
     end
 
     def sort_options(options)
