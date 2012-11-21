@@ -105,7 +105,7 @@ module Rake
 
     # Argument description (nil if none).
     def arg_description # :nodoc:
-      @arg_names ? "[#{(arg_names || []).join(',')}]" : nil
+      @arg_names ? "[#{arg_names.join(',')}]" : nil
     end
 
     # Name of arguments for this task.
