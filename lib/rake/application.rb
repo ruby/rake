@@ -176,7 +176,7 @@ module Rake
       if options.backtrace
         trace ex.backtrace.join("\n")
       else
-        trace Backtrace.collapse(ex.backtrace)
+        trace Backtrace.collapse(ex.backtrace).join("\n")
       end
       trace "Tasks: #{ex.chain}" if has_chain?(ex)
       trace "(See full trace by running task with --trace)" unless options.backtrace
@@ -314,21 +314,15 @@ module Rake
       end
     end
 
-    def trace(*str)
+    def trace(*strings)
       options.trace_output ||= $stderr
-
-      # use the same semantics as puts, but use print and append a CR to the end to
-      # make sure the entire string is output as a single unit.
-      sep = ($\||"\n")
-      if str.empty?
-        options.trace_output.print sep
+      sep = $\ || "\n"
+      if strings.empty?
+        output = sep
       else
-        msgs = str.flatten.collect do |m|
-          next m + sep if m.is_a?(String) && !m.end_with?("\n")
-          m
-        end
-        options.trace_output.print(*msgs)
+        output = strings.map { |s| s.end_with?(sep) ? s : s + sep }.join
       end
+      options.trace_output.print(output)
     end
 
     def sort_options(options)

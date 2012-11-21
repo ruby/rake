@@ -1,4 +1,5 @@
 require File.expand_path('../helper', __FILE__)
+require 'stringio'
 
 class TestRakeApplication < Rake::TestCase
 
@@ -340,6 +341,46 @@ class TestRakeApplication < Rake::TestCase
     assert @app.options.trace
   end
 
+  class PrintSpy
+    attr_reader :result, :calls
+    def initialize
+      @result = ""
+      @calls = 0
+    end
+    def print(string)
+      @result << string
+      @calls += 1
+    end
+  end
+
+  def test_trace_issues_single_io_for_args_with_empty_args
+    spy = PrintSpy.new
+    @app.options.trace_output = spy
+    @app.trace
+    assert_equal "\n", spy.result
+    assert_equal 1, spy.calls
+  end
+
+  def test_trace_issues_single_io_for_args_multiple_strings
+    spy = PrintSpy.new
+    @app.options.trace_output = spy
+    @app.trace("HI\n", "LO")
+    assert_equal "HI\nLO\n", spy.result
+    assert_equal 1, spy.calls
+  end
+
+  def test_trace_issues_single_io_for_args_multiple_strings_and_alternate_sep
+    old_sep = $\
+    $\ = "\r"
+    spy = PrintSpy.new
+    @app.options.trace_output = spy
+    @app.trace("HI\r", "LO")
+    assert_equal "HI\rLO\r", spy.result
+    assert_equal 1, spy.calls
+  ensure
+    $\ = old_sep
+  end
+
   def test_trace_output_does_not_combine_messages_on_a_single_line
     assert !@app.options.trace
     @app.options.trace = true
@@ -357,13 +398,13 @@ class TestRakeApplication < Rake::TestCase
 
     @app.options.trace_output = output
     assert_equal output, @app.options.trace_output
-    
+
     (1..100).to_a.each do |i|
       task i.to_s do
       end
       multitask :doit => i.to_s
     end
-    
+
     # invoke all tasks simultaneously, if it behaves exactly
     # like #puts, the trace will write a message and then before
     # it writes the \n, another thread will
@@ -372,9 +413,9 @@ class TestRakeApplication < Rake::TestCase
     # ** Execute 56** Execute 72   << We regex for number followed by **
     #
     # ** Execute 74
-    
+
     Rake::Task[:doit].invoke
-    
+
     refute( /[\d]+\*\*/ =~ output.string, "trace does not write single, atomic lines!")
   end
 
