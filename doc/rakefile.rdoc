@@ -251,6 +251,25 @@ for tasks with arguments.  For example:
      puts "Last  name is #{args.last_name}"
    end
 
+=== Tasks that take Variable-length Parameters
+
+Tasks that need to handle a list of values as a parameter can use the
+extras method of the args variable.  This allows for tasks that can
+loop over a variable number of values, and its compatible with named
+parameters as well:
+
+   task :email, [:message] do |t, args|
+     mail = Mail.new(args.message)
+     recipients = args.extras
+     recipients.each do |target|
+       mail.send_to(recipents)
+     end
+   end
+
+There is also the convenience method to_a that returns all parameters
+in the sequential order they were given, including those associated 
+with named parameters.
+
 === Deprecated Task Parameters Format
 
 There is an older format for declaring task parameters that omitted
