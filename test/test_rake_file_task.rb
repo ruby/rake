@@ -116,7 +116,7 @@ class TestRakeFileTask < Rake::TestCase
   end
 
   def load_phony
-    load File.join(@orig_PWD, "lib/rake/phony.rb")
+    load File.join(@rake_lib, "rake/phony.rb")
   end
 
 end
