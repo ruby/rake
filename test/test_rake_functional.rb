@@ -438,17 +438,10 @@ class TestRakeFunctional < Rake::TestCase
   end
 
   def test_failing_test_sets_exit_status
-    # Skipping this test in Ruby 1.8.7.
-    #
-    # We are unable to accurately verify that Rake returns an error
-    # exit status using popen3 in Ruby 1.8.7. Hand checking seems to
-    # indicate that Rake should pass this test, but we don't seem to
-    # be able to get the error status in correctly.
-    skip if RUBY_VERSION < "1.9"
-
+    skip if uncertain_exit_status?
     rakefile_failing_test_task
     rake
-    assert_equal 1, @exit.exitstatus
+    assert @exit.exitstatus > 0, "should be non-zero"
   end
 
   def test_stand_alone_filelist
@@ -457,10 +450,18 @@ class TestRakeFunctional < Rake::TestCase
     run_ruby @ruby_options + ["stand_alone_filelist.rb"]
 
     assert_match(/^stand_alone_filelist\.rb$/, @out)
-    assert_equal 0, @exit.exitstatus
+    assert_equal 0, @exit.exitstatus unless uncertain_exit_status?
   end
 
   private
+
+  # We are unable to accurately verify that Rake returns a proper
+  # error exit status using popen3 in Ruby 1.8.7 and JRuby. This
+  # predicate function can be used to skip tests or assertions as
+  # needed.
+  def uncertain_exit_status?
+    RUBY_VERSION < "1.9" || defined?(JRUBY_VERSION)
+  end
 
   # Run a shell Ruby command with command line options (using the
   # default test options). Output is captured in @out and @err
@@ -479,7 +480,7 @@ class TestRakeFunctional < Rake::TestCase
   def run_ruby(option_list)
     puts "COMMAND: [#{RUBY} #{option_list.join ' '}]" if @verbose
 
-    inn, out, err, wait = Open3.popen3(Gem.ruby, *option_list)
+    inn, out, err, wait = Open3.popen3(RUBY, *option_list)
     inn.close
 
     @exit = wait ? wait.value : $?
