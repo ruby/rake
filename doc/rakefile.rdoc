@@ -193,7 +193,7 @@ example, if the "release" task expected a parameter named
 
 or
 
-   RELEASE_VERSION rake release
+   RELEASE_VERSION=0.8.2 rake release
 
 will work.  Environment variable names must either match the task
 parameter exactly, or match an all-uppercase version of the task
