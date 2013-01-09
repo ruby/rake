@@ -32,7 +32,6 @@ class TestRakeTask < Rake::TestCase
   end
 
   def test_inspect
-#    t = task(:foo, :needs => [:bar, :baz])
     t = task(:foo => [:bar, :baz])
     assert_equal "<Rake::Task foo => [bar, baz]>", t.inspect
   end
