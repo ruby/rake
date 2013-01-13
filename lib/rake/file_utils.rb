@@ -41,7 +41,7 @@ module FileUtils
     unless options[:noop]
       res = rake_system(*cmd)
       status = $?
-      status = PseudoStatus.new(1) if !res && status.nil?
+      status = Rake::PseudoStatus.new(1) if !res && status.nil?
       shell_runner.call(res, status)
     end
   end
