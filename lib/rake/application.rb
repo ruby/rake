@@ -167,8 +167,14 @@ module Rake
       rescue Exception => ex
         # Exit with error message
         display_error_message(ex)
-        exit(false)
+        exit_because_of_exception(ex)
       end
+    end
+
+    # Exit the program because of an unhandle exception.
+    # (may be overridden by subclasses)
+    def exit_because_of_exception(ex)
+      exit(false)
     end
 
     # Display the error message that caused the exception.
