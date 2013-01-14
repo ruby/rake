@@ -637,7 +637,13 @@ module Rake
           @top_level_tasks << arg unless arg =~ /^-/
         end
       end
-      @top_level_tasks.push("default") if @top_level_tasks.size == 0
+      @top_level_tasks.push(default_task_name) if @top_level_tasks.empty?
+    end
+
+    # Default task name ("default").
+    # (May be overridden by subclasses)
+    def default_task_name
+      "default"
     end
 
     # Add a file to the list of files to be imported.
