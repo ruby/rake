@@ -337,7 +337,7 @@ required on *rule* when the first argument is a regular expression.
 
 The following rule might be used for Java files ...
 
-  rule '.java' => [
+  rule '.class' => [
     proc { |tn| tn.sub(/\.class$/, '.java').sub(/^classes\//, 'src/') }
   ] do |t|
     java_compile(t.source, t.name)
