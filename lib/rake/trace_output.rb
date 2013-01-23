@@ -11,7 +11,7 @@ module Rake
       if strings.empty?
         output = sep
       else
-        output = strings.map { |s| s.end_with?(sep) ? s : s + sep }.join
+        output = strings.map { |s| s.nil? || s.end_with?(sep) ? s : s + sep }.join
       end
       out.print(output)
     end
