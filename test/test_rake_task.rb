@@ -32,7 +32,6 @@ class TestRakeTask < Rake::TestCase
   end
 
   def test_inspect
-#    t = task(:foo, :needs => [:bar, :baz])
     t = task(:foo => [:bar, :baz])
     assert_equal "<Rake::Task foo => [bar, baz]>", t.inspect
   end
@@ -238,7 +237,7 @@ class TestRakeTask < Rake::TestCase
     def b.timestamp() Time.now + 10 end
     def c.timestamp() Time.now + 5 end
 
-    assert_in_delta now + 10, a.timestamp, 0.1, 'computer too slow?'
+    assert_in_delta now, a.timestamp, 0.1, 'computer too slow?'
   end
 
   def test_always_multitask

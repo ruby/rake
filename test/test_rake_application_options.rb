@@ -30,7 +30,6 @@ class TestRakeApplicationOptions < Rake::TestCase
   def test_default_options
     opts = command_line
     assert_nil opts.backtrace
-    assert_nil opts.classic_namespace
     assert_nil opts.dryrun
     assert_nil opts.ignore_system
     assert_nil opts.load_system
@@ -371,22 +370,6 @@ class TestRakeApplicationOptions < Rake::TestCase
     assert_match(/\bversion\b/, out)
     assert_match(/\b#{RAKEVERSION}\b/, out)
     assert_equal :exit, @exit
-  end
-
-  def test_classic_namespace
-    _, err = capture_io do
-      flags(['--classic-namespace'],
-            ['-C', '-T', '-P', '-n', '-s', '-t']) do |opts|
-        assert opts.classic_namespace
-        assert_equal opts.show_tasks, $show_tasks
-        assert_equal opts.show_prereqs, $show_prereqs
-        assert_equal opts.trace, $trace
-        assert_equal opts.dryrun, $dryrun
-        assert_equal opts.silent, $silent
-      end
-    end
-
-    assert_match(/deprecated/, err)
   end
 
   def test_bad_option

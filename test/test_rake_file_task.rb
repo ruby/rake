@@ -55,7 +55,7 @@ class TestRakeFileTask < Rake::TestCase
 
     task(name => :phony)
 
-    assert ! t1.needed?, "unless the non-file task has a timestamp"
+    assert t1.needed?, "unless the non-file task has a timestamp"
   end
 
   def test_file_times_old_depends_on_new
@@ -79,7 +79,7 @@ class TestRakeFileTask < Rake::TestCase
 
     Task[:obj].invoke
     Task[NEWFILE].invoke
-    assert ! @runs.include?(NEWFILE)
+    assert @runs.include?(NEWFILE)
   end
 
   def test_existing_file_depends_on_non_existing_file

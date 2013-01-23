@@ -1,5 +1,9 @@
 = Rake Changelog
 
+NOTE: Refer to the individual release documents (in the
+      doc/release_notes directory) for changes after in version 0.9.4
+      and later.
+
 == Master (for 0.9.3)
 
 * The rake test loader now removes arguments it has processed.  Issue #51

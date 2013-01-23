@@ -30,6 +30,13 @@ class TestTraceOutput < Rake::TestCase
     assert_equal 1, spy.calls
   end
 
+  def test_trace_handles_nil_objects
+    spy = PrintSpy.new
+    trace_on(spy, "HI\n", nil, "LO")
+    assert_equal "HI\nLO\n", spy.result
+    assert_equal 1, spy.calls
+  end
+
   def test_trace_issues_single_io_for_args_multiple_strings_and_alternate_sep
     old_sep = $\
     $\ = "\r"

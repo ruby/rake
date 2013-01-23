@@ -33,21 +33,11 @@ class TestRakeTaskWithArguments < Rake::TestCase
     assert_equal ["pre"], t.prerequisites
   end
 
-  def test_name_args_and_explicit_needs
-    ignore_deprecations do
-      t = task(:t, :x, :y, :needs => [:pre])
-      assert_equal "t", t.name
-      assert_equal [:x, :y], t.arg_names
-      assert_equal ["pre"], t.prerequisites
-    end
-  end
-
-  def test_illegal_keys_in_task_name_hash
-    ignore_deprecations do
-      assert_raises RuntimeError do
-        task(:t, :x, :y => 1, :needs => [:pre])
-      end
-    end
+  def test_name_args_and_prereqs
+    t = task(:t, [:x, :y] => [:pre])
+    assert_equal "t", t.name
+    assert_equal [:x, :y], t.arg_names
+    assert_equal ["pre"], t.prerequisites
   end
 
   def test_arg_list_is_empty_if_no_args_given
