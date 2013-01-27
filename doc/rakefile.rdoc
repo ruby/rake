@@ -291,7 +291,7 @@ Running this example:
 
 The ability to programmatically manipulate tasks gives rake very
 powerful meta-programming capabilities w.r.t. task execution, but
-should be used with cation.
+should be used with caution.
 
 == Rules
 
