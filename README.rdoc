@@ -1,7 +1,5 @@
 = RAKE -- Ruby Make
 
-https://secure.travis-ci.org/jimweirich/rake.png?branch=master&x=rake.png
-
 This package contains Rake, a simple ruby build program with capabilities
 similar to make.
 
