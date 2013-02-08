@@ -18,9 +18,6 @@ module Rake
     FileUtilsExt.verbose_flag = DEFAULT
     FileUtilsExt.nowrite_flag = false
 
-    $fileutils_verbose = true
-    $fileutils_nowrite = false
-
     FileUtils.commands.each do |name|
       opts = FileUtils.options_of name
       default_options = []

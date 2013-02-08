@@ -58,7 +58,7 @@ module FileUtils
   def set_verbose_option(options) # :nodoc:
     unless options.key? :verbose
       options[:verbose] =
-        Rake::FileUtilsExt.verbose_flag == Rake::FileUtilsExt::DEFAULT ||
+        (Rake::FileUtilsExt.verbose_flag == Rake::FileUtilsExt::DEFAULT) ||
         Rake::FileUtilsExt.verbose_flag
     end
   end
