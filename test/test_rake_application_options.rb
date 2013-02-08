@@ -353,13 +353,11 @@ class TestRakeApplicationOptions < Rake::TestCase
 
   def test_verbose
     out, = capture_io do
-      flags('--verbose', '-V') do |opts|
-        assert Rake::FileUtilsExt.verbose_flag
-        assert ! opts.silent
+      flags('--verbose', '-v') do |opts|
+        assert Rake::FileUtilsExt.verbose_flag, "verbose should be true"
+        assert ! opts.silent, "opts should not be silent"
       end
     end
-
-    assert_equal "rake, version #{Rake::VERSION}\n", out
   end
 
   def test_version
