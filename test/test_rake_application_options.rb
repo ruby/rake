@@ -185,9 +185,10 @@ class TestRakeApplicationOptions < Rake::TestCase
   end
 
   def test_quiet
+    Rake::FileUtilsExt.verbose_flag = true
     flags('--quiet', '-q') do |opts|
-      assert ! Rake::FileUtilsExt.verbose_flag
-      assert ! opts.silent
+      assert ! Rake::FileUtilsExt.verbose_flag, "verbose flag shoud be false"
+      assert ! opts.silent, "should not be silent"
     end
   end
 
@@ -198,9 +199,10 @@ class TestRakeApplicationOptions < Rake::TestCase
   end
 
   def test_silent
+    Rake::FileUtilsExt.verbose_flag = true
     flags('--silent', '-s') do |opts|
-      assert ! Rake::FileUtilsExt.verbose_flag
-      assert opts.silent
+      assert ! Rake::FileUtilsExt.verbose_flag, "verbose flag should be false"
+      assert opts.silent, "should be silent"
     end
   end
 
@@ -352,7 +354,7 @@ class TestRakeApplicationOptions < Rake::TestCase
   end
 
   def test_verbose
-    out, = capture_io do
+    capture_io do
       flags('--verbose', '-v') do |opts|
         assert Rake::FileUtilsExt.verbose_flag, "verbose should be true"
         assert ! opts.silent, "opts should not be silent"
@@ -361,7 +363,7 @@ class TestRakeApplicationOptions < Rake::TestCase
   end
 
   def test_version
-    out, = capture_io do
+    out, _ = capture_io do
       flags '--version', '-V'
     end
 
