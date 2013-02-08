@@ -163,6 +163,7 @@ else
     s.name = 'rake'
     s.version = $package_version
     s.summary = "Ruby based make-like utility."
+    s.license = "MIT"
     s.description = <<-EOF.delete "\n"
 Rake is a Make-like program implemented in Ruby. Tasks and dependencies are
 specified in standard Ruby syntax.
