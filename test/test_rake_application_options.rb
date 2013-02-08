@@ -401,9 +401,21 @@ class TestRakeApplicationOptions < Rake::TestCase
 
   def test_environment_definition
     ENV.delete('TESTKEY')
-    command_line("a", "TESTKEY=12")
-    assert_equal ["a"], @tasks.sort
-    assert '12', ENV['TESTKEY']
+    command_line("TESTKEY=12")
+    assert_equal '12', ENV['TESTKEY']
+  end
+
+  def test_multiline_environment_definition
+    ENV.delete('TESTKEY')
+    command_line("TESTKEY=a\nb\n")
+    assert_equal "a\nb\n", ENV['TESTKEY']
+  end
+
+  def test_environment_and_tasks_together
+    ENV.delete('TESTKEY')
+    command_line("a", "b", "TESTKEY=12")
+    assert_equal ["a", "b"], @tasks.sort
+    assert_equal '12', ENV['TESTKEY']
   end
 
   def test_rake_explicit_task_library
