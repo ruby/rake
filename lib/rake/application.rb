@@ -625,7 +625,7 @@ module Rake
     def collect_tasks
       @top_level_tasks = []
       ARGV.each do |arg|
-        if arg =~ /^(\w+)=(.*)$/
+        if arg =~ /^(\w+)=(.*)$/m
           ENV[$1] = $2
         else
           @top_level_tasks << arg unless arg =~ /^-/
