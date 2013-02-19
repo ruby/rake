@@ -61,6 +61,9 @@ module Rake
     end
     private :lookup_prerequisite
 
+    # Complete list of prerequisite tasks including subtask's prerequisites
+    # recursively until no prerequisites exist or depth +limit+ reached.
+    # Default +limit+ is 30.
     def prerequisite_tasks!(limit=30)
       self.prerequisite_tasks.inject([]) do |tasks, task|
         tasks << task
