@@ -61,6 +61,16 @@ module Rake
     end
     private :lookup_prerequisite
 
+    def prerequisite_tasks!(limit=30)
+      self.prerequisite_tasks.inject([]) do |tasks, task|
+        tasks << task
+        unless task.prerequisite_tasks.empty? or limit < 1
+          tasks += task.prerequisite_tasks!(limit - 1)
+        end
+        tasks
+      end
+    end
+
     # First source from a rule (nil if no sources)
     def source
       @sources.first if defined?(@sources)

@@ -220,6 +220,33 @@ class TestRakeTask < Rake::TestCase
     assert_equal [b, c], a.prerequisite_tasks
   end
 
+  def test_deep_prerequisite_tasks_includes_deep_prerequisites
+    a = task :a => ["b", "d"]
+    b = task :b => "c"
+    c = task :c
+    d = task :d
+
+    assert_equal [b, c, d], a.prerequisite_tasks!
+  end
+
+  def test_deep_prerequisite_tasks_honors_limit
+    a = task :a => "b"
+    b = task :b => "c"
+    c = task :c => "a"
+
+    assert a.prerequisite_tasks!.include?(a)
+    assert a.prerequisite_tasks!.include?(b)
+    assert a.prerequisite_tasks!.include?(c)
+  end
+
+  def test_deep_prerequisite_tasks_includes_duplicates
+    a = task :a => ["b", "c"]
+    b = task :b => "c"
+    c = task :c
+
+    assert_equal [b, c, c], a.prerequisite_tasks!
+  end
+
   def test_timestamp_returns_now_if_all_prereqs_have_no_times
     a = task :a => ["b", "c"]
     task :b
