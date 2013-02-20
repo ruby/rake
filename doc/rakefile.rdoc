@@ -4,6 +4,7 @@ First of all, there is no special format for a Rakefile.  A Rakefile
 contains executable Ruby code.  Anything legal in a ruby script is
 allowed in a Rakefile.
 
+
 Now that we understand there is no special syntax in a Rakefile, there
 are some conventions that are used in a Rakefile that are a little
 unusual in a typical Ruby program.  Since a Rakefile is tailored to
@@ -549,6 +550,34 @@ This is the proper way to specify the task ...
   file "prog" => object_files do
     # Actions go here
   end
+
+== Rakefile Path
+
+When issuing the <tt>rake<tt> command in a terminal, Rake will look 
+for a Rakefile in the current directory. If a Rakefile  is not found, 
+it will search parent directories until one is found.
+
+For example, if a Rakefile resides in the <tt>project/<tt> directory, 
+moving deeper into the project's directory tree will not have an adverse
+effect on rake tasks:
+
+  $ pwd
+  /home/user/project
+
+  $ cd lib/foo/bar
+  $ pwd
+  /home/user/project/lib/foo/bar
+
+  $ rake run_pwd
+  /home/user/project
+
+As far as rake is concerned, all tasks are run from the directory in 
+which the Rakefile resides.
+
+=== Multiple Rake Files
+
+Not all tasks need to be included in a single Rakefile. A <tt>rakelib<tt>
+directory may be created for including additional Rake files.
 
 ----
 
