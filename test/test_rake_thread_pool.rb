@@ -42,15 +42,13 @@ class TestRakeTestThreadPool < Rake::TestCase
     assert_equal 2, threads.count
   end
 
-  def test_pool_future_captures_arguments
+  def test_pool_future_does_NOT_duplicate_arguments
     pool = ThreadPool.new(2)
-    a = 'a'
-    b = 'b'
-    c = 5 # 5 throws an execption with 5.dup. It should be ignored
-    pool.future(a,c){ |a_var,ignore| a_var.capitalize!; b.capitalize! }
+    obj = Object.new
+    captured = nil
+    pool.future(obj) { |var| captured = var }
     pool.join
-    assert_equal 'a', a
-    assert_equal 'b'.capitalize, b
+    assert_equal obj, captured
   end
 
   def test_pool_join_empties_queue
