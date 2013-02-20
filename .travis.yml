@@ -1,0 +1,9 @@
+language: ruby
+env:
+  - CI=true
+rvm:
+  - 1.8.7
+  - rbx-19mode
+  - jruby
+  - 1.9.3
+  - 2.0.0
