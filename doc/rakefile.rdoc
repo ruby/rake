@@ -80,7 +80,7 @@ method).  In addition, file tasks are usually named with a string
 rather than a symbol.
 
 The following file task creates a executable program (named +prog+)
-given two object files name <tt>a.o</tt> and <tt>b.o</tt>.  The tasks
+given two object files named <tt>a.o</tt> and <tt>b.o</tt>.  The tasks
 for creating <tt>a.o</tt> and <tt>b.o</tt> are not shown.
 
   file "prog" => ["a.o", "b.o"] do |t|
@@ -196,9 +196,23 @@ or
 
    RELEASE_VERSION=0.8.2 rake release
 
+or, alternatively 
+
+   rake release RELEASE_VERSION=0.8.2
+
 will work.  Environment variable names must either match the task
 parameter exactly, or match an all-uppercase version of the task
 parameter.
+
+<b>NOTE:</b> A variable declared within a rake command will
+not persist in the environment:
+
+   $ export $VALUE=old
+   $ rake :print_value $VALUE=new
+   new
+
+   $ rake :print_value  
+   old
 
 === Tasks that Expect Parameters
 
