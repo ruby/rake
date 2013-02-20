@@ -61,18 +61,20 @@ module Rake
     end
     private :lookup_prerequisite
 
-    # Complete list of prerequisite tasks including subtask's prerequisites
-    # recursively until no prerequisites exist or depth +limit+ reached.
-    # Default +limit+ is 30.
-    def prerequisite_tasks!(limit=30)
-      self.prerequisite_tasks.inject([]) do |tasks, task|
-        tasks << task
-        unless task.prerequisite_tasks.empty? or limit < 1
-          tasks += task.prerequisite_tasks!(limit - 1)
-        end
-        tasks
-      end
+    # List of all unique prerequisite tasks including prerequisite tasks'
+    # prerequisites.
+    # Includes self when cyclic dependencies are found.
+    def all_prerequisite_tasks
+      fetch_prerequisites
     end
+
+    def fetch_prerequisites(list=[])
+      prerequisite_tasks.each do |pre|
+        list << pre and pre.fetch_prerequisites(list) unless list.include?(pre)
+      end unless prerequisite_tasks.empty?
+      list
+    end
+    protected :fetch_prerequisites
 
     # First source from a rule (nil if no sources)
     def source
