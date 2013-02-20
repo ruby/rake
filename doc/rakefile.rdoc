@@ -79,7 +79,7 @@ method).  In addition, file tasks are usually named with a string
 rather than a symbol.
 
 The following file task creates a executable program (named +prog+)
-given two object files name <tt>a.o</tt> and <tt>b.o</tt>.  The tasks
+given two object files named <tt>a.o</tt> and <tt>b.o</tt>.  The tasks
 for creating <tt>a.o</tt> and <tt>b.o</tt> are not shown.
 
   file "prog" => ["a.o", "b.o"] do |t|
@@ -195,9 +195,22 @@ or
 
    RELEASE_VERSION=0.8.2 rake release
 
+or, alternatively 
+
+   rake release RELEASE_VERSION=0.8.2
+
 will work.  Environment variable names must either match the task
 parameter exactly, or match an all-uppercase version of the task
 parameter.
+
+<b>NOTE:</b> A variable declared within a rake command will
+not persist in the environment:
+
+   $ export $VALUE=old
+   $ rake print_value VALUE=new
+   new
+   $ rake print_value  
+   old
 
 === Tasks that Expect Parameters
 
@@ -549,6 +562,34 @@ This is the proper way to specify the task ...
   file "prog" => object_files do
     # Actions go here
   end
+
+== Rakefile Path
+
+When issuing the <tt>rake</tt> command in a terminal, Rake will look 
+for a Rakefile in the current directory. If a Rakefile  is not found, 
+it will search parent directories until one is found.
+
+For example, if a Rakefile resides in the <tt>project/</tt> directory, 
+moving deeper into the project's directory tree will not have an adverse
+effect on rake tasks:
+
+  $ pwd
+  /home/user/project
+
+  $ cd lib/foo/bar
+  $ pwd
+  /home/user/project/lib/foo/bar
+
+  $ rake run_pwd
+  /home/user/project
+
+As far as rake is concerned, all tasks are run from the directory in 
+which the Rakefile resides.
+
+=== Multiple Rake Files
+
+Not all tasks need to be included in a single Rakefile. A <tt>rakelib</tt>
+directory may be created for including additional Rake files.
 
 ----
 
