@@ -207,9 +207,8 @@ parameter.
 not persist in the environment:
 
    $ export $VALUE=old
-   $ rake print_value $VALUE=new
+   $ rake print_value VALUE=new
    new
-
    $ rake print_value  
    old
 
