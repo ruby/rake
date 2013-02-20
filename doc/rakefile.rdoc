@@ -4,7 +4,6 @@ First of all, there is no special format for a Rakefile.  A Rakefile
 contains executable Ruby code.  Anything legal in a ruby script is
 allowed in a Rakefile.
 
-
 Now that we understand there is no special syntax in a Rakefile, there
 are some conventions that are used in a Rakefile that are a little
 unusual in a typical Ruby program.  Since a Rakefile is tailored to
@@ -208,10 +207,10 @@ parameter.
 not persist in the environment:
 
    $ export $VALUE=old
-   $ rake :print_value $VALUE=new
+   $ rake print_value $VALUE=new
    new
 
-   $ rake :print_value  
+   $ rake print_value  
    old
 
 === Tasks that Expect Parameters
@@ -567,11 +566,11 @@ This is the proper way to specify the task ...
 
 == Rakefile Path
 
-When issuing the <tt>rake<tt> command in a terminal, Rake will look 
+When issuing the <tt>rake</tt> command in a terminal, Rake will look 
 for a Rakefile in the current directory. If a Rakefile  is not found, 
 it will search parent directories until one is found.
 
-For example, if a Rakefile resides in the <tt>project/<tt> directory, 
+For example, if a Rakefile resides in the <tt>project/</tt> directory, 
 moving deeper into the project's directory tree will not have an adverse
 effect on rake tasks:
 
@@ -590,7 +589,7 @@ which the Rakefile resides.
 
 === Multiple Rake Files
 
-Not all tasks need to be included in a single Rakefile. A <tt>rakelib<tt>
+Not all tasks need to be included in a single Rakefile. A <tt>rakelib</tt>
 directory may be created for including additional Rake files.
 
 ----
