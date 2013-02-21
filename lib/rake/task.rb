@@ -61,6 +61,21 @@ module Rake
     end
     private :lookup_prerequisite
 
+    # List of all unique prerequisite tasks including prerequisite tasks'
+    # prerequisites.
+    # Includes self when cyclic dependencies are found.
+    def all_prerequisite_tasks
+      fetch_prerequisites
+    end
+
+    def fetch_prerequisites(list=[])
+      prerequisite_tasks.each do |pre|
+        list << pre and pre.fetch_prerequisites(list) unless list.include?(pre)
+      end unless prerequisite_tasks.empty?
+      list
+    end
+    protected :fetch_prerequisites
+
     # First source from a rule (nil if no sources)
     def source
       @sources.first if defined?(@sources)

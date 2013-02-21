@@ -220,6 +220,31 @@ class TestRakeTask < Rake::TestCase
     assert_equal [b, c], a.prerequisite_tasks
   end
 
+  def test_all_prerequisite_tasks_includes_all_prerequisites
+    a = task :a => "b"
+    b = task :b => ["c", "d"]
+    c = task :c => "e"
+    d = task :d
+    e = task :e
+
+    assert_equal [b, c, d, e], a.all_prerequisite_tasks.sort_by { |t| t.name }
+  end
+
+  def test_all_prerequisite_tasks_does_not_include_duplicates
+    a = task :a => ["b", "c"]
+    b = task :b => "c"
+    c = task :c
+
+    assert_equal [b, c], a.all_prerequisite_tasks.sort_by { |t| t.name }
+  end
+
+  def test_all_prerequisite_tasks_includes_self_on_cyclic_dependencies
+    a = task :a => "b"
+    b = task :b => "a"
+
+    assert_equal [a, b], a.all_prerequisite_tasks.sort_by { |t| t.name }
+  end
+
   def test_timestamp_returns_now_if_all_prereqs_have_no_times
     a = task :a => ["b", "c"]
     task :b
