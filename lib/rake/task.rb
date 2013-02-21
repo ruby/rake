@@ -71,7 +71,7 @@ module Rake
     def fetch_prerequisites(list=[])
       prerequisite_tasks.each do |pre|
         list << pre and pre.fetch_prerequisites(list) unless list.include?(pre)
-      end unless prerequisite_tasks.empty?
+      end
       list
     end
     protected :fetch_prerequisites
