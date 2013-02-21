@@ -65,14 +65,17 @@ module Rake
     # prerequisites.
     # Includes self when cyclic dependencies are found.
     def all_prerequisite_tasks
-      fetch_prerequisites
+      seen = {}
+      collect_prerequisites(seen)
+      seen.values
     end
 
-    def fetch_prerequisites(list=[])
+    def collect_prerequisites(seen)
       prerequisite_tasks.each do |pre|
-        list << pre and pre.fetch_prerequisites(list) unless list.include?(pre)
+        next if seen[pre.name]
+        seen[pre.name] = pre
+        pre.collect_prerequisites(seen)
       end
-      list
     end
     protected :fetch_prerequisites
 
