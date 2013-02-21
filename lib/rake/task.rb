@@ -77,7 +77,7 @@ module Rake
         pre.collect_prerequisites(seen)
       end
     end
-    protected :fetch_prerequisites
+    protected :collect_prerequisites
 
     # First source from a rule (nil if no sources)
     def source
