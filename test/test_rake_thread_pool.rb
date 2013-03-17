@@ -76,7 +76,7 @@ class TestRakeTestThreadPool < Rake::TestCase
     pool = ThreadPool.new(10)
 
     deep_exception_block = lambda do |count|
-      next raise Exception.new if ( count < 1 )
+      raise Exception.new if ( count < 1 )
       pool.future(count-1, &deep_exception_block).value
     end
 
