@@ -70,20 +70,21 @@ class TestRakeTestThreadPool < Rake::TestCase
     assert_equal true, pool.__send__(:__queue__).empty?, "queue should be empty"
   end
 
+  CustomError = Class.new(StandardError)
+
   # test that throwing an exception way down in the blocks propagates
   # to the top
   def test_exceptions
     pool = ThreadPool.new(10)
 
     deep_exception_block = lambda do |count|
-      raise Exception.new if ( count < 1 )
+      raise CustomError if ( count < 1 )
       pool.future(count-1, &deep_exception_block).value
     end
 
-    assert_raises(Exception) do
+    assert_raises(CustomError) do
       pool.future(2, &deep_exception_block).value
     end
-
   end
 
   def test_pool_prevents_deadlock
