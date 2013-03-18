@@ -87,17 +87,17 @@ module Rake
     # Create a task named +task_name+ with no actions or prerequisites. Use
     # +enhance+ to add actions and prerequisites.
     def initialize(task_name, app)
-      @name = task_name.to_s
-      @prerequisites = []
-      @actions = []
+      @name            = task_name.to_s
+      @prerequisites   = []
+      @actions         = []
       @already_invoked = false
-      @full_comment = nil
-      @comment = nil
-      @lock = Monitor.new
-      @application = app
-      @scope = app.current_scope
-      @arg_names = nil
-      @locations = []
+      @full_comment    = nil
+      @comment         = nil
+      @lock            = Monitor.new
+      @application     = app
+      @scope           = app.current_scope
+      @arg_names       = nil
+      @locations       = []
     end
 
     # Enhance a task with prerequisites or actions.  Returns self.
