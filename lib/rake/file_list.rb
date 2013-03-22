@@ -61,7 +61,7 @@ module Rake
     DELEGATING_METHODS = (ARRAY_METHODS + MUST_DEFINE - MUST_NOT_DEFINE).collect{ |s| s.to_s }.sort.uniq
 
     # Now do the delegation.
-    DELEGATING_METHODS.each_with_index do |sym, i|
+    DELEGATING_METHODS.each do |sym|
       if SPECIAL_RETURN.include?(sym)
         ln = __LINE__+1
         class_eval %{

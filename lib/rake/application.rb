@@ -157,7 +157,7 @@ module Rake
     # Provide standard exception handling for the given block.
     def standard_exception_handling
       yield
-    rescue SystemExit => ex
+    rescue SystemExit
       # Exit silently with current status
       raise
     rescue OptionParser::InvalidOption => ex
