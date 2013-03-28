@@ -156,19 +156,17 @@ module Rake
 
     # Provide standard exception handling for the given block.
     def standard_exception_handling
-      begin
-        yield
-      rescue SystemExit => ex
-        # Exit silently with current status
-        raise
-      rescue OptionParser::InvalidOption => ex
-        $stderr.puts ex.message
-        exit(false)
-      rescue Exception => ex
-        # Exit with error message
-        display_error_message(ex)
-        exit_because_of_exception(ex)
-      end
+      yield
+    rescue SystemExit => ex
+      # Exit silently with current status
+      raise
+    rescue OptionParser::InvalidOption => ex
+      $stderr.puts ex.message
+      exit(false)
+    rescue Exception => ex
+      # Exit with error message
+      display_error_message(ex)
+      exit_because_of_exception(ex)
     end
 
     # Exit the program because of an unhandle exception.
