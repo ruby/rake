@@ -23,7 +23,7 @@ module Rake
     # Create a new argument scope using the prerequisite argument
     # names.
     def new_scope(names)
-      values = names.collect { |n| self[n] }
+      values = names.map { |n| self[n] }
       self.class.new(names, values, self)
     end
 

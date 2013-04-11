@@ -24,7 +24,7 @@ module Rake
       task_name, arg_names, deps = resolve_args(args)
       task_name = task_class.scope_name(@scope, task_name)
       deps = [deps] unless deps.respond_to?(:to_ary)
-      deps = deps.collect {|d| d.to_s }
+      deps = deps.map { |d| d.to_s }
       task = intern(task_class, task_name)
       task.set_arg_names(arg_names) unless arg_names.empty?
       if Rake::TaskManager.record_task_metadata
@@ -94,7 +94,7 @@ module Rake
     #
     def resolve_args_with_dependencies(args, hash) # :nodoc:
       fail "Task Argument Error" if hash.size != 1
-      key, value = hash.map { |k, v| [k,v] }.first
+      key, value = hash.map { |k, v| [k, v] }.first
       if args.empty?
         task_name = key
         arg_names = []
@@ -172,7 +172,7 @@ module Rake
     def lookup_in_scope(name, scope)
       n = scope.size
       while n >= 0
-        tn = (scope[0,n] + [name]).join(':')
+        tn = (scope[0, n] + [name]).join(':')
         task = @tasks[tn]
         return task if task
         n -= 1
@@ -213,7 +213,7 @@ module Rake
       locations = caller
       i = 0
       while locations[i]
-        return locations[i+1] if locations[i] =~ /rake\/dsl_definition.rb/
+        return locations[i + 1] if locations[i] =~ /rake\/dsl_definition.rb/
         i += 1
       end
       nil
@@ -227,18 +227,19 @@ module Rake
     end
 
     def trace_rule(level, message)
-      options.trace_output.puts "#{"    "*level}#{message}" if Rake.application.options.trace_rules
+      options.trace_output.puts "#{"    " * level}#{message}" if
+        Rake.application.options.trace_rules
     end
 
     # Attempt to create a rule given the list of prerequisites.
     def attempt_rule(task_name, extensions, block, level)
       sources = make_sources(task_name, extensions)
-      prereqs = sources.collect { |source|
+      prereqs = sources.map { |source|
         trace_rule level, "Attempting Rule #{task_name} => #{source}"
         if File.exist?(source) || Rake::Task.task_defined?(source)
           trace_rule level, "(#{task_name} => #{source} ... EXIST)"
           source
-        elsif parent = enhance_with_matching_rule(source, level+1)
+        elsif parent = enhance_with_matching_rule(source, level + 1)
           trace_rule level, "(#{task_name} => #{source} ... ENHANCE)"
           parent.name
         else
@@ -254,7 +255,7 @@ module Rake
     # Make a list of sources from the list of file name extensions /
     # translation procs.
     def make_sources(task_name, extensions)
-      result = extensions.collect { |ext|
+      result = extensions.map { |ext|
         case ext
         when /%/
           task_name.pathmap(ext)

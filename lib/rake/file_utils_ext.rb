@@ -135,7 +135,8 @@ module Rake
       optdecl.each do |name|
         h.delete name
       end
-      raise ArgumentError, "no such option: #{h.keys.join(' ')}" unless h.empty?
+      raise ArgumentError, "no such option: #{h.keys.join(' ')}" unless
+        h.empty?
     end
 
     extend self

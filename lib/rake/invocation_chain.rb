@@ -38,9 +38,11 @@ module Rake
       def member?(obj)
         false
       end
+
       def append(value)
         InvocationChain.new(value, self)
       end
+
       def to_s
         "TOP"
       end

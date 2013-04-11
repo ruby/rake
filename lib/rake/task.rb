@@ -53,7 +53,7 @@ module Rake
 
     # List of prerequisite tasks
     def prerequisite_tasks
-      prerequisites.collect { |pre| lookup_prerequisite(pre) }
+      prerequisites.map { |pre| lookup_prerequisite(pre) }
     end
 
     def lookup_prerequisite(prerequisite_name)
@@ -190,7 +190,8 @@ module Rake
     protected :invoke_with_call_chain
 
     def add_chain_to(exception, new_chain)
-      exception.extend(InvocationExceptionMixin) unless exception.respond_to?(:chain)
+      exception.extend(InvocationExceptionMixin) unless
+        exception.respond_to?(:chain)
       exception.chain = new_chain if exception.chain.nil?
     end
     private :add_chain_to
@@ -208,8 +209,8 @@ module Rake
     end
 
     # Invoke all the prerequisites of a task in parallel.
-    def invoke_prerequisites_concurrently(task_args, invocation_chain) # :nodoc:
-      futures = prerequisite_tasks.collect do |p|
+    def invoke_prerequisites_concurrently(task_args, invocation_chain)# :nodoc:
+      futures = prerequisite_tasks.map do |p|
         prereq_args = task_args.new_scope(p.arg_names)
         application.thread_pool.future(p) do |r|
           r.invoke_with_call_chain(prereq_args, invocation_chain)
@@ -234,9 +235,7 @@ module Rake
         application.trace "** Execute (dry run) #{name}"
         return
       end
-      if application.options.trace
-        application.trace "** Execute #{name}"
-      end
+      application.trace "** Execute #{name}" if application.options.trace
       application.enhance_with_matching_rule(name) if @actions.empty?
       @actions.each do |act|
         case act.arity
@@ -262,7 +261,7 @@ module Rake
     # Add a description to the task.  The description can consist of an option
     # argument list (enclosed brackets) and an optional comment.
     def add_description(description)
-      return if ! description
+      return unless description
       comment = description.strip
       add_comment(comment) if comment && ! comment.empty?
     end
@@ -305,11 +304,11 @@ module Rake
       result <<  "timestamp: #{timestamp}\n"
       result << "pre-requisites: \n"
       prereqs = prerequisite_tasks
-      prereqs.sort! {|a,b| a.timestamp <=> b.timestamp}
+      prereqs.sort! { |a, b| a.timestamp <=> b.timestamp }
       prereqs.each do |p|
         result << "--#{p.name} (#{p.timestamp})\n"
       end
-      latest_prereq = prerequisite_tasks.collect { |pre| pre.timestamp }.max
+      latest_prereq = prerequisite_tasks.map { |pre| pre.timestamp }.max
       result <<  "latest-prerequisite time: #{latest_prereq}\n"
       result << "................................\n\n"
       return result

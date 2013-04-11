@@ -41,7 +41,8 @@ module Rake
 
     # List of array methods (that are not in +Object+) that need to be
     # delegated.
-    ARRAY_METHODS = (Array.instance_methods - Object.instance_methods).map { |n| n.to_s }
+    ARRAY_METHODS = (Array.instance_methods - Object.instance_methods).
+      map { |n| n.to_s }
 
     # List of additional methods that must be delegated.
     MUST_DEFINE = %w[to_a inspect <=>]
@@ -58,12 +59,13 @@ module Rake
       + - & |
     ]
 
-    DELEGATING_METHODS = (ARRAY_METHODS + MUST_DEFINE - MUST_NOT_DEFINE).collect{ |s| s.to_s }.sort.uniq
+    DELEGATING_METHODS = (ARRAY_METHODS + MUST_DEFINE - MUST_NOT_DEFINE).
+      map { |s| s.to_s }.sort.uniq
 
     # Now do the delegation.
     DELEGATING_METHODS.each do |sym|
       if SPECIAL_RETURN.include?(sym)
-        ln = __LINE__+1
+        ln = __LINE__ + 1
         class_eval %{
           def #{sym}(*args, &block)
             resolve
@@ -72,7 +74,7 @@ module Rake
           end
         }, __FILE__, ln
       else
-        ln = __LINE__+1
+        ln = __LINE__ + 1
         class_eval %{
           def #{sym}(*args, &block)
             resolve
@@ -149,10 +151,8 @@ module Rake
       patterns.each do |pat|
         @exclude_patterns << pat
       end
-      if block_given?
-        @exclude_procs << block
-      end
-      resolve_exclude if ! @pending
+      @exclude_procs << block if block_given?
+      resolve_exclude unless @pending
       self
     end
 
@@ -231,7 +231,7 @@ module Rake
     #   FileList['a.c', 'b.c'].sub(/\.c$/, '.o')  => ['a.o', 'b.o']
     #
     def sub(pat, rep)
-      inject(FileList.new) { |res, fn| res << fn.sub(pat,rep) }
+      inject(FileList.new) { |res, fn| res << fn.sub(pat, rep) }
     end
 
     # Return a new FileList with the results of running +gsub+ against each
@@ -242,18 +242,18 @@ module Rake
     #      => ['lib\\test\\file', 'x\\y']
     #
     def gsub(pat, rep)
-      inject(FileList.new) { |res, fn| res << fn.gsub(pat,rep) }
+      inject(FileList.new) { |res, fn| res << fn.gsub(pat, rep) }
     end
 
     # Same as +sub+ except that the original file list is modified.
     def sub!(pat, rep)
-      each_with_index { |fn, i| self[i] = fn.sub(pat,rep) }
+      each_with_index { |fn, i| self[i] = fn.sub(pat, rep) }
       self
     end
 
     # Same as +gsub+ except that the original file list is modified.
     def gsub!(pat, rep)
-      each_with_index { |fn, i| self[i] = fn.gsub(pat,rep) }
+      each_with_index { |fn, i| self[i] = fn.gsub(pat, rep) }
       self
     end
 

@@ -50,20 +50,19 @@ module Rake # :nodoc:
     def parse_mode(m)
       result = 0
       (1..9).each do |i|
-        result = 2*result + ((m[i]==?-) ? 0 : 1)
+        result = 2 * result + ((m[i] == ?-) ? 0 : 1)
       end
       result
     end
 
     def determine_time(d1, d2, d3)
       now = self.class.time.now
-      if /:/ =~ d3
-        result = Time.parse("#{d1} #{d2} #{now.year} #{d3}")
-        if result > now
-          result = Time.parse("#{d1} #{d2} #{now.year-1} #{d3}")
-        end
-      else
+      if /:/ !~ d3
         result = Time.parse("#{d1} #{d2} #{d3}")
+      else
+        result = Time.parse("#{d1} #{d2} #{now.year} #{d3}")
+        result = Time.parse("#{d1} #{d2} #{now.year - 1} #{d3}") if
+          result > now
       end
       result
     end

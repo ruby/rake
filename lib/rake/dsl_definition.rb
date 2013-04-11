@@ -66,7 +66,7 @@ module Rake
       dir, _ = *Rake.application.resolve_args(args)
       Rake.each_dir_parent(dir) do |d|
         file_create d do |t|
-          mkdir_p t.name if ! File.exist?(t.name)
+          mkdir_p t.name unless File.exist?(t.name)
         end
       end
       result
