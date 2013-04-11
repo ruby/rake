@@ -66,17 +66,6 @@ module Rake # :nodoc:
         result = Time.parse("#{d1} #{d2} #{d3}")
       end
       result
-#       elements = ParseDate.parsedate("#{d1} #{d2} #{d3}")
-#       if elements[0].nil?
-#         today = self.class.date.today
-#         if elements[1] > today.month
-#           elements[0] = today.year - 1
-#         else
-#           elements[0] = today.year
-#         end
-#       end
-#       elements = elements.collect { |el| el.nil? ? 0 : el }
-#       Time.mktime(*elements[0,7])
     end
   end
 
