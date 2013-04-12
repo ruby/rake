@@ -26,8 +26,8 @@ class TestRakeTaskArguments < Rake::TestCase
   end
 
   def test_enumerable_behavior
-    ta = Rake::TaskArguments.new([:a, :b, :c], [1, 2 ,3])
-    assert_equal [10, 20, 30], ta.collect { |k,v| v * 10 }.sort
+    ta = Rake::TaskArguments.new([:a, :b, :c], [1, 2, 3])
+    assert_equal [10, 20, 30], ta.map { |k, v| v * 10 }.sort
   end
 
   def test_named_args

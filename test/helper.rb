@@ -33,26 +33,27 @@ class Rake::TestCase < MiniTest::Unit::TestCase
 
     test_dir = File.basename File.dirname File.expand_path __FILE__
 
-    @rake_root = if test_dir == 'test' then
-                   # rake repository
-                   File.expand_path '../../', __FILE__
-                 else
-                   # ruby repository
-                   File.expand_path '../../../', __FILE__
-                 end
+    @rake_root =
+      if test_dir == 'test'
+        # rake repository
+        File.expand_path '../../', __FILE__
+      else
+        # ruby repository
+        File.expand_path '../../../', __FILE__
+      end
 
     @rake_exec = File.join @rake_root, 'bin', 'rake'
     @rake_lib  = File.join @rake_root, 'lib'
 
-    @orig_PWD = Dir.pwd
-    @orig_APPDATA      = ENV['APPDATA']
-    @orig_HOME         = ENV['HOME']
-    @orig_HOMEDRIVE    = ENV['HOMEDRIVE']
-    @orig_HOMEPATH     = ENV['HOMEPATH']
-    @orig_RAKE_COLUMNS = ENV['RAKE_COLUMNS']
-    @orig_RAKE_SYSTEM  = ENV['RAKE_SYSTEM']
-    @orig_RAKEOPT      = ENV['RAKEOPT']
-    @orig_USERPROFILE  = ENV['USERPROFILE']
+    @orig_pwd = Dir.pwd
+    @orig_appdata      = ENV['APPDATA']
+    @orig_home         = ENV['HOME']
+    @orig_homedrive    = ENV['HOMEDRIVE']
+    @orig_homepath     = ENV['HOMEPATH']
+    @orig_rake_columns = ENV['RAKE_COLUMNS']
+    @orig_rake_system  = ENV['RAKE_SYSTEM']
+    @orig_rakeopt      = ENV['RAKEOPT']
+    @orig_userprofile  = ENV['USERPROFILE']
     ENV.delete 'RAKE_COLUMNS'
     ENV.delete 'RAKE_SYSTEM'
     ENV.delete 'RAKEOPT'
@@ -70,22 +71,22 @@ class Rake::TestCase < MiniTest::Unit::TestCase
   end
 
   def teardown
-    Dir.chdir @orig_PWD
+    Dir.chdir @orig_pwd
     FileUtils.rm_rf @tempdir
 
-    if @orig_APPDATA then
-      ENV['APPDATA'] = @orig_APPDATA
+    if @orig_appdata
+      ENV['APPDATA'] = @orig_appdata
     else
       ENV.delete 'APPDATA'
     end
 
-    ENV['HOME']         = @orig_HOME
-    ENV['HOMEDRIVE']    = @orig_HOMEDRIVE
-    ENV['HOMEPATH']     = @orig_HOMEPATH
-    ENV['RAKE_COLUMNS'] = @orig_RAKE_COLUMNS
-    ENV['RAKE_SYSTEM']  = @orig_RAKE_SYSTEM
-    ENV['RAKEOPT']      = @orig_RAKEOPT
-    ENV['USERPROFILE']  = @orig_USERPROFILE
+    ENV['HOME']         = @orig_home
+    ENV['HOMEDRIVE']    = @orig_homedrive
+    ENV['HOMEPATH']     = @orig_homepath
+    ENV['RAKE_COLUMNS'] = @orig_rake_columns
+    ENV['RAKE_SYSTEM']  = @orig_rake_system
+    ENV['RAKEOPT']      = @orig_rakeopt
+    ENV['USERPROFILE']  = @orig_userprofile
   end
 
   def ignore_deprecations
@@ -111,7 +112,7 @@ end
     ENV['RAKE_SYSTEM'] = @system_dir
   end
 
-  def rakefile contents
+  def rakefile(contents)
     open 'Rakefile', 'w' do |io|
       io << contents
     end
@@ -288,7 +289,6 @@ FileList['src/*'].each do |src|
   target = File.join TARGET_DIR, File.basename(src)
   file target => [src, TARGET_DIR] do
     cp src, target
-    # sleep 3 if src !~ /foo#{N-1}$/   # I'm commenting out this sleep, it doesn't seem to do anything.
   end
   task :run => target
 end

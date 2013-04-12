@@ -26,7 +26,7 @@ class TestRakeFileTask < Rake::TestCase
 
     open(ftask.name, "w") { |f| f.puts "HI" }
 
-    assert_equal nil, ftask.prerequisites.collect{|n| Task[n].timestamp}.max
+    assert_equal nil, ftask.prerequisites.map { |n| Task[n].timestamp }.max
     assert ! ftask.needed?, "file should not be needed"
   ensure
     File.delete(ftask.name) rescue nil
@@ -61,10 +61,10 @@ class TestRakeFileTask < Rake::TestCase
   def test_file_times_old_depends_on_new
     create_timed_files(OLDFILE, NEWFILE)
 
-    t1 = Rake.application.intern(FileTask,OLDFILE).enhance([NEWFILE])
+    t1 = Rake.application.intern(FileTask, OLDFILE).enhance([NEWFILE])
     t2 = Rake.application.intern(FileTask, NEWFILE)
     assert ! t2.needed?, "Should not need to build new file"
-    preq_stamp = t1.prerequisites.collect{|t| Task[t].timestamp}.max
+    preq_stamp = t1.prerequisites.map { |t| Task[t].timestamp }.max
     assert_equal t2.timestamp, preq_stamp
     assert t1.timestamp < preq_stamp, "T1 should be older"
     assert t1.needed?, "Should need to rebuild old file because of new"
@@ -112,7 +112,7 @@ class TestRakeFileTask < Rake::TestCase
       Task[NEWFILE].invoke
     rescue Exception
     end
-    assert( ! File.exist?(NEWFILE), "NEWFILE should be deleted")
+    assert(! File.exist?(NEWFILE), "NEWFILE should be deleted")
   end
 
   def load_phony

@@ -81,7 +81,7 @@ class TestRakeTaskWithArguments < Rake::TestCase
 
   def test_arguments_are_passed_to_block
     t = task(:t, :a, :b) { |tt, args|
-      assert_equal( { :a => 1, :b => 2 }, args.to_hash )
+      assert_equal({ :a => 1, :b => 2 }, args.to_hash)
     }
     t.invoke(1, 2)
   end
@@ -121,7 +121,7 @@ class TestRakeTaskWithArguments < Rake::TestCase
     assert_equal "T", t.comment
     assert_equal "[a,b]", t.arg_description
     assert_equal "tt[a,b]", t.name_with_args
-    assert_equal [:a, :b],t.arg_names
+    assert_equal [:a, :b], t.arg_names
   end
 
   def test_named_args_are_passed_to_prereqs

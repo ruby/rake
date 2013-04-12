@@ -156,8 +156,8 @@ class TestRakeTask < Rake::TestCase
   def test_multi_invocations
     runs = []
     p = proc do |t| runs << t.name end
-    task({:t1=>[:t2,:t3]}, &p)
-    task({:t2=>[:t3]}, &p)
+    task({ :t1 => [:t2, :t3] }, &p)
+    task({ :t2 => [:t3] }, &p)
     task(:t3, &p)
     Task[:t1].invoke
     assert_equal ["t1", "t2", "t3"], runs.sort
@@ -166,7 +166,7 @@ class TestRakeTask < Rake::TestCase
   def test_task_list
     task :t2
     task :t1 => [:t2]
-    assert_equal ["t1", "t2"], Task.tasks.collect {|t| t.name}
+    assert_equal ["t1", "t2"], Task.tasks.map { |t| t.name }
   end
 
   def test_task_gives_name_on_to_s
@@ -271,15 +271,15 @@ class TestRakeTask < Rake::TestCase
 
     t_a = task(:a) do |t|
       sleep 0.02
-      mx.synchronize{ result << t.name }
+      mx.synchronize { result << t.name }
     end
 
     t_b = task(:b) do |t|
-      mx.synchronize{ result << t.name }
+      mx.synchronize { result << t.name }
     end
 
-    t_c = task(:c => [:a,:b]) do |t|
-      mx.synchronize{ result << t.name }
+    t_c = task(:c => [:a, :b]) do |t|
+      mx.synchronize { result << t.name }
     end
 
     t_c.invoke

@@ -1,6 +1,6 @@
 require File.expand_path('../helper', __FILE__)
 
-TESTING_REQUIRE = [ ]
+TESTING_REQUIRE = []
 
 class TestRakeApplicationOptions < Rake::TestCase
 
@@ -22,9 +22,7 @@ class TestRakeApplicationOptions < Rake::TestCase
   end
 
   def clear_argv
-    while ! ARGV.empty?
-      ARGV.pop
-    end
+    ARGV.pop until ARGV.empty?
   end
 
   def test_default_options
@@ -146,7 +144,11 @@ class TestRakeApplicationOptions < Rake::TestCase
 
   def test_rakelib
     dirs = %w(A B C).join(File::PATH_SEPARATOR)
-    flags(['--rakelibdir', dirs], ["--rakelibdir=#{dirs}"], ['-R', dirs], ["-R#{dirs}"]) do |opts|
+    flags(
+      ['--rakelibdir', dirs],
+      ["--rakelibdir=#{dirs}"],
+      ['-R', dirs],
+      ["-R#{dirs}"]) do |opts|
       assert_equal ['A', 'B', 'C'], opts.rakelib
     end
   end

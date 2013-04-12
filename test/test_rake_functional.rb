@@ -420,8 +420,10 @@ class TestRakeFunctional < Rake::TestCase
     status = $?
     if @verbose
       puts "    SIG status = #{$?.inspect}"
-      puts "    SIG status.respond_to?(:signaled?) = #{$?.respond_to?(:signaled?).inspect}"
-      puts "    SIG status.signaled? = #{status.signaled?}" if status.respond_to?(:signaled?)
+      puts "    SIG status.respond_to?(:signaled?) = " +
+        "#{$?.respond_to?(:signaled?).inspect}"
+      puts "    SIG status.signaled? = #{status.signaled?}" if
+        status.respond_to?(:signaled?)
     end
     status.respond_to?(:signaled?) && status.signaled?
   end

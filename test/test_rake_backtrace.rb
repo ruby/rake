@@ -83,7 +83,8 @@ class TestRakeBacktrace < Rake::TestCase
         return
       end
     end
-    flunk "expected #{pattern.inspect} to match something in:\n    #{lines.join("\n    ")}"
+    flunk "expected #{pattern.inspect} to match something in:\n" +
+      "#{lines.join("\n    ")}"
   end
 
 end

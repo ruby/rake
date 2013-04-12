@@ -6,10 +6,12 @@ class TestTraceOutput < Rake::TestCase
 
   class PrintSpy
     attr_reader :result, :calls
+
     def initialize
       @result = ""
       @calls = 0
     end
+
     def print(string)
       @result << string
       @calls += 1

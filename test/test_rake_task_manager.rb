@@ -37,7 +37,7 @@ class TestRakeTaskManager < Rake::TestCase
       t = @tm.define_task(Rake::Task, :t)
       assert_equal "x:t", t.name
     end
-    assert_equal ["x:t"], @tm.tasks.collect { |t| t.name }
+    assert_equal ["x:t"], @tm.tasks.map { |t| t.name }
   end
 
   def test_anonymous_namespace
@@ -55,7 +55,7 @@ class TestRakeTaskManager < Rake::TestCase
       assert_equal "fn", t.name
     end
 
-    assert_equal ["fn"], @tm.tasks.collect { |t| t.name }
+    assert_equal ["fn"], @tm.tasks.map { |t| t.name }
   end
 
   def test_namespace_yields_same_namespace_as_returned
@@ -124,7 +124,7 @@ class TestRakeTaskManager < Rake::TestCase
   end
 
   def test_lookup_with_explicit_scopes
-    t1, t2, t3, s = (0...4).collect { nil }
+    t1, t2, t3, s = (0...4).map { nil }
     t1 = @tm.define_task(Rake::Task, :t)
     @tm.in_namespace("a") do
       t2 = @tm.define_task(Rake::Task, :t)
@@ -154,4 +154,3 @@ class TestRakeTaskManager < Rake::TestCase
   end
 
 end
-
