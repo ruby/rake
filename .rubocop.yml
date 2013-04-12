@@ -15,3 +15,13 @@ SpaceAroundEqualsInParameterDefault:
 
 HashSyntax:
   Enabled: false
+
+LineLength:
+  Enabled: true
+  Max: 90
+
+WhileUntilModifier:
+  Enabled: false
+
+IfUnlessModifier:
+  Enabled: false
