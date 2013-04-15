@@ -85,4 +85,34 @@ class TestRakeTaskArguments < Rake::TestCase
     ta.with_defaults({ "cc" => "default_val" })
     assert_nil ta[:cc]
   end
+
+  def test_all_and_extra_arguments_without_named_arguments
+    app = Rake::Application.new
+    ta = Rake::TaskArguments.new([],app.parse_task_string("task[1,two,more]").last)
+    assert_equal [], ta.names
+    assert_equal ['1','two','more'], ta.to_a
+    assert_equal ['1','two','more'], ta.extras
+  end
+
+  def test_all_and_extra_arguments_with_named_arguments
+    app = Rake::Application.new
+    ta = Rake::TaskArguments.new([:first,:second],app.parse_task_string("task[1,two,more,still more]").last)
+    assert_equal [:first,:second], ta.names
+    assert_equal "1", ta[:first]
+    assert_equal "two", ta[:second]
+    assert_equal ['1','two','more','still more'], ta.to_a
+    assert_equal ['more','still more'], ta.extras
+  end
+
+  def test_extra_args_with_less_than_named_arguments
+    app = Rake::Application.new
+    ta = Rake::TaskArguments.new([:first,:second,:third],app.parse_task_string("task[1,two]").last)
+    assert_equal [:first,:second,:third], ta.names
+    assert_equal "1", ta[:first]
+    assert_equal "two", ta[:second]
+    assert_equal nil, ta[:third]
+    assert_equal ['1','two'], ta.to_a
+    assert_equal [], ta.extras
+  end
+
 end
