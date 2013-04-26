@@ -166,7 +166,7 @@ class TestRakeFileList < Rake::TestCase
   def test_excluding_via_block
     fl = FileList['a.c', 'b.c', 'xyz.c']
     fl.exclude { |fn| fn.pathmap('%n') == 'xyz' }
-    assert fl.exclude?("xyz.c"), "Should exclude xyz.c"
+    assert fl.excluded_from_list?("xyz.c"), "Should exclude xyz.c"
     assert_equal ['a.c', 'b.c'], fl
   end
 
@@ -404,24 +404,24 @@ class TestRakeFileList < Rake::TestCase
 
   def test_exclude_with_alternate_file_seps
     fl = FileList.new
-    assert fl.exclude?("x/CVS/y")
-    assert fl.exclude?("x\\CVS\\y")
-    assert fl.exclude?("x/.svn/y")
-    assert fl.exclude?("x\\.svn\\y")
-    assert fl.exclude?("x/core")
-    assert fl.exclude?("x\\core")
+    assert fl.excluded_from_list?("x/CVS/y")
+    assert fl.excluded_from_list?("x\\CVS\\y")
+    assert fl.excluded_from_list?("x/.svn/y")
+    assert fl.excluded_from_list?("x\\.svn\\y")
+    assert fl.excluded_from_list?("x/core")
+    assert fl.excluded_from_list?("x\\core")
   end
 
   def test_add_default_exclude_list
     fl = FileList.new
     fl.exclude(/~\d+$/)
-    assert fl.exclude?("x/CVS/y")
-    assert fl.exclude?("x\\CVS\\y")
-    assert fl.exclude?("x/.svn/y")
-    assert fl.exclude?("x\\.svn\\y")
-    assert fl.exclude?("x/core")
-    assert fl.exclude?("x\\core")
-    assert fl.exclude?("x/abc~1")
+    assert fl.excluded_from_list?("x/CVS/y")
+    assert fl.excluded_from_list?("x\\CVS\\y")
+    assert fl.excluded_from_list?("x/.svn/y")
+    assert fl.excluded_from_list?("x\\.svn\\y")
+    assert fl.excluded_from_list?("x/core")
+    assert fl.excluded_from_list?("x\\core")
+    assert fl.excluded_from_list?("x/abc~1")
   end
 
   def test_basic_array_functions

@@ -219,7 +219,7 @@ module Rake
     private :resolve_add
 
     def resolve_exclude
-      reject! { |fn| exclude?(fn) }
+      reject! { |fn| excluded_from_list?(fn) }
       self
     end
     private :resolve_exclude
@@ -341,13 +341,19 @@ module Rake
     # Add matching glob patterns.
     def add_matching(pattern)
       FileList.glob(pattern).each do |fn|
-        self << fn unless exclude?(fn)
+        self << fn unless excluded_from_list?(fn)
       end
     end
     private :add_matching
 
-    # Should the given file name be excluded?
-    def exclude?(fn)
+    # Should the given file name be excluded from the list?
+    #
+    # NOTE: This method was formally named "exclude?", but Rails
+    # introduced an exclude? method as an array method and setup a
+    # conflict with file list. We renamed the method to avoid
+    # confusion. If you were using "FileList#exclude?" in your user
+    # code, you will need to update.
+    def excluded_from_list?(fn)
       return true if @exclude_patterns.any? do |pat|
         case pat
         when Regexp
