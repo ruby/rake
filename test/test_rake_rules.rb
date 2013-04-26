@@ -323,4 +323,40 @@ class TestRakeRules < Rake::TestCase
     assert_raises(RuntimeError) do Task['a'].invoke end
   end
 
+  def test_string_rule_with_args
+    delete_file(OBJFILE)
+    create_file(SRCFILE)
+    rule '.o', [:a] => SRCFILE do |t, args|
+      assert_equal 'arg', args.a
+    end
+    Task[OBJFILE].invoke('arg')
+  end
+
+  def test_regex_rule_with_args
+    delete_file(OBJFILE)
+    create_file(SRCFILE)
+    rule /.o$/, [:a] => SRCFILE do |t, args|
+      assert_equal 'arg', args.a
+    end
+    Task[OBJFILE].invoke('arg')
+  end
+
+  def test_string_rule_with_args_and_lambda_prereq
+    delete_file(OBJFILE)
+    create_file(SRCFILE)
+    rule '.o', [:a] => [lambda{SRCFILE}]do |t, args|
+      assert_equal 'arg', args.a
+    end
+    Task[OBJFILE].invoke('arg')
+  end
+
+  def test_regex_rule_with_args_and_lambda_prereq
+    delete_file(OBJFILE)
+    create_file(SRCFILE)
+    rule /.o$/, [:a] => [lambda{SRCFILE}] do |t, args|
+      assert_equal 'arg', args.a
+    end
+    Task[OBJFILE].invoke('arg')
+  end
+
 end

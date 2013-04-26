@@ -15,9 +15,9 @@ module Rake
     end
 
     def create_rule(*args, &block)
-      pattern, _, deps = resolve_args(args)
+      pattern, args, deps = resolve_args(args)
       pattern = Regexp.new(Regexp.quote(pattern) + '$') if String === pattern
-      @rules << [pattern, deps, block]
+      @rules << [pattern, args, deps, block]
     end
 
     def define_task(task_class, *args, &block)
@@ -116,9 +116,9 @@ module Rake
     def enhance_with_matching_rule(task_name, level=0)
       fail Rake::RuleRecursionOverflowError,
         "Rule Recursion Too Deep" if level >= 16
-      @rules.each do |pattern, extensions, block|
+      @rules.each do |pattern, args, extensions, block|
         if pattern.match(task_name)
-          task = attempt_rule(task_name, extensions, block, level)
+          task = attempt_rule(task_name, args, extensions, block, level)
           return task if task
         end
       end
@@ -232,7 +232,7 @@ module Rake
     end
 
     # Attempt to create a rule given the list of prerequisites.
-    def attempt_rule(task_name, extensions, block, level)
+    def attempt_rule(task_name, args, extensions, block, level)
       sources = make_sources(task_name, extensions)
       prereqs = sources.map { |source|
         trace_rule level, "Attempting Rule #{task_name} => #{source}"
@@ -247,7 +247,7 @@ module Rake
           return nil
         end
       }
-      task = FileTask.define_task({task_name => prereqs}, &block)
+      task = FileTask.define_task(task_name, {args => prereqs}, &block)
       task.sources = prereqs
       task
     end
