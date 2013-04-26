@@ -1,6 +1,34 @@
 require File.expand_path('../helper', __FILE__)
 require 'open3'
 
+class TestBacktraceSuppression < Rake::TestCase
+  def test_bin_rake_suppressed
+    paths = ["something/bin/rake:12"]
+
+    actual = Rake::Backtrace.collapse(paths)
+
+    assert_equal [], actual
+  end
+
+  def test_system_dir_suppressed
+    path = RbConfig::CONFIG['rubylibprefix']
+    paths = [path + ":12"]
+
+    actual = Rake::Backtrace.collapse(paths)
+
+    assert_equal [], actual
+  end
+
+  def test_near_system_dir_isnt_suppressed
+    path = RbConfig::CONFIG['rubylibprefix']
+    paths = [" " + path + ":12"]
+
+    actual = Rake::Backtrace.collapse(paths)
+
+    assert_equal paths, actual
+  end
+end
+
 class TestRakeBacktrace < Rake::TestCase
 
   def setup
