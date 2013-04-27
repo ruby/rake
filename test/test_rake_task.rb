@@ -308,6 +308,24 @@ class TestRakeTask < Rake::TestCase
   end
 
 
+  def test_comments_with_sentences
+    desc "Comment 1. Comment 2."
+    t = task(:t, :name, :rev)
+    assert_equal "Comment 1", t.comment
+  end
+
+  def test_comments_with_tabbed_sentences
+    desc "Comment 1.\tComment 2."
+    t = task(:t, :name, :rev)
+    assert_equal "Comment 1", t.comment
+  end
+
+  def test_comments_with_decimal_points
+    desc "Revision 1.2.3."
+    t = task(:t, :name, :rev)
+    assert_equal "Revision 1.2.3", t.comment
+  end
+
   def test_extended_comments
     desc %{
       This is a comment.
@@ -318,7 +336,7 @@ class TestRakeTask < Rake::TestCase
     }
     t = task(:t, :name, :rev)
     assert_equal "[name,rev]", t.arg_description
-    assert_equal "This is a comment.", t.comment
+    assert_equal "This is a comment", t.comment
     assert_match(/^\s*name -- Name/, t.full_comment)
     assert_match(/^\s*rev  -- Software/, t.full_comment)
     assert_match(/\A\s*This is a comment\.$/, t.full_comment)

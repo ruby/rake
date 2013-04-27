@@ -21,13 +21,6 @@ module Rake
     # Application owning this task.
     attr_accessor :application
 
-    # Comment for this task.  Restricted to a single line of no more than 50
-    # characters.
-    attr_reader :comment
-
-    # Full text of the (possibly multi-line) comment.
-    attr_reader :full_comment
-
     # Array of nested namespaces names used for task lookup by this task.
     attr_reader :scope
 
@@ -91,8 +84,7 @@ module Rake
       @prerequisites   = []
       @actions         = []
       @already_invoked = false
-      @full_comment    = nil
-      @comment         = nil
+      @comments        = []
       @lock            = Monitor.new
       @application     = app
       @scope           = app.current_scope
@@ -159,8 +151,7 @@ module Rake
 
     # Clear the existing comments on a rake task.
     def clear_comments
-      @full_comment = nil
-      @comment = nil
+      @comments = []
       self
     end
 
@@ -266,9 +257,29 @@ module Rake
       add_comment(comment) if comment && ! comment.empty?
     end
 
+    def add_comment(comment)
+      @comments << comment
+    end
+
+    def full_comment
+      if @comments.empty?
+        nil
+      else
+        @comments.join(" / ")
+      end
+    end
+
+    def comment
+      if @comments.empty?
+        nil
+      else
+        @comments.map { |c| c.split(/\.[ \t]|\.$|\n/).first }.join(" / ")
+      end
+    end
+
     # Add a comment to the task.  If a comment already exists, separate
     # the new comment with " / ".
-    def add_comment(comment)
+    def old_add_comment(comment)
       if @full_comment
         @full_comment << " / "
       else
