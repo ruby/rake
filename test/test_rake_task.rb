@@ -331,10 +331,4 @@ class TestRakeTask < Rake::TestCase
     task(:t)
     assert_equal "line one / line two", t.comment
   end
-
-  def test_settable_comments
-    t = task(:t)
-    t.comment = "HI"
-    assert_equal "HI", t.comment
-  end
 end

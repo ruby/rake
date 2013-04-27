@@ -266,11 +266,6 @@ module Rake
       add_comment(comment) if comment && ! comment.empty?
     end
 
-    # Writing to the comment attribute is the same as adding a description.
-    def comment=(description)
-      add_description(description)
-    end
-
     # Add a comment to the task.  If a comment already exists, separate
     # the new comment with " / ".
     def add_comment(comment)
