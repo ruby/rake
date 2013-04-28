@@ -116,6 +116,7 @@ module Rake
     end
 
     # Describe the next rake task.
+    # Duplicate descriptions are discarded.
     #
     # Example:
     #   desc "Run the Unit Tests"
