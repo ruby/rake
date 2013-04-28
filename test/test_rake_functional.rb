@@ -68,7 +68,7 @@ class TestRakeFunctional < Rake::TestCase
 
     rake "--describe"
 
-    assert_match %r{^rake a\n *A / A2 *$}m, @out
+    assert_match %r{^rake a\n *A\n *A2 *$}m, @out
     assert_match %r{^rake b\n *B *$}m, @out
     assert_match %r{^rake d\n *x{80}}m, @out
     refute_match %r{^rake c\n}m, @out

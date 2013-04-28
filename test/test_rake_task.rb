@@ -349,4 +349,22 @@ class TestRakeTask < Rake::TestCase
     task(:t)
     assert_equal "line one / line two", t.comment
   end
+
+  def test_duplicate_comments
+    desc "line one"
+    t = task(:t)
+    desc "line one"
+    task(:t)
+    assert_equal "line one", t.comment
+  end
+
+  def test_interspersed_duplicate_comments
+    desc "line one"
+    t = task(:t)
+    desc "line two"
+    task(:t)
+    desc "line one"
+    task(:t)
+    assert_equal "line one / line two", t.comment
+  end
 end

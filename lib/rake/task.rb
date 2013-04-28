@@ -258,41 +258,41 @@ module Rake
     end
 
     def add_comment(comment)
-      @comments << comment
-    end
-
-    def full_comment
-      if @comments.empty?
-        nil
-      else
-        @comments.join(" / ")
-      end
-    end
-
-    def comment
-      if @comments.empty?
-        nil
-      else
-        @comments.map { |c| c.split(/\.[ \t]|\.$|\n/).first }.join(" / ")
-      end
-    end
-
-    # Add a comment to the task.  If a comment already exists, separate
-    # the new comment with " / ".
-    def old_add_comment(comment)
-      if @full_comment
-        @full_comment << " / "
-      else
-        @full_comment = ''
-      end
-      @full_comment << comment
-      if @full_comment =~ /\A([^.]+?\.)( |$)/
-        @comment = $1
-      else
-        @comment = @full_comment
-      end
+      @comments << comment unless @comments.include?(comment)
     end
     private :add_comment
+
+    # Full collection of comments. Multiple comments are separated by
+    # newlines.
+    def full_comment
+      transform_comments("\n")
+    end
+
+    # First line (or sentence) of all comments. Multiple comments are
+    # separated by a "/".
+    def comment
+      transform_comments(" / ") { |c| first_sentence(c) }
+    end
+
+    # Transform the list of comments as specified by the block and
+    # join with the separator.
+    def transform_comments(separator, &block)
+      if @comments.empty?
+        nil
+      else
+        block ||= lambda { |c| c }
+        @comments.map(&block).join(separator)
+      end
+    end
+    private :transform_comments
+
+    # Get the first sentence in a string. The sentence is terminated
+    # by the first period or the end of the line. Decimal points do
+    # not count as periods.
+    def first_sentence(string)
+      string.split(/\.[ \t]|\.$|\n/).first
+    end
+    private :first_sentence
 
     # Set the names of the arguments for this task. +args+ should be
     # an array of symbols, one for each argument name.
