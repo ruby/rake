@@ -1,7 +1,7 @@
 (add-to-list
  'toggle-mapping-styles
  '(rake . (
-           ("test/lib/\\1_test.rb"   . "lib/rake/\\1.rb")
+           ("test/test_\\1.rb"   . "lib/rake/\\1.rb")
            ) ))
 
 (buffer-toggle-style 'rake)
