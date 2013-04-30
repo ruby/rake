@@ -4,23 +4,29 @@ module Rake
   # InvocationChain tracks the chain of task invocations to detect
   # circular dependencies.
   class InvocationChain < LinkedList
-    def member?(obj)
-      head == obj || tail.member?(obj)
+
+    # Is the invocation already in the chain?
+    def member?(invocation)
+      head == invocation || tail.member?(invocation)
     end
 
-    def append(value)
-      if member?(value)
-        fail RuntimeError, "Circular dependency detected: #{to_s} => #{value}"
+    # Append an invocation to the chain of invocations. It is an error
+    # if the invocation already listed.
+    def append(invocation)
+      if member?(invocation)
+        fail RuntimeError, "Circular dependency detected: #{to_s} => #{invocation}"
       end
-      conj(value)
+      conj(invocation)
     end
 
+    # Convert to string, ie: TOP => invocation => invocation
     def to_s
       "#{prefix}#{head}"
     end
 
-    def self.append(value, chain)
-      chain.append(value)
+    # Class level append.
+    def self.append(invocation, chain)
+      chain.append(invocation)
     end
 
     private
@@ -29,13 +35,16 @@ module Rake
       "#{tail.to_s} => "
     end
 
+    # Null object for an empty chain.
     class EmptyInvocationChain < LinkedList::EmptyLinkedList
+      @parent = InvocationChain
+
       def member?(obj)
         false
       end
 
-      def append(value)
-        InvocationChain.new(value, self)
+      def append(invocation)
+        conj(invocation)
       end
 
       def to_s
@@ -43,6 +52,6 @@ module Rake
       end
     end
 
-    EMPTY = EmptyInvocationChain.new(self)
+    EMPTY = EmptyInvocationChain.new
   end
 end
