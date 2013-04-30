@@ -13,7 +13,13 @@ class TestRakeInvocationChain < Rake::TestCase
     @two = @one.append(@second_member)
   end
 
-  def test_append
+  def test_make_on_invocation_chains
+    assert_equal @empty, Rake::InvocationChain.make()
+    assert_equal @one, Rake::InvocationChain.make(@first_member)
+    assert_equal @two, Rake::InvocationChain.make(@second_member, @first_member)
+  end
+
+  def test_append_with_one_argument
     chain = @empty.append("A")
 
     assert_equal 'TOP => A', chain.to_s # HACK
@@ -49,4 +55,3 @@ class TestRakeInvocationChain < Rake::TestCase
   end
 
 end
-

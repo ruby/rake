@@ -44,11 +44,15 @@ module Rake
     end
 
     def self.make(*args)
-      result = EMPTY
+      result = empty
       args.reverse_each do |item|
-        result = LinkedList.new(item, result)
+        result = new(item, result)
       end
       result
+    end
+
+    def self.empty
+      EMPTY
     end
 
     class EmptyLinkedList < LinkedList

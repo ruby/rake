@@ -3,14 +3,9 @@ module Rake
   ####################################################################
   # InvocationChain tracks the chain of task invocations to detect
   # circular dependencies.
-  class InvocationChain
-    def initialize(value, tail)
-      @value = value
-      @tail = tail
-    end
-
+  class InvocationChain < LinkedList
     def member?(obj)
-      @value == obj || @tail.member?(obj)
+      head == obj || tail.member?(obj)
     end
 
     def append(value)
@@ -21,20 +16,24 @@ module Rake
     end
 
     def to_s
-      "#{prefix}#{@value}"
+      "#{prefix}#{head}"
     end
 
     def self.append(value, chain)
       chain.append(value)
     end
 
+    def self.empty
+      EMPTY
+    end
+
     private
 
     def prefix
-      "#{@tail.to_s} => "
+      "#{tail.to_s} => "
     end
 
-    class EmptyInvocationChain
+    class EmptyInvocationChain < LinkedList::EmptyLinkedList
       def member?(obj)
         false
       end
