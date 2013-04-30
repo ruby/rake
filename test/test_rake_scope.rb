@@ -33,4 +33,12 @@ class TestRakeScope < Rake::TestCase
     scope = Scope.make.conj("B").conj("A")
     assert_equal Scope.make("A", "B"), scope
   end
+
+  def test_trim
+    scope = Scope.make("A", "B")
+    assert_equal scope, scope.trim(0)
+    assert_equal scope.tail, scope.trim(1)
+    assert_equal scope.tail.tail, scope.trim(2)
+    assert_equal scope.tail.tail, scope.trim(3)
+  end
 end

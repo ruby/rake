@@ -101,6 +101,7 @@ class TestRakeTaskManager < Rake::TestCase
         assert_equal bot_z, @tm["z"]
         assert_equal mid_z, @tm["^z"]
         assert_equal top_z, @tm["^^z"]
+        assert_equal top_z, @tm["^^^z"] # Over the top
         assert_equal top_z, @tm["rake:z"]
       end
 
@@ -113,6 +114,7 @@ class TestRakeTaskManager < Rake::TestCase
       assert_equal aa, @tm["aa"]
       assert_equal mid_z, @tm["z"]
       assert_equal top_z, @tm["^z"]
+      assert_equal top_z, @tm["^^z"] # Over the top
       assert_equal top_z, @tm["rake:z"]
     end
 

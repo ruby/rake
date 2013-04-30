@@ -9,6 +9,15 @@ module Rake
       "#{path}:#{task_name}"
     end
 
+    def trim(n)
+      result = self
+      while n > 0 && ! result.empty?
+        result = result.tail
+        n -= 1
+      end
+      result
+    end
+
     class EmptyScope < EmptyLinkedList
       def path
         ""

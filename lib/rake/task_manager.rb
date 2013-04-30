@@ -160,8 +160,7 @@ module Rake
         scopes = Scope.make
         task_name = task_name.sub(/^rake:/, '')
       elsif task_name =~ /^(\^+)/
-        scopes = initial_scope
-        $1.size.times { scopes = scopes.tail }
+        scopes = initial_scope.trim($1.size)
         task_name = task_name.sub(/^(\^+)/, '')
       else
         scopes = initial_scope
