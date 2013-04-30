@@ -12,7 +12,7 @@ module Rake
       if member?(value)
         fail RuntimeError, "Circular dependency detected: #{to_s} => #{value}"
       end
-      self.class.new(value, self)
+      conj(value)
     end
 
     def to_s
@@ -21,10 +21,6 @@ module Rake
 
     def self.append(value, chain)
       chain.append(value)
-    end
-
-    def self.empty
-      EMPTY
     end
 
     private
@@ -47,6 +43,6 @@ module Rake
       end
     end
 
-    EMPTY = EmptyInvocationChain.new
+    EMPTY = EmptyInvocationChain.new(self)
   end
 end

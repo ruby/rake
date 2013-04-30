@@ -2,11 +2,7 @@ module Rake
   class Scope < LinkedList
 
     def path
-      map{|item| item.to_s}.reverse.join(":")
-    end
-
-    def self.empty
-      EMPTY
+      map { |item| item.to_s }.reverse.join(":")
     end
 
     def path_with_task_name(task_name)
@@ -14,10 +10,6 @@ module Rake
     end
 
     class EmptyScope < EmptyLinkedList
-
-      def initialize
-      end
-
       def path
         ""
       end
@@ -25,10 +17,8 @@ module Rake
       def path_with_task_name(task_name)
         task_name
       end
-
     end
 
-    EMPTY = EmptyScope.new
-
+    EMPTY = EmptyScope.new(self)
   end
 end

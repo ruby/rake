@@ -28,4 +28,9 @@ class TestRakeScope < Rake::TestCase
     scope = Scope.make
     assert_equal "task", scope.path_with_task_name("task")
   end
+
+  def test_scope_conj
+    scope = Scope.make.conj("B").conj("A")
+    assert_equal Scope.make("A", "B"), scope
+  end
 end

@@ -76,4 +76,9 @@ class TestLinkedList < Rake::TestCase
     assert_equal expected, new_list
   end
 
+  def test_conjunction
+    list = LinkedList.make.conj("C").conj("B").conj("A")
+    assert_equal LinkedList.make("A", "B", "C"), list
+  end
+
 end

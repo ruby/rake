@@ -10,6 +10,10 @@ module Rake
       @tail = tail
     end
 
+    def conj(item)
+      self.class.cons(item, self)
+    end
+
     def empty?
       false
     end
@@ -46,25 +50,42 @@ module Rake
     def self.make(*args)
       result = empty
       args.reverse_each do |item|
-        result = new(item, result)
+        result = cons(item, result)
       end
       result
     end
 
+    def self.cons(head, tail)
+      new(head, tail)
+    end
+
     def self.empty
-      EMPTY
+      self::EMPTY
+    end
+
+    def self.parent
+      empty.parent
     end
 
     class EmptyLinkedList < LinkedList
-      def initialize
+      def initialize(parent)
+        self.class.parent = parent
       end
 
       def empty?
         true
       end
+
+      def self.cons(head, tail)
+        @parent.cons(head, tail)
+      end
+
+      def self.parent=(parent)
+        @parent = parent
+      end
     end
 
-    EMPTY = EmptyLinkedList.new
+    EMPTY = EmptyLinkedList.new(self)
   end
 
 end
