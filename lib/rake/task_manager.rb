@@ -10,7 +10,7 @@ module Rake
       super
       @tasks = Hash.new
       @rules = Array.new
-      @scope = Array.new
+      @scope = Scope.make
       @last_description = nil
     end
 
@@ -136,7 +136,7 @@ module Rake
     # List of all the tasks defined in the given scope (and its
     # sub-scopes).
     def tasks_in_scope(scope)
-      prefix = scope.join(":")
+      prefix = scope.path
       tasks.select { |t|
         /^#{prefix}:/ =~ t.name
       }
@@ -157,10 +157,11 @@ module Rake
       initial_scope ||= @scope
       task_name = task_name.to_s
       if task_name =~ /^rake:/
-        scopes = []
+        scopes = Scope.make
         task_name = task_name.sub(/^rake:/, '')
       elsif task_name =~ /^(\^+)/
-        scopes = initial_scope[0, initial_scope.size - $1.size]
+        scopes = initial_scope
+        $1.size.times { scopes = scopes.tail }
         task_name = task_name.sub(/^(\^+)/, '')
       else
         scopes = initial_scope
@@ -170,12 +171,12 @@ module Rake
 
     # Lookup the task name
     def lookup_in_scope(name, scope)
-      n = scope.size
-      while n >= 0
-        tn = (scope[0, n] + [name]).join(':')
+      loop do
+        tn = scope.path_with_task_name(name)
         task = @tasks[tn]
         return task if task
-        n -= 1
+        break if scope.empty?
+        scope = scope.tail
       end
       nil
     end
@@ -184,19 +185,19 @@ module Rake
     # Return the list of scope names currently active in the task
     # manager.
     def current_scope
-      @scope.dup
+      @scope
     end
 
     # Evaluate the block in a nested namespace named +name+.  Create
     # an anonymous namespace if +name+ is nil.
     def in_namespace(name)
       name ||= generate_name
-      @scope.push(name)
+      @scope = Scope.new(name, @scope)
       ns = NameSpace.new(self, @scope)
       yield(ns)
       ns
     ensure
-      @scope.pop
+      @scope = @scope.tail
     end
 
     private
