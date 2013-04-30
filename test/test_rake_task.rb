@@ -307,6 +307,12 @@ class TestRakeTask < Rake::TestCase
     assert_match(/pre-requisites:\s*--t[23]/, out)
   end
 
+  # NOTE: Rail-ties uses comment=.
+  def test_comment_setting
+    t = task(:t, :name, :rev)
+    t.comment = "A Comment"
+    assert_equal "A Comment", t.comment
+  end
 
   def test_comments_with_sentences
     desc "Comment 1. Comment 2."

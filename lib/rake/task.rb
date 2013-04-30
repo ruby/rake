@@ -257,6 +257,10 @@ module Rake
       add_comment(comment) if comment && ! comment.empty?
     end
 
+    def comment=(comment)
+      add_comment(comment)
+    end
+
     def add_comment(comment)
       @comments << comment unless @comments.include?(comment)
     end
