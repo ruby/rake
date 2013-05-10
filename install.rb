@@ -11,7 +11,7 @@ $ruby = CONFIG['ruby_install_name']
 # insert a #! line. If this is a Unix install, we name
 # the command (for example) 'rake' and let the shebang line
 # handle running it. Under windows, we add a '.rb' extension
-# and let file associations to their stuff
+# and let file associations do their stuff
 #
 
 def installBIN(from, opfile)
@@ -58,7 +58,6 @@ $bindir =  CONFIG["bindir"]
 
 $realbindir = $bindir
 
-bindir = CONFIG["bindir"]
 if (destdir = ENV['DESTDIR'])
   $bindir  = destdir + $bindir
   $sitedir = destdir + $sitedir
