@@ -1,6 +1,7 @@
 require 'rbconfig'
 require 'find'
 require 'fileutils'
+require 'tempfile'
 
 include RbConfig
 
@@ -16,17 +17,7 @@ $ruby = CONFIG['ruby_install_name']
 
 def installBIN(from, opfile)
 
-  tmp_dir = nil
-  for t in [".", "/tmp", "c:/temp", $bindir]
-    stat = File.stat(t) rescue next
-    if stat.directory? and stat.writable?
-      tmp_dir = t
-      break
-    end
-  end
-
-  fail "Cannot find a temporary directory" unless tmp_dir
-  tmp_file = File.join(tmp_dir, "_tmp")
+  tmp_file = Tempfile.new("_tmp")
 
   File.open(from) do |ip|
     File.open(tmp_file, "w") do |op|
@@ -39,7 +30,7 @@ def installBIN(from, opfile)
   opfile += ".rb" if CONFIG["target_os"] =~ /mswin/i
   FileUtils.install(tmp_file, File.join($bindir, opfile),
     {:mode => 0755, :verbose => true})
-  File.unlink(tmp_file)
+  tmp_file.unlink
 end
 
 $sitedir = CONFIG["sitelibdir"]
@@ -54,7 +45,7 @@ unless $sitedir
   end
 end
 
-$bindir =  CONFIG["bindir"]
+$bindir = CONFIG["bindir"]
 
 $realbindir = $bindir
 
