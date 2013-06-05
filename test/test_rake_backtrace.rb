@@ -30,6 +30,7 @@ class TestBacktraceSuppression < Rake::TestCase
 end
 
 class TestRakeBacktrace < Rake::TestCase
+  include RubyRunner
 
   def setup
     super
@@ -38,15 +39,9 @@ class TestRakeBacktrace < Rake::TestCase
       Dir.pwd =~ Rake::Backtrace::SUPPRESS_PATTERN
   end
 
-  # TODO: factor out similar code in test_rake_functional.rb
-  def rake(*args)
-    Open3.popen3(RUBY, "-I", @rake_lib, @rake_exec, *args) { |_, _, err, _|
-      err.read
-    }
-  end
-
-  def invoke(task_name)
-    rake task_name.to_s
+  def invoke(*args)
+    rake(*args)
+    @err
   end
 
   def test_single_collapse
@@ -56,7 +51,7 @@ class TestRakeBacktrace < Rake::TestCase
       end
     }
 
-    lines = invoke(:foo).split("\n")
+    lines = invoke("foo").split("\n")
 
     assert_equal "rake aborted!", lines[0]
     assert_equal "foooo!", lines[1]
@@ -74,7 +69,7 @@ class TestRakeBacktrace < Rake::TestCase
       end
     }
 
-    lines = invoke(:foo).split("\n")
+    lines = invoke("foo").split("\n")
 
     assert_equal "rake aborted!", lines[0]
     assert_equal "barrr!", lines[1]
@@ -90,12 +85,12 @@ class TestRakeBacktrace < Rake::TestCase
       end
     }
 
-    lines = rake("baz").split("\n")
+    lines = invoke("baz").split("\n")
     assert_equal "rake aborted!", lines[0]
     assert_equal "bazzz!", lines[1]
     assert_something_matches %r!Rakefile!i, lines
 
-    lines = rake("--suppress-backtrace", ".ak.file", "baz").split("\n")
+    lines = invoke("--suppress-backtrace", ".ak.file", "baz").split("\n")
     assert_equal "rake aborted!", lines[0]
     assert_equal "bazzz!", lines[1]
     refute_match %r!Rakefile!i, lines[2]
