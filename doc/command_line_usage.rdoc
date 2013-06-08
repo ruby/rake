@@ -144,7 +144,7 @@ Options are:
     number where the task is defined. By default this option will
     display all tasks, not just the tasks that have descriptions.
 
-[<tt>--no-deprecation-warnings</tt> (-W)]
+[<tt>--no-deprecation-warnings</tt> (-X)]
     Do not display the deprecation warnings.
 
 In addition, any command line option of the form
