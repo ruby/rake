@@ -572,7 +572,7 @@ module Rake
       options.trace_output = $stderr
 
       OptionParser.new do |opts|
-        opts.banner = "rake [-f rakefile] {options} targets..."
+        opts.banner = "#{Rake.application.name} [-f rakefile] {options} targets..."
         opts.separator ""
         opts.separator "Options are ..."
 
