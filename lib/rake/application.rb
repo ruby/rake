@@ -409,7 +409,15 @@ module Rake
             "Specifies the maximum number of tasks to execute in parallel. " +
             "(default is 2)",
             lambda { |value|
-              options.thread_pool_size = [(value || 3).to_i, 3].max - 1
+              if value == 'max'
+                value = FIXNUM_MAX
+              elsif value =~ /^\d+$/
+                value = value.to_i
+              else
+                value = Rake.suggested_thread_count
+              end
+              value = 1 if value < 1
+              options.thread_pool_size = value - 1
             }
           ],
           ['--job-stats [LEVEL]',
