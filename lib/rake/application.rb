@@ -117,8 +117,8 @@ module Rake
       thread_pool.join
       if options.job_stats
         stats = thread_pool.statistics
-        puts "Maximum active threads: #{stats[:max_active_threads]}"
-        puts "Total threads in play:  #{stats[:total_threads_in_play]}"
+        puts "Maximum active threads: #{stats[:max_active_threads]} + main"
+        puts "Total threads in play:  #{stats[:total_threads_in_play]} + main"
       end
       ThreadHistoryDisplay.new(thread_pool.history).show if
         options.job_stats == :history
@@ -409,7 +409,7 @@ module Rake
             "Specifies the maximum number of tasks to execute in parallel. " +
             "(default is 2)",
             lambda { |value|
-              options.thread_pool_size = [(value || 2).to_i, 2].max
+              options.thread_pool_size = [(value || 2).to_i, 1].max - 1
             }
           ],
           ['--job-stats [LEVEL]',
