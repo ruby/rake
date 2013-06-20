@@ -16,8 +16,8 @@ module Rake
     end
 
     def suggested_thread_count
-      cpus = Rake::CpuCounter.count || 2
-      cpus + 4
+      @cpu_count ||= Rake::CpuCounter.count
+      @cpu_count + 4
     end
 
     # Return the original directory where the Rake application was started.

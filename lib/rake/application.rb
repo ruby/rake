@@ -138,7 +138,7 @@ module Rake
 
     # Return the thread pool used for multithreaded processing.
     def thread_pool             # :nodoc:
-      @thread_pool ||= ThreadPool.new(options.thread_pool_size || FIXNUM_MAX)
+      @thread_pool ||= ThreadPool.new(options.thread_pool_size || Rake.suggested_thread_count-1)
     end
 
     # private ----------------------------------------------------------------

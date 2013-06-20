@@ -111,6 +111,9 @@ class TestRakeApplicationOptions < Rake::TestCase
   end
 
   def test_jobs
+    flags([]) do |opts|
+      assert_nil opts.thread_pool_size
+    end
     flags(['--jobs', '0'], ['-j', '0']) do |opts|
       assert_equal 0, opts.thread_pool_size
     end
