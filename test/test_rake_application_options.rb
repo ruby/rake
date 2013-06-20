@@ -126,11 +126,8 @@ class TestRakeApplicationOptions < Rake::TestCase
     flags(['--jobs', 'asdas'], ['-j', 'asdas']) do |opts|
       assert_equal Rake.suggested_thread_count-1, opts.thread_pool_size
     end
-    flags(['--jobs', 'max'], ['-j', 'max']) do |opts|
-      assert opts.thread_pool_size > 1_000_000, "thread pool size should be huge (was #{opts.thread_pool_size})"
-    end
     flags('--jobs', '-j') do |opts|
-      assert_equal Rake.suggested_thread_count-1, opts.thread_pool_size
+      assert opts.thread_pool_size > 1_000_000, "thread pool size should be huge (was #{opts.thread_pool_size})"
     end
   end
 

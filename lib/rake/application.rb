@@ -409,7 +409,7 @@ module Rake
             "Specifies the maximum number of tasks to execute in parallel. " +
             "(default is number of CPU cores + 4)",
             lambda { |value|
-              if value == 'max'
+              if value.nil? || value == ''
                 value = FIXNUM_MAX
               elsif value =~ /^\d+$/
                 value = value.to_i

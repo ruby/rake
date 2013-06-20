@@ -60,11 +60,10 @@ Options are:
     tasks into multitasks.
 
     Sample values:
-     (no -j) : Allow up to (# of CPUs + 4) number of threads
-     -j      : Allow up to (# of CPUs + 4) number of threads
-     -j1     : Allow only one thread (the main thread)
-     -j16    : Allow up to 16 concurrent threads
-     -jmax   : Allow unlimited number of threads
+       (no -j)   : Allow up to (# of CPUs + 4) number of threads
+       --jobs    : Allow unlimited number of threads
+       --jobs=1  : Allow only one thread (the main thread)
+       --jobs=16 : Allow up to 16 concurrent threads
 
 [<tt>--job-stats</tt> _level_]
 
