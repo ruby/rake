@@ -407,7 +407,7 @@ module Rake
           ],
           ['--jobs',  '-j [NUMBER]',
             "Specifies the maximum number of tasks to execute in parallel. " +
-            "(default is 2)",
+            "(default is number of CPU cores + 4)",
             lambda { |value|
               if value == 'max'
                 value = FIXNUM_MAX

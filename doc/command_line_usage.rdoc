@@ -48,22 +48,29 @@ Options are:
     Display some help text and exit.
 
 [<tt>--jobs</tt> _number_  (-j)]
-    Specifies the number of active concurrent tasks used. The
-    suggested value is equal to the number of CPUs. The concurrent
-    tasks are used to execute the <tt>multitask</tt> prerequisites.
-    Also see the <tt>-m</tt> option which turns all tasks into
-    multitasks.
+
+    Specifies the maximun number of concurrent threads allowed. Rake
+    will allocate threads as needed up to this maximum number.
+
+    If omitted, Rake will attempt to estimate the number of CPUs on
+    the system and add 4 to that number.
+
+    The concurrent threads are used to execute the <tt>multitask</tt>
+    prerequisites. Also see the <tt>-m</tt> option which turns all
+    tasks into multitasks.
 
     Sample values:
-     (no -j) : unlimited concurrent tasks (standard rake behavior)
-     -j      : 2 concurrent tasks (exact number may change)
-     -j 16   : 16 concurrent tasks
+     (no -j) : Allow up to (# of CPUs + 4) number of threads
+     -j      : Allow up to (# of CPUs + 4) number of threads
+     -j1     : Allow only one thread (the main thread)
+     -j16    : Allow up to 16 concurrent threads
+     -jmax   : Allow unlimited number of threads
 
 [<tt>--job-stats</tt> _level_]
 
     Display job statistics at the completion of the run. By default,
-    this will display the requested number of active tasks (from the
-    -j options) and the maximum number of tasks in play at any given
+    this will display the requested number of active threads (from the
+    -j options) and the maximum number of threads in play at any given
     time.
 
     If the optional _level_ is <tt>history</tt>, then a complete trace
