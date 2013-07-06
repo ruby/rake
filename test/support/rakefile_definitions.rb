@@ -217,6 +217,30 @@ default: other
     end
   end
 
+  def rakefile_regenerate_imports
+    rakefile <<-REGENERATE_IMPORTS
+task :default
+
+task :regenerate do
+  open("deps", "w") do |f|
+    f << <<-CONTENT
+file "deps" => :regenerate
+puts "REGENERATED"
+    CONTENT
+  end
+end
+
+import "deps"
+    REGENERATE_IMPORTS
+
+    open "deps", "w" do |f|
+      f << <<-CONTENT
+file "deps" => :regenerate
+puts "INITIAL"
+      CONTENT
+    end
+  end
+
   def rakefile_multidesc
     rakefile <<-MULTIDESC
 task :b
