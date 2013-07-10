@@ -21,12 +21,12 @@ module Rake
       }
     end
 
-    # Retrive the complete array of sequential values
+    # Retrieve the complete array of sequential values
     def to_a
       @values.dup
     end
 
-    # Retrive the list of values not associated with named arguments
+    # Retrieve the list of values not associated with named arguments
     def extras
       @values[@names.length..-1] || []
     end
