@@ -106,11 +106,11 @@ class String
     #
     # For example:
     #
-    #    "src/org/onestepback/proj/A.java".pathmap("%{^src,bin}X.class")
+    #    "src/org/onestepback/proj/A.java".pathmap("%{^src,class}X.class")
     #
     # returns:
     #
-    #    "bin/org/onestepback/proj/A.class"
+    #    "class/org/onestepback/proj/A.class"
     #
     # If the replacement text is '*', then a block may be provided to perform
     # some arbitrary calculation for the replacement.
