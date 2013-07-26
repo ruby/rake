@@ -150,9 +150,20 @@ module Rake
     end
 
     def parse_task_string(string)
+      @token_re ||= /((?:[^\\,]|\\.)*)(?:,(.*))?$/
       if string =~ /^([^\[]+)(\[(.*)\])$/
         name = $1
-        args = $3.split(/\s*,\s*/)
+        args = []
+
+        if $2 != '[]'
+          match_data = @token_re.match($3)
+          while !match_data.nil?
+            token, rest = match_data[1].strip, match_data[2]
+            args << (token.gsub!(/\\(.)/, '\1') || token)
+            break if rest.nil?
+            match_data = @token_re.match(rest)
+          end
+        end
       else
         name = string
         args = []
