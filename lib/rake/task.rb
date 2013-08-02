@@ -74,7 +74,11 @@ module Rake
 
     # First source from a rule (nil if no sources)
     def source
-      @sources.first if defined?(@sources)
+      if defined?(@sources)
+        @sources.first
+      else
+        prerequisites.first
+      end
     end
 
     # Create a task named +task_name+ with no actions or prerequisites. Use
