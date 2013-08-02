@@ -265,7 +265,7 @@ module Rake
           task_name.ext(ext)
         when String
           ext
-        when Proc
+        when Proc, Method
           if ext.arity == 1
             ext.call(task_name)
           else
