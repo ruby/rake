@@ -131,10 +131,8 @@ other projects with similar (and not so similar) goals.
 * http://www.a-a-p.org -- Make in Python
 * http://www.aromatic.com/tools/jam.txt -- JAM, Java Automated Make
 * http://ant.apache.org -- The Ant project
-* http://ppt.perl.org/commands/make/index.html -- Make from the Perl
-  Power Tools implementation.
 * http://search.cpan.org/search?query=PerlBuildSystem -- The Perl Build System
-* http://make.rubyforge.org -- Rant, another Ruby make tool.
+* http://rant.rubyforge.org -- Rant, another Ruby make tool.
 
 == Credits
 
