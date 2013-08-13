@@ -7,7 +7,7 @@ begin
   publisher = Rake::CompositePublisher.new
   publisher.add Rake::RubyForgePublisher.new('rake', 'jimweirich')
   publisher.add Rake::SshFilePublisher.new(
-    'umlcoop',
+    'linode',
     'htdocs/software/rake',
     '.',
     'rake.blurb')
