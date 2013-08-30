@@ -41,7 +41,11 @@ module Rake
     # List of sources for task.
     attr_writer :sources
     def sources
-      @sources ||= []
+      if defined?(@sources)
+        @sources
+      else
+        prerequisites
+      end
     end
 
     # List of prerequisite tasks
@@ -74,11 +78,7 @@ module Rake
 
     # First source from a rule (nil if no sources)
     def source
-      if defined?(@sources)
-        @sources.first
-      else
-        prerequisites.first
-      end
+      sources.first
     end
 
     # Create a task named +task_name+ with no actions or prerequisites. Use
