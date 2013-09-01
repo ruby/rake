@@ -16,11 +16,13 @@ class TestRakeTestTask < Rake::TestCase
 
   def test_initialize_override
     tt = Rake::TestTask.new(:example) do |t|
+      t.description = "Run example tests"
       t.libs = ['src', 'ext']
       t.pattern = 'test/tc_*.rb'
       t.verbose = true
     end
     refute_nil tt
+    assert_equal "Run example tests", tt.description
     assert_equal :example, tt.name
     assert_equal ['src', 'ext'], tt.libs
     assert_equal 'test/tc_*.rb', tt.pattern

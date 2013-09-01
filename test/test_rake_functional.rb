@@ -368,6 +368,14 @@ class TestRakeFunctional < Rake::TestCase
     assert_match(/^PREPARE\nSCOPEDEP$/m, @out)
   end
 
+  def test_test_task_descriptions
+    rakefile_test_task
+
+    rake "-T"
+
+    assert_match(/custom test task description/, @out)
+  end
+
   def test_comment_before_task_acts_like_desc
     rakefile_comments
 

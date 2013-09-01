@@ -41,6 +41,16 @@ end
     ACCESS
   end
 
+  def rakefile_test_task
+    rakefile <<-RAKEFILE
+    require "rake/testtask"
+
+    Rake::TestTask.new(:unit) do |t|
+      t.description = "custom test task description"
+    end
+    RAKEFILE
+  end
+
   def rakefile_chains
     rakefile <<-DEFAULT
 task :default => "play.app"
