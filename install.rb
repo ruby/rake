@@ -35,7 +35,7 @@ end
 
 $sitedir = CONFIG["sitelibdir"]
 unless $sitedir
-  version = CONFIG["MAJOR"]+"."+CONFIG["MINOR"]
+  version = CONFIG["MAJOR"] + "." + CONFIG["MINOR"]
   $libdir = File.join(CONFIG["libdir"], "ruby", version)
   $sitedir = $:.find {|x| x =~ /site_ruby/}
   if !$sitedir
