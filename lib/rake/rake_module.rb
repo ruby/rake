@@ -33,9 +33,7 @@ module Rake
     # Add files to the rakelib list
     def add_rakelib(*files)
       application.options.rakelib ||= []
-      files.each do |file|
-        application.options.rakelib << file
-      end
+      application.options.rakelib.concat(files)
     end
   end
 

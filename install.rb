@@ -68,7 +68,7 @@ files = Dir.chdir('lib') { Dir['**/*.rb'].sort }
 for fn in files
   fn_dir = File.dirname(fn)
   target_dir = File.join($sitedir, fn_dir)
-  if ! File.exist?(target_dir)
+  if !File.exist?(target_dir)
     FileUtils.mkdir_p(target_dir)
   end
   FileUtils.install(File.join('lib', fn), File.join($sitedir, fn),
