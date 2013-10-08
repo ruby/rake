@@ -275,7 +275,7 @@ parameters as well:
      mail = Mail.new(args.message)
      recipients = args.extras
      recipients.each do |target|
-       mail.send_to(recipents)
+       mail.send_to(target)
      end
    end
 
