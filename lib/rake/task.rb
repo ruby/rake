@@ -262,6 +262,7 @@ module Rake
     end
 
     def add_comment(comment)
+      return if comment.nil?
       @comments << comment unless @comments.include?(comment)
     end
     private :add_comment
@@ -281,7 +282,7 @@ module Rake
     # Transform the list of comments as specified by the block and
     # join with the separator.
     def transform_comments(separator, &block)
-      if @comments.compact.empty?
+      if @comments.empty?
         nil
       else
         block ||= lambda { |c| c }
