@@ -332,6 +332,17 @@ class TestRakeTask < Rake::TestCase
     assert_equal "Revision 1.2.3", t.comment
   end
 
+  def test_comments_do_not_set
+    t = task(:t, :name, :rev)
+    assert_equal nil, t.comment
+  end
+
+  def test_comments_is_nil
+    t = task(:t, :name, :rev)
+    t.comment = nil
+    assert_equal nil, t.comment
+  end
+
   def test_extended_comments
     desc %{
       This is a comment.

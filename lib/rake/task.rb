@@ -281,7 +281,7 @@ module Rake
     # Transform the list of comments as specified by the block and
     # join with the separator.
     def transform_comments(separator, &block)
-      if @comments.empty?
+      if @comments.compact.empty?
         nil
       else
         block ||= lambda { |c| c }
