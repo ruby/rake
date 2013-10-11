@@ -2,7 +2,7 @@ require 'rubygems'
 $:.unshift File.expand_path('../../lib', __FILE__)
 
 begin
-  gem 'minitest'
+  gem 'minitest', '~> 4'
 rescue Gem::LoadError
 end
 

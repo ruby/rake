@@ -171,7 +171,7 @@ specified in standard Ruby syntax.
 
     s.required_ruby_version = '>= 1.8.6'
     s.required_rubygems_version = '>= 1.3.2'
-    s.add_development_dependency 'minitest', '~> 2.1'
+    s.add_development_dependency 'minitest', '~> 4'
 
     s.files = PKG_FILES.to_a
 
