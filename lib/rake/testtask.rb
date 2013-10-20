@@ -171,7 +171,7 @@ module Rake
       when :testrb
         "-S testrb #{fix}"
       when :rake
-        "-I\"#{rake_lib_dir}\" \"#{rake_loader}\""
+        "#{rake_include_arg} \"#{rake_loader}\""
       end
     end
 
@@ -186,6 +186,15 @@ module Rake
         return file_path if File.exist? file_path
       end
       nil
+    end
+
+    def rake_include_arg # :nodoc:
+      spec = Gem.loaded_specs['rake']
+      if spec.respond_to?(:default_gem?) && spec.default_gem?
+        ""
+      else
+        "-I\"#{rake_lib_dir}\""
+      end
     end
 
     def rake_lib_dir # :nodoc:
