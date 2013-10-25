@@ -453,8 +453,7 @@ common for task names to begin to clash.  For example, if you might
 have a main program and a set of sample programs built by a single
 Rakefile.  By placing the tasks related to the main program in one
 namespace, and the tasks for building the sample programs in a
-different namespace, the task names will not will not interfere with
-each other.
+different namespace, the task names will not interfere with each other.
 
 For example:
 
