@@ -22,6 +22,13 @@ module Rake
 
     def define_task(task_class, *args, &block)
       task_name, arg_names, deps = resolve_args(args)
+
+      original_scope = @scope
+      if(task_name.is_a? String)
+        task_name, *definition_scope = *(task_name.split(":").reverse)
+        @scope = Scope.make(*(definition_scope + @scope.to_a))
+      end
+
       task_name = task_class.scope_name(@scope, task_name)
       deps = [deps] unless deps.respond_to?(:to_ary)
       deps = deps.map { |d| d.to_s }
@@ -32,6 +39,8 @@ module Rake
         task.add_description(get_description(task))
       end
       task.enhance(deps, &block)
+    ensure
+      @scope = original_scope
     end
 
     # Lookup a task.  Return an existing task if found, otherwise
