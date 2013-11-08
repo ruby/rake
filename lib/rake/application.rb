@@ -353,7 +353,7 @@ module Rake
       sort_options(
         [
           ['--all', '-A',
-            "Show all tasks, even uncommented ones",
+            "Show all tasks, even uncommented ones (in combination with -T or -D)",
             lambda { |value|
               options.show_all_tasks = value
             }
