@@ -175,7 +175,7 @@ arguments can be passed by separating them with a comma, for example:
 
 Just a few words of caution.  The rake task name and its arguments
 need to be a single command line argument to rake.  This generally
-means no spaces.  If spaces are needed, then the entire rake +
+means no spaces.  If spaces are needed, then the entire name +
 argument string should be quoted.  Something like this:
 
    rake "name[billy bob, smith]"
