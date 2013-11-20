@@ -74,6 +74,10 @@ module Rake
       to_s
     end
 
+    def has_key?(key)
+      @hash.has_key?(key)
+    end
+
     protected
 
     def lookup(name)
