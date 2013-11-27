@@ -458,7 +458,7 @@ class TestRakeApplicationOptions < Rake::TestCase
     end
     @app.instance_eval do
       handle_options
-      collect_tasks
+      collect_command_line_tasks
     end
     @tasks = @app.top_level_tasks
     @app.options

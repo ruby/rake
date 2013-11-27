@@ -84,7 +84,7 @@ module Rake
       standard_exception_handling do
         @name = app_name
         handle_options
-        collect_tasks
+        collect_command_line_tasks
       end
     end
 
@@ -685,7 +685,7 @@ module Rake
     # Collect the list of tasks on the command line.  If no tasks are
     # given, return a list containing only the default task.
     # Environmental assignments are processed at this time as well.
-    def collect_tasks
+    def collect_command_line_tasks
       @top_level_tasks = []
       ARGV.each do |arg|
         if arg =~ /^(\w+)=(.*)$/m
