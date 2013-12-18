@@ -97,9 +97,9 @@ that creates the directory.  For example, the following declaration
 
 is equivalent to ...
 
-  file "testdata"              do |t| mkdir t.name end
-  file "testdata/examples"     do |t| mkdir t.name end
-  file "testdata/examples/doc" do |t| mkdir t.name end
+  file "testdata" do |t| mkdir t.name end
+  file "testdata/examples" => ["testdata"] do |t| mkdir t.name end
+  file "testdata/examples/doc" => ["testdata/examples"] do |t| mkdir t.name end
 
 The +directory+ method does not accept prerequisites or actions, but
 both prerequisites and actions can be added later.  For example ...
