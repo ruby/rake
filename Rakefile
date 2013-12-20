@@ -189,8 +189,7 @@ specified in standard Ruby syntax.
 
     s.author = "Jim Weirich"
     s.email = "jim.weirich@gmail.com"
-    s.homepage = "http://github.com/jimweirich/rake
-#    s.rubyforge_project = "rake"
+    s.homepage = "http://github.com/jimweirich/rake"
   end
 
   Gem::PackageTask.new(SPEC) do |pkg|
