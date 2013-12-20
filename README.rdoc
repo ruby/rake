@@ -112,8 +112,8 @@ Issues and bug reports can also be tracked here:
 === Rake References
 
 * Rake Documentation Home: http://docs.rubyrake.org
-* Rake Project Page: http://rubyforge.org/projects/rake
-* Rake API Documents: http://rake.rubyforge.org
+* Rake Project Page: http://github.com/jimweirich/rake
+* Rake API Documents: http://onestepback.org/software/rake/
 * Rake Source Code Repo:  http://github.com/jimweirich/rake
 * Rake Git Repo Clone URL: git://github.com/jimweirich/rake.git
 * Rake Bug Reports: https://github.com/jimweirich/rake/issues
@@ -138,7 +138,7 @@ other projects with similar (and not so similar) goals.
 * http://ppt.perl.org/commands/make/index.html -- Make from the Perl
   Power Tools implementation.
 * http://search.cpan.org/search?query=PerlBuildSystem -- The Perl Build System
-* http://make.rubyforge.org -- Rant, another Ruby make tool.
+* http://rubydoc.info/gems/rant/0.5.7/frames -- Rant, another Ruby make tool.
 
 == Credits
 
@@ -158,8 +158,8 @@ Rake is available under an MIT-style license.
 
 == Support
 
-The Rake homepage is http://rake.rubyforge.org.  You can find the Rake
-RubyForge page at http://rubyforge.org/projects/rake.
+The Rake homepage is http://onestepback.org/software/rake/.  You can find the Rake
+GitHub page at http://github.com/jimweirich/rake.
 
 Feel free to submit commits or feature requests.  If you send a patch,
 remember to update the corresponding unit tests.  In fact, I prefer
