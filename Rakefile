@@ -188,9 +188,9 @@ specified in standard Ruby syntax.
     s.rdoc_options = BASE_RDOC_OPTIONS
 
     s.author = "Jim Weirich"
-    s.email = "jim@weirichhouse.org"
-    s.homepage = "http://rake.rubyforge.org"
-    s.rubyforge_project = "rake"
+    s.email = "jim.weirich@gmail.com"
+    s.homepage = "http://github.com/jimweirich/rake
+#    s.rubyforge_project = "rake"
   end
 
   Gem::PackageTask.new(SPEC) do |pkg|
