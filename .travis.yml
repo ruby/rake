@@ -7,4 +7,5 @@ rvm:
   - jruby        # 2 failures
   - 1.9.3
   - 2.0.0
+  - 2.1.0
 script: ruby -Ilib bin/rake
