@@ -1,3 +1,5 @@
 source 'https://rubygems.org'
 
-# gem 'minitest', '~> 4.3'
+if RUBY_VERSION < "2.0.0"
+  gem 'minitest', '~> 4.3'
+end
