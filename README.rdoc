@@ -168,7 +168,7 @@ jim dot weirich at gmail.com.
 = Other stuff
 
 Author::   Jim Weirich <jim.weirich@gmail.com>
-Requires:: Ruby 1.8.7 or later
+Requires:: Ruby 1.9 or later
 License::  Copyright 2003-2013 by Jim Weirich.
            Released under an MIT-style license.  See the MIT-LICENSE
            file included in the distribution.
