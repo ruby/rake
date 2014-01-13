@@ -169,7 +169,7 @@ Rake is a Make-like program implemented in Ruby. Tasks and dependencies are
 specified in standard Ruby syntax.
     EOF
 
-    s.required_ruby_version = '>= 1.8.6'
+    s.required_ruby_version = '>= 1.9'
     s.required_rubygems_version = '>= 1.3.2'
     s.add_development_dependency 'minitest', '~> 4'
 
