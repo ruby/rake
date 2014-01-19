@@ -474,7 +474,7 @@ For example:
 Referencing a task in a separate namespace can be achieved by
 prefixing the task name with the namespace and a colon
 (e.g. "main:build" refers to the :build task in the +main+ namespace).
-Nested namespaces are supported, so
+Nested namespaces are supported.
 
 Note that the name given in the +task+ command is always the unadorned
 task name without any namespace prefixes.  The +task+ command always
