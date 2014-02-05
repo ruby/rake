@@ -365,6 +365,12 @@ module Rake
               select_trace_output(options, 'backtrace', value)
             }
           ],
+          ['--build-all', '-B',
+           "Build all prerequisites, including those which are up-to-date.",
+           lambda { |value|
+             options.build_all = true
+           }
+          ],
           ['--comments',
             "Show commented tasks only",
             lambda { |value|
