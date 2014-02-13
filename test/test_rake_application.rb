@@ -391,10 +391,10 @@ class TestRakeApplication < Rake::TestCase
     @app.intern(Rake::Task, "default").enhance { fail }
     ARGV.clear
     ARGV << '-f' << '-s' <<  '--rakelib=""'
-    assert_raises(SystemExit) {
-      _, err = capture_io { @app.run }
-      assert_match(/see full trace/, err)
+    _, err = capture_io {
+      assert_raises(SystemExit){ @app.run }
     }
+    assert_match(/see full trace/i, err)
   ensure
     ARGV.clear
   end
@@ -403,10 +403,10 @@ class TestRakeApplication < Rake::TestCase
     @app.intern(Rake::Task, "default").enhance { fail }
     ARGV.clear
     ARGV << '-f' << '-s' << '-t'
-    assert_raises(SystemExit) {
-      _, err = capture_io { @app.run }
-      refute_match(/see full trace/, err)
+    _, err = capture_io {
+      assert_raises(SystemExit) { @app.run }
     }
+    refute_match(/see full trace/i, err)
   ensure
     ARGV.clear
   end
@@ -415,10 +415,35 @@ class TestRakeApplication < Rake::TestCase
     @app.intern(Rake::Task, "default").enhance { fail }
     ARGV.clear
     ARGV << '-f' << '-s' << '--backtrace'
-    assert_raises(SystemExit) {
-      _, err = capture_io { @app.run }
-      refute_match(/see full trace/, err)
+    _, err = capture_io {
+      assert_raises(SystemExit) {
+        @app.run
+      }
     }
+    refute_match(/see full trace/, err)
+  ensure
+    ARGV.clear
+  end
+
+  def test_printing_original_exception_cause
+    custom_error = Class.new(StandardError)
+    @app.intern(Rake::Task, "default").enhance {
+      begin
+        raise custom_error, "Original Error"
+      rescue custom_error => ex
+        raise custom_error, "Secondary Error"
+      end
+    }
+    ARGV.clear
+    ARGV << '-f' << '-s'
+    _ ,err = capture_io {
+      assert_raises(SystemExit) {
+        @app.run
+        $stdout.puts "DBG: err=#{err.inspect}"
+      }
+    }
+    assert_match(/Original Error/, err)
+    assert_match(/Secondary Error/, err)
   ensure
     ARGV.clear
   end
