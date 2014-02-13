@@ -425,6 +425,37 @@ class TestRakeApplication < Rake::TestCase
     ARGV.clear
   end
 
+  CustomError = Class.new(RuntimeError)
+
+  def test_bad_run_includes_exception_name
+    @app.intern(Rake::Task, "default").enhance {
+        raise CustomError, "intentional"
+    }
+    ARGV.clear
+    ARGV << '-f' << '-s'
+    _, err = capture_io {
+      assert_raises(SystemExit) {
+        @app.run
+      }
+    }
+    assert_match(/CustomError: intentional/, err)
+  end
+
+  def test_rake_error_excludes_exception_name
+    @app.intern(Rake::Task, "default").enhance {
+      fail "intentional"
+    }
+    ARGV.clear
+    ARGV << '-f' << '-s'
+    _, err = capture_io {
+      assert_raises(SystemExit) {
+        @app.run
+      }
+   }
+   refute_match(/RuntimeError/, err)
+   assert_match(/intentional/, err)
+  end
+
   def cause_supported?
     ex = StandardError.new
     ex.respond_to?(:cause)
@@ -444,7 +475,6 @@ class TestRakeApplication < Rake::TestCase
     _ ,err = capture_io {
       assert_raises(SystemExit) {
         @app.run
-        $stdout.puts "DBG: err=#{err.inspect}"
       }
     }
     if cause_supported?

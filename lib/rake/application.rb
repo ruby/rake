@@ -191,7 +191,12 @@ module Rake
     end
 
     def display_exception_details(ex)
-      trace ex.message
+      if ex.instance_of?(RuntimeError)
+        trace ex.message
+      else
+        trace "#{ex.class.name}: #{ex.message}"
+      end
+
       if options.backtrace
         trace ex.backtrace.join("\n")
       else
