@@ -152,10 +152,6 @@ module Rake
     def __queue__ # :nodoc:
       @queue
     end
-
-    def __threads__ # :nodoc:
-      @threads.dup
-    end
   end
 
 end
