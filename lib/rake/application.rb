@@ -191,20 +191,28 @@ module Rake
     end
 
     def display_exception_details(ex)
+      display_exception_message_details(ex)
+      display_exception_backtrace(ex)
+      display_exception_details(ex.cause) if has_cause?(ex)
+    end
+
+    def has_cause?(ex)
+      ex.respond_to?(:cause) && ex.cause
+    end
+
+    def display_exception_message_details(ex)
       if ex.instance_of?(RuntimeError)
         trace ex.message
       else
         trace "#{ex.class.name}: #{ex.message}"
       end
+    end
 
+    def display_exception_backtrace(ex)
       if options.backtrace
         trace ex.backtrace.join("\n")
       else
         trace Backtrace.collapse(ex.backtrace).join("\n")
-      end
-
-      if ex.respond_to?(:cause) && ex.cause
-        display_exception_details(ex.cause)
       end
     end
 
