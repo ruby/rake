@@ -425,6 +425,11 @@ class TestRakeApplication < Rake::TestCase
     ARGV.clear
   end
 
+  def cause_supported?
+    ex = StandardError.new
+    ex.respond_to?(:cause)
+  end
+
   def test_printing_original_exception_cause
     custom_error = Class.new(StandardError)
     @app.intern(Rake::Task, "default").enhance {
@@ -442,7 +447,9 @@ class TestRakeApplication < Rake::TestCase
         $stdout.puts "DBG: err=#{err.inspect}"
       }
     }
-    assert_match(/Original Error/, err)
+    if cause_supported?
+      assert_match(/Original Error/, err)
+    end
     assert_match(/Secondary Error/, err)
   ensure
     ARGV.clear
