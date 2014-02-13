@@ -9,6 +9,13 @@ class TestRakeApplication < Rake::TestCase
     @app.options.rakelib = []
   end
 
+  def setup_command_line(*options)
+    ARGV.clear
+    options.each do |option|
+      ARGV << option
+    end
+  end
+
   def test_display_tasks
     @app.options.show_tasks = :tasks
     @app.options.show_task_pattern = //
@@ -193,6 +200,7 @@ class TestRakeApplication < Rake::TestCase
   end
 
   def test_load_rakefile_not_found
+    ARGV.clear
     Dir.chdir @tempdir
     ENV['RAKE_SYSTEM'] = 'not_exist'
 
@@ -201,8 +209,11 @@ class TestRakeApplication < Rake::TestCase
       options.silent = true
     end
 
+
     ex = assert_raises(RuntimeError) do
-      @app.instance_eval do raw_load_rakefile end
+      @app.instance_eval do
+        raw_load_rakefile
+      end
     end
 
     assert_match(/no rakefile found/i, ex.message)
@@ -295,8 +306,7 @@ class TestRakeApplication < Rake::TestCase
     assert !@app.options.trace
 
     valid_option = '--trace'
-    ARGV.clear
-    ARGV << valid_option
+    setup_command_line(valid_option)
 
     @app.handle_options
 
@@ -305,8 +315,7 @@ class TestRakeApplication < Rake::TestCase
   end
 
   def test_handle_options_trace_default_is_stderr
-    ARGV.clear
-    ARGV << "--trace"
+    setup_command_line("--trace")
 
     @app.handle_options
 
@@ -315,8 +324,7 @@ class TestRakeApplication < Rake::TestCase
   end
 
   def test_handle_options_trace_overrides_to_stdout
-    ARGV.clear
-    ARGV << "--trace=stdout"
+    setup_command_line("--trace=stdout")
 
     @app.handle_options
 
@@ -327,8 +335,7 @@ class TestRakeApplication < Rake::TestCase
   def test_handle_options_trace_does_not_eat_following_task_names
     assert !@app.options.trace
 
-    ARGV.clear
-    ARGV << "--trace" << "sometask"
+    setup_command_line("--trace", "sometask")
 
     @app.handle_options
     assert ARGV.include?("sometask")
@@ -359,8 +366,7 @@ class TestRakeApplication < Rake::TestCase
 
   def test_display_task_run
     ran = false
-    ARGV.clear
-    ARGV << '-f' << '-s' << '--tasks' << '--rakelib=""'
+    setup_command_line('-f', '-s', '--tasks', '--rakelib=""')
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "default")
     out, = capture_io { @app.run }
@@ -372,8 +378,7 @@ class TestRakeApplication < Rake::TestCase
 
   def test_display_prereqs
     ran = false
-    ARGV.clear
-    ARGV << '-f' << '-s' << '--prereqs' << '--rakelib=""'
+    setup_command_line('-f', '-s', '--prereqs', '--rakelib=""')
     @app.last_description = "COMMENT"
     t = @app.define_task(Rake::Task, "default")
     t.enhance([:a, :b])
@@ -389,8 +394,7 @@ class TestRakeApplication < Rake::TestCase
 
   def test_bad_run
     @app.intern(Rake::Task, "default").enhance { fail }
-    ARGV.clear
-    ARGV << '-f' << '-s' <<  '--rakelib=""'
+    setup_command_line('-f', '-s',  '--rakelib=""')
     _, err = capture_io {
       assert_raises(SystemExit){ @app.run }
     }
@@ -401,8 +405,7 @@ class TestRakeApplication < Rake::TestCase
 
   def test_bad_run_with_trace
     @app.intern(Rake::Task, "default").enhance { fail }
-    ARGV.clear
-    ARGV << '-f' << '-s' << '-t'
+    setup_command_line('-f', '-s', '-t')
     _, err = capture_io {
       assert_raises(SystemExit) { @app.run }
     }
@@ -413,8 +416,7 @@ class TestRakeApplication < Rake::TestCase
 
   def test_bad_run_with_backtrace
     @app.intern(Rake::Task, "default").enhance { fail }
-    ARGV.clear
-    ARGV << '-f' << '-s' << '--backtrace'
+    setup_command_line('-f', '-s', '--backtrace')
     _, err = capture_io {
       assert_raises(SystemExit) {
         @app.run
@@ -431,8 +433,7 @@ class TestRakeApplication < Rake::TestCase
     @app.intern(Rake::Task, "default").enhance {
         raise CustomError, "intentional"
     }
-    ARGV.clear
-    ARGV << '-f' << '-s'
+    setup_command_line('-f', '-s')
     _, err = capture_io {
       assert_raises(SystemExit) {
         @app.run
@@ -445,8 +446,7 @@ class TestRakeApplication < Rake::TestCase
     @app.intern(Rake::Task, "default").enhance {
       fail "intentional"
     }
-    ARGV.clear
-    ARGV << '-f' << '-s'
+    setup_command_line('-f', '-s')
     _, err = capture_io {
       assert_raises(SystemExit) {
         @app.run
@@ -470,8 +470,7 @@ class TestRakeApplication < Rake::TestCase
         raise custom_error, "Secondary Error"
       end
     }
-    ARGV.clear
-    ARGV << '-f' << '-s'
+    setup_command_line('-f', '-s')
     _ ,err = capture_io {
       assert_raises(SystemExit) {
         @app.run
@@ -487,8 +486,7 @@ class TestRakeApplication < Rake::TestCase
 
   def test_run_with_bad_options
     @app.intern(Rake::Task, "default").enhance { fail }
-    ARGV.clear
-    ARGV << '-f' << '-s' << '--xyzzy'
+    setup_command_line('-f', '-s', '--xyzzy')
     assert_raises(SystemExit) {
       capture_io { @app.run }
     }
