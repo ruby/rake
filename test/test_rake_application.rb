@@ -466,7 +466,7 @@ class TestRakeApplication < Rake::TestCase
     @app.intern(Rake::Task, "default").enhance {
       begin
         raise custom_error, "Original Error"
-      rescue custom_error => ex
+      rescue custom_error
         raise custom_error, "Secondary Error"
       end
     }
