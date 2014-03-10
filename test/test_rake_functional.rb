@@ -268,6 +268,14 @@ class TestRakeFunctional < Rake::TestCase
     assert_match(/^FIRST$\s+^DYNAMIC$\s+^STATIC$\s+^OTHER$/, @out)
   end
 
+  def test_regenerate_imports
+    rakefile_regenerate_imports
+
+    rake
+
+    assert_match(/^INITIAL\s+^REGENERATED$/, @out)
+  end
+
   def test_rules_chaining_to_file_task
     rakefile_chains
 

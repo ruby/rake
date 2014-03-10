@@ -737,6 +737,11 @@ module Rake
         ext = File.extname(fn)
         loader = @loaders[ext] || @default_loader
         loader.load(fn)
+        if fn_task = lookup(fn) and fn_task.needed?
+          fn_task.reenable
+          fn_task.invoke
+          loader.load(fn)
+        end
         @imported << fn
       end
     end

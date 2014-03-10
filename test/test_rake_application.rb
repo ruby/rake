@@ -560,14 +560,12 @@ class TestRakeApplication < Rake::TestCase
 
     loader.instance_variable_set :@load_called, false
     def loader.load arg
-      raise 'called more than once' if @load_called
       raise ArgumentError, arg unless arg == 'x.dummy'
       @load_called = true
     end
 
     loader.instance_variable_set :@make_dummy_called, false
     def loader.make_dummy
-      raise 'called more than once' if @make_dummy_called
       @make_dummy_called = true
     end
 
