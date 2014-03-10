@@ -11,7 +11,7 @@ class TestBacktraceSuppression < Rake::TestCase
   end
 
   def test_system_dir_suppressed
-    path = RbConfig::CONFIG['rubylibprefix']
+    path = File.expand_path(RbConfig::CONFIG['rubylibprefix'])
     skip if path.nil?
 
     paths = [path + ":12"]
@@ -22,7 +22,7 @@ class TestBacktraceSuppression < Rake::TestCase
   end
 
   def test_near_system_dir_isnt_suppressed
-    path = RbConfig::CONFIG['rubylibprefix']
+    path = File.expand_path(RbConfig::CONFIG['rubylibprefix'])
     skip if path.nil?
 
     paths = [" " + path + ":12"]
