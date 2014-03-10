@@ -384,4 +384,9 @@ class TestRakeTask < Rake::TestCase
     task(:t)
     assert_equal "line one / line two", t.comment
   end
+
+  def test_source_is_first_prerequisite
+    t = task :t => ["preqA", "preqB"]
+    assert_equal "preqA", t.source
+  end
 end

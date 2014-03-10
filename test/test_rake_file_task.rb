@@ -98,6 +98,16 @@ class TestRakeFileTask < Rake::TestCase
     assert @ran
   end
 
+  def test_source_is_first_prerequisite
+    t = file :f => ["preqA", "preqB"]
+    assert_equal "preqA", t.source
+  end
+
+  def test_sources_is_all_prerequisites
+    t = file :f => ["preqA", "preqB"]
+    assert_equal ["preqA", "preqB"], t.sources
+  end
+
   # I have currently disabled this test.  I'm not convinced that
   # deleting the file target on failure is always the proper thing to
   # do.  I'm willing to hear input on this topic.
