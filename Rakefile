@@ -29,7 +29,6 @@ end
 CLEAN.include('**/*.o', '*.dot', '**/*.rbc')
 CLOBBER.include('doc/example/main')
 CLOBBER.include('TAGS')
-CLOBBER.include('coverage', 'rcov_aggregate')
 
 # Prevent OS X from including extended attribute junk in the tar output
 ENV['COPY_EXTENDED_ATTRIBUTES_DISABLE'] = 'true'
@@ -63,44 +62,6 @@ Rake::TestTask.new do |t|
   t.test_files = files
   t.libs << "."
   t.warning = true
-end
-
-begin
-  require 'rcov/rcovtask'
-  IGNORE_COVERAGE_IN = FileList[
-    'lib/rake/rdoctask.rb',
-    'lib/rake/testtask.rb',
-    'lib/rake/packagetask.rb',
-    'lib/rake/clean.rb',
-  ]
-
-  unless File::ALT_SEPARATOR
-    IGNORE_COVERAGE_IN.include(
-      'lib/rake/alt_system.rb',
-      'lib/rake/win32.rb')
-  end
-
-  Rcov::RcovTask.new do |t|
-    t.libs << "test"
-    t.rcov_opts = [
-      '-xRakefile', '-xrakefile', '-xpublish.rf',
-      '-xlib/rake/contrib', '-x/Library', '-x.rvm',
-      '--text-report',
-      '--sort coverage'
-    ] + FileList['rakelib/*.rake'].pathmap("-x%p") +
-      IGNORE_COVERAGE_IN.map { |fn| "-x#{fn}" }
-    t.test_files = FileList[
-      'test/lib/*_test.rb',
-      'test/contrib/*_test.rb',
-      'test/functional/*_test.rb'
-    ]
-    t.output_dir = 'coverage'
-    t.verbose = true
-  end
-rescue LoadError
-  task :rcov do
-    puts "RCov is not available"
-  end
 end
 
 # CVS Tasks ----------------------------------------------------------
