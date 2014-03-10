@@ -10,7 +10,8 @@ Enhancements:
     task 'a:b' do ... end
 
   Pull request #232 by Judson Lester.
-
+* Task#source defaults to the first prerequisite in non-rule tasks.  Pull
+  request #215 by Avdi Grimm.
 * Rake now prints the exception class on errors.  Patch #251 by David Cornu.
 
 Bug fixes:
