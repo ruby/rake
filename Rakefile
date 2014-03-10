@@ -20,11 +20,8 @@ require 'rubygems/package_task'
 require 'rake/clean'
 require 'rake/testtask'
 
-begin
-  gem 'rdoc'
-  require 'rdoc/task'
-rescue Gem::LoadError
-end
+gem 'rdoc'
+require 'rdoc/task'
 
 CLEAN.include('**/*.o', '*.dot', '**/*.rbc')
 CLOBBER.include('doc/example/main')
@@ -74,18 +71,14 @@ BASE_RDOC_OPTIONS = [
   '--title', 'Rake -- Ruby Make'
 ]
 
-if defined?(RDoc::Task) then
-  RDoc::Task.new do |rdoc|
-    rdoc.rdoc_dir = 'html'
-    rdoc.title    = "Rake -- Ruby Make"
-    rdoc.options = BASE_RDOC_OPTIONS.dup
+RDoc::Task.new do |rdoc|
+  rdoc.rdoc_dir = 'html'
+  rdoc.title    = "Rake -- Ruby Make"
+  rdoc.options = BASE_RDOC_OPTIONS.dup
 
-    rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGES')
-    rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
-    rdoc.rdoc_files.exclude(/\bcontrib\b/)
-  end
-else
-  warn "RDoc 2.4.2+ is required to build documentation"
+  rdoc.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'TODO', 'CHANGES')
+  rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
+  rdoc.rdoc_files.exclude(/\bcontrib\b/)
 end
 
 # ====================================================================
