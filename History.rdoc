@@ -1,0 +1,6 @@
+=== 10.1.2
+
+Bug fixes:
+
+* Fixed typo in rakefile.rdoc.  Pull request #256 by Valera Rozuvan.
+
