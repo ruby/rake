@@ -66,13 +66,6 @@ end
 
 # CVS Tasks ----------------------------------------------------------
 
-# Install rake using the standard install.rb script.
-
-desc "Install the application"
-task :install do
-  ruby "install.rb"
-end
-
 # Create a task to build the RDOC documentation tree.
 
 BASE_RDOC_OPTIONS = [
