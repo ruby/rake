@@ -3,4 +3,4 @@
 Bug fixes:
 
 * Fixed typo in rakefile.rdoc.  Pull request #256 by Valera Rozuvan.
-
+* Clarified `rake -f` usage message.  Pull request #252 by Marco Pfatschbacher.
