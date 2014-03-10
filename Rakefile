@@ -215,8 +215,6 @@ task :rf => :rubyfiles
 # --------------------------------------------------------------------
 # Creating a release
 
-task :noop
-
 desc "Make a new release"
 task :release, [:rel, :reuse, :reltest] => [
     :prerelease,
