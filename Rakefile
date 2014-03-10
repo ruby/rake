@@ -314,7 +314,3 @@ end
 
 load 'xforge.rf' if File.exist?('xforge.rf')
 
-task :failure => :really_fail
-task :really_fail do
-  fail "oops"
-end
