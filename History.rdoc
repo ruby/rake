@@ -1,6 +1,11 @@
 === 10.1.2
 
+Enhancements:
+
+* Rake now prints the exception class on errors.  Patch #251 by David Cornu.
+
 Bug fixes:
 
 * Fixed typo in rakefile.rdoc.  Pull request #256 by Valera Rozuvan.
 * Clarified `rake -f` usage message.  Pull request #252 by Marco Pfatschbacher.
+
