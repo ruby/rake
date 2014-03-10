@@ -19,4 +19,5 @@ Bug fixes:
 * Fixed documentation for calling tasks with arguments.  Pull request #235 by
   John Varghese.
 * Clarified `rake -f` usage message.  Pull request #252 by Marco Pfatschbacher.
+* Fixed a test failure on windows.  Pull request #231 by Hiroshi Shirosaki.
 
