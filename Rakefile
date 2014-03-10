@@ -61,8 +61,6 @@ Rake::TestTask.new do |t|
   t.warning = true
 end
 
-# CVS Tasks ----------------------------------------------------------
-
 # Create a task to build the RDOC documentation tree.
 
 BASE_RDOC_OPTIONS = [
