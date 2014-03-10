@@ -2,6 +2,9 @@
 
 Enhancements:
 
+* Rake now requires Ruby 1.9 or newer.  For me, this is a breaking change, but
+  it seems that Jim planned to release it with Rake 2.1.  See also pull
+  request #247 by Philip Arndt.
 * Rake now prints the exception class on errors.  Patch #251 by David Cornu.
 
 Bug fixes:
