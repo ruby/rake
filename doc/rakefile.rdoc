@@ -183,7 +183,7 @@ argument string should be quoted.  Something like this:
 (Quoting rules vary between operating systems and shells, so make sure
 you consult the proper docs for your OS/shell).
 
-=== Tasks Arguments and the Environment
+=== Task Arguments and the Environment
 
 Task argument values can also be picked up from the environment.  For
 example, if the "release" task expected a parameter named
