@@ -196,11 +196,6 @@ task :lines do
   show_line("TOTAL", total_lines, total_code)
 end
 
-# Define an optional publish target in an external file.  If the
-# publish.rf file is not found, the publish targets won't be defined.
-
-load "publish.rf" if File.exist? "publish.rf"
-
 # Support Tasks ------------------------------------------------------
 
 RUBY_FILES = FileList['**/*.rb'].exclude('pkg')
@@ -309,8 +304,4 @@ task :tag, [:rel, :reuse, :reltest] => [:prerelease] do |t, args|
     sh %{svn copy svn+ssh://rubyforge.org/var/svn/rake/trunk svn+ssh://rubyforge.org/var/svn/rake/tags/#{reltag} -m 'Commiting release #{reltag}'} ###'
   end
 end
-
-# Require experimental XForge/Metaproject support.
-
-load 'xforge.rf' if File.exist?('xforge.rf')
 
