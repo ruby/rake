@@ -12,6 +12,8 @@ Enhancements:
   Pull request #232 by Judson Lester.
 * Task#source defaults to the first prerequisite in non-rule tasks.  Pull
   request #215 by Avdi Grimm.
+* Rake now automatically rebuilds and reloads imported files.  Pull request
+  #209 by Randy Coulman.
 * Rake now prints the exception class on errors.  Patch #251 by David Cornu.
 
 Bug fixes:
