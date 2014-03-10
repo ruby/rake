@@ -472,8 +472,8 @@ module Rake
             "Do not log messages to standard output.",
             lambda { |value| Rake.verbose(false) }
           ],
-          ['--rakefile', '-f [FILE]',
-            "Use FILE as the rakefile.",
+          ['--rakefile', '-f [FILENAME]',
+            "Use FILENAME as the rakefile to search for.",
             lambda { |value|
               value ||= ''
               @rakefiles.clear
