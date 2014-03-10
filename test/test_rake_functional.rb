@@ -430,7 +430,7 @@ class TestRakeFunctional < Rake::TestCase
   end
 
   def can_detect_signals?
-    system "ruby -e 'Process.kill \"TERM\", $$'"
+    system RUBY, '-e', 'Process.kill "TERM", $$'
     status = $?
     if @verbose
       puts "    SIG status = #{$?.inspect}"
