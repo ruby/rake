@@ -20,4 +20,5 @@ Bug fixes:
   John Varghese.
 * Clarified `rake -f` usage message.  Pull request #252 by Marco Pfatschbacher.
 * Fixed a test failure on windows.  Pull request #231 by Hiroshi Shirosaki.
+* Fixed corrupted rake.1.gz.  Pull request #225 by Michel Boaventura.
 
