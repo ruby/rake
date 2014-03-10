@@ -7,7 +7,6 @@
 # MIT-LICENSE for details.
 
 require 'rbconfig'
-require 'rubygems'
 
 system_rake = File.join RbConfig::CONFIG['rubylibdir'], 'rake.rb'
 
@@ -156,55 +155,51 @@ PKG_FILES.exclude('doc/example/*.o')
 PKG_FILES.exclude('TAGS')
 PKG_FILES.exclude(%r{doc/example/main$})
 
-if ! defined?(Gem)
-  puts "Package Target requires RubyGems"
-else
-  SPEC = Gem::Specification.new do |s|
-    s.name = 'rake'
-    s.version = $package_version
-    s.summary = "Ruby based make-like utility."
-    s.license = "MIT"
-    s.description = <<-EOF.delete "\n"
+SPEC = Gem::Specification.new do |s|
+  s.name = 'rake'
+  s.version = $package_version
+  s.summary = "Ruby based make-like utility."
+  s.license = "MIT"
+  s.description = <<-EOF.delete "\n"
 Rake is a Make-like program implemented in Ruby. Tasks and dependencies are
 specified in standard Ruby syntax.
-    EOF
+  EOF
 
-    s.required_ruby_version = '>= 1.9'
-    s.required_rubygems_version = '>= 1.3.2'
-    s.add_development_dependency 'minitest', '~> 4'
+  s.required_ruby_version = '>= 1.9'
+  s.required_rubygems_version = '>= 1.3.2'
+  s.add_development_dependency 'minitest', '~> 4'
 
-    s.files = PKG_FILES.to_a
+  s.files = PKG_FILES.to_a
 
-    s.executables = ["rake"]
+  s.executables = ["rake"]
 
-    s.extra_rdoc_files = FileList[
-      'README.rdoc',
-      'MIT-LICENSE',
-      'TODO',
-      'CHANGES',
-      'doc/**/*.rdoc'
-    ]
+  s.extra_rdoc_files = FileList[
+    'README.rdoc',
+    'MIT-LICENSE',
+    'TODO',
+    'CHANGES',
+    'doc/**/*.rdoc'
+  ]
 
-    s.rdoc_options = BASE_RDOC_OPTIONS
+  s.rdoc_options = BASE_RDOC_OPTIONS
 
-    s.author = "Jim Weirich"
-    s.email = "jim.weirich@gmail.com"
-    s.homepage = "http://github.com/jimweirich/rake"
-  end
-
-  Gem::PackageTask.new(SPEC) do |pkg|
-    pkg.need_zip = true
-    pkg.need_tar = true
-  end
-
-  file "rake.gemspec" => ["Rakefile", "lib/rake.rb"] do |t|
-    require 'yaml'
-    open(t.name, "w") { |f| f.puts SPEC.to_yaml }
-  end
-
-  desc "Create a stand-alone gemspec"
-  task :gemspec => "rake.gemspec"
+  s.author = "Jim Weirich"
+  s.email = "jim.weirich@gmail.com"
+  s.homepage = "http://github.com/jimweirich/rake"
 end
+
+Gem::PackageTask.new(SPEC) do |pkg|
+  pkg.need_zip = true
+  pkg.need_tar = true
+end
+
+file "rake.gemspec" => ["Rakefile", "lib/rake.rb"] do |t|
+  require 'yaml'
+  open(t.name, "w") { |f| f.puts SPEC.to_yaml }
+end
+
+desc "Create a stand-alone gemspec"
+task :gemspec => "rake.gemspec"
 
 # Misc tasks =========================================================
 
