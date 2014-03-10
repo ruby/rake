@@ -220,12 +220,7 @@ task :rf => :rubyfiles
 # --------------------------------------------------------------------
 # Creating a release
 
-def plugin(plugin_name)
-  require "rake/plugins/#{plugin_name}"
-end
-
 task :noop
-#plugin "release_manager"
 
 desc "Make a new release"
 task :release, [:rel, :reuse, :reltest] => [
