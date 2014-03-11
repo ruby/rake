@@ -150,23 +150,23 @@ module Rake
     end
 
     def parse_task_string(string)
-      if /^(?<name>[^\[]+)(\[(?<remaining_args>.*)\])$/ =~ string
-        args = []
+      /^(?<name>[^\[]+)(\[(?<remaining_args>.*)\])$/ =~ string
 
-        unless remaining_args.empty?
-          begin
-            # extract the first argument
-            /(?<token>(?:[^\\,]|\\.)*?)\s*(?:,\s*(?<remaining_args>.*))?$/ =~ remaining_args
+      return string, [] unless name
 
-            # strip backslashes and take the argument
-            args << token.gsub(/\\(.)/, '\1')
-          end until remaining_args.nil?
-        end
-      else
-        name = string
-        args = []
+      args = []
+
+      unless remaining_args.empty?
+        begin
+          # extract the first argument
+          /(?<token>(?:[^\\,]|\\.)*?)\s*(?:,\s*(?<remaining_args>.*))?$/ =~ remaining_args
+
+          # strip backslashes and take the argument
+          args << token.gsub(/\\(.)/, '\1')
+        end until remaining_args.nil?
       end
-      [name, args]
+
+      return name, args
     end
 
     # Provide standard exception handling for the given block.
