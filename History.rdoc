@@ -14,6 +14,8 @@ Enhancements:
   request #215 by Avdi Grimm.
 * Rake now automatically rebuilds and reloads imported files.  Pull request
   #209 by Randy Coulman.
+* The rake task arguments can contain escaped commas.  Pull request #214 by
+  Filip Hrbek.
 * Rake now prints the exception class on errors.  Patch #251 by David Cornu.
 
 Bug fixes:
