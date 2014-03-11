@@ -150,13 +150,10 @@ module Rake
     end
 
     def parse_task_string(string)
-      if string =~ /^([^\[]+)(\[(.*)\])$/
-        name = $1
+      if /^(?<name>[^\[]+)(\[(?<remaining_args>.*)\])$/ =~ string
         args = []
 
-        if $2 != '[]'
-          # there's at least one non-empty argument
-          remaining_args = $3
+        unless remaining_args.empty?
           begin
             # extract the first argument
             /(?<token>(?:[^\\,]|\\.)*?)\s*(?:,\s*(?<remaining_args>.*))?$/ =~ remaining_args
