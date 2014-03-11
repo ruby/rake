@@ -1,4 +1,3 @@
-.gemtest
 .rubocop.yml
 .togglerc
 Gemfile
