@@ -158,10 +158,10 @@ module Rake
       args = []
 
       begin
-        /(?<token>(?:[^\\,]|\\.)*?)\s*(?:,\s*(?<remaining_args>.*))?$/ =~
-          remaining_args
+        /((?:[^\\,]|\\.)*?)\s*(?:,\s*(.*))?$/ =~ remaining_args
 
-        args << token.gsub(/\\(.)/, '\1')
+        remaining_args = $2
+        args << $1.gsub(/\\(.)/, '\1')
       end while remaining_args
 
       return name, args
