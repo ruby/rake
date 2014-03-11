@@ -110,9 +110,7 @@ lib/rake/trace_output.rb
 lib/rake/version.rb
 lib/rake/win32.rb
 rake.blurb
-rakelib/metrics.rake
 rakelib/publish.rake
-rakelib/tags.rake
 rakelib/test_times.rake
 test/file_creation.rb
 test/helper.rb
