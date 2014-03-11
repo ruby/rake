@@ -1,6 +1,9 @@
 language: ruby
 env:
   - CI=true
+notifications:
+  email:
+  - drbrain@segment7.net
 rvm:
 #  - 1.8.7        # Needs mini-test
 #  - rbx-19mode   # Time comparison fails
