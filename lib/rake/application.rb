@@ -158,10 +158,9 @@ module Rake
 
       unless remaining_args.empty?
         begin
-          # extract the first argument
-          /(?<token>(?:[^\\,]|\\.)*?)\s*(?:,\s*(?<remaining_args>.*))?$/ =~ remaining_args
+          /(?<token>(?:[^\\,]|\\.)*?)\s*(?:,\s*(?<remaining_args>.*))?$/ =~
+            remaining_args
 
-          # strip backslashes and take the argument
           args << token.gsub(/\\(.)/, '\1')
         end while remaining_args
       end
