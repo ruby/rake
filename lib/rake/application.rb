@@ -153,17 +153,16 @@ module Rake
       /^(?<name>[^\[]+)(\[(?<remaining_args>.*)\])$/ =~ string
 
       return string, [] unless name
+      return name,   [] if     remaining_args.empty?
 
       args = []
 
-      unless remaining_args.empty?
-        begin
-          /(?<token>(?:[^\\,]|\\.)*?)\s*(?:,\s*(?<remaining_args>.*))?$/ =~
-            remaining_args
+      begin
+        /(?<token>(?:[^\\,]|\\.)*?)\s*(?:,\s*(?<remaining_args>.*))?$/ =~
+          remaining_args
 
-          args << token.gsub(/\\(.)/, '\1')
-        end while remaining_args
-      end
+        args << token.gsub(/\\(.)/, '\1')
+      end while remaining_args
 
       return name, args
     end
