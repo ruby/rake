@@ -163,7 +163,7 @@ module Rake
 
           # strip backslashes and take the argument
           args << token.gsub(/\\(.)/, '\1')
-        end until remaining_args.nil?
+        end while remaining_args
       end
 
       return name, args
