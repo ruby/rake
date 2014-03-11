@@ -21,6 +21,10 @@
 # IN THE SOFTWARE.
 #++
 
+module Rake
+  VERSION = '10.2.0'
+end
+
 require 'rake/version'
 
 # :stopdoc:

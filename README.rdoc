@@ -1,7 +1,12 @@
 = RAKE -- Ruby Make
 
-This package contains Rake, a simple ruby build program with capabilities
-similar to make.
+home :: https://github.com/jimweirich/rake
+bugs :: https://github.com/jimweirich/rake/issues
+
+== Description
+
+Rake is a Make-like program implemented in Ruby. Tasks and dependencies are
+specified in standard Ruby syntax.
 
 Rake has the following features:
 
