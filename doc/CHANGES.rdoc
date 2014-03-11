@@ -1,3 +1,5 @@
+This changelog is out of date and has been replaced by History.rdoc.
+
 = Rake Changelog
 
 NOTE: Refer to the individual release documents (in the

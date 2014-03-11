@@ -1,7 +1,6 @@
 .gemtest
 .rubocop.yml
 .togglerc
-CHANGES
 Gemfile
 History.rdoc
 MIT-LICENSE
@@ -9,6 +8,7 @@ Manifest.txt
 README.rdoc
 Rakefile
 bin/rake
+doc/CHANGES.rdoc
 doc/command_line_usage.rdoc
 doc/example/Rakefile1
 doc/example/Rakefile2
