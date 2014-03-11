@@ -159,8 +159,8 @@ module Rake
           remaining_args = $3
           begin
             # extract the first argument
-            match_data = /((?:[^\\,]|\\.)*)(?:,(.*))?$/.match(remaining_args)
-            token, remaining_args = match_data[1].strip, match_data[2]
+            match_data = /((?:[^\\,]|\\.)*?)\s*(?:,\s*(.*))?$/.match(remaining_args)
+            token, remaining_args = match_data[1], match_data[2]
 
             # strip backslashes and take the argument
             args << (token.gsub!(/\\(.)/, '\1') || token)
