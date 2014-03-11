@@ -48,6 +48,8 @@ hoe = Hoe.spec 'rake' do
   ]
 end
 
+hoe.test_prelude = 'gem "minitest", "~> 4.0"'
+
 # Use custom rdoc task due to existence of doc directory
 
 Rake::Task['docs'].clear
