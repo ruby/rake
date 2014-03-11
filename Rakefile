@@ -17,6 +17,9 @@ end
 
 require 'hoe'
 
+Hoe.plugin :minitest
+Hoe.plugin :travis
+
 hoe = Hoe.spec 'rake' do
   developer 'Eric Hodel', 'drbrain@segment7.net'
   developer 'Jim Weirich', ''

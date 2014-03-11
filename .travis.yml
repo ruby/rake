@@ -1,12 +1,14 @@
+---
+after_script:
+- ruby -Ilib bin/rake travis:after -t
+before_script:
+- gem install hoe-travis --no-rdoc --no-ri
+- ruby -Ilib bin/rake travis:before -t
 language: ruby
-env:
-  - CI=true
 notifications:
   email:
   - drbrain@segment7.net
 rvm:
-#  - 1.8.7        # Needs mini-test
-#  - rbx-19mode   # Time comparison fails
   - jruby        # 2 failures
   - 1.9.3
   - 2.0.0
