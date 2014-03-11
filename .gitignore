@@ -1,5 +1,4 @@
 *.bak
-*.patch
 *.rbc
 *.swp
 *~
@@ -12,4 +11,3 @@
 /html
 /pkg
 Gemfile.lock
-xxx-*
