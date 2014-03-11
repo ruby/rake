@@ -8,7 +8,6 @@ MIT-LICENSE
 Manifest.txt
 README.rdoc
 Rakefile
-TODO
 bin/rake
 doc/command_line_usage.rdoc
 doc/example/Rakefile1

@@ -33,7 +33,6 @@ hoe = Hoe.spec 'rake' do
 
   self.extra_rdoc_files.concat FileList[
     'MIT-LICENSE',
-    'TODO',
     'CHANGES',
     'doc/**/*.rdoc'
   ]
