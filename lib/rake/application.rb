@@ -162,7 +162,7 @@ module Rake
             /(?<token>(?:[^\\,]|\\.)*?)\s*(?:,\s*(?<remaining_args>.*))?$/ =~ remaining_args
 
             # strip backslashes and take the argument
-            args << (token.gsub!(/\\(.)/, '\1') || token)
+            args << token.gsub(/\\(.)/, '\1')
           end until remaining_args.nil?
         end
       else
