@@ -94,7 +94,9 @@ module Rake
     end
 
     def in_path_command(command)
-      `which #{command}` != '' ? command : nil
+      IO.popen ['which', command] do |io|
+        io.eof? ? nil : command
+      end
     end
   end
 end
