@@ -162,7 +162,7 @@ module Rake
     # Example:
     #   desc "Run the Unit Tests"
     #   task test: [:build]
-    #     runtests
+    #     # ... run tests
     #   end
     #
     def desc(description) # :doc:
