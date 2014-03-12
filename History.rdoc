@@ -20,7 +20,8 @@ Enhancements:
 
 Bug fixes:
 
-* Fixed typos.  Pull request #256 by Valera Rozuvan, #250 via Jake Worth.
+* Fixed typos.  Pull request #256 by Valera Rozuvan, #250 via Jake Worth, #260
+  by Zachary Scott.
 * Fixed documentation for calling tasks with arguments.  Pull request #235 by
   John Varghese.
 * Clarified `rake -f` usage message.  Pull request #252 by Marco Pfatschbacher.
