@@ -26,9 +26,9 @@ module Rake
 
     # :call-seq:
     #   task task_name
-    #   task task_name => dependencies
+    #   task task_name: dependencies
     #   task task_name, arguments => dependencies
-    #   task task_name, argument[, argument ...], :needs => dependencies
+    #   task task_name, argument[, argument ...], :needs: dependencies
     #
     # Declare a basic task.  The +task_name+ is always the first argument.  If
     # the task name contains a ":" it is defined in that namespace.
@@ -42,7 +42,7 @@ module Rake
     #
     # A task with a single dependency:
     #
-    #   task :clobber => [:clean] do
+    #   task clobber: %w[clean] do
     #     rm_rf "html"
     #   end
     #
@@ -58,7 +58,7 @@ module Rake
     #
     # Alternate definition:
     #
-    #   task :package, :version, :needs => :test do |t, args|
+    #   task :package, :version, needs: :test do |t, args|
     #     # ...
     #   end
     #
@@ -112,7 +112,7 @@ module Rake
     # about it)
     #
     # Example:
-    #   multitask :deploy => [:deploy_gem, :deploy_rdoc]
+    #   multitask deploy: %w[deploy_gem deploy_rdoc]
     #
     def multitask(*args, &block) # :doc:
       Rake::MultiTask.define_task(*args, &block)
@@ -161,7 +161,7 @@ module Rake
     #
     # Example:
     #   desc "Run the Unit Tests"
-    #   task :test => [:build]
+    #   task test: [:build]
     #     runtests
     #   end
     #
