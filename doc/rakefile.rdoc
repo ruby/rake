@@ -32,7 +32,7 @@ following the name and an arrow (=>).
 
   task name: [:prereq1, :prereq2]
 
-<b>NOTE:</b> Although this syntax looks a little funky, it is legal
+*NOTE:* Although this syntax looks a little funky, it is legal
 Ruby.  We are constructing a hash where the key is :name and the value
 for that key is the list of prerequisites.  It is equivalent to the
 following ...
@@ -93,8 +93,8 @@ method).  In addition, file tasks are usually named with a string
 rather than a symbol.
 
 The following file task creates a executable program (named +prog+)
-given two object files named <tt>a.o</tt> and <tt>b.o</tt>.  The tasks
-for creating <tt>a.o</tt> and <tt>b.o</tt> are not shown.
+given two object files named +a.o+ and +b.o+.  The tasks
+for creating +a.o+ and +b.o+ are not shown.
 
   file "prog" => ["a.o", "b.o"] do |t|
     sh "cc -o #{t.name} #{t.prerequisites.join(' ')}"
@@ -217,7 +217,7 @@ will work.  Environment variable names must either match the task
 parameter exactly, or match an all-uppercase version of the task
 parameter.
 
-<b>NOTE:</b> A variable declared within a rake command will
+*NOTE:* A variable declared within a rake command will
 not persist in the environment:
 
    $ export VALUE=old
@@ -308,8 +308,7 @@ versions of rake.
 == Accessing Task Programmatically
 
 Sometimes it is useful to manipulate tasks programmatically in a
-Rakefile. To find a task object, use the <tt>:[]</tt> operator on the
-<tt>Rake::Task</tt>.
+Rakefile. To find a task object use Rake::Task.[].
 
 === Programmatic Task Example
 
@@ -378,7 +377,7 @@ The following rule is equivalent to the example above.
     sh "cc #{t.source} -c -o #{t.name}"
   end
 
-<b>NOTE:</b> Because of a _quirk_ in Ruby syntax, parenthesis are
+*NOTE:* Because of a _quirk_ in Ruby syntax, parenthesis are
 required on *rule* when the first argument is a regular expression.
 
 The following rule might be used for Java files ...
@@ -389,7 +388,7 @@ The following rule might be used for Java files ...
     java_compile(t.source, t.name)
   end
 
-<b>NOTE:</b> +java_compile+ is a hypothetical method that invokes the
+*NOTE:* +java_compile+ is a hypothetical method that invokes the
 java compiler.
 
 == Importing Dependencies
@@ -592,11 +591,11 @@ This is the proper way to specify the task ...
 
 == Rakefile Path
 
-When issuing the <tt>rake</tt> command in a terminal, Rake will look
+When issuing the +rake+ command in a terminal, Rake will look
 for a Rakefile in the current directory. If a Rakefile  is not found,
 it will search parent directories until one is found.
 
-For example, if a Rakefile resides in the <tt>project/</tt> directory,
+For example, if a Rakefile resides in the +project/+ directory,
 moving deeper into the project's directory tree will not have an adverse
 effect on rake tasks:
 
@@ -616,12 +615,12 @@ which the Rakefile resides.
 === Multiple Rake Files
 
 Not all tasks need to be included in a single Rakefile. Additional
-rake files (with the file extension "<tt>.rake</tt>") may be placed in
-<tt>rakelib</tt> directory located at the top level of a project (i.e.
-the same directory that contains the main <tt>Rakefile</tt>).
+rake files (with the file extension "+.rake+") may be placed in
++rakelib+ directory located at the top level of a project (i.e.
+the same directory that contains the main +Rakefile+).
 
 Also, rails projects may include additional rake files in the
-<tt>lib/tasks</tt> directory.
++lib/tasks+ directory.
 
 ----
 
