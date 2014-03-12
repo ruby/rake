@@ -20,7 +20,7 @@ class TestRakeCpuCounter < Rake::TestCase
 
   def test_run
     with_ruby_in_path do |ruby|
-      assert_equal 7, @cpu_counter.run(ruby, '-e "puts 3 + 4"')
+      assert_equal 7, @cpu_counter.run(ruby, '-e', 'puts 3 + 4')
     end
   end
 

@@ -70,13 +70,15 @@ module Rake
     end
 
     def count_via_sysctl
-      run 'sysctl', '-n hw.ncpu'
+      run 'sysctl', '-n', 'hw.ncpu'
     end
 
-    def run(command, args)
+    def run(command, *args)
       cmd = resolve_command(command)
       if cmd
-        `#{cmd} #{args}`.to_i
+        IO.popen [cmd, *args] do |io|
+          io.read.to_i
+        end
       else
         nil
       end
