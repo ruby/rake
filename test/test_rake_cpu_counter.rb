@@ -9,16 +9,8 @@ class TestRakeCpuCounter < Rake::TestCase
   end
 
   def test_in_path_command
-    ruby     = File.basename Gem.ruby
-    ruby_dir = File.dirname  Gem.ruby
-
-    begin
-      orig_path, ENV['PATH'] =
-        ENV['PATH'], [ruby_dir, *ENV['PATH']].join(File::PATH_SEPARATOR)
-
+    with_ruby_in_path do |ruby|
       assert_equal ruby, @cpu_counter.in_path_command(ruby)
-    ensure
-      ENV['PATH'] = orig_path
     end
   rescue Errno::ENOENT => e
     raise unless e.message =~ /\bwhich\b/
@@ -27,6 +19,12 @@ class TestRakeCpuCounter < Rake::TestCase
   end
 
   def test_run
+    with_ruby_in_path do |ruby|
+      assert_equal 7, @cpu_counter.run(ruby, '-e "puts 3 + 4"')
+    end
+  end
+
+  def with_ruby_in_path
     ruby     = File.basename Gem.ruby
     ruby_dir = File.dirname  Gem.ruby
 
@@ -34,7 +32,7 @@ class TestRakeCpuCounter < Rake::TestCase
       orig_path, ENV['PATH'] =
         ENV['PATH'], [ruby_dir, *ENV['PATH']].join(File::PATH_SEPARATOR)
 
-      assert_equal 7, @cpu_counter.run(ruby, '-e "puts 3 + 4"')
+      yield ruby
     ensure
       ENV['PATH'] = orig_path
     end
