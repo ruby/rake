@@ -12,10 +12,10 @@ module Rake
 
   CommandLineOptionError = Class.new(StandardError)
 
-  ######################################################################
+  ##
   # Rake main application object.  When invoking +rake+ from the
   # command line, a Rake::Application object is created and run.
-  #
+
   class Application
     include TaskManager
     include TraceOutput
@@ -141,15 +141,16 @@ module Rake
       @thread_pool ||= ThreadPool.new(options.thread_pool_size || Rake.suggested_thread_count-1)
     end
 
-    # private ----------------------------------------------------------------
+    # internal ----------------------------------------------------------------
 
-    def invoke_task(task_string)
+    # Invokes a task with arguments that are extracted from +task_string+
+    def invoke_task(task_string) # :nodoc:
       name, args = parse_task_string(task_string)
       t = self[name]
       t.invoke(*args)
     end
 
-    def parse_task_string(string)
+    def parse_task_string(string) # :nodoc:
       /^(?<name>[^\[]+)(\[(?<remaining_args>.*)\])$/ =~ string
 
       return string, [] unless name
@@ -168,7 +169,7 @@ module Rake
     end
 
     # Provide standard exception handling for the given block.
-    def standard_exception_handling
+    def standard_exception_handling # :nodoc:
       yield
     rescue SystemExit
       # Exit silently with current status
@@ -184,12 +185,12 @@ module Rake
 
     # Exit the program because of an unhandle exception.
     # (may be overridden by subclasses)
-    def exit_because_of_exception(ex)
+    def exit_because_of_exception(ex) # :nodoc:
       exit(false)
     end
 
     # Display the error message that caused the exception.
-    def display_error_message(ex)
+    def display_error_message(ex) # :nodoc:
       trace "#{name} aborted!"
       display_exception_details(ex)
       trace "Tasks: #{ex.chain}" if has_chain?(ex)
@@ -197,17 +198,17 @@ module Rake
          options.backtrace
     end
 
-    def display_exception_details(ex)
+    def display_exception_details(ex) # :nodoc:
       display_exception_message_details(ex)
       display_exception_backtrace(ex)
       display_exception_details(ex.cause) if has_cause?(ex)
     end
 
-    def has_cause?(ex)
+    def has_cause?(ex) # :nodoc:
       ex.respond_to?(:cause) && ex.cause
     end
 
-    def display_exception_message_details(ex)
+    def display_exception_message_details(ex) # :nodoc:
       if ex.instance_of?(RuntimeError)
         trace ex.message
       else
@@ -215,7 +216,7 @@ module Rake
       end
     end
 
-    def display_exception_backtrace(ex)
+    def display_exception_backtrace(ex) # :nodoc:
       if options.backtrace
         trace ex.backtrace.join("\n")
       else
@@ -228,7 +229,7 @@ module Rake
     # Example:
     #    Rake.application.deprecate("import", "Rake.import", caller.first)
     #
-    def deprecate(old_usage, new_usage, call_site)
+    def deprecate(old_usage, new_usage, call_site) # :nodoc:
       unless options.ignore_deprecate
         $stderr.puts "WARNING: '#{old_usage}' is deprecated.  " +
           "Please use '#{new_usage}' instead.\n" +
@@ -237,14 +238,14 @@ module Rake
     end
 
     # Does the exception have a task invocation chain?
-    def has_chain?(exception)
+    def has_chain?(exception) # :nodoc:
       exception.respond_to?(:chain) && exception.chain
     end
     private :has_chain?
 
     # True if one of the files in RAKEFILES is in the current directory.
     # If a match is found, it is copied into @rakefile.
-    def have_rakefile
+    def have_rakefile # :nodoc:
       @rakefiles.each do |fn|
         if File.exist?(fn)
           others = FileList.glob(fn, File::FNM_CASEFOLD)
@@ -257,23 +258,23 @@ module Rake
     end
 
     # True if we are outputting to TTY, false otherwise
-    def tty_output?
+    def tty_output? # :nodoc:
       @tty_output
     end
 
     # Override the detected TTY output state (mostly for testing)
-    def tty_output=(tty_output_state)
+    def tty_output=(tty_output_state) # :nodoc:
       @tty_output = tty_output_state
     end
 
     # We will truncate output if we are outputting to a TTY or if we've been
     # given an explicit column width to honor
-    def truncate_output?
+    def truncate_output? # :nodoc:
       tty_output? || @terminal_columns.nonzero?
     end
 
     # Display the tasks and comments.
-    def display_tasks_and_comments
+    def display_tasks_and_comments # :nodoc:
       displayable_tasks = tasks.select { |t|
         (options.show_all_tasks || t.comment) &&
           t.name =~ options.show_task_pattern
@@ -312,7 +313,7 @@ module Rake
       end
     end
 
-    def terminal_width
+    def terminal_width # :nodoc:
       if @terminal_columns.nonzero?
         result = @terminal_columns
       else
@@ -324,28 +325,28 @@ module Rake
     end
 
     # Calculate the dynamic width of the
-    def dynamic_width
+    def dynamic_width # :nodoc:
       @dynamic_width ||= (dynamic_width_stty.nonzero? || dynamic_width_tput)
     end
 
-    def dynamic_width_stty
+    def dynamic_width_stty # :nodoc:
       %x{stty size 2>/dev/null}.split[1].to_i
     end
 
-    def dynamic_width_tput
+    def dynamic_width_tput # :nodoc:
       %x{tput cols 2>/dev/null}.to_i
     end
 
-    def unix?
+    def unix? # :nodoc:
       RbConfig::CONFIG['host_os'] =~
         /(aix|darwin|linux|(net|free|open)bsd|cygwin|solaris|irix|hpux)/i
     end
 
-    def windows?
+    def windows? # :nodoc:
       Win32.windows?
     end
 
-    def truncate(string, width)
+    def truncate(string, width) # :nodoc:
       if string.nil?
         ""
       elsif string.length <= width
@@ -356,19 +357,19 @@ module Rake
     end
 
     # Display the tasks and prerequisites
-    def display_prerequisites
+    def display_prerequisites # :nodoc:
       tasks.each do |t|
         puts "#{name} #{t.name}"
         t.prerequisites.each { |pre| puts "    #{pre}" }
       end
     end
 
-    def trace(*strings)
+    def trace(*strings) # :nodoc:
       options.trace_output ||= $stderr
       trace_on(options.trace_output, *strings)
     end
 
-    def sort_options(options)
+    def sort_options(options) # :nodoc:
       options.sort_by { |opt|
         opt.select { |o| o =~ /^-/ }.map { |o| o.downcase }.sort.reverse
       }
@@ -377,7 +378,7 @@ module Rake
 
     # A list of all the standard options used in rake, suitable for
     # passing to OptionParser.
-    def standard_rake_options
+    def standard_rake_options # :nodoc:
       sort_options(
         [
           ['--all', '-A',
@@ -581,14 +582,14 @@ module Rake
         ])
     end
 
-    def select_tasks_to_show(options, show_tasks, value)
+    def select_tasks_to_show(options, show_tasks, value) # :nodoc:
       options.show_tasks = show_tasks
       options.show_task_pattern = Regexp.new(value || '')
       Rake::TaskManager.record_task_metadata = true
     end
     private :select_tasks_to_show
 
-    def select_trace_output(options, trace_option, value)
+    def select_trace_output(options, trace_option, value) # :nodoc:
       value = value.strip unless value.nil?
       case value
       when 'stdout'
@@ -603,7 +604,7 @@ module Rake
     private :select_trace_output
 
     # Read and handle the command line options.
-    def handle_options
+    def handle_options # :nodoc:
       options.rakelib = ['rakelib']
       options.trace_output = $stderr
 
@@ -624,7 +625,7 @@ module Rake
 
     # Similar to the regular Ruby +require+ command, but will check
     # for *.rake files in addition to *.rb files.
-    def rake_require(file_name, paths=$LOAD_PATH, loaded=$")
+    def rake_require(file_name, paths=$LOAD_PATH, loaded=$") # :nodoc:
       fn = file_name + ".rake"
       return false if loaded.include?(fn)
       paths.each do |path|
@@ -638,7 +639,7 @@ module Rake
       fail LoadError, "Can't find #{file_name}"
     end
 
-    def find_rakefile_location
+    def find_rakefile_location # :nodoc:
       here = Dir.pwd
       until (fn = have_rakefile)
         Dir.chdir("..")
@@ -650,7 +651,7 @@ module Rake
       Dir.chdir(Rake.original_dir)
     end
 
-    def print_rakefile_directory(location)
+    def print_rakefile_directory(location) # :nodoc:
       $stderr.puts "(in #{Dir.pwd})" unless
         options.silent or original_dir == location
     end
@@ -681,13 +682,13 @@ module Rake
       load_imports
     end
 
-    def glob(path, &block)
+    def glob(path, &block) # :nodoc:
       FileList.glob(path.gsub("\\", '/')).each(&block)
     end
     private :glob
 
     # The directory path containing the system wide rakefiles.
-    def system_dir
+    def system_dir # :nodoc:
       @system_dir ||=
         begin
           if ENV['RAKE_SYSTEM']
@@ -713,7 +714,7 @@ module Rake
     # Collect the list of tasks on the command line.  If no tasks are
     # given, return a list containing only the default task.
     # Environmental assignments are processed at this time as well.
-    def collect_command_line_tasks
+    def collect_command_line_tasks # :nodoc:
       @top_level_tasks = []
       ARGV.each do |arg|
         if arg =~ /^(\w+)=(.*)$/m
@@ -727,17 +728,17 @@ module Rake
 
     # Default task name ("default").
     # (May be overridden by subclasses)
-    def default_task_name
+    def default_task_name # :nodoc:
       "default"
     end
 
     # Add a file to the list of files to be imported.
-    def add_import(fn)
+    def add_import(fn) # :nodoc:
       @pending_imports << fn
     end
 
     # Load the pending list of imported files.
-    def load_imports
+    def load_imports # :nodoc:
       while fn = @pending_imports.shift
         next if @imported.member?(fn)
         fn_task = lookup(fn) and fn_task.invoke
@@ -753,7 +754,7 @@ module Rake
       end
     end
 
-    def rakefile_location(backtrace=caller)
+    def rakefile_location(backtrace=caller) # :nodoc:
       backtrace.map { |t| t[/([^:]+):/, 1] }
 
       re = /^#{@rakefile}$/
