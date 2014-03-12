@@ -6,6 +6,7 @@
 .DS_Store
 .idea
 .rbx
+/.rdoc
 /TAGS
 /coverage
 /html
