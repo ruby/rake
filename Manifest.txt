@@ -119,6 +119,7 @@ test/test_rake_application.rb
 test/test_rake_application_options.rb
 test/test_rake_backtrace.rb
 test/test_rake_clean.rb
+test/test_rake_cpu_counter.rb
 test/test_rake_definitions.rb
 test/test_rake_directory_task.rb
 test/test_rake_dsl.rb
