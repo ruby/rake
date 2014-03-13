@@ -11,27 +11,27 @@ module Rake
   #
   # The PackageTask will create the following targets:
   #
-  # [<b>:package</b>]
+  # +:package+ ::
   #   Create all the requested package files.
   #
-  # [<b>:clobber_package</b>]
+  # +:clobber_package+ ::
   #   Delete all the package files.  This target is automatically
   #   added to the main clobber target.
   #
-  # [<b>:repackage</b>]
+  # +:repackage+ ::
   #   Rebuild the package files from scratch, even if they are not out
   #   of date.
   #
-  # [<b>"<em>package_dir</em>/<em>name</em>-<em>version</em>.tgz"</b>]
+  # <tt>"<em>package_dir</em>/<em>name</em>-<em>version</em>.tgz"</tt> ::
   #   Create a gzipped tar package (if <em>need_tar</em> is true).
   #
-  # [<b>"<em>package_dir</em>/<em>name</em>-<em>version</em>.tar.gz"</b>]
+  # <tt>"<em>package_dir</em>/<em>name</em>-<em>version</em>.tar.gz"</tt> ::
   #   Create a gzipped tar package (if <em>need_tar_gz</em> is true).
   #
-  # [<b>"<em>package_dir</em>/<em>name</em>-<em>version</em>.tar.bz2"</b>]
+  # <tt>"<em>package_dir</em>/<em>name</em>-<em>version</em>.tar.bz2"</tt> ::
   #   Create a bzip2'd tar package (if <em>need_tar_bz2</em> is true).
   #
-  # [<b>"<em>package_dir</em>/<em>name</em>-<em>version</em>.zip"</b>]
+  # <tt>"<em>package_dir</em>/<em>name</em>-<em>version</em>.zip"</tt> ::
   #   Create a zip package archive (if <em>need_zip</em> is true).
   #
   # Example:
@@ -162,25 +162,37 @@ module Rake
       self
     end
 
+    # The name of this package
+
     def package_name
       @version ? "#{@name}-#{@version}" : @name
     end
+
+    # The directory this package will be built in
 
     def package_dir_path
       "#{package_dir}/#{package_name}"
     end
 
+    # The package name with .tgz added
+
     def tgz_file
       "#{package_name}.tgz"
     end
+
+    # The package name with .tar.gz added
 
     def tar_gz_file
       "#{package_name}.tar.gz"
     end
 
+    # The package name with .tar.bz2 added
+
     def tar_bz2_file
       "#{package_name}.tar.bz2"
     end
+
+    # The package name with .zip added
 
     def zip_file
       "#{package_name}.zip"
