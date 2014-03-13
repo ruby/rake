@@ -410,7 +410,7 @@ explicit task, that task is invoked before loading the file. This
 allows dependency files to be generated and used in a single rake
 command invocation.
 
-=== Example:
+Example:
 
   require 'rake/loaders/makefile'
 
@@ -431,7 +431,7 @@ legal in Ruby source code, including comments for tasks and rules.
 However, if you wish a task to be described using the "-T" switch,
 then you need to use the +desc+ command to describe the task.
 
-=== Example:
+Example:
 
   desc "Create a distribution package"
   task package: %w[ ... ] do ... end
