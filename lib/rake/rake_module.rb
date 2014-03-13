@@ -2,8 +2,6 @@ require 'rake/application'
 
 module Rake
 
-  # Rake module singleton methods.
-  #
   class << self
     # Current Rake Application
     def application
@@ -15,7 +13,7 @@ module Rake
       @application = app
     end
 
-    def suggested_thread_count
+    def suggested_thread_count # :nodoc:
       @cpu_count ||= Rake::CpuCounter.count
       @cpu_count + 4
     end
