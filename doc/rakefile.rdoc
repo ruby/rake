@@ -622,6 +622,24 @@ the same directory that contains the main +Rakefile+).
 Also, rails projects may include additional rake files in the
 +lib/tasks+ directory.
 
+=== Clean and Clobber Tasks
+
+Through <tt>require 'rake/clean'</tt> Rake provides +clean+ and +clobber+
+tasks:
+
++clean+ ::
+  Clean up the project by deleting scratch files and backup files.  Add files
+  to the +CLEAN+ FileList to have the +clean+ target handle them.
+
++clobber+ ::
+  Clobber all generated and non-source files in a project.  The task depends
+  on +clean+, so all the +CLEAN+ files will be deleted as well as files in the
+  +CLOBBER+ FileList.  The intent of this task is to return a project to its
+  pristine, just unpacked state.
+
+You can add file names or glob patterns to both the +CLEAN+ and +CLOBBER+
+lists.
+
 === Phony Task
 
 The phony task can be used as a dependency to allow file-based tasks to use
