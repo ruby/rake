@@ -1,5 +1,4 @@
 #--
-
 # Copyright 2003-2010 by Jim Weirich (jim.weirich@gmail.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
