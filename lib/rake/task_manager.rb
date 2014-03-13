@@ -4,9 +4,12 @@ module Rake
   module TaskManager
     # Track the last comment made in the Rakefile.
     attr_accessor :last_description
-    alias :last_comment :last_description    # Backwards compatibility
 
-    def initialize
+    # TODO: Remove in Rake 11
+
+    alias :last_comment :last_description # :nodoc: Backwards compatibility
+
+    def initialize # :nodoc:
       super
       @tasks = Hash.new
       @rules = Array.new
@@ -14,13 +17,13 @@ module Rake
       @last_description = nil
     end
 
-    def create_rule(*args, &block)
+    def create_rule(*args, &block) # :nodoc:
       pattern, args, deps = resolve_args(args)
       pattern = Regexp.new(Regexp.quote(pattern) + '$') if String === pattern
       @rules << [pattern, args, deps, block]
     end
 
-    def define_task(task_class, *args, &block)
+    def define_task(task_class, *args, &block) # :nodoc:
       task_name, arg_names, deps = resolve_args(args)
 
       original_scope = @scope
@@ -58,7 +61,7 @@ module Rake
         fail "Don't know how to build task '#{task_name}'"
     end
 
-    def synthesize_file_task(task_name)
+    def synthesize_file_task(task_name) # :nodoc:
       return nil unless File.exist?(task_name)
       define_task(Rake::FileTask, task_name)
     end
@@ -235,7 +238,7 @@ module Rake
       "_anon_#{@seed}"
     end
 
-    def trace_rule(level, message)
+    def trace_rule(level, message) # :nodoc:
       options.trace_output.puts "#{"    " * level}#{message}" if
         Rake.application.options.trace_rules
     end
@@ -298,7 +301,7 @@ module Rake
     end
 
     class << self
-      attr_accessor :record_task_metadata
+      attr_accessor :record_task_metadata # :nodoc:
       TaskManager.record_task_metadata = false
     end
   end
