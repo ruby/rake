@@ -4,7 +4,7 @@ module Rake
 
   # Based on a script at:
   #   http://stackoverflow.com/questions/891537/ruby-detect-number-of-cpus-installed
-  class CpuCounter
+  class CpuCounter # :nodoc: all
     def self.count
       new.count_with_default
     end
