@@ -5,10 +5,10 @@ require 'rake/promise'
 
 module Rake
 
-  class ThreadPool              # :nodoc: all
+  class ThreadPool # :nodoc: all
 
-    # Creates a ThreadPool object.
-    # The parameter is the size of the pool.
+    # Creates a ThreadPool object.  The +thread_count+ parameter is the size
+    # of the pool.
     def initialize(thread_count)
       @max_active_threads = [thread_count, 0].max
       @threads = Set.new
@@ -25,9 +25,9 @@ module Rake
     # Creates a future executed by the +ThreadPool+.
     #
     # The args are passed to the block when executing (similarly to
-    # <tt>Thread#new</tt>) The return value is an object representing
+    # Thread#new) The return value is an object representing
     # a future which has been created and added to the queue in the
-    # pool. Sending <tt>#value</tt> to the object will sleep the
+    # pool. Sending #value to the object will sleep the
     # current thread until the future is finished and will return the
     # result (or raise an exception thrown from the future)
     def future(*args, &block)
