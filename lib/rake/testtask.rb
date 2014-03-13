@@ -1,5 +1,3 @@
-# Define a task library for running unit tests.
-
 require 'rake'
 require 'rake/tasklib'
 
@@ -125,18 +123,18 @@ module Rake
         "")
     end
 
-    def ruby_opts_string
+    def ruby_opts_string # :nodoc:
       opts = @ruby_opts.dup
       opts.unshift("-I\"#{lib_path}\"") unless @libs.empty?
       opts.unshift("-w") if @warning
       opts.join(" ")
     end
 
-    def lib_path
+    def lib_path # :nodoc:
       @libs.join(File::PATH_SEPARATOR)
     end
 
-    def file_list_string
+    def file_list_string # :nodoc:
       file_list.map { |fn| "\"#{fn}\"" }.join(' ')
     end
 
@@ -160,11 +158,11 @@ module Rake
       end || ''
     end
 
-    def ruby_version
+    def ruby_version # :nodoc:
       RUBY_VERSION
     end
 
-    def run_code
+    def run_code # :nodoc:
       case @loader
       when :direct
         "-e \"ARGV.each{|f| require f}\""
