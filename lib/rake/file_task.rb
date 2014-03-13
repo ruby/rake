@@ -2,7 +2,7 @@ require 'rake/task.rb'
 require 'rake/early_time'
 
 module Rake
-  # #########################################################################
+
   # A FileTask is a task that includes time based dependencies.  If any of a
   # FileTask's prerequisites have a timestamp that is later than the file
   # represented by this task, then the file must be rebuilt (using the
