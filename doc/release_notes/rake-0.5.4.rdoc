@@ -4,7 +4,7 @@ Time for some minor bug fixes and small enhancements
 
 == Changes
 
-Here are the changes for version 0.5.3 ...
+Here are the changes for version 0.5.4 ...
 
 * Added double quotes to the test runner.  This allows the location of
   the tests (and runner) to be in a directory path that contains
