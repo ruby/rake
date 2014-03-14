@@ -4,25 +4,7 @@ Rake version 0.8.5 introduced greatly improved support for executing
 commands on Windows.  The "sh" command now has the same semantics on
 Windows that it has on Unix based platforms.
 
-Rake version 0.8.6 includes minor fixes the the RDoc generation.
-
-== Changes
-
-=== New Features / Enhancements in Version 0.8.5
-
-* Improved implementation of the Rake system command for Windows.
-  (patch from James M. Lawrence/quix)
-
-* Support for Ruby 1.9's improved system command.  (patch from James
-  M. Lawrence/quix)
-
-* Rake now includes the configured extension when invoking an
-  executable (Config::CONFIG['EXEEXT])
-
-=== Bug Fixes in Version 0.8.5
-
-* Environment variable keys are now correctly cased (it matters in
-  some implementations).
+Rake version 0.8.5 includes minor fixes the the RDoc generation.
 
 == What is Rake
 
