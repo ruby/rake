@@ -1,4 +1,4 @@
-= Rake 0.5.0 Released
+= Rake 0.5.3 Released
 
 Although it has only been two weeks since the last release, we have
 enough updates to the Rake program to make it time for another
