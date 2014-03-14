@@ -1,6 +1,6 @@
-= Rake 0.9.3 Released
+= Rake 0.9.2.2 Released
 
-Rake version 0.9.3 is mainly bug fixes.
+Rake version 0.9.2.2 is mainly bug fixes.
 
 == Changes
 
