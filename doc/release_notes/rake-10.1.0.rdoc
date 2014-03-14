@@ -2,7 +2,7 @@
 
 == Changes in Version 10.1
 
-Here are new features in this version of Rake:
+=== New Features
 
 * Add support for variable length task argument lists. If more actual
   arguments are supplied than named arguments, then the extra
@@ -12,7 +12,7 @@ Here are new features in this version of Rake:
   "rake" was hardcoded, now rake-based applications can display their
   own names).
 
-=== Bug Fixes (in 10.1)
+=== Bug Fixes
 
 Bug fixes include:
 
