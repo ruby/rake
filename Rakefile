@@ -39,6 +39,10 @@ hoe = Hoe.spec 'rake' do
     'doc/**/*.rdoc'
   ]
 
+  self.local_rdoc_dir = 'html'
+  self.rsync_args = '-avz --delete'
+  rdoc_locations << 'docs.seattlerb.org:/data/www/docs.seattlerb.org/rake/'
+
   self.clean_globs += [
     '**/*.o',
     '**/*.rbc',
