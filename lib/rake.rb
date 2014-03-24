@@ -27,6 +27,7 @@ end
 require 'rake/version'
 
 # :stopdoc:
+# TODO: Remove in Rake 11
 RAKEVERSION = Rake::VERSION
 # :startdoc:
 
