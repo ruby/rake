@@ -36,7 +36,8 @@ hoe = Hoe.spec 'rake' do
 
   self.extra_rdoc_files.concat FileList[
     'MIT-LICENSE',
-    'doc/**/*.rdoc'
+    'doc/**/*.rdoc',
+    '*.rdoc',
   ]
 
   self.local_rdoc_dir = 'html'
