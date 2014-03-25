@@ -8,6 +8,14 @@ class TestRakeCpuCounter < Rake::TestCase
     @cpu_counter = Rake::CpuCounter.new
   end
 
+  def test_count_via_win32
+    if Rake::Win32.windows? then
+      assert_kind_of Numeric, @cpu_counter.count_via_win32
+    else
+      assert_nil @cpu_counter.count_via_win32
+    end
+  end
+
   def test_in_path_command
     with_ruby_in_path do |ruby|
       assert_equal ruby, @cpu_counter.in_path_command(ruby)

@@ -51,7 +51,7 @@ module Rake
       wmi = WIN32OLE.connect("winmgmts://")
       cpu = wmi.ExecQuery("select NumberOfCores from Win32_Processor") # TODO count hyper-threaded in this
       cpu.to_enum.first.NumberOfCores
-    rescue StandardError
+    rescue StandardError, LoadError
       nil
     end
 
