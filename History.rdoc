@@ -3,6 +3,8 @@
 Bug fixes:
 
 * Use sysctl for CPU count for all BSDs.  Pull request #261 by Joshua Stein.
+* File tasks including a ':' are now top-level tasks again.  Issue #262 by
+  Josh Holtrop.
 
 === 10.2.0 / 2014-03-24
 

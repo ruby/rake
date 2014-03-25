@@ -27,7 +27,8 @@ module Rake
       task_name, arg_names, deps = resolve_args(args)
 
       original_scope = @scope
-      if(task_name.is_a? String)
+      if String === task_name and
+         not task_class.ancestors.include? Rake::FileTask then
         task_name, *definition_scope = *(task_name.split(":").reverse)
         @scope = Scope.make(*(definition_scope + @scope.to_a))
       end
