@@ -3,6 +3,7 @@
 Bug fixes:
 
 * Use sysctl for CPU count for all BSDs.  Pull request #261 by Joshua Stein.
+* Fixed CPU detection for unknown platforms.
 * File tasks including a ':' are now top-level tasks again.  Issue #262 by
   Josh Holtrop.
 
