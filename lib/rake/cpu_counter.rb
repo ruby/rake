@@ -26,7 +26,7 @@ module Rake
           count_via_hwprefs_thread_count || count_via_sysctl
         when /linux/
           count_via_cpuinfo
-        when /freebsd/
+        when /bsd/
           count_via_sysctl
         when /mswin|mingw/
           count_via_win32
