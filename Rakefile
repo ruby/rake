@@ -17,6 +17,7 @@ end
 
 require 'hoe'
 
+Hoe.plugin :git
 Hoe.plugin :minitest
 Hoe.plugin :travis
 
