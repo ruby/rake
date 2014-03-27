@@ -1,3 +1,9 @@
+=== 10.2.2 / 2014-03-27
+
+Bug fixes:
+
+* Restored Ruby 1.8.7 compatibility
+
 === 10.2.1 / 2014-03-25
 
 Bug fixes:

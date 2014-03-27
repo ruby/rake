@@ -24,7 +24,7 @@ hoe = Hoe.spec 'rake' do
   developer 'Eric Hodel', 'drbrain@segment7.net'
   developer 'Jim Weirich', ''
 
-  require_ruby_version     '>= 1.9'
+  require_ruby_version     '>= 1.8.7'
   require_rubygems_version '>= 1.3.2'
 
   dependency 'minitest', '~> 4.0', :developer
