@@ -60,17 +60,21 @@ hoe.test_prelude = 'gem "minitest", "~> 4.0"'
 Rake::Task['docs'].clear
 Rake::Task['clobber_docs'].clear
 
-require 'rdoc/task'
+begin
+  require 'rdoc/task'
 
-RDoc::Task.new :rdoc => 'docs', :clobber_rdoc => 'clobber_docs' do |doc|
-  doc.main   = hoe.readme_file
-  doc.title  = 'Rake -- Ruby Make'
+  RDoc::Task.new :rdoc => 'docs', :clobber_rdoc => 'clobber_docs' do |doc|
+    doc.main   = hoe.readme_file
+    doc.title  = 'Rake -- Ruby Make'
 
-  rdoc_files = Rake::FileList.new %w[lib History.rdoc MIT-LICENSE doc]
-  rdoc_files.add hoe.extra_rdoc_files
+    rdoc_files = Rake::FileList.new %w[lib History.rdoc MIT-LICENSE doc]
+    rdoc_files.add hoe.extra_rdoc_files
 
-  doc.rdoc_files = rdoc_files
+    doc.rdoc_files = rdoc_files
 
-  doc.rdoc_dir = 'html'
+    doc.rdoc_dir = 'html'
+  end
+rescue LoadError
+  warn 'run `rake newb` to install rdoc'
 end
 
