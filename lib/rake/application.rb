@@ -151,7 +151,10 @@ module Rake
     end
 
     def parse_task_string(string) # :nodoc:
-      /^(?<name>[^\[]+)(\[(?<remaining_args>.*)\])$/ =~ string
+      /^([^\[]+)(?:\[(.*)\])$/ =~ string
+
+      name           = $1
+      remaining_args = $2
 
       return string, [] unless name
       return name,   [] if     remaining_args.empty?
