@@ -1,5 +1,8 @@
 require 'rbconfig'
 
+# TODO: replace with IO.popen using array-style arguments in Rake 11
+require 'open3'
+
 module Rake
 
   # Based on a script at:
@@ -76,8 +79,8 @@ module Rake
     def run(command, *args)
       cmd = resolve_command(command)
       if cmd
-        IO.popen [cmd, *args] do |io|
-          io.read.to_i
+        Open3.popen3 cmd, *args do |_, out|
+          out.read.to_i
         end
       else
         nil
@@ -96,8 +99,8 @@ module Rake
     end
 
     def in_path_command(command)
-      IO.popen ['which', command] do |io|
-        io.eof? ? nil : command
+      Open3.popen3 'which', command do |_, out,|
+        out.eof? ? nil : command
       end
     end
   end
