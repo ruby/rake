@@ -1,6 +1,6 @@
+.autotest
 .rubocop.yml
 .togglerc
-Gemfile
 History.rdoc
 MIT-LICENSE
 Manifest.txt
