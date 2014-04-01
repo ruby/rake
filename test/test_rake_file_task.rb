@@ -98,6 +98,22 @@ class TestRakeFileTask < Rake::TestCase
     assert @ran
   end
 
+  def test_needed_eh_build_all
+    create_file 'a'
+
+    file 'a'
+
+    a_task = Task['a']
+
+    refute a_task.needed?
+
+    Rake.application.options.build_all = true
+
+    assert a_task.needed?
+  ensure
+    delete_file 'a'
+  end
+
   def test_needed_eh_dependency
     create_file 'a', Time.now
     create_file 'b', Time.now - 60
