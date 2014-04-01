@@ -17,6 +17,13 @@ module Rake
       @task_manager.lookup(name, @scope)
     end
 
+    ##
+    # The scope of the namespace (a LinkedList)
+
+    def scope
+      @scope.dup
+    end
+
     # Return the list of tasks defined in this and nested namespaces.
     def tasks
       @task_manager.tasks_in_scope(@scope)

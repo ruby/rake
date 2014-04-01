@@ -1,3 +1,9 @@
+=== 10.3
+
+Enhancements:
+
+* Added Rake::NameSpace#scope.  Issue #263 by Jon San Miguel.
+
 === 10.2.2 / 2014-03-27
 
 Bug fixes:
