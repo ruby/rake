@@ -98,6 +98,44 @@ class TestRakeFileTask < Rake::TestCase
     assert @ran
   end
 
+  def test_needed_eh_dependency
+    create_file 'a', Time.now
+    create_file 'b', Time.now - 60
+
+    create_file 'c', Time.now
+    create_file 'd', Time.now - 60
+
+    file 'b' => 'a'
+
+    b_task = Task['b']
+
+    assert b_task.needed?
+
+    file 'c' => 'd'
+
+    c_task = Task['c']
+
+    refute c_task.needed?
+  ensure
+    delete_file 'old'
+    delete_file 'new'
+  end
+
+  def test_needed_eh_exists
+    name = "dummy"
+    file name
+
+    ftask = Task[name]
+
+    assert ftask.needed?
+
+    create_file name
+
+    refute ftask.needed?
+  ensure
+    delete_file name
+  end
+
   def test_source_is_first_prerequisite
     t = file :f => ["preqA", "preqB"]
     assert_equal "preqA", t.source
