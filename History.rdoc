@@ -2,6 +2,8 @@
 
 Enhancements:
 
+* Added --build-all option to rake which treats all file prerequisites as
+  out-of-date.  Pull request #254 by Andrew Gilbert.
 * Added Rake::NameSpace#scope.  Issue #263 by Jon San Miguel.
 
 === 10.2.2 / 2014-03-27
