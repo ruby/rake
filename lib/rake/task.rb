@@ -54,7 +54,11 @@ module Rake
     end
 
     def lookup_prerequisite(prerequisite_name) # :nodoc:
-      application[prerequisite_name, @scope]
+      scoped_prerequisite_task = application[prerequisite_name, @scope]
+      if scoped_prerequisite_task == self
+        unscoped_prerequisite_task = application[prerequisite_name]
+      end
+      unscoped_prerequisite_task || scoped_prerequisite_task
     end
     private :lookup_prerequisite
 
