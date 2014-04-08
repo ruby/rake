@@ -29,7 +29,7 @@ module Rake
 
     def cleanup(file_name, opts={})
       begin
-        rm_r file_name, opts
+        rm_r file_name, opts if File.exist? file_name
       rescue StandardError => ex
         puts "Failed to remove #{file_name}: #{ex}"
       end

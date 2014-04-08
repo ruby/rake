@@ -23,6 +23,15 @@ class TestRakeClean < Rake::TestCase
     remove_undeletable_file
   end
 
+  def test_cleanup_ignores_missing_files
+    file_name = File.join(@tempdir, "missing_directory" "no_such_file")
+
+    out, _ = capture_io do
+      Rake::Cleaner.cleanup(file_name, :verbose => false)
+    end
+    refute_match(/failed to remove/i, out)
+  end
+
   private
 
   def create_undeletable_file
@@ -30,8 +39,8 @@ class TestRakeClean < Rake::TestCase
     file_name = File.join(dir_name, "deleteme")
     FileUtils.mkdir(dir_name)
     FileUtils.touch(file_name)
-    FileUtils.chmod(0, file_name)
-    FileUtils.chmod(0, dir_name)
+    FileUtils.chmod(0400, file_name)
+    FileUtils.chmod(0500, dir_name)
     file_name
   end
 
