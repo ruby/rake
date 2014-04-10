@@ -39,8 +39,8 @@ class TestRakeClean < Rake::TestCase
     file_name = File.join(dir_name, "deleteme")
     FileUtils.mkdir(dir_name)
     FileUtils.touch(file_name)
-    FileUtils.chmod(0400, file_name)
-    FileUtils.chmod(0500, dir_name)
+    FileUtils.chmod(0, file_name)
+    FileUtils.chmod(0, dir_name)
     file_name
   end
 

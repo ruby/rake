@@ -29,10 +29,23 @@ module Rake
 
     def cleanup(file_name, opts={})
       begin
-        rm_r file_name, opts if File.exist? file_name
+        rm_r file_name, opts
       rescue StandardError => ex
-        puts "Failed to remove #{file_name}: #{ex}"
+        puts "Failed to remove #{file_name}: #{ex}" unless file_already_gone?(file_name)
       end
+    end
+
+    private
+
+    def self.file_already_gone?(file_name)
+      return false if File.exist?(file_name)
+
+      path = file_name
+      while path = File.dirname(path)
+        return false unless File.readable?(path) && File.executable?(path)
+        break if ["/", "."].include?(path)
+      end
+      true
     end
   end
 end
