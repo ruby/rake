@@ -35,9 +35,7 @@ module Rake
       end
     end
 
-    private
-
-    def self.file_already_gone?(file_name)
+    def file_already_gone?(file_name)
       return false if File.exist?(file_name)
 
       path = file_name
@@ -47,6 +45,7 @@ module Rake
       end
       true
     end
+    private_class_method :file_already_gone?
   end
 end
 
