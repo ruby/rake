@@ -31,9 +31,21 @@ module Rake
       begin
         rm_r file_name, opts
       rescue StandardError => ex
-        puts "Failed to remove #{file_name}: #{ex}"
+        puts "Failed to remove #{file_name}: #{ex}" unless file_already_gone?(file_name)
       end
     end
+
+    def file_already_gone?(file_name)
+      return false if File.exist?(file_name)
+
+      path = file_name
+      while path = File.dirname(path)
+        return false unless File.readable?(path) && File.executable?(path)
+        break if ["/", "."].include?(path)
+      end
+      true
+    end
+    private_class_method :file_already_gone?
   end
 end
 
