@@ -10,6 +10,7 @@ Bug fixes:
 
 * Suppress org.jruby package files in rake error messages for JRuby users.
   Issue #213 by Charles Nutter.
+* Fixed typo, removed extra "h".  Pull request #267 by Hsing-Hui Hsu.
 
 === 10.2.2 / 2014-03-27
 
