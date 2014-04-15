@@ -11,6 +11,8 @@ Bug fixes:
 * Suppress org.jruby package files in rake error messages for JRuby users.
   Issue #213 by Charles Nutter.
 * Fixed typo, removed extra "h".  Pull request #267 by Hsing-Hui Hsu.
+* Rake no longer reports an error when cleaning already-deleted files.  Pull
+  request #266 by Randy Coulman.
 
 === 10.2.2 / 2014-03-27
 
