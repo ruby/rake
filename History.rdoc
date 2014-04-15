@@ -13,6 +13,8 @@ Bug fixes:
 * Fixed typo, removed extra "h".  Pull request #267 by Hsing-Hui Hsu.
 * Rake no longer reports an error when cleaning already-deleted files.  Pull
   request #266 by Randy Coulman.
+* Consume stderr while determining CPU count to avoid hang.  Issue #268 by
+  Albert Sun.
 
 === 10.2.2 / 2014-03-27
 

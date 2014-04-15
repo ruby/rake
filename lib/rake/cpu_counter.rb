@@ -79,7 +79,9 @@ module Rake
     def run(command, *args)
       cmd = resolve_command(command)
       if cmd
-        Open3.popen3 cmd, *args do |_, out|
+        Open3.popen3 cmd, *args do |inn, out, err,|
+          inn.close
+          err.read
           out.read.to_i
         end
       else
