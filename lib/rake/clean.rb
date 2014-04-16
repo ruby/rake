@@ -40,12 +40,17 @@ module Rake
 
       path = file_name
       while path = File.dirname(path)
-        return false unless File.readable?(path) && File.executable?(path)
+        return false if cant_be_deleted?(path)
         break if ["/", "."].include?(path)
       end
       true
     end
     private_class_method :file_already_gone?
+
+    def cant_be_deleted?(path_name)
+      File.exist?(path_name) &&
+        (!File.readable?(path_name) || !File.executable?(path_name))
+    end
   end
 end
 
