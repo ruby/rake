@@ -51,6 +51,7 @@ module Rake
       File.exist?(path_name) &&
         (!File.readable?(path_name) || !File.executable?(path_name))
     end
+    private_class_method :cant_be_deleted?
   end
 end
 
