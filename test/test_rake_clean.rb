@@ -24,7 +24,7 @@ class TestRakeClean < Rake::TestCase
   end
 
   def test_cleanup_ignores_missing_files
-    file_name = File.join(@tempdir, "missing_directory" "no_such_file")
+    file_name = File.join(@tempdir, "missing_directory", "no_such_file")
 
     out, _ = capture_io do
       Rake::Cleaner.cleanup(file_name, :verbose => false)
