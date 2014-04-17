@@ -39,9 +39,12 @@ module Rake
       return false if File.exist?(file_name)
 
       path = file_name
+      prev = nil
+
       while path = File.dirname(path)
         return false if cant_be_deleted?(path)
-        break if ["/", "."].include?(path)
+        break if [prev, "."].include?(path)
+        prev = path
       end
       true
     end

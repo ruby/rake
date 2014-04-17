@@ -4,6 +4,7 @@ Bug fixes:
 
 * Really stop reporting an error when cleaning already-deleted files.  Pull
   request #269 by Randy Coulman
+* Fixed infinite loop when cleaning already-deleted files on windows.
 
 === 10.3 / 2014-04-15
 
