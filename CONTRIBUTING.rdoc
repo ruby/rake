@@ -27,3 +27,8 @@ If you have found a bug in rake please try with the latest version of rake
 before filing an issue.  Also check History.rdoc for bug fixes that may have
 addressed your issue.
 
+When submitting pull requests please check the rake Travis-CI page for test
+failures:
+
+  https://travis-ci.org/jimweirich/rake
+
