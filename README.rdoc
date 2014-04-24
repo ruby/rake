@@ -72,26 +72,12 @@ Type "rake --help" for all available options.
 
 === More Information
 
-* For details on Rake's command-line invocation, read
-  doc/command_line_usage.rdoc[https://github.com/jimweirich/rake/blob/master/doc/command_line_usage.rdoc]
-* For details on writing Rakefiles, see
-  doc/rakefile.rdoc[https://github.com/jimweirich/rake/blob/master/doc/rakefile.rdoc].
-* For the original announcement of Rake, see
-  doc/rational.rdoc[https://github.com/jimweirich/rake/blob/master/doc/rational.rdoc].
-* For a glossary of terms, see
-  doc/glossary.rdoc[https://github.com/jimweirich/rake/blob/master/doc/glossary.rdoc].
+* {Rake command-line}[rdoc-ref:doc/command_line_usage.rdoc]
+* {Writing Rakefiles}[rdoc-ref:doc/rakefile.rdoc].
+* The original {Rake announcement}[rdoc-ref:doc/rational.rdoc].
+* Rake {glossary}[rdoc-ref:doc/glossary.rdoc].
 
-== Online Resources
-
-=== Rake References
-
-* Rake Documentation Home: http://docs.rubyrake.org
-* Rake Project Page: http://github.com/jimweirich/rake
-* Rake API Documents: http://onestepback.org/software/rake/
-* Rake Source Code Repo:  http://github.com/jimweirich/rake
-* Rake Git Repo Clone URL: git://github.com/jimweirich/rake.git
-* Rake Bug Reports: https://github.com/jimweirich/rake/issues
-* Rake Continuous Build Server: https://travis-ci.org/#!/jimweirich/rake
+== Resources
 
 === Presentations and Articles about Rake
 
