@@ -95,6 +95,11 @@ Type "rake --help" for all available options.
 
 === Presentations and Articles about Rake
 
+* Avdi Grimm's rake series:
+  1. {Rake Basics}[http://devblog.avdi.org/2014/04/21/rake-part-1-basics/]
+  2. {Rake File Lists}[http://devblog.avdi.org/2014/04/22/rake-part-2-file-lists/]
+  3. {Rake Rules}[http://devblog.avdi.org/2014/04/23/rake-part-3-rules/]
+  4. {Rake Pathmap}[http://devblog.avdi.org/2014/04/24/rake-part-4-pathmap/]
 * Jim Weirich's 2003 RubyConf presentation:
   http://onestepback.org/articles/buildingwithrake/
 * Martin Fowler's article on Rake: http://martinfowler.com/articles/rake.html
