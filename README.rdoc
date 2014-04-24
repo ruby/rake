@@ -2,6 +2,7 @@
 
 home :: https://github.com/jimweirich/rake
 bugs :: https://github.com/jimweirich/rake/issues
+docs :: http://docs.seattlerb.org/rake
 
 == Description
 
@@ -34,7 +35,7 @@ Rake has the following features:
 
 Download and install rake with the following.
 
-   gem install rake
+  gem install rake
 
 == Usage
 
@@ -43,7 +44,7 @@ Download and install rake with the following.
 First, you must write a "Rakefile" file which contains the build rules. Here's
 a simple example:
 
-  task :default => [:test]
+  task default: %w[test]
 
   task :test do
     ruby "test/unittest.rb"
@@ -51,8 +52,8 @@ a simple example:
 
 This Rakefile has two tasks:
 
-* A task named "test", which - upon invocation - will run a unit test file in
-  Ruby.
+* A task named "test", which -- upon invocation -- will run a unit test file
+  in Ruby.
 * A task named "default". This task does nothing by itself, but it has exactly
   one dependency, namely the "test" task. Invoking the "default" task will
   cause Rake to invoke the "test" task as well.
@@ -69,7 +70,6 @@ Running the "rake" command without any options will cause it to run the
 
 Type "rake --help" for all available options.
 
-
 === More Information
 
 * For details on Rake's command-line invocation, read
@@ -80,33 +80,6 @@ Type "rake --help" for all available options.
   doc/rational.rdoc[https://github.com/jimweirich/rake/blob/master/doc/rational.rdoc].
 * For a glossary of terms, see
   doc/glossary.rdoc[https://github.com/jimweirich/rake/blob/master/doc/glossary.rdoc].
-
-== Development
-
-=== Source Repository
-
-Rake is currently hosted at github. The github web page is
-http://github.com/jimweirich/rake . The public git clone URL is
-
-* git://github.com/jimweirich/rake.git
-
-=== Running the Rake Test Suite
-
-If you wish to run the unit and functional tests that come with Rake:
-
-* Install the 'flexmock' gem
-* Install the 'session' gem in order to run the functional tests.
-* CD into the top project directory of rake.
-* Type one of the following:
-
-     rake                  # If you have a version of rake installed
-     ruby -Ilib bin/rake   # If you do not have a version of rake installed.
-
-=== Issues and Bug Reports
-
-Feature requests and bug reports can be made here
-
-* https://github.com/jimweirich/rake/issues
 
 == Online Resources
 
@@ -126,7 +99,7 @@ Feature requests and bug reports can be made here
   http://onestepback.org/articles/buildingwithrake/
 * Martin Fowler's article on Rake: http://martinfowler.com/articles/rake.html
 
-== Other Make Reinvisionings ...
+== Other Make Re-envisionings ...
 
 Rake is a late entry in the make replacement field.  Here are links to
 other projects with similar (and not so similar) goals.
@@ -155,32 +128,19 @@ Rake is available under an MIT-style license.
 
 :include: MIT-LICENSE
 
-== Support
-
-The Rake homepage is http://onestepback.org/software/rake/.  You can find the Rake
-GitHub page at http://github.com/jimweirich/rake.
-
-Feel free to submit commits or feature requests.  If you send a patch,
-remember to update the corresponding unit tests.  In fact, I prefer
-new feature to be submitted in the form of new unit tests.
-
-For other information, feel free to ask on the ruby-talk mailing list
-(which is mirrored to comp.lang.ruby) or contact
-jim dot weirich at gmail.com.
-
 ---
 
 = Other stuff
 
 Author::   Jim Weirich <jim.weirich@gmail.com>
-Requires:: Ruby 1.9 or later
-License::  Copyright 2003-2013 by Jim Weirich.
+Requires:: Ruby 1.8.7 or later
+License::  Copyright by Jim Weirich.
            Released under an MIT-style license.  See the MIT-LICENSE
            file included in the distribution.
 
 == Warranty
 
-This software is provided "as is" and without any express or
-implied warranties, including, without limitation, the implied
-warranties of merchantibility and fitness for a particular
-purpose.
+This software is provided "as is" and without any express or implied
+warranties, including, without limitation, the implied warranties of
+merchantability and fitness for a particular purpose.
+

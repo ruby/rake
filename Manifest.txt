@@ -1,6 +1,7 @@
 .autotest
 .rubocop.yml
 .togglerc
+CONTRIBUTING.rdoc
 History.rdoc
 MIT-LICENSE
 Manifest.txt
