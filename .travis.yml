@@ -16,3 +16,6 @@ rvm:
   - 2.1.0
   - jruby
 script: ruby -Ilib bin/rake
+matrix:
+  allow_failures:
+    - rvm: jruby
