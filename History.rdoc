@@ -1,3 +1,10 @@
+=== 10.3.2
+
+Bug fixes:
+
+* Rake no longer infinitely loops when showing exception causes that refer to
+  each other.  Bug #272 by Chris Bandy.
+
 === 10.3.1 / 2014-04-17
 
 Bug fixes:

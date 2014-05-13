@@ -202,6 +202,10 @@ module Rake
     end
 
     def display_exception_details(ex) # :nodoc:
+      seen = Thread.current[:rake_display_exception_details_seen] ||= []
+      return if seen.include? ex
+      seen << ex
+
       display_exception_message_details(ex)
       display_exception_backtrace(ex)
       display_exception_details(ex.cause) if has_cause?(ex)
