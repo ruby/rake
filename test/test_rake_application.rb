@@ -32,6 +32,29 @@ class TestRakeApplication < Rake::TestCase
     assert_match __method__.to_s, err
   end
 
+  def test_display_exception_details_cause
+    skip 'Exception#cause not implemented' unless
+      Exception.method_defined? :cause
+
+    begin
+      raise 'cause a'
+    rescue
+      begin
+        raise 'cause b'
+      rescue => ex
+      end
+    end
+
+    out, err = capture_io do
+      @app.display_error_message ex
+    end
+
+    assert_empty out
+
+    assert_match 'cause a', err
+    assert_match 'cause b', err
+  end
+
   def test_display_tasks
     @app.options.show_tasks = :tasks
     @app.options.show_task_pattern = //
