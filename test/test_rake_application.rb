@@ -16,6 +16,22 @@ class TestRakeApplication < Rake::TestCase
     end
   end
 
+  def test_display_exception_details
+    begin
+      raise 'test'
+    rescue => ex
+    end
+
+    out, err = capture_io do
+      @app.display_error_message ex
+    end
+
+    assert_empty out
+
+    assert_match 'rake aborted!', err
+    assert_match __method__.to_s, err
+  end
+
   def test_display_tasks
     @app.options.show_tasks = :tasks
     @app.options.show_task_pattern = //
