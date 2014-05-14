@@ -20,7 +20,7 @@ Options are:
     tracing details). The _output_ parameter is optional, but if
     specified it controls where the backtrace output is sent. If
     _output_ is <tt>stdout</tt>, then backtrace output is directed to
-    stardard output. If _output_ is <tt>stderr</tt>, or if it is
+    standard output. If _output_ is <tt>stderr</tt>, or if it is
     missing, then the backtrace output is sent to standard error.
 
 [<tt>--comments</tt>]
@@ -49,7 +49,7 @@ Options are:
 
 [<tt>--jobs</tt> _number_  (-j)]
 
-    Specifies the maximun number of concurrent threads allowed. Rake
+    Specifies the maximum number of concurrent threads allowed. Rake
     will allocate threads as needed up to this maximum number.
 
     If omitted, Rake will attempt to estimate the number of CPUs on
@@ -135,7 +135,7 @@ Options are:
     Turn on invoke/execute tracing. Also enable full backtrace on
     errors. The _output_ parameter is optional, but if specified it
     controls where the trace output is sent. If _output_ is
-    <tt>stdout</tt>, then trace output is directed to stardard output.
+    <tt>stdout</tt>, then trace output is directed to standard output.
     If _output_ is <tt>stderr</tt>, or if it is missing, then trace
     output is sent to standard error.
 
