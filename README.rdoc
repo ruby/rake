@@ -1,7 +1,7 @@
 = RAKE -- Ruby Make
 
-home :: https://github.com/jimweirich/rake
-bugs :: https://github.com/jimweirich/rake/issues
+home :: https://github.com/ruby/rake
+bugs :: https://github.com/ruby/rake/issues
 docs :: http://docs.seattlerb.org/rake
 
 == Description
