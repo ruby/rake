@@ -20,7 +20,7 @@ module Rake
     # Uploads the files
 
     def upload
-      sh %{scp -rq #{@local_dir}/* #{@host}:#{@remote_dir}}
+      sh "scp", "-rq", "#{@local_dir}/*", "#{@host}:#{@remote_dir}"
     end
   end
 
@@ -30,8 +30,8 @@ module Rake
     # Uploads the files after removing the existing remote directory.
 
     def upload
-      sh %{ssh #{@host} rm -rf #{@remote_dir}} rescue nil
-      sh %{ssh #{@host} mkdir #{@remote_dir}}
+      sh "ssh", @host, "rm", "-rf", @remote_dir rescue nil
+      sh "ssh", @host, "mkdir",     @remote_dir
       super
     end
   end
@@ -54,7 +54,7 @@ module Rake
 
     def upload
       @files.each do |fn|
-        sh %{scp -q #{@local_dir}/#{fn} #{@host}:#{@remote_dir}}
+        sh "scp", "-q", "#{@local_dir}/#{fn}", "#{@host}:#{@remote_dir}"
       end
     end
   end
