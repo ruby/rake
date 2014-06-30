@@ -346,7 +346,7 @@ module Rake
 
     # Should the given file name be excluded from the list?
     #
-    # NOTE: This method was formally named "exclude?", but Rails
+    # NOTE: This method was formerly named "exclude?", but Rails
     # introduced an exclude? method as an array method and setup a
     # conflict with file list. We renamed the method to avoid
     # confusion. If you were using "FileList#exclude?" in your user
