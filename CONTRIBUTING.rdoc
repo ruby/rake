@@ -1,9 +1,9 @@
 = Source Repository
 
 Rake is currently hosted at github. The github web page is
-http://github.com/jimweirich/rake . The public git clone URL is
+http://github.com/ruby/rake . The public git clone URL is
 
-  git://github.com/jimweirich/rake.git
+  git://github.com/ruby/rake.git
 
 = Running the Rake Test Suite
 
@@ -30,5 +30,5 @@ addressed your issue.
 When submitting pull requests please check the rake Travis-CI page for test
 failures:
 
-  https://travis-ci.org/jimweirich/rake
+  https://travis-ci.org/ruby/rake
 
