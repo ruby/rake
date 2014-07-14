@@ -3,6 +3,8 @@
 Bug fixes:
 
 * Fixed some typos.  Pull request #280 by Jed Northridge.
+* Also try counting CPUs via cpuinfo if host_os was not matched.  Pull request
+  #282 by Edouard B.
 
 === 10.3.2 / 2014-05-15
 
