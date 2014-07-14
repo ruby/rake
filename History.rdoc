@@ -1,3 +1,9 @@
+=== 10.3.3
+
+Bug fixes:
+
+* Fixed some typos.  Pull request #280 by Jed Northridge.
+
 === 10.3.2 / 2014-05-15
 
 Bug fixes:
