@@ -1,5 +1,9 @@
 === 10.3.3
 
+Enhancements:
+
+* Added to use Pathnames when working with Rake. Pull request #271 by Randy Coulman.
+
 Bug fixes:
 
 * Fixed some typos.  Pull request #280 by Jed Northridge.
