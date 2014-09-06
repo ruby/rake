@@ -1,7 +1,10 @@
 require 'rubygems'
 $:.unshift File.expand_path('../../lib', __FILE__)
 
-gem 'minitest', '~> 4'
+begin
+  gem 'minitest', '~> 4'
+rescue Gem::LoadError
+end
 
 require 'minitest/autorun'
 require 'rake'
