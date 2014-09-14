@@ -22,7 +22,7 @@ rescue NoMethodError, LoadError
   require 'test/support/rakefile_definitions'
 end
 
-class Rake::TestCase < MiniTest::Unit::TestCase
+class Rake::TestCase < Minitest::Test
   include FileCreation
 
   include Rake::DSL
