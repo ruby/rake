@@ -3,6 +3,7 @@
 Enhancements:
 
 * Added to use Pathnames when working with Rake. Pull request #271 by Randy Coulman.
+* Use Etc.nprocessors for counting to cpu numbers.
 
 Bug fixes:
 
