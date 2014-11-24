@@ -3,7 +3,7 @@ after_script:
 - ruby -Ilib bin/rake travis:after -t
 before_script:
 - gem install hoe-travis --no-rdoc --no-ri
-- gem install minitest -v '~> 4.0' --no-rdoc --no-ri
+- gem install minitest -v '~> 5.0' --no-rdoc --no-ri
 - ruby -Ilib bin/rake travis:before -t
 language: ruby
 notifications:

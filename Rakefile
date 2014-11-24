@@ -28,7 +28,7 @@ hoe = Hoe.spec 'rake' do
   require_ruby_version     '>= 1.8.7'
   require_rubygems_version '>= 1.3.2'
 
-  dependency 'minitest', '~> 4.0', :developer
+  dependency 'minitest', '~> 5.0', :developer
 
   license "MIT"
 
@@ -54,7 +54,7 @@ hoe = Hoe.spec 'rake' do
   ]
 end
 
-hoe.test_prelude = 'gem "minitest", "~> 4.0"'
+hoe.test_prelude = 'gem "minitest", "~> 5.0"'
 
 # Use custom rdoc task due to existence of doc directory
 
