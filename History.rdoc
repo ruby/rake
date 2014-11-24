@@ -5,6 +5,8 @@ Enhancements:
 * Upgraded to minitest 5.  Pull request #292 by Teo Ljungberg.
 * Added support for Pathname in rake tasks.  Pull request #271 by Randy
   Coulman.
+* Rake now ignores falsy dependencies which allows for easier programmatic
+  creation of tasks.  Pull request #273 by Manav.
 
 Bug fixes:
 
