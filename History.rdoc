@@ -1,5 +1,9 @@
 === 10.4
 
+Enhancements:
+
+* Upgraded to minitest 5.  Pull request #292 by Teo Ljungberg.
+
 Bug fixes:
 
 * Updated rake manpage.  Pull request #291 by skittleys.
