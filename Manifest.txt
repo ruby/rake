@@ -17,7 +17,7 @@ doc/example/main.c
 doc/glossary.rdoc
 doc/jamis.rb
 doc/proto_rake.rdoc
-doc/rake.1.gz
+doc/rake.1
 doc/rakefile.rdoc
 doc/rational.rdoc
 doc/release_notes/rake-0.4.14.rdoc
@@ -69,6 +69,7 @@ lib/rake/dsl_definition.rb
 lib/rake/early_time.rb
 lib/rake/ext/core.rb
 lib/rake/ext/module.rb
+lib/rake/ext/pathname.rb
 lib/rake/ext/string.rb
 lib/rake/ext/time.rb
 lib/rake/file_creation_task.rb
@@ -79,6 +80,7 @@ lib/rake/file_utils_ext.rb
 lib/rake/gempackagetask.rb
 lib/rake/invocation_chain.rb
 lib/rake/invocation_exception_mixin.rb
+lib/rake/late_time.rb
 lib/rake/linked_list.rb
 lib/rake/loaders/makefile.rb
 lib/rake/multi_task.rb
@@ -133,6 +135,7 @@ test/test_rake_file_utils.rb
 test/test_rake_ftp_file.rb
 test/test_rake_functional.rb
 test/test_rake_invocation_chain.rb
+test/test_rake_late_time.rb
 test/test_rake_linked_list.rb
 test/test_rake_makefile_loader.rb
 test/test_rake_multi_task.rb
@@ -141,6 +144,7 @@ test/test_rake_package_task.rb
 test/test_rake_path_map.rb
 test/test_rake_path_map_explode.rb
 test/test_rake_path_map_partial.rb
+test/test_rake_pathname_extensions.rb
 test/test_rake_pseudo_status.rb
 test/test_rake_rake_test_loader.rb
 test/test_rake_reduce_compat.rb
