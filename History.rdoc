@@ -3,6 +3,8 @@
 Bug fixes:
 
 * Updated rake manpage.  Pull request #291 by skittleys.
+* Add Rake::LATE to allow rebuilding of files that depend on deleted files.
+  Bug #286, pull request #287 by David Grayson.
 
 === 10.3.3
 
