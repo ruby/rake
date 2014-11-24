@@ -1,3 +1,9 @@
+=== 10.4
+
+Bug fixes:
+
+* Updated rake manpage.  Pull request #291 by skittleys.
+
 === 10.3.3
 
 Enhancements:
