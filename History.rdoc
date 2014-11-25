@@ -12,7 +12,8 @@ Enhancements:
 
 Bug fixes:
 
-* Updated rake manpage.  Pull request #291 by skittleys.
+* Updated rake manpage.  Issue #283 by Nathan Long, pull request #291 by
+  skittleys.
 * Add Rake::LATE to allow rebuilding of files that depend on deleted files.
   Bug #286, pull request #287 by David Grayson.
 * Fix relinking of files when repackaging.  Bug #276 by Muenze.
