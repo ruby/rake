@@ -7,6 +7,8 @@ Enhancements:
   Coulman.
 * Rake now ignores falsy dependencies which allows for easier programmatic
   creation of tasks.  Pull request #273 by Manav.
+* Rake no longer edits ARGV.  This allows you to re-exec rake from a rake
+  task.  Issue #277 by Matt Palmer.
 
 Bug fixes:
 
