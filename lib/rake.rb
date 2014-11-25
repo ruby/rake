@@ -21,7 +21,7 @@
 #++
 
 module Rake
-  VERSION = '10.3.2'
+  VERSION = '10.4.0'
 end
 
 require 'rake/version'

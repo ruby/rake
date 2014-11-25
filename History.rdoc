@@ -1,4 +1,4 @@
-=== 10.4
+=== 10.4.0
 
 Enhancements:
 
@@ -9,6 +9,7 @@ Enhancements:
   creation of tasks.  Pull request #273 by Manav.
 * Rake no longer edits ARGV.  This allows you to re-exec rake from a rake
   task.  Issue #277 by Matt Palmer.
+* Etc.nprocessors is used for counting the number of CPUs.
 
 Bug fixes:
 
@@ -17,18 +18,8 @@ Bug fixes:
 * Add Rake::LATE to allow rebuilding of files that depend on deleted files.
   Bug #286, pull request #287 by David Grayson.
 * Fix relinking of files when repackaging.  Bug #276 by Muenze.
-
-=== 10.3.3
-
-Enhancements:
-
-* Added to use Pathnames when working with Rake. Pull request #271 by Randy Coulman.
-* Use Etc.nprocessors for counting to cpu numbers.
-
-Bug fixes:
-
 * Fixed some typos.  Pull request #280 by Jed Northridge.
-* Also try counting CPUs via cpuinfo if host_os was not matched.  Pull request
+* Try counting CPUs via cpuinfo if host_os was not matched.  Pull request
   #282 by Edouard B.
 
 === 10.3.2 / 2014-05-15
