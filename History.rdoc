@@ -1,3 +1,10 @@
+=== 10.4.1
+
+Bug fixes:
+
+* Reverted fix for #277 as it caused numerous issues for rake users.
+  rails/spring issue #366 by Gustavo Dutra.
+
 === 10.4.0 / 2014-11-22
 
 Enhancements:
@@ -10,6 +17,8 @@ Enhancements:
 * Rake no longer edits ARGV.  This allows you to re-exec rake from a rake
   task.  Issue #277 by Matt Palmer.
 * Etc.nprocessors is used for counting the number of CPUs.
+* Rake no longer edits ARGV.  This allows you to re-exec rake from a rake
+  task.  Issue #277 by Matt Palmer.
 
 Bug fixes:
 
