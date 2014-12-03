@@ -6,6 +6,7 @@ Bug fixes:
   task.  Pull requset #9 by Matt Palmer.
 * Documented how Rake::DSL#desc handles sentences in task descriptions.
   Issue #7 by Raza Sayed.
+* Fixed test error on 1.9.3 with legacy RubyGems.  Issue #8 by Matt Palmer.
 * Deleted duplicated History entry.  Pull request #10 by Yuji Yamamoto.
 
 === 10.4.1 / 2014-12-01
