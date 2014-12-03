@@ -17,8 +17,6 @@ Enhancements:
 * Rake no longer edits ARGV.  This allows you to re-exec rake from a rake
   task.  Issue #277 by Matt Palmer.
 * Etc.nprocessors is used for counting the number of CPUs.
-* Rake no longer edits ARGV.  This allows you to re-exec rake from a rake
-  task.  Issue #277 by Matt Palmer.
 
 Bug fixes:
 
