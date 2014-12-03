@@ -83,8 +83,8 @@ module Rake
     def init(app_name='rake')
       standard_exception_handling do
         @name = app_name
-        handle_options
-        collect_command_line_tasks
+        args = handle_options
+        collect_command_line_tasks(args)
       end
     end
 
@@ -616,7 +616,9 @@ module Rake
     end
     private :select_trace_output
 
-    # Read and handle the command line options.
+    # Read and handle the command line options.  Returns the command line
+    # arguments that we didn't understand, which should (in theory) be just
+    # task names and env vars.
     def handle_options # :nodoc:
       options.rakelib = ['rakelib']
       options.trace_output = $stderr
@@ -633,7 +635,7 @@ module Rake
 
         standard_rake_options.each { |args| opts.on(*args) }
         opts.environment('RAKEOPT')
-      end.parse!
+      end.parse(ARGV)
     end
 
     # Similar to the regular Ruby +require+ command, but will check
@@ -727,9 +729,14 @@ module Rake
     # Collect the list of tasks on the command line.  If no tasks are
     # given, return a list containing only the default task.
     # Environmental assignments are processed at this time as well.
-    def collect_command_line_tasks # :nodoc:
+    #
+    # `args` is the list of arguments to peruse to get the list of tasks.
+    # It should be the command line that was given to rake, less any
+    # recognised command-line options, which OptionParser.parse will
+    # have taken care of already.
+    def collect_command_line_tasks(args) # :nodoc:
       @top_level_tasks = []
-      ARGV.each do |arg|
+      args.each do |arg|
         if arg =~ /^(\w+)=(.*)$/m
           ENV[$1] = $2
         else
