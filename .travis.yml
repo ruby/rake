@@ -6,6 +6,7 @@ before_script:
 - gem install minitest -v '~> 5.0' --no-rdoc --no-ri
 - ruby -Ilib bin/rake travis:before -t
 language: ruby
+sudo: false
 notifications:
   email:
   - drbrain@segment7.net
