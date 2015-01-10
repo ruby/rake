@@ -148,6 +148,15 @@ class TestRakeTask < Rake::TestCase
     assert_equal "Don't know how to build task 'leaves'", ex.message
   end
 
+  def test_find_with_alts
+    task :tfindx
+    assert_equal "tfindx", Task[:tfindx].name
+    ex = assert_raises(RuntimeError) { Task[:tfind] }
+    assert_match /Don\'t know how to build task \'tfind\'/, ex.message
+    assert_match /Did you mean one of these\?/, ex.message
+    assert_match /tfindx/, ex.message
+  end
+
   def test_defined
     assert ! Task.task_defined?(:a)
     task :a
