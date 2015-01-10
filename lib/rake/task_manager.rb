@@ -59,7 +59,20 @@ module Rake
       self.lookup(task_name, scopes) or
         enhance_with_matching_rule(task_name) or
         synthesize_file_task(task_name) or
-        fail "Don't know how to build task '#{task_name}'"
+        build_task_fail(task_name)
+    end
+
+    # If a task match wasn't found, try to offer suggestions.
+    # The task name must be at least 2 characters.
+    def build_task_fail(task_name)
+      msg = "Don't know how to build task '#{task_name}'"
+      if task_name.size > 1
+        matches = @tasks.keys.find_all{ |e| e =~ /#{task_name}/i }
+        if matches.size > 0
+          msg += ". Did you mean one of these?\n\n" + matches.map{ |e| "  #{e}" }.join("\n") + "\n"
+        end
+      end
+      fail msg
     end
 
     def synthesize_file_task(task_name) # :nodoc:
