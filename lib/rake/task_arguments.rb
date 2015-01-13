@@ -83,8 +83,8 @@ module Rake
       @hash.has_key?(key)
     end
 
-    def fetch(key, &block)
-      @hash.fetch(key, &block)
+    def fetch(*args, &block)
+      @hash.fetch(*args, &block)
     end
 
     protected
