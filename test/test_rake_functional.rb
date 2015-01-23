@@ -471,7 +471,7 @@ class TestRakeFunctional < Rake::TestCase
 
   def test_multitask_doesnt_corrupt_output
     rakefile_multitask_output
-    rake "-j 8 -m"
+    rake
     @out.each_line do |line|
       assert_match(/^Run child\d+$/, line)
     end

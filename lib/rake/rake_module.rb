@@ -33,6 +33,10 @@ module Rake
       application.options.rakelib ||= []
       application.options.rakelib.concat(files)
     end
+
+    def synchronize_output_streams(&block)
+      application.synchronize_output_streams(&block)
+    end
   end
 
 end

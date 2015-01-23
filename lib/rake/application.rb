@@ -7,6 +7,7 @@ require 'rake/thread_pool'
 require 'rake/thread_history_display'
 require 'rake/trace_output'
 require 'rake/win32'
+require 'rake/synchronized_output'
 
 module Rake
 
@@ -73,9 +74,11 @@ module Rake
     # call +top_level+ to run your top level tasks.
     def run
       standard_exception_handling do
-        init
-        load_rakefile
-        top_level
+        # synchronize_output_streams do
+          init
+          load_rakefile
+          top_level
+        # end
       end
     end
 
@@ -115,6 +118,7 @@ module Rake
       yield
 
       thread_pool.join
+
       if options.job_stats
         stats = thread_pool.statistics
         puts "Maximum active threads: #{stats[:max_active_threads]} + main"
@@ -190,6 +194,19 @@ module Rake
     # (may be overridden by subclasses)
     def exit_because_of_exception(ex) # :nodoc:
       exit(false)
+    end
+
+    def synchronize_output_streams
+      original_stdout = $stdout
+      original_stderr = $stderr
+      $stdout = SynchronizedOutput.wrap($stdout)
+      $stderr = SynchronizedOutput.wrap($stderr)
+      options.trace_output = (options.trace_output == original_stdout) ? $stdout : $stderr
+      yield
+    ensure
+      options.trace_output = (options.trace_output == $stdout) ? original_stdout : original_stderr
+      $stdout = original_stdout
+      $stderr = original_stderr
     end
 
     # Display the error message that caused the exception.
