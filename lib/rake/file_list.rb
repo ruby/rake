@@ -198,7 +198,8 @@ module Rake
 
     def <<(obj)
       resolve
-      @items << Rake.from_pathname(obj)
+      i = Rake.from_pathname(obj)
+      @items.push i unless @items.include? i
       self
     end
 
@@ -210,6 +211,7 @@ module Rake
         @pending_add = []
         resolve_exclude
       end
+      @items.uniq!
       self
     end
 
@@ -382,7 +384,7 @@ module Rake
     ]
 
     def import(array) # :nodoc:
-      @items = array
+      @items = array.uniq
       self
     end
 
