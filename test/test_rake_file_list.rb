@@ -215,6 +215,17 @@ class TestRakeFileList < Rake::TestCase
     assert_equal %w[abc.h abc.x cfiles existing x.c xyzzy.txt], fl
   end
 
+  def test_exclude_an_array
+    fl = FileList['*'].exclude(['existing', '*.c'])
+    assert_equal %w[abc.h abc.x cfiles xyzzy.txt], fl
+  end
+
+  def test_exclude_a_filelist
+    excluded = FileList['existing', '*.c']
+    fl = FileList['*'].exclude(excluded)
+    assert_equal %w[abc.h abc.x cfiles xyzzy.txt], fl
+  end
+
   def test_default_exclude
     fl = FileList.new
     fl.clear_exclude

@@ -151,7 +151,11 @@ module Rake
     #
     def exclude(*patterns, &block)
       patterns.each do |pat|
-        @exclude_patterns << Rake.from_pathname(pat)
+        if pat.respond_to? :to_ary
+          exclude(*pat.to_ary)
+        else
+          @exclude_patterns << Rake.from_pathname(pat)
+        end
       end
       @exclude_procs << block if block_given?
       resolve_exclude unless @pending
