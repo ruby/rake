@@ -369,7 +369,10 @@ module Rake
         when Regexp
           fn =~ pat
         when GLOB_PATTERN
-          File.fnmatch?(pat, fn, File::FNM_PATHNAME | File::FNM_EXTGLOB)
+          flags = File::FNM_PATHNAME
+          # Ruby <= 1.9.3 does not support File::FNM_EXTGLOB
+          flags |= File::FNM_EXTGLOB if defined? File::FNM_EXTGLOB
+          File.fnmatch?(pat, fn, flags)
         else
           fn == pat
         end
