@@ -10,6 +10,7 @@ class TestRakeRules < Rake::TestCase
   OBJFILE    = "abc.o"
   FOOFILE    = "foo"
   DOTFOOFILE = ".foo"
+  MINFILE = 'abc.min.o'
 
   def setup
     super
@@ -383,6 +384,17 @@ class TestRakeRules < Rake::TestCase
     end
     Task[OBJFILE].invoke
     assert_equal ["#{OBJFILE} - abc.c"], @runs
+  end
+
+  def test_works_with_chained_extensions_in_rules
+    create_file(OBJFILE)
+    rule('.min.o' => ['.o']) do |t|
+      @runs << t.name
+      assert_equal OBJFILE, t.source
+      assert_equal MINFILE, t.name
+    end
+    Task[MINFILE].invoke
+    assert_equal [MINFILE], @runs
   end
 
 end
