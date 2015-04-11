@@ -20,9 +20,6 @@
 # IN THE SOFTWARE.
 #++
 
-module Rake
-  VERSION = '10.4.2'
-end
 
 require 'rake/version'
 
