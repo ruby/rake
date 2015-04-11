@@ -186,7 +186,7 @@ module Rake
       exit_because_of_exception(ex)
     end
 
-    # Exit the program because of an unhandle exception.
+    # Exit the program because of an unhandled exception.
     # (may be overridden by subclasses)
     def exit_because_of_exception(ex) # :nodoc:
       exit(false)
