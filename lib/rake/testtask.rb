@@ -35,7 +35,7 @@ module Rake
     # Name of test task. (default is :test)
     attr_accessor :name
 
-    # List of directories to added to $LOAD_PATH before running the
+    # List of directories added to $LOAD_PATH before running the
     # tests. (default is 'lib')
     attr_accessor :libs
 
