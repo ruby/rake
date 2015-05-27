@@ -6,6 +6,7 @@ module Rake
   # Create a task that runs a set of tests.
   #
   # Example:
+  #   require "rake/testtask"
   #
   #   Rake::TestTask.new do |t|
   #     t.libs << "test"
