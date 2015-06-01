@@ -12,7 +12,9 @@ class String
     # This String extension comes from Rake
     def ext(newext='')
       return self.dup if ['.', '..'].include? self
-      newext = (newext =~ /^\./) ? newext : ("." + newext) if newext != ''
+      if newext != ''
+        newext = "." + newext unless newext =~ /^\./
+      end
       self.chomp(File.extname(self)) << newext
     end
   end
