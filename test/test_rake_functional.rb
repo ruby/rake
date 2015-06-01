@@ -469,6 +469,14 @@ class TestRakeFunctional < Rake::TestCase
     assert_equal 0, @exit.exitstatus unless uncertain_exit_status?
   end
 
+  def test_multitask_doesnt_corrupt_output
+    rakefile_multitask_output
+    rake
+    @out.each_line do |line|
+      assert_match(/^Run child\d+$/, line)
+    end
+  end
+
   private
 
   # We are unable to accurately verify that Rake returns a proper

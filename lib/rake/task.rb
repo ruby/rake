@@ -205,13 +205,15 @@ module Rake
 
     # Invoke all the prerequisites of a task in parallel.
     def invoke_prerequisites_concurrently(task_args, invocation_chain)# :nodoc:
-      futures = prerequisite_tasks.map do |p|
-        prereq_args = task_args.new_scope(p.arg_names)
-        application.thread_pool.future(p) do |r|
-          r.invoke_with_call_chain(prereq_args, invocation_chain)
+      Rake.synchronize_output_streams do
+        futures = prerequisite_tasks.map do |p|
+          prereq_args = task_args.new_scope(p.arg_names)
+          application.thread_pool.future(p) do |r|
+            r.invoke_with_call_chain(prereq_args, invocation_chain)
+          end
         end
+        futures.each { |f| f.value }
       end
-      futures.each { |f| f.value }
     end
 
     # Format the trace flags for display.

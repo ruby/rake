@@ -475,4 +475,16 @@ end
       io << "puts FL\n"
     end
   end
+
+  def rakefile_multitask_output
+    rakefile <<-MULTITASK_OUTPUT
+25.times do |n|
+  child_task_name = "child\#{n}"
+  task child_task_name do
+    print "Run ", "child", n, "\n"
+  end
+  multitask default: child_task_name
+end
+    MULTITASK_OUTPUT
+  end
 end
