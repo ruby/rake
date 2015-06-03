@@ -57,9 +57,10 @@ module Rake
 
     # Style of test loader to use.  Options are:
     #
-    # * :rake -- Rake provided test loading script (default).
+    # * :rake   -- Rake provided test loading script (default).
     # * :testrb -- Ruby provided test loading script.
     # * :direct -- Load tests using command line loader.
+    # * 'file://custom/loader.rb' -- Load tests using custom loader
     #
     attr_accessor :loader
 
@@ -171,6 +172,10 @@ module Rake
         "-S testrb #{fix}"
       when :rake
         "#{rake_include_arg} \"#{rake_loader}\""
+      when %r[\Afile://(.+)\Z]
+        find_custom_loader($1)
+      else
+        fail 'unexpected loader'
       end
     end
 
@@ -207,6 +212,10 @@ module Rake
         return path if File.exist? file_path
       end
       nil
+    end
+
+    def find_custom_loader(fn) # :nodoc:
+      find_file(fn) || fail('custom loader not found in $LOAD_PATH')
     end
 
   end
