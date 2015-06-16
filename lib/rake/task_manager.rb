@@ -59,8 +59,28 @@ module Rake
       self.lookup(task_name, scopes) or
         enhance_with_matching_rule(task_name) or
         synthesize_file_task(task_name) or
-        fail "Don't know how to build task '#{task_name}'"
+        build_task_fail(task_name)
     end
+
+    # If a task match wasn't found, try to offer suggestions.
+    # The task name must be at least 2 characters.
+    def build_task_fail(task_name)
+      msg       = "Don't know how to build task '#{task_name}'"
+      threshold = (task_name.size * 0.3).ceil
+
+      matches = @tasks.keys.
+        map {|name| [levenshtein_distance(name.downcase, task_name), name] }.
+        select {|distance, _| distance <= threshold }.
+        sort.
+        map(&:last)
+
+      if matches.size > 0
+        msg += ".\nDid you mean one of these? #{matches.join(", ")}"
+      end
+
+      fail msg
+    end
+    private :build_task_fail
 
     def synthesize_file_task(task_name) # :nodoc:
       return nil unless File.exist?(task_name)
@@ -296,6 +316,36 @@ module Rake
       desc = @last_description
       @last_description = nil
       desc
+    end
+
+    # Return a value representing the "cost" of transforming str1 into str2
+    def levenshtein_distance(str1, str2)
+      n = str1.length
+      m = str2.length
+      return m if n.zero?
+      return n if m.zero?
+
+      d = (0..m).to_a
+      x = nil
+
+      str1.each_char.each_with_index do |char1,i|
+        e = i+1
+
+        str2.each_char.each_with_index do |char2,j|
+          cost = (char1 == char2) ? 0 : 1
+          x = [
+               d[j+1] + 1, # insertion
+               e + 1,      # deletion
+               d[j] + cost # substitution
+              ].min
+          d[j] = e
+          e = x
+        end
+
+        d[m] = x
+      end
+
+      x
     end
 
     class << self
