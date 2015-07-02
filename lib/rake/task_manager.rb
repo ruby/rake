@@ -67,8 +67,8 @@ module Rake
       define_task(Rake::FileTask, task_name)
     end
 
-    # Resolve the arguments for a task/rule.  Returns a triplet of
-    # [task_name, arg_name_list, prerequisites].
+    # Resolve the arguments for a task/rule.  Returns a quadruple of
+    # [task_name, arg_name_list, prerequisites, triggers].
     def resolve_args(args)
       if args.last.is_a?(Hash)
         if args.last.include?(:triggers)

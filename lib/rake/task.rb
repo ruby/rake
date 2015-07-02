@@ -209,7 +209,7 @@ module Rake
     end
     private :add_chain_to
 
-    # Invoke all the prerequisites of a task.
+    # Invoke a set of subtasks.
     def invoke_subtasks(subtasks, task_args, invocation_chain) # :nodoc:
       if application.options.always_multitask
         invoke_subtasks_concurrently(subtasks, task_args, invocation_chain)
@@ -221,7 +221,7 @@ module Rake
       end
     end
 
-    # Invoke all the prerequisites of a task in parallel.
+    # Invoke a set of subtasks in parallel.
     def invoke_subtasks_concurrently(subtasks, task_args, invocation_chain)# :nodoc:
       futures = subtasks.map do |p|
         subtask_args = task_args.new_scope(p.arg_names)
