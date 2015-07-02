@@ -18,13 +18,13 @@ module Rake
     end
 
     def create_rule(*args, &block) # :nodoc:
-      pattern, args, deps = resolve_args(args)
+      pattern, args, deps, triggers = resolve_args(args)
       pattern = Regexp.new(Regexp.quote(pattern) + '$') if String === pattern
-      @rules << [pattern, args, deps, block]
+      @rules << [pattern, args, deps, triggers, block]
     end
 
     def define_task(task_class, *args, &block) # :nodoc:
-      task_name, arg_names, deps = resolve_args(args)
+      task_name, arg_names, deps, triggers = resolve_args(args)
 
       original_scope = @scope
       if String === task_name and
@@ -42,7 +42,7 @@ module Rake
         add_location(task)
         task.add_description(get_description(task))
       end
-      task.enhance(deps, &block)
+      task.enhance(deps, triggers, &block)
     ensure
       @scope = original_scope
     end
@@ -71,8 +71,13 @@ module Rake
     # [task_name, arg_name_list, prerequisites].
     def resolve_args(args)
       if args.last.is_a?(Hash)
-        deps = args.pop
-        resolve_args_with_dependencies(args, deps)
+        if args.last.include?(:triggers)
+          hash = args.pop
+          resolve_args_with_triggers(args, hash)
+        else
+          deps = args.pop
+          resolve_args_with_dependencies(args, deps)
+        end
       else
         resolve_args_without_dependencies(args)
       end
@@ -93,7 +98,7 @@ module Rake
       else
         arg_names = args
       end
-      [task_name, arg_names, []]
+      [task_name, arg_names, [], []]
     end
     private :resolve_args_without_dependencies
 
@@ -118,9 +123,32 @@ module Rake
         deps = value
       end
       deps = [deps] unless deps.respond_to?(:to_ary)
-      [task_name, arg_names, deps]
+      [task_name, arg_names, deps, []]
     end
     private :resolve_args_with_dependencies
+
+    # Resolve task arguments for a task or rule when there are
+    # triggers declared.
+    #
+    # The patterns recognized by this argument resolving function are:
+    #
+    #   task :t, :triggers => [:trigger1, :trigger2]
+    #   task :t, [:a], :triggers => [:trigger1, :trigger2]
+    #   task :t => [:d], :triggers => [:trigger1, :trigger2]
+    #   task :t, [a] => [:d], :triggers => [:trigger1, :trigger2]
+    #
+    def resolve_args_with_triggers(args, hash) # :nodoc:
+      fail "Task Argument Error" if hash.size > 2
+      triggers = hash.delete(:triggers)
+      if hash.empty?
+        task_name, arg_names, deps, _ = resolve_args(args)
+      else
+        task_name, arg_names, deps, _ = resolve_args(args << hash)
+      end
+      triggers = [triggers] unless triggers.respond_to?(:to_ary)
+      [task_name, arg_names, deps, triggers]
+    end
+    private :resolve_args_with_triggers
 
     # If a rule can be found that matches the task name, enhance the
     # task with the prerequisites and actions from the rule.  Set the
@@ -129,9 +157,9 @@ module Rake
     def enhance_with_matching_rule(task_name, level=0)
       fail Rake::RuleRecursionOverflowError,
         "Rule Recursion Too Deep" if level >= 16
-      @rules.each do |pattern, args, extensions, block|
+      @rules.each do |pattern, args, extensions, triggers, block|
         if pattern.match(task_name)
-          task = attempt_rule(task_name, args, extensions, block, level)
+          task = attempt_rule(task_name, args, extensions, triggers, block, level)
           return task if task
         end
       end
@@ -245,7 +273,7 @@ module Rake
     end
 
     # Attempt to create a rule given the list of prerequisites.
-    def attempt_rule(task_name, args, extensions, block, level)
+    def attempt_rule(task_name, args, extensions, triggers, block, level)
       sources = make_sources(task_name, extensions)
       prereqs = sources.map { |source|
         trace_rule level, "Attempting Rule #{task_name} => #{source}"
@@ -260,7 +288,7 @@ module Rake
           return nil
         end
       }
-      task = FileTask.define_task(task_name, {args => prereqs}, &block)
+      task = FileTask.define_task(task_name, {args => prereqs, :triggers => triggers}, &block)
       task.sources = prereqs
       task
     end

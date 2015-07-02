@@ -15,6 +15,9 @@ module Rake
     # List of prerequisites for a task.
     attr_reader :prerequisites
 
+    # List of task triggers for a task.
+    attr_reader :triggers
+
     # List of actions attached to a task.
     attr_reader :actions
 
@@ -50,13 +53,13 @@ module Rake
 
     # List of prerequisite tasks
     def prerequisite_tasks
-      prerequisites.map { |pre| lookup_prerequisite(pre) }
+      prerequisites.map { |pre| lookup_task(pre) }
     end
 
-    def lookup_prerequisite(prerequisite_name) # :nodoc:
-      application[prerequisite_name, @scope]
+    def lookup_task(task_name) # :nodoc:
+      application[task_name, @scope]
     end
-    private :lookup_prerequisite
+    private :lookup_task
 
     # List of all unique prerequisite tasks including prerequisite tasks'
     # prerequisites.
@@ -76,6 +79,11 @@ module Rake
     end
     protected :collect_prerequisites
 
+    # List of triggered tasks
+    def triggered_tasks
+      triggers.map { |trigger| lookup_task(trigger) }
+    end
+
     # First source from a rule (nil if no sources)
     def source
       sources.first
@@ -86,6 +94,7 @@ module Rake
     def initialize(task_name, app)
       @name            = task_name.to_s
       @prerequisites   = []
+      @triggers        = []
       @actions         = []
       @already_invoked = false
       @comments        = []
@@ -96,9 +105,10 @@ module Rake
       @locations       = []
     end
 
-    # Enhance a task with prerequisites or actions.  Returns self.
-    def enhance(deps=nil, &block)
+    # Enhance a task with prerequisites, triggers or actions.  Returns self.
+    def enhance(deps=nil, triggers=nil, &block)
       @prerequisites |= deps if deps
+      @triggers |= triggers if triggers
       @actions << block if block_given?
       self
     end
@@ -136,6 +146,7 @@ module Rake
     # Clear the existing prerequisites and actions of a rake task.
     def clear
       clear_prerequisites
+      clear_triggers
       clear_actions
       clear_comments
       self
@@ -144,6 +155,12 @@ module Rake
     # Clear the existing prerequisites of a rake task.
     def clear_prerequisites
       prerequisites.clear
+      self
+    end
+
+    # Clear the existing triggers of a rake task.
+    def clear_triggers
+      triggers.clear
       self
     end
 
@@ -175,8 +192,9 @@ module Rake
         end
         return if @already_invoked
         @already_invoked = true
-        invoke_prerequisites(task_args, new_chain)
+        invoke_subtasks(prerequisite_tasks, task_args, new_chain)
         execute(task_args) if needed?
+        invoke_subtasks(triggered_tasks, task_args, new_chain)
       end
     rescue Exception => ex
       add_chain_to(ex, new_chain)
@@ -192,23 +210,23 @@ module Rake
     private :add_chain_to
 
     # Invoke all the prerequisites of a task.
-    def invoke_prerequisites(task_args, invocation_chain) # :nodoc:
+    def invoke_subtasks(subtasks, task_args, invocation_chain) # :nodoc:
       if application.options.always_multitask
-        invoke_prerequisites_concurrently(task_args, invocation_chain)
+        invoke_subtasks_concurrently(subtasks, task_args, invocation_chain)
       else
-        prerequisite_tasks.each { |p|
-          prereq_args = task_args.new_scope(p.arg_names)
-          p.invoke_with_call_chain(prereq_args, invocation_chain)
+        subtasks.each { |p|
+          subtask_args = task_args.new_scope(p.arg_names)
+          p.invoke_with_call_chain(subtask_args, invocation_chain)
         }
       end
     end
 
     # Invoke all the prerequisites of a task in parallel.
-    def invoke_prerequisites_concurrently(task_args, invocation_chain)# :nodoc:
-      futures = prerequisite_tasks.map do |p|
-        prereq_args = task_args.new_scope(p.arg_names)
+    def invoke_subtasks_concurrently(subtasks, task_args, invocation_chain)# :nodoc:
+      futures = subtasks.map do |p|
+        subtask_args = task_args.new_scope(p.arg_names)
         application.thread_pool.future(p) do |r|
-          r.invoke_with_call_chain(prereq_args, invocation_chain)
+          r.invoke_with_call_chain(subtask_args, invocation_chain)
         end
       end
       futures.each { |f| f.value }

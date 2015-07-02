@@ -105,9 +105,10 @@ class TestRakeTask < Rake::TestCase
 
   def test_clear
     desc "a task"
-    t = task("t" => "a") { }
+    t = task("t" => "a", :triggers => :tr) { }
     t.clear
     assert t.prerequisites.empty?, "prerequisites should be empty"
+    assert t.triggers.empty?, "triggers should be empty"
     assert t.actions.empty?, "actions should be empty"
     assert_nil t.comment, "comments should be empty"
   end
@@ -117,6 +118,13 @@ class TestRakeTask < Rake::TestCase
     assert_equal ['a', 'b'], t.prerequisites
     t.clear_prerequisites
     assert_equal [], t.prerequisites
+  end
+
+  def test_clear_triggers
+    t = task("t" => ["a", "b"], :triggers => :tr)
+    assert_equal [:tr], t.triggers
+    t.clear_triggers
+    assert_equal [], t.triggers
   end
 
   def test_clear_actions
