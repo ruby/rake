@@ -9,7 +9,7 @@ http://github.com/ruby/rake . The public git clone URL is
 
 If you wish to run the unit and functional tests that come with Rake:
 
-* CD into the top project directory of rake.
+* +cd+ into the top project directory of rake.
 * Type one of the following:
 
     rake newb    # If you have never run rake's tests
