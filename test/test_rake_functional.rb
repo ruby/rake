@@ -476,7 +476,7 @@ class TestRakeFunctional < Rake::TestCase
   # predicate function can be used to skip tests or assertions as
   # needed.
   def uncertain_exit_status?
-    RUBY_VERSION < "1.9" || defined?(JRUBY_VERSION)
+    defined?(JRUBY_VERSION)
   end
 
 end
