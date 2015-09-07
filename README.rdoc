@@ -108,6 +108,8 @@ other projects with similar (and not so similar) goals.
 
 == Credits
 
+[<b>Jim Weirich</b>] Who originally created Rake.
+
 [<b>Ryan Dlugosz</b>] For the initial conversation that sparked Rake.
 
 [<b>nobu.nokada@softhome.net</b>] For the initial patch for rule support.
@@ -138,3 +140,14 @@ This software is provided "as is" and without any express or implied
 warranties, including, without limitation, the implied warranties of
 merchantability and fitness for a particular purpose.
 
+== Historical
+
+Rake was originally created by Jim Weirich, who unfortunately passed away in
+February 2014. This repository was originally hosted at
+[github.com/jimweirich/rake](https://github.com/jimweirich/rake/), however
+with his passing, has been moved to [ruby/rake](https://github.com/ruby/rake).
+
+You can view Jim's last commit here:
+https://github.com/jimweirich/rake/tree/336559f28f55bce418e2ebcc0a57548dcbac4025
+
+Thank you for this great tool, Jim. We'll remember you.
