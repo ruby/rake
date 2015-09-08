@@ -144,10 +144,12 @@ merchantability and fitness for a particular purpose.
 
 Rake was originally created by Jim Weirich, who unfortunately passed away in
 February 2014. This repository was originally hosted at
-[github.com/jimweirich/rake](https://github.com/jimweirich/rake/), however
-with his passing, has been moved to [ruby/rake](https://github.com/ruby/rake).
+{github.com/jimweirich/rake}[https://github.com/jimweirich/rake/], however
+with his passing, has been moved to {ruby/rake}[https://github.com/ruby/rake].
 
 You can view Jim's last commit here:
 https://github.com/jimweirich/rake/tree/336559f28f55bce418e2ebcc0a57548dcbac4025
+
+You can {read more about Jim}[https://en.wikipedia.org/wiki/Jim_Weirich] at Wikipedia.
 
 Thank you for this great tool, Jim. We'll remember you.
