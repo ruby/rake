@@ -38,5 +38,5 @@ rule ::
   defined.  Rules generally synthesize file tasks.
 
 task (Rake::Task) ::
-  The basic unit of work in a Rakefile.  A task has a name, a set of prerequisites,
-  and a list of actions to be performed.
+  The basic unit of work in a Rakefile.  A task has a name, a set of 
+  prerequisites, and a list of actions to be performed.
