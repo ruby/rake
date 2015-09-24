@@ -642,6 +642,21 @@ class TestRakeFileList < Rake::TestCase
     assert_equal FileList, r.class
   end
 
+  def test_special_return_delegating_methods_object_type
+    custom_file_list = Class.new(FileList)
+    f = custom_file_list.new
+
+    FileList::SPECIAL_RETURN.each do |m|
+      r = if [].method(m).arity == 1
+            f.send(m, [])
+          else
+            f.send(m)
+          end
+
+      assert_equal custom_file_list, r.class
+    end
+  end
+
   def test_file_utils_can_use_filelists
     cfiles = FileList['*.c']
 
