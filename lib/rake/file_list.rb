@@ -70,7 +70,7 @@ module Rake
           def #{sym}(*args, &block)
             resolve
             result = @items.send(:#{sym}, *args, &block)
-            FileList.new.import(result)
+            self.class.new.import(result)
           end
         }, __FILE__, ln
       else
