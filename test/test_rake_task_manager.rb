@@ -24,7 +24,7 @@ class TestRakeTaskManager < Rake::TestCase
       @tm['bad']
     end
 
-    assert_equal "Don't know how to build task 'bad'", e.message
+    assert_equal "Don't know how to build task 'bad' (see --tasks)", e.message
   end
 
   def test_name_lookup
