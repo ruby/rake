@@ -16,8 +16,8 @@ If you wish to run the unit and functional tests that come with Rake:
 
 * Type one of the following:
 
-    rake newb    # If you have never run rake's tests
-    rake         # If you have run rake's tests
+    rake newb       # If you have never run rake's tests
+    rake            # If you have run rake's tests
 
 = Issues and Bug Reports
 
