@@ -783,7 +783,8 @@ module Rake
       backtrace.find { |str| str =~ re } || ''
     end
 
-  private
+    # private -----------------------------------------------------------------
+
     FIXNUM_MAX = (2**(0.size * 8 - 2) - 1) # :nodoc:
 
   end
