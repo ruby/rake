@@ -41,6 +41,7 @@ require 'ostruct'
 require 'rake/ext/module'
 require 'rake/ext/string'
 require 'rake/ext/time'
+require 'rake/ext/fixnum'
 
 require 'rake/win32'
 

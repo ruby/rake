@@ -452,7 +452,7 @@ module Rake
             "(default is number of CPU cores + 4)",
             lambda { |value|
               if value.nil? || value == ''
-                value = FIXNUM_MAX
+                value = Fixnum::MAX
               elsif value =~ /^\d+$/
                 value = value.to_i
               else
@@ -782,9 +782,6 @@ module Rake
 
       backtrace.find { |str| str =~ re } || ''
     end
-
-  private
-    FIXNUM_MAX = (2**(0.size * 8 - 2) - 1) # :nodoc:
 
   end
 end
