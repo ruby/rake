@@ -2,7 +2,7 @@
 
 home :: https://github.com/ruby/rake
 bugs :: https://github.com/ruby/rake/issues
-docs :: http://docs.seattlerb.org/rake
+docs :: http://docs.seattlerb.org/rake/
 build :: {<img src="https://travis-ci.org/ruby/rake.svg?branch=master" alt="travis-ci">}[https://travis-ci.org/ruby/rake]
 
 == Description
@@ -98,13 +98,13 @@ Type "rake --help" for all available options.
 Rake is a late entry in the make replacement field.  Here are links to
 other projects with similar (and not so similar) goals.
 
-* http://directory.fsf.org/bras.html -- Bras, one of earliest
+* http://directory.fsf.org/wiki/Bras -- Bras, one of earliest
   implementations of "make in a scripting language".
 * http://www.a-a-p.org -- Make in Python
 * http://www.aromatic.com/tools/jam.txt -- JAM, Java Automated Make
 * http://ant.apache.org -- The Ant project
 * http://search.cpan.org/search?query=PerlBuildSystem -- The Perl Build System
-* http://rubydoc.info/gems/rant/0.5.7/frames -- Rant, another Ruby make tool.
+* http://www.rubydoc.info/gems/rant/0.5.7/frames -- Rant, another Ruby make tool.
 
 == Credits
 
