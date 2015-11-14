@@ -25,7 +25,7 @@ hoe = Hoe.spec 'rake' do
   developer 'Eric Hodel', 'drbrain@segment7.net'
   developer 'Jim Weirich', ''
 
-  require_ruby_version     '>= 1.8.7'
+  require_ruby_version     '>= 1.9.3'
   require_rubygems_version '>= 1.3.2'
 
   dependency 'minitest', '~> 5.0', :developer
@@ -78,4 +78,3 @@ begin
 rescue LoadError
   warn 'run `rake newb` to install rdoc'
 end
-
