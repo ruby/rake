@@ -115,26 +115,6 @@ class TestRakeTestTask < Rake::TestCase
     end
   end
 
-  def test_run_code_testrb_ruby_1_8_2
-    test_task = Rake::TestTask.new do |t|
-      t.loader = :testrb
-    end
-
-    def test_task.ruby_version() '1.8.2' end
-
-    assert_match(/^-S testrb +".*"$/, test_task.run_code)
-  end
-
-  def test_run_code_testrb_ruby_1_8_6
-    test_task = Rake::TestTask.new do |t|
-      t.loader = :testrb
-    end
-
-    def test_task.ruby_version() '1.8.6' end
-
-    assert_match(/^-S testrb +$/, test_task.run_code)
-  end
-
   def test_test_files_equals
     tt = Rake::TestTask.new do |t|
       t.test_files = FileList['a.rb', 'b.rb']
