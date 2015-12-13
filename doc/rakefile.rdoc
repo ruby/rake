@@ -197,35 +197,6 @@ argument string should be quoted.  Something like this:
 (Quoting rules vary between operating systems and shells, so make sure
 you consult the proper docs for your OS/shell).
 
-=== Task Arguments and the Environment
-
-Task argument values can also be picked up from the environment.  For
-example, if the "release" task expected a parameter named
-"release_version", then either
-
-   rake release[0.8.2]
-
-or
-
-   RELEASE_VERSION=0.8.2 rake release
-
-or, alternatively
-
-   rake release RELEASE_VERSION=0.8.2
-
-will work.  Environment variable names must either match the task
-parameter exactly, or match an all-uppercase version of the task
-parameter.
-
-*NOTE:* A variable declared within a rake command will
-not persist in the environment:
-
-   $ export VALUE=old
-   $ rake print_value VALUE=new
-   new
-   $ rake print_value
-   old
-
 === Tasks that Expect Parameters
 
 Parameters are only given to tasks that are setup to expect them.  In
