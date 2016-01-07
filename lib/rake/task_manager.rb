@@ -59,7 +59,7 @@ module Rake
       self.lookup(task_name, scopes) or
         enhance_with_matching_rule(task_name) or
         synthesize_file_task(task_name) or
-        fail "Don't know how to build task '#{task_name}'"
+        fail "Don't know how to build task '#{task_name}' (see --tasks)"
     end
 
     def synthesize_file_task(task_name) # :nodoc:

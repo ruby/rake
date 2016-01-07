@@ -145,7 +145,7 @@ class TestRakeTask < Rake::TestCase
     task :tfind
     assert_equal "tfind", Task[:tfind].name
     ex = assert_raises(RuntimeError) { Task[:leaves] }
-    assert_equal "Don't know how to build task 'leaves'", ex.message
+    assert_equal "Don't know how to build task 'leaves' (see --tasks)", ex.message
   end
 
   def test_defined
