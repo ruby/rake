@@ -70,7 +70,7 @@ end
 
 CLOBBER = ::Rake::FileList.new
 
-desc "Remove any generated file."
+desc "Remove any generated files."
 task :clobber => [:clean] do
   Rake::Cleaner.cleanup_files(CLOBBER)
 end
