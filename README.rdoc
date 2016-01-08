@@ -110,7 +110,7 @@ other projects with similar (and not so similar) goals.
 
 [<b>Ryan Dlugosz</b>] For the initial conversation that sparked Rake.
 
-[<b>nobu.nokada@softhome.net</b>] For the initial patch for rule support.
+[<b>Nobuyoshi Nakada <nobu@ruby-lang.org></b>] For the initial patch for rule support.
 
 [<b>Tilman Sauerbeck <tilman@code-monkey.de></b>] For the recursive rule patch.
 
@@ -137,4 +137,3 @@ License::  Copyright Jim Weirich.
 This software is provided "as is" and without any express or implied
 warranties, including, without limitation, the implied warranties of
 merchantability and fitness for a particular purpose.
-
