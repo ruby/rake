@@ -1,3 +1,9 @@
+=== 10.5.0(dev) / 2016-
+
+Enhancements:
+
+* Removed monkey patching for Ruby 1.8. Pull request #46 by Pablo Herrero.
+
 === 10.4.2 / 2014-12-02
 
 Bug fixes:
