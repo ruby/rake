@@ -71,7 +71,6 @@ lib/rake/ext/core.rb
 lib/rake/ext/module.rb
 lib/rake/ext/pathname.rb
 lib/rake/ext/string.rb
-lib/rake/ext/time.rb
 lib/rake/file_creation_task.rb
 lib/rake/file_list.rb
 lib/rake/file_task.rb
