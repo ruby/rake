@@ -135,6 +135,36 @@ class TestRakeTestTask < Rake::TestCase
     assert_match(/^-S testrb +$/, test_task.run_code)
   end
 
+  def test_run_code_custom_loader
+    custom_loader = 'rake'
+
+    test_task = Rake::TestTask.new do |t|
+      t.loader = "file://#{custom_loader}"
+    end
+
+    regexp_quoted_custom_loader = Regexp.quote(custom_loader)
+
+    assert_match(/#{regexp_quoted_custom_loader}[.]rb$/, test_task.run_code)
+  end
+
+  def test_run_code_custom_loader_not_found
+    custom_loader = 'not_found'
+
+    test_task = Rake::TestTask.new do |t|
+      t.loader = "file://#{custom_loader}"
+    end
+
+    assert_raises(RuntimeError) { test_task.run_code }
+  end
+
+  def test_run_code_unexpected_loader
+    test_task = Rake::TestTask.new do |t|
+      t.loader = :unexpected
+    end
+
+    assert_raises(RuntimeError) { test_task.run_code }
+  end
+
   def test_test_files_equals
     tt = Rake::TestTask.new do |t|
       t.test_files = FileList['a.rb', 'b.rb']
