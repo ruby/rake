@@ -24,5 +24,6 @@ rvm:
 script: ruby -Ilib bin/rake
 matrix:
   allow_failures:
+    - rvm: jruby-1.7.20
     - rvm: jruby-9.0.4.0
     - rvm: jruby-head
