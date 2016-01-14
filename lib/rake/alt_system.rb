@@ -41,70 +41,8 @@ module Rake::AltSystem # :nodoc: all
     end
   end
 
-  if WINDOWS && RUBY_VERSION < "1.9.0"
-    RUNNABLE_EXTS = %w[com exe bat cmd]
-    RUNNABLE_PATTERN = %r!\.(#{RUNNABLE_EXTS.join('|')})\Z!i
-
-    define_module_function :kernel_system, &Kernel.method(:system)
-    define_module_function :kernel_backticks, &Kernel.method(:'`')
-
-    module_function
-
-    def repair_command(cmd)
-      "call " + (
-        if cmd =~ %r!\A\s*\".*?\"!
-          # already quoted
-          cmd
-        elsif match = cmd.match(%r!\A\s*(\S+)!)
-          if match[1] =~ %r!/!
-            # avoid x/y.bat interpretation as x with option /y
-            %Q!"#{match[1]}"! + match.post_match
-          else
-            # a shell command will fail if quoted
-            cmd
-          end
-        else
-          # empty or whitespace
-          cmd
-        end
-      )
-    end
-
-    def find_runnable(file)
-      if file =~ RUNNABLE_PATTERN
-        file
-      else
-        RUNNABLE_EXTS.each { |ext|
-          test = "#{file}.#{ext}"
-          return test if File.exist?(test)
-        }
-        nil
-      end
-    end
-
-    def system(cmd, *args)
-      repaired = (
-        if args.empty?
-          [repair_command(cmd)]
-        elsif runnable = find_runnable(cmd)
-          [File.expand_path(runnable), *args]
-        else
-          # non-existent file
-          [cmd, *args]
-        end
-      )
-      kernel_system(*repaired)
-    end
-
-    def backticks(cmd)
-      kernel_backticks(repair_command(cmd))
-    end
-
-    define_module_function :'`', &method(:backticks)
-  else
-    # Non-Windows or ruby-1.9+: same as Kernel versions
-    define_module_function :system, &Kernel.method(:system)
-    define_module_function :backticks, &Kernel.method(:'`')
-    define_module_function :'`', &Kernel.method(:'`')
-  end
+  # Non-Windows or ruby-1.9+: same as Kernel versions
+  define_module_function :system, &Kernel.method(:system)
+  define_module_function :backticks, &Kernel.method(:'`')
+  define_module_function :'`', &Kernel.method(:'`')
 end

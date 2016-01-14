@@ -150,15 +150,6 @@ module Rake
       end
     end
 
-    def fix # :nodoc:
-      case ruby_version
-      when '1.8.2'
-        "\"#{find_file 'rake/ruby182_test_unit_fix'}\""
-      else
-        nil
-      end || ''
-    end
-
     def ruby_version # :nodoc:
       RUBY_VERSION
     end
@@ -168,7 +159,7 @@ module Rake
       when :direct
         "-e \"ARGV.each{|f| require f}\""
       when :testrb
-        "-S testrb #{fix}"
+        "-S testrb"
       when :rake
         "#{rake_include_arg} \"#{rake_loader}\""
       end

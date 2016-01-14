@@ -71,7 +71,6 @@ lib/rake/ext/core.rb
 lib/rake/ext/module.rb
 lib/rake/ext/pathname.rb
 lib/rake/ext/string.rb
-lib/rake/ext/time.rb
 lib/rake/file_creation_task.rb
 lib/rake/file_list.rb
 lib/rake/file_task.rb
@@ -94,7 +93,6 @@ lib/rake/pseudo_status.rb
 lib/rake/rake_module.rb
 lib/rake/rake_test_loader.rb
 lib/rake/rdoctask.rb
-lib/rake/ruby182_test_unit_fix.rb
 lib/rake/rule_recursion_overflow_error.rb
 lib/rake/runtest.rb
 lib/rake/scope.rb
