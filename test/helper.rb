@@ -11,15 +11,8 @@ require 'rake'
 require 'tmpdir'
 require File.expand_path('../file_creation', __FILE__)
 
-
-begin
-  require_relative 'support/ruby_runner'
-  require_relative 'support/rakefile_definitions'
-rescue NoMethodError, LoadError
-  # ruby 1.8
-  require 'test/support/ruby_runner'
-  require 'test/support/rakefile_definitions'
-end
+require_relative 'support/ruby_runner'
+require_relative 'support/rakefile_definitions'
 
 class Rake::TestCase < Minitest::Test
   include FileCreation
