@@ -20,6 +20,7 @@ require 'hoe'
 Hoe.plugin :git
 Hoe.plugin :minitest
 Hoe.plugin :travis
+Hoe.plugin :gemspec
 
 hoe = Hoe.spec 'rake' do
   developer 'Eric Hodel', 'drbrain@segment7.net'
