@@ -57,8 +57,7 @@ module Rake
           $stderr.puts e.backtrace.join("\n")
           @threads.each do |t|
             $stderr.print "Thread #{t} status = #{t.status}\n"
-            # 1.8 doesn't support Thread#backtrace
-            $stderr.puts t.backtrace.join("\n") if t.respond_to? :backtrace
+            $stderr.puts t.backtrace.join("\n")
           end
           raise e
         end
