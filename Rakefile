@@ -23,6 +23,7 @@ Hoe.plugin :travis
 Hoe.plugin :gemspec
 
 hoe = Hoe.spec 'rake' do
+  developer 'Hiroshi SHIBATA', 'hsbt@ruby-lang.org'
   developer 'Eric Hodel', 'drbrain@segment7.net'
   developer 'Jim Weirich', ''
 
