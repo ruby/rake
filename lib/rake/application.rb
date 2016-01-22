@@ -575,7 +575,7 @@ module Rake
           ['--version', '-V',
             "Display the program version.",
             lambda { |value|
-              puts "rake, version #{RAKEVERSION}"
+              puts "rake, version #{Rake::VERSION}"
               exit
             }
           ],

@@ -381,7 +381,7 @@ class TestRakeApplicationOptions < Rake::TestCase
     end
 
     assert_match(/\bversion\b/, out)
-    assert_match(/\b#{RAKEVERSION}\b/, out)
+    assert_match(/\b#{Rake::VERSION}\b/, out)
     assert_equal :exit, @exit
   end
 
