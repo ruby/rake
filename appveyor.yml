@@ -9,7 +9,7 @@ install:
   - gem install minitest -v '~> 5.0' --no-document
 before_test:
   - ruby -Ilib bin/rake travis:before -t
-after_script:
+after_test:
   - ruby -Ilib bin/rake travis:after -t
 test_script:
   - ruby -Ilib bin/rake
