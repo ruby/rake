@@ -7,7 +7,7 @@ install:
   - gem update --system
   - gem --version
   - gem install hoe-travis --no-document
-  - gem install minitest -v '~> 5.0' --no-document
+  - gem install minitest --no-document
 before_test:
   - ruby -Ilib bin/rake travis:before -t
 after_test:
