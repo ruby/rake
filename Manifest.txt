@@ -51,7 +51,6 @@ doc/release_notes/rake-10.0.2.rdoc
 doc/release_notes/rake-10.0.3.rdoc
 doc/release_notes/rake-10.1.0.rdoc
 lib/rake.rb
-lib/rake/alt_system.rb
 lib/rake/application.rb
 lib/rake/backtrace.rb
 lib/rake/clean.rb

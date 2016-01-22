@@ -1,7 +1,6 @@
+require 'rbconfig'
 
 module Rake
-  require 'rake/alt_system'
-
   # Win 32 interface methods for Rake. Windows specific functionality
   # will be placed here to collect that knowledge in one spot.
   module Win32 # :nodoc: all
@@ -14,12 +13,7 @@ module Rake
     class << self
       # True if running on a windows system.
       def windows?
-        AltSystem::WINDOWS
-      end
-
-      # Run a command line on windows.
-      def rake_system(*cmd)
-        AltSystem.system(*cmd)
+        RbConfig::CONFIG["host_os"] =~ %r!(msdos|mswin|djgpp|mingw|[Ww]indows)!
       end
 
       # The standard directory containing system wide rake files on
