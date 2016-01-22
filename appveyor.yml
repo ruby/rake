@@ -8,6 +8,9 @@ install:
   - gem --version
   - gem install hoe-travis --no-document
   - gem install minitest --no-document
+build_script:
+  - net user
+  - net localgroup
 before_test:
   - ruby -Ilib bin/rake travis:before -t
 after_test:
