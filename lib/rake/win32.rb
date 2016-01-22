@@ -1,3 +1,4 @@
+require 'rbconfig'
 
 module Rake
   # Win 32 interface methods for Rake. Windows specific functionality
@@ -10,6 +11,11 @@ module Rake
     end
 
     class << self
+      # True if running on a windows system.
+      def windows?
+        RbConfig::CONFIG["host_os"] =~ %r!(msdos|mswin|djgpp|mingw|[Ww]indows)!
+      end
+
       # The standard directory containing system wide rake files on
       # Win 32 systems. Try the following environment variables (in
       # order):
