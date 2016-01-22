@@ -5,6 +5,7 @@ before_script:
 - gem install hoe-travis --no-document
 - gem install minitest -v '~> 5.0' --no-document
 - ruby -Ilib bin/rake travis:before -t
+- unset JRUBY_OPTS
 language: ruby
 sudo: false
 notifications:
