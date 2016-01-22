@@ -51,7 +51,7 @@ module FileUtils
     Rake.rake_output_message cmd.join(" ") if options[:verbose]
 
     unless options[:noop]
-      res = rake_system(*cmd)
+      res = system(*cmd)
       status = $?
       status = Rake::PseudoStatus.new(1) if !res && status.nil?
       shell_runner.call(res, status)
@@ -77,11 +77,6 @@ module FileUtils
     end
   end
   private :set_verbose_option
-
-  def rake_system(*cmd) # :nodoc:
-    Rake::AltSystem.system(*cmd)
-  end
-  private :rake_system
 
   # Run a Ruby interpreter with the given arguments.
   #
