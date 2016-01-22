@@ -4,6 +4,7 @@ clone_depth: 10
 install:
   - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
   - ruby --version
+  - gem update --system
   - gem --version
   - gem install hoe-travis --no-document
   - gem install minitest -v '~> 5.0' --no-document
