@@ -1,0 +1,25 @@
+---
+version: "{build}"
+clone_depth: 10
+install:
+  - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
+  - ruby --version
+  - gem --version
+  - gem install hoe-travis --no-document
+  - gem install minitest -v '~> 5.0' --no-document
+before_test:
+  - ruby -Ilib bin/rake travis:before -t
+after_script:
+  - ruby -Ilib bin/rake travis:after -t
+test_script:
+  - ruby -Ilib bin/rake
+
+environment:
+  matrix:
+    - ruby_version: "193"
+    - ruby_version: "200"
+    - ruby_version: "200-x64"
+    - ruby_version: "21"
+    - ruby_version: "21-x64"
+    - ruby_version: "22"
+    - ruby_version: "22-x64"
