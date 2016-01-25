@@ -117,6 +117,8 @@ other projects with similar (and not so similar) goals.
 
 [<b>Eric Hodel</b>] For aid in maintaining rake.
 
+[<b>Hiroshi SHIBATA</b>] Maintainer of Rake 10.X and Rake 11.X
+
 == License
 
 Rake is available under an MIT-style license.
