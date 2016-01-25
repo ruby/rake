@@ -33,7 +33,6 @@ require 'monitor'
 require 'optparse'
 require 'ostruct'
 
-require 'rake/ext/module'
 require 'rake/ext/string'
 
 require 'rake/win32'
