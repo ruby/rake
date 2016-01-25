@@ -5,6 +5,7 @@ Enhancements:
  * Removed to support Ruby 1.8.x
  * Removed constant named `RAKEVERSION`
  * Removed Rake::AltSystem
+ * Removed Rake::RubyForgePublisher
 
 === 10.5.0 / 2016-01-13
 
