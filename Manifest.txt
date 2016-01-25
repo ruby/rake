@@ -59,7 +59,6 @@ lib/rake/contrib/.document
 lib/rake/contrib/compositepublisher.rb
 lib/rake/contrib/ftptools.rb
 lib/rake/contrib/publisher.rb
-lib/rake/contrib/rubyforgepublisher.rb
 lib/rake/contrib/sshpublisher.rb
 lib/rake/cpu_counter.rb
 lib/rake/default_loader.rb
