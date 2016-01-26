@@ -7,6 +7,7 @@ Enhancements:
  * Removed Rake::AltSystem
  * Removed Rake::RubyForgePublisher
  * Removed Rake::TaskManager#last_comment. Use last_description.
+ * Removed Rake::TaskLib#paste
 
 === 10.5.0 / 2016-01-13
 
