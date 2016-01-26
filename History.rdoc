@@ -8,6 +8,8 @@ Enhancements:
  * Removed Rake::RubyForgePublisher
  * Removed Rake::TaskManager#last_comment. Use last_description.
  * Removed Rake::TaskLib#paste
+ * Removed SshDirPublisher, SshFreshDirPublisher, SshFilePublisher
+   from lib/rake/contrib/publisher.rb
 
 === 10.5.0 / 2016-01-13
 
