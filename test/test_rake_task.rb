@@ -94,6 +94,13 @@ class TestRakeTask < Rake::TestCase
     assert_equal ["t3", "t2", "t1"], runlist
   end
 
+  def test_already_invoked
+    t1 = task(:t1) {}
+    assert_equal false, t1.already_invoked
+    t1.invoke
+    assert_equal true, t1.already_invoked
+  end
+
   def test_can_double_invoke_with_reenable
     runlist = []
     t1 = task(:t1) { |t| runlist << t.name }

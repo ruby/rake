@@ -29,6 +29,10 @@ module Rake
     # location option set).
     attr_reader :locations
 
+    # Has this task already been invoked?  Already invoked tasks
+    # will be skipped unless you reenable them.
+    attr_reader :already_invoked
+
     # Return task name
     def to_s
       name
