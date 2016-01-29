@@ -2,6 +2,8 @@
 
 Enhancements:
 
+ * Lookup prerequisites with same name outside of scope instead of
+   matching self. Pull request #96 by Sandy Vanderbleek
  * Removed to support Ruby 1.8.x
  * Removed constant named `RAKEVERSION`
  * Removed Rake::AltSystem
