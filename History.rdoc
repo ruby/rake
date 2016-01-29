@@ -2,6 +2,8 @@
 
 Enhancements:
 
+ * Make Rake::Task#already_invoked publicly accessible.
+   Pull request #93 by Joe Rafaniello
  * Lookup prerequisites with same name outside of scope instead of
    matching self. Pull request #96 by Sandy Vanderbleek
  * Removed to support Ruby 1.8.x
