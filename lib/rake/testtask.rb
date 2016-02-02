@@ -85,7 +85,7 @@ module Rake
       @options = nil
       @test_files = nil
       @verbose = false
-      @warning = false
+      @warning = true
       @loader = :rake
       @ruby_opts = []
       @description = "Run tests" + (@name == :test ? "" : " for #{@name}")
