@@ -8,6 +8,8 @@ Enhancements:
    matching self. Pull request #96 by Sandy Vanderbleek
  * Make FileList#pathmap behave like String#pathmap.
    Pull request #61 by Daniel Tamai
+ * Add fetch method to task arguments.
+   Pull request #12 by Chris Keathley
  * Removed to support Ruby 1.8.x
  * Removed constant named `RAKEVERSION`
  * Removed Rake::AltSystem
