@@ -1,5 +1,9 @@
 === 11.0.0(dev) / 2016-
 
+Bug fixes:
+
+ * Fix verbose option at TestTask. Punn request #67 by Mike Blumtritt
+
 Enhancements:
 
  * Make Rake::Task#already_invoked publicly accessible.
