@@ -19,9 +19,7 @@ task :work do
   end
 end
 
-# TODO: remove `disabled_' when DeprecatedObjectDSL removed
-task :obj
-task :disabled_obj do
+task :obj do
   begin
     Object.new.instance_eval { task :xyzzy }
     puts "BAD:D  Rake DSL are polluting objects"
