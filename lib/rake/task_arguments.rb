@@ -83,6 +83,10 @@ module Rake
       @hash.has_key?(key)
     end
 
+    def fetch(*args, &block)
+      @hash.fetch(*args, &block)
+    end
+
     protected
 
     def lookup(name) # :nodoc:
