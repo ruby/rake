@@ -25,6 +25,13 @@ class TestRakeTaskArguments < Rake::TestCase
     refute(ta.has_key?(:b))
   end
 
+  def test_fetch
+    ta = Rake::TaskArguments.new([:one], [1])
+    assert_equal 1, ta.fetch(:one)
+    assert_equal 2, ta.fetch(:two) { 2 }
+    assert_raises(KeyError) { ta.fetch(:three) } unless older_ruby?
+  end
+
   def test_to_s
     ta = Rake::TaskArguments.new([:a, :b, :c], [1, 2, 3])
     assert_equal ta.to_hash.inspect, ta.to_s
@@ -122,6 +129,12 @@ class TestRakeTaskArguments < Rake::TestCase
     assert_equal nil, ta[:third]
     assert_equal ['1', 'two'], ta.to_a
     assert_equal [], ta.extras
+  end
+
+  private
+
+  def older_ruby?
+    RUBY_VERSION == '1.8.7'
   end
 
 end
