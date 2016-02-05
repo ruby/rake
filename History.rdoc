@@ -23,6 +23,7 @@ Enhancements:
  * Removed Rake::TaskLib#paste
  * Removed Top-level SshDirPublisher, SshFreshDirPublisher, SshFilePublisher
    and CompositePublisher from lib/rake/contrib/publisher.rb
+ * Removed "rake/runtest.rb"
 
 === 10.5.0 / 2016-01-13
 
