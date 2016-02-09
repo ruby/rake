@@ -5,14 +5,12 @@ before_script:
 - gem install hoe-travis --no-document
 - gem install minitest -v '~> 5.0' --no-document
 - ruby -Ilib bin/rake travis:before -t
+- unset JRUBY_OPTS
 language: ruby
 sudo: false
 notifications:
   email:
   - drbrain@segment7.net
-env:
-  global:
-    - JRUBY_OPTS="--client -J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -J-Xss2m -Xcompile.invokedynamic=false"
 rvm:
   - 1.9.3
   - 2.0.0
