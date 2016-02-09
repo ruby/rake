@@ -1,7 +1,6 @@
 require 'rake/cloneable'
 require 'rake/file_utils_ext'
-require 'rake/pathmap'
-
+require 'rake/ext/string'
 
 module Rake
 
@@ -265,8 +264,8 @@ module Rake
     # Apply the pathmap spec to each of the included file names, returning a
     # new file list with the modified paths.  (See String#pathmap for
     # details.)
-    def pathmap(spec=nil)
-      collect { |fn| fn.pathmap(spec) }
+    def pathmap(spec=nil, &block)
+      collect { |fn| fn.pathmap(spec, &block) }
     end
 
     # Return a new FileList with <tt>String#ext</tt> method applied to

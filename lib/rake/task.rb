@@ -29,6 +29,10 @@ module Rake
     # location option set).
     attr_reader :locations
 
+    # Has this task already been invoked?  Already invoked tasks
+    # will be skipped unless you reenable them.
+    attr_reader :already_invoked
+
     # Return task name
     def to_s
       name
@@ -54,7 +58,11 @@ module Rake
     end
 
     def lookup_prerequisite(prerequisite_name) # :nodoc:
-      application[prerequisite_name, @scope]
+      scoped_prerequisite_task = application[prerequisite_name, @scope]
+      if scoped_prerequisite_task == self
+        unscoped_prerequisite_task = application[prerequisite_name]
+      end
+      unscoped_prerequisite_task || scoped_prerequisite_task
     end
     private :lookup_prerequisite
 

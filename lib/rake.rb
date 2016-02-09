@@ -26,11 +26,6 @@ end
 
 require 'rake/version'
 
-# :stopdoc:
-# TODO: Remove in Rake 11
-RAKEVERSION = Rake::VERSION
-# :startdoc:
-
 require 'rbconfig'
 require 'fileutils'
 require 'singleton'
@@ -38,7 +33,6 @@ require 'monitor'
 require 'optparse'
 require 'ostruct'
 
-require 'rake/ext/module'
 require 'rake/ext/string'
 
 require 'rake/win32'

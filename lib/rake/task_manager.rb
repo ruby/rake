@@ -5,10 +5,6 @@ module Rake
     # Track the last comment made in the Rakefile.
     attr_accessor :last_description
 
-    # TODO: Remove in Rake 11
-
-    alias :last_comment :last_description # :nodoc: Backwards compatibility
-
     def initialize # :nodoc:
       super
       @tasks = Hash.new

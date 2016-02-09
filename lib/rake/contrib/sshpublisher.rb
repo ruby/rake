@@ -2,7 +2,6 @@ require 'rake/dsl_definition'
 require 'rake/contrib/compositepublisher'
 
 module Rake
-
   # Publish an entire directory to an existing remote directory using
   # SSH.
   class SshDirPublisher

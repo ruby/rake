@@ -5,12 +5,14 @@ before_script:
 - gem install hoe-travis --no-document
 - gem install minitest -v '~> 5.0' --no-document
 - ruby -Ilib bin/rake travis:before -t
-- unset JRUBY_OPTS
 language: ruby
 sudo: false
 notifications:
   email:
   - drbrain@segment7.net
+env:
+  global:
+    - JRUBY_OPTS="--client -J-XX:+TieredCompilation -J-XX:TieredStopAtLevel=1 -J-Xss2m -Xcompile.invokedynamic=false"
 rvm:
   - 1.9.3
   - 2.0.0
@@ -19,11 +21,12 @@ rvm:
   - 2.3.0
   - ruby-head
   - jruby-1.7.20
-  - jruby-9.0.4.0
+  - jruby-9.0.5.0
   - jruby-head
   - rbx-2
 script: ruby -Ilib bin/rake
 matrix:
   allow_failures:
-    - rvm: jruby-9.0.4.0
+    - rvm: jruby-1.7.20
+    - rvm: jruby-9.0.5.0
     - rvm: jruby-head

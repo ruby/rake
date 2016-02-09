@@ -1,5 +1,30 @@
 === 11.0.0(dev) / 2016-
 
+Bug fixes:
+
+ * Fix verbose option at TestTask. Punn request #67 by Mike Blumtritt
+
+Enhancements:
+
+ * Make Rake::Task#already_invoked publicly accessible.
+   Pull request #93 by Joe Rafaniello
+ * Lookup prerequisites with same name outside of scope instead of
+   matching self. Pull request #96 by Sandy Vanderbleek
+ * Make FileList#pathmap behave like String#pathmap.
+   Pull request #61 by Daniel Tamai
+ * Add fetch method to task arguments.
+   Pull request #12 by Chris Keathley
+ * Use ruby warnings by default. Pull request #97 by Harold Giménez
+ * Removed to support Ruby 1.8.x
+ * Removed constant named `RAKEVERSION`
+ * Removed Rake::AltSystem
+ * Removed Rake::RubyForgePublisher
+ * Removed Rake::TaskManager#last_comment. Use last_description.
+ * Removed Rake::TaskLib#paste
+ * Removed Top-level SshDirPublisher, SshFreshDirPublisher, SshFilePublisher
+   and CompositePublisher from lib/rake/contrib/publisher.rb
+ * Removed "rake/runtest.rb"
+
 === 10.5.0 / 2016-01-13
 
 Enhancements:
