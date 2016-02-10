@@ -60,6 +60,7 @@ class TestRakeApplication < Rake::TestCase
   def test_display_exception_details_cause_loop
     skip 'Exception#cause not implemented' unless
       Exception.method_defined? :cause
+    skip if jruby9? # https://github.com/jruby/jruby/issues/3654
 
     begin
       begin
