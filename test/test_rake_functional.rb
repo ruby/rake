@@ -425,6 +425,8 @@ class TestRakeFunctional < Rake::TestCase
   end
 
   def test_file_list_is_requirable_separately
+    skip if jruby9? # https://github.com/jruby/jruby/issues/3655
+
     ruby '-rrake/file_list', '-e', 'puts Rake::FileList["a"].size'
     assert_equal "1\n", @out
   end

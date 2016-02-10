@@ -142,6 +142,8 @@ class TestRakeFileUtils < Rake::TestCase
   end
 
   def test_sh_with_multiple_arguments
+    skip if jruby9? # https://github.com/jruby/jruby/issues/3653
+
     check_no_expansion
     ENV['RAKE_TEST_SH'] = 'someval'
 
@@ -240,6 +242,8 @@ class TestRakeFileUtils < Rake::TestCase
   end
 
   def test_ruby_with_multiple_arguments
+    skip if jruby9? # https://github.com/jruby/jruby/issues/3653
+
     check_no_expansion
 
     ENV['RAKE_TEST_SH'] = 'someval'
