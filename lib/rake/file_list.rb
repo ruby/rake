@@ -189,7 +189,7 @@ module Rake
       result = @items * other
       case result
       when Array
-        FileList.new.import(result)
+        self.class.new.import(result)
       else
         result
       end
@@ -235,7 +235,7 @@ module Rake
     #   FileList['a.c', 'b.c'].sub(/\.c$/, '.o')  => ['a.o', 'b.o']
     #
     def sub(pat, rep)
-      inject(FileList.new) { |res, fn| res << fn.sub(pat, rep) }
+      inject(self.class.new) { |res, fn| res << fn.sub(pat, rep) }
     end
 
     # Return a new FileList with the results of running +gsub+ against each
@@ -246,7 +246,7 @@ module Rake
     #      => ['lib\\test\\file', 'x\\y']
     #
     def gsub(pat, rep)
-      inject(FileList.new) { |res, fn| res << fn.gsub(pat, rep) }
+      inject(self.class.new) { |res, fn| res << fn.gsub(pat, rep) }
     end
 
     # Same as +sub+ except that the original file list is modified.
@@ -330,8 +330,8 @@ module Rake
       resolve
       result = @items.partition(&block)
       [
-        FileList.new.import(result[0]),
-        FileList.new.import(result[1]),
+        self.class.new.import(result[0]),
+        self.class.new.import(result[1]),
       ]
     end
 
@@ -343,7 +343,7 @@ module Rake
 
     # Add matching glob patterns.
     def add_matching(pattern)
-      FileList.glob(pattern).each do |fn|
+      self.class.glob(pattern).each do |fn|
         self << fn unless excluded_from_list?(fn)
       end
     end
