@@ -6,6 +6,7 @@ Bug fixes:
 
 Enhancements:
 
+ * Use IO.open instead of Open3.poepn3 for CPU counter.
  * Make Rake::Task#already_invoked publicly accessible.
    Pull request #93 by Joe Rafaniello
  * Lookup prerequisites with same name outside of scope instead of
