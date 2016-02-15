@@ -112,8 +112,8 @@ unless Rake::CpuCounter.method_defined?(:count)
     end
 
     def in_path_command(command)
-      Open3.popen3 'which', command do |_, out,|
-        out.eof? ? nil : command
+      IO.popen ['which', command] do |io|
+        io.eof? ? nil : command
       end
     end
   end;
