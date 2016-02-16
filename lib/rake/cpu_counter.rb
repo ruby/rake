@@ -30,9 +30,6 @@ unless Rake::CpuCounter.method_defined?(:count)
   Rake::CpuCounter.class_eval <<-'end;', __FILE__, __LINE__+1
     require 'rbconfig'
 
-    # TODO: replace with IO.popen using array-style arguments in Rake 11
-    require 'open3'
-
     def count
       if defined?(Java::Java)
         count_via_java_runtime
@@ -95,10 +92,8 @@ unless Rake::CpuCounter.method_defined?(:count)
     def run(command, *args)
       cmd = resolve_command(command)
       if cmd
-        Open3.popen3 cmd, *args do |inn, out, err,|
-          inn.close
-          err.read
-          out.read.to_i
+        IO.popen [cmd, *args] do |io|
+          io.read.to_i
         end
       else
         nil
@@ -117,8 +112,8 @@ unless Rake::CpuCounter.method_defined?(:count)
     end
 
     def in_path_command(command)
-      Open3.popen3 'which', command do |_, out,|
-        out.eof? ? nil : command
+      IO.popen ['which', command] do |io|
+        io.eof? ? nil : command
       end
     end
   end;
