@@ -445,7 +445,7 @@ class TestRakeFunctional < Rake::TestCase
   end
 
   def test_signal_propagation_in_tests
-    if can_detect_signals?
+    if can_detect_signals? || jruby17?
       rakefile_test_signal
       rake
       assert_match(/ATEST/, @out)

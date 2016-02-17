@@ -122,8 +122,12 @@ end
     defined?(JRUBY_VERSION)
   end
 
+  def jruby17?
+    jruby? && (JRUBY_VERSION < '9.0.0.0')
+  end
+
   def jruby9?
-    jruby? && (JRUBY_VERSION > '9.0.0.0')
+    jruby? && (JRUBY_VERSION >= '9.0.0.0')
   end
 
   include RakefileDefinitions
