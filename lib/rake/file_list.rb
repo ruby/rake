@@ -84,6 +84,8 @@ module Rake
       end
     end
 
+    GLOB_PATTERN = %r{[*?\[\{]}
+
     # Create a file list from the globbable patterns given.  If you wish to
     # perform multiple includes or excludes at object build time, use the
     # "yield self" pattern.
@@ -148,7 +150,11 @@ module Rake
     #
     def exclude(*patterns, &block)
       patterns.each do |pat|
-        @exclude_patterns << Rake.from_pathname(pat)
+        if pat.respond_to? :to_ary
+          exclude(*pat.to_ary)
+        else
+          @exclude_patterns << Rake.from_pathname(pat)
+        end
       end
       @exclude_procs << block if block_given?
       resolve_exclude unless @pending
@@ -214,7 +220,7 @@ module Rake
 
     def resolve_add(fn) # :nodoc:
       case fn
-      when %r{[*?\[\{]}
+      when GLOB_PATTERN
         add_matching(fn)
       else
         self << fn
@@ -361,8 +367,11 @@ module Rake
         case pat
         when Regexp
           fn =~ pat
-        when /[*?]/
-          File.fnmatch?(pat, fn, File::FNM_PATHNAME)
+        when GLOB_PATTERN
+          flags = File::FNM_PATHNAME
+          # Ruby <= 1.9.3 does not support File::FNM_EXTGLOB
+          flags |= File::FNM_EXTGLOB if defined? File::FNM_EXTGLOB
+          File.fnmatch?(pat, fn, flags)
         else
           fn == pat
         end
