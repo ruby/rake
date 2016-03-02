@@ -6,6 +6,7 @@ Bug fixes:
 
 Enhancements:
 
+ * Make FileList#exclude more analogous to FileList#include.
  * Use IO.open instead of Open3.popen3 for CPU counter.
  * Make Rake::Task#already_invoked publicly accessible.
    Pull request #93 by Joe Rafaniello
