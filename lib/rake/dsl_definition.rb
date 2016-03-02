@@ -28,7 +28,6 @@ module Rake
     #   task task_name
     #   task task_name: dependencies
     #   task task_name, arguments => dependencies
-    #   task task_name, argument[, argument ...], :needs: dependencies
     #
     # Declare a basic task.  The +task_name+ is always the first argument.  If
     # the task name contains a ":" it is defined in that namespace.
@@ -55,12 +54,6 @@ module Rake
     # To invoke this task from the command line:
     #
     #   $ rake package[1.2.3]
-    #
-    # Alternate definition:
-    #
-    #   task :package, :version, needs: :test do |t, args|
-    #     # ...
-    #   end
     #
     def task(*args, &block) # :doc:
       Rake::Task.define_task(*args, &block)
