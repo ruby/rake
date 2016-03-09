@@ -2,6 +2,8 @@
 
 Bug fixes:
 
+ * Correctly handle bad encoding in exception messages. Pull Request #113
+   by Tomer Brisker
  * Fix verbose option at TestTask. Punn request #67 by Mike Blumtritt
 
 Enhancements:
