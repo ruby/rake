@@ -2,35 +2,35 @@
 
 Bug fixes:
 
- * Correctly handle bad encoding in exception messages. Pull request #113
-   by Tomer Brisker
- * Fix verbose option at TestTask. Pull request #67 by Mike Blumtritt
+* Correctly handle bad encoding in exception messages. Pull request #113
+  by Tomer Brisker
+* Fix verbose option at TestTask. Pull request #67 by Mike Blumtritt
 
 Enhancements:
 
- * Make FileList#exclude more analogous to FileList#include.
- * Use IO.open instead of Open3.popen3 for CPU counter.
- * Make Rake::Task#already_invoked publicly accessible.
-   Pull request #93 by Joe Rafaniello
- * Lookup prerequisites with same name outside of scope instead of
-   matching self. Pull request #96 by Sandy Vanderbleek
- * Make FileList#pathmap behave like String#pathmap.
-   Pull request #61 by Daniel Tamai
- * Add fetch method to task arguments.
-   Pull request #12 by Chris Keathley
- * Use ruby warnings by default. Pull request #97 by Harold Giménez
+* Make FileList#exclude more analogous to FileList#include.
+* Use IO.open instead of Open3.popen3 for CPU counter.
+* Make Rake::Task#already_invoked publicly accessible.
+  Pull request #93 by Joe Rafaniello
+* Lookup prerequisites with same name outside of scope instead of
+  matching self. Pull request #96 by Sandy Vanderbleek
+* Make FileList#pathmap behave like String#pathmap.
+  Pull request #61 by Daniel Tamai
+* Add fetch method to task arguments.
+  Pull request #12 by Chris Keathley
+* Use ruby warnings by default. Pull request #97 by Harold Giménez
 
 Compatibility Changes:
 
- * Removed to support Ruby 1.8.x
- * Removed constant named `RAKEVERSION`
- * Removed Rake::AltSystem
- * Removed Rake::RubyForgePublisher
- * Removed Rake::TaskManager#last_comment. Use last_description.
- * Removed Rake::TaskLib#paste
- * Removed Top-level SshDirPublisher, SshFreshDirPublisher, SshFilePublisher
-   and CompositePublisher from lib/rake/contrib/publisher.rb
- * Removed "rake/runtest.rb"
+* Removed to support Ruby 1.8.x
+* Removed constant named `RAKEVERSION`
+* Removed Rake::AltSystem
+* Removed Rake::RubyForgePublisher
+* Removed Rake::TaskManager#last_comment. Use last_description.
+* Removed Rake::TaskLib#paste
+* Removed Top-level SshDirPublisher, SshFreshDirPublisher, SshFilePublisher
+  and CompositePublisher from lib/rake/contrib/publisher.rb
+* Removed "rake/runtest.rb"
 
 === 10.5.0 / 2016-01-13
 
