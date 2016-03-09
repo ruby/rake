@@ -1,4 +1,10 @@
-=== 11.0.0(dev) / 2016-
+=== 11.0.1 / 2016-03-09
+
+Bug fixes:
+
+* Fixed packaging manifest.
+
+=== 11.0.0 / 2016-03-09
 
 Bug fixes:
 
