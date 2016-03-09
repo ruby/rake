@@ -23,7 +23,7 @@ class Rake::TestCase < Minitest::Test
     include Rake::TaskManager
   end
 
-  RUBY = defined?(EnvUtil) ? EnvUtil.rubybin : Gem.ruby
+  RUBY = Gem.ruby
 
   def setup
     ARGV.clear
