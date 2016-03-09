@@ -58,7 +58,6 @@ lib/rake/cloneable.rb
 lib/rake/contrib/.document
 lib/rake/contrib/compositepublisher.rb
 lib/rake/contrib/ftptools.rb
-lib/rake/contrib/publisher.rb
 lib/rake/contrib/sshpublisher.rb
 lib/rake/cpu_counter.rb
 lib/rake/default_loader.rb
@@ -72,7 +71,6 @@ lib/rake/file_list.rb
 lib/rake/file_task.rb
 lib/rake/file_utils.rb
 lib/rake/file_utils_ext.rb
-lib/rake/gempackagetask.rb
 lib/rake/invocation_chain.rb
 lib/rake/invocation_exception_mixin.rb
 lib/rake/late_time.rb
@@ -100,7 +98,6 @@ lib/rake/thread_pool.rb
 lib/rake/trace_output.rb
 lib/rake/version.rb
 lib/rake/win32.rb
-rakelib/publish.rake
 rakelib/test_times.rake
 test/file_creation.rb
 test/helper.rb
@@ -145,7 +142,6 @@ test/test_rake_scope.rb
 test/test_rake_task.rb
 test/test_rake_task_argument_parsing.rb
 test/test_rake_task_arguments.rb
-test/test_rake_task_lib.rb
 test/test_rake_task_manager.rb
 test/test_rake_task_manager_argument_resolution.rb
 test/test_rake_task_with_arguments.rb
