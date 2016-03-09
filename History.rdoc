@@ -19,6 +19,9 @@ Enhancements:
  * Add fetch method to task arguments.
    Pull request #12 by Chris Keathley
  * Use ruby warnings by default. Pull request #97 by Harold Giménez
+
+Compatibility Changes:
+
  * Removed to support Ruby 1.8.x
  * Removed constant named `RAKEVERSION`
  * Removed Rake::AltSystem
