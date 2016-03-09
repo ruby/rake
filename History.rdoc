@@ -2,9 +2,9 @@
 
 Bug fixes:
 
- * Correctly handle bad encoding in exception messages. Pull Request #113
+ * Correctly handle bad encoding in exception messages. Pull request #113
    by Tomer Brisker
- * Fix verbose option at TestTask. Punn request #67 by Mike Blumtritt
+ * Fix verbose option at TestTask. Pull request #67 by Mike Blumtritt
 
 Enhancements:
 
