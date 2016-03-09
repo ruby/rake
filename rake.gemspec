@@ -3,7 +3,7 @@
 
 Gem::Specification.new do |s|
   s.name = "rake".freeze
-  s.version = "11.0.0.20160210165915"
+  s.version = "11.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.3.2".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
