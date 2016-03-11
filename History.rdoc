@@ -1,3 +1,8 @@
+=== 11.1.0 / 2016-03-11
+
+Compatibility Changes:
+  * Revert to remove `last_comment`. It will remove Rake 12.
+
 === 11.0.1 / 2016-03-09
 
 Bug fixes:
