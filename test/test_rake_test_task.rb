@@ -12,6 +12,7 @@ class TestRakeTestTask < Rake::TestCase
     assert_equal 'test/test*.rb', tt.pattern
     assert_equal false, tt.verbose
     assert_equal true, tt.warning
+    assert_equal [], tt.deps
     assert Task.task_defined?(:test)
   end
 
@@ -22,6 +23,7 @@ class TestRakeTestTask < Rake::TestCase
       t.pattern = 'test/tc_*.rb'
       t.warning = true
       t.verbose = true
+      t.deps = [:env]
     end
     refute_nil tt
     assert_equal "Run example tests", tt.description
@@ -30,6 +32,7 @@ class TestRakeTestTask < Rake::TestCase
     assert_equal 'test/tc_*.rb', tt.pattern
     assert_equal true, tt.warning
     assert_equal true, tt.verbose
+    assert_equal [:env], tt.deps
     assert_match(/-w/, tt.ruby_opts_string)
     assert_match(/--verbose/, tt.ruby_opts_string)
     assert Task.task_defined?(:example)
@@ -127,5 +130,16 @@ class TestRakeTestTask < Rake::TestCase
     end
 
     assert_equal ["a.rb", 'b.rb'], tt.file_list.to_a
+  end
+
+  def test_task_prerequisites
+    Rake::TestTask.new :parent
+
+    Rake::TestTask.new :child do |t|
+      t.deps = :parent
+    end
+
+    task = Rake::Task[:child]
+    assert_includes task.prerequisites, 'parent'
   end
 end
