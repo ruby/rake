@@ -18,7 +18,6 @@ end
 require 'hoe'
 
 Hoe.plugin :git
-Hoe.plugin :minitest
 Hoe.plugin :travis
 Hoe.plugin :gemspec
 
@@ -56,6 +55,7 @@ hoe = Hoe.spec 'rake' do
   ]
 end
 
+hoe.testlib = :minitest
 hoe.test_prelude = 'gem "minitest", "~> 5.0"'
 
 # Use custom rdoc task due to existence of doc directory
