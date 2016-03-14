@@ -1,3 +1,10 @@
+=== 11.1.1 / 2016-03-14
+
+Bug fixes:
+
+* Use `-W` instead of `--verbose` when Rake::TestTask#verbose enabled.
+  JRuby doesn't have `--verbose` option.
+
 === 11.1.0 / 2016-03-11
 
 Compatibility Changes:
