@@ -31,7 +31,11 @@ class TestRakeTestTask < Rake::TestCase
     assert_equal true, tt.warning
     assert_equal true, tt.verbose
     assert_match(/-w/, tt.ruby_opts_string)
-    assert_match(/--verbose/, tt.ruby_opts_string)
+    if jruby?
+      assert_match(/-v/, tt.ruby_opts_string)
+    else
+      assert_match(/--verbose/, tt.ruby_opts_string)
+    end
     assert Task.task_defined?(:example)
   end
 

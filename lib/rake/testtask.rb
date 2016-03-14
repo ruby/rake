@@ -128,7 +128,13 @@ module Rake
       opts = @ruby_opts.dup
       opts.unshift("-I\"#{lib_path}\"") unless @libs.empty?
       opts.unshift("-w") if @warning
-      opts.unshift('--verbose') if @verbose
+      if @verbose
+        if defined?(JRUBY_VERSION)
+          opts.unshift('-v')
+        else
+          opts.unshift('--verbose')
+        end
+      end
       opts.join(" ")
     end
 
