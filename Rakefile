@@ -11,6 +11,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require 'bundler/gem_tasks'
 require 'rake/testtask'
+require 'rdoc/task'
 
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
@@ -18,15 +19,9 @@ Rake::TestTask.new(:test) do |t|
   t.test_files = FileList['test/**/test_*.rb']
 end
 
-begin
-  require 'rdoc/task'
-
-  RDoc::Task.new :rdoc => 'docs', :clobber_rdoc => 'clobber_docs' do |doc|
-    doc.main   = 'README.rdoc'
-    doc.title  = 'Rake -- Ruby Make'
-    doc.rdoc_files = Rake::FileList.new %w[lib MIT-LICENSE doc/**/*.rdoc *.rdoc]
-    doc.rdoc_dir = 'html'
-  end
-rescue LoadError
-  warn 'run `rake newb` to install rdoc'
+RDoc::Task.new :rdoc => 'docs', :clobber_rdoc => 'clobber_docs' do |doc|
+  doc.main   = 'README.rdoc'
+  doc.title  = 'Rake -- Ruby Make'
+  doc.rdoc_files = Rake::FileList.new %w[lib MIT-LICENSE doc/**/*.rdoc *.rdoc]
+  doc.rdoc_dir = 'html'
 end
