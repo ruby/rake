@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |s|
   s.name = "rake".freeze
-  s.version = "11.0.1.20160309174104"
+  s.version = "11.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.3.2".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
