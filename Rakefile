@@ -25,3 +25,5 @@ RDoc::Task.new do |doc|
   doc.rdoc_files = FileList.new %w[lib MIT-LICENSE doc/**/*.rdoc *.rdoc]
   doc.rdoc_dir = 'html'
 end
+
+task :default => :test
