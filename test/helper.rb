@@ -41,7 +41,7 @@ class Rake::TestCase < Minitest::Test
 
     @verbose = ENV['VERBOSE']
 
-    @rake_exec = File.join @rake_root, 'bin', 'rake'
+    @rake_exec = File.join @rake_root, 'exe', 'rake'
     @rake_lib  = File.join @rake_root, 'lib'
     @ruby_options = ["-I#{@rake_lib}", "-I."]
 
