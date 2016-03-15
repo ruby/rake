@@ -28,15 +28,12 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<minitest>.freeze, ["~> 5.8"])
       s.add_development_dependency(%q<rdoc>.freeze, ["~> 4.0"])
-      s.add_development_dependency(%q<hoe>.freeze, ["~> 3.14"])
     else
       s.add_dependency(%q<minitest>.freeze, ["~> 5.8"])
       s.add_dependency(%q<rdoc>.freeze, ["~> 4.0"])
-      s.add_dependency(%q<hoe>.freeze, ["~> 3.14"])
     end
   else
     s.add_dependency(%q<minitest>.freeze, ["~> 5.8"])
     s.add_dependency(%q<rdoc>.freeze, ["~> 4.0"])
-    s.add_dependency(%q<hoe>.freeze, ["~> 3.14"])
   end
 end
