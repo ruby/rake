@@ -22,6 +22,6 @@ end
 RDoc::Task.new do |doc|
   doc.main   = 'README.rdoc'
   doc.title  = 'Rake -- Ruby Make'
-  doc.rdoc_files = Rake::FileList.new %w[lib MIT-LICENSE doc/**/*.rdoc *.rdoc]
+  doc.rdoc_files = FileList.new %w[lib MIT-LICENSE doc/**/*.rdoc *.rdoc]
   doc.rdoc_dir = 'html'
 end
