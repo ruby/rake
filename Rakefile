@@ -19,7 +19,7 @@ Rake::TestTask.new(:test) do |t|
   t.test_files = FileList['test/**/test_*.rb']
 end
 
-RDoc::Task.new :rdoc => 'docs', :clobber_rdoc => 'clobber_docs' do |doc|
+RDoc::Task.new do |doc|
   doc.main   = 'README.rdoc'
   doc.title  = 'Rake -- Ruby Make'
   doc.rdoc_files = Rake::FileList.new %w[lib MIT-LICENSE doc/**/*.rdoc *.rdoc]
