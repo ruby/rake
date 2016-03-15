@@ -13,7 +13,7 @@ rvm:
   - rbx-2
 before_script:
   - unset JRUBY_OPTS
-script: ruby -Ilib bin/rake
+script: ruby -Ilib exe/rake
 notifications:
   email:
   - drbrain@segment7.net

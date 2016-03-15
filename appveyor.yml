@@ -11,7 +11,7 @@ build_script:
   - net user
   - net localgroup
 test_script:
-  - ruby -Ilib bin/rake
+  - ruby -Ilib exe/rake
 
 environment:
   matrix:
