@@ -1,5 +1,6 @@
-# -*- encoding: utf-8 -*-
-# stub: rake 11.0.1.20160309174104 ruby lib
+# coding: utf-8
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |s|
   s.name = "rake".freeze
