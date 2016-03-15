@@ -22,7 +22,7 @@ begin
   require 'rdoc/task'
 
   RDoc::Task.new :rdoc => 'docs', :clobber_rdoc => 'clobber_docs' do |doc|
-    doc.main   = 'README.md'
+    doc.main   = 'README.rdoc'
     doc.title  = 'Rake -- Ruby Make'
     doc.rdoc_files = Rake::FileList.new %w[lib MIT-LICENSE doc/**/*.rdoc *.rdoc]
     doc.rdoc_dir = 'html'
