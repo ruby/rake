@@ -1,7 +1,7 @@
 = Source Repository
 
 Rake is currently hosted at github. The github web page is
-http://github.com/ruby/rake . The public git clone URL is
+https://github.com/ruby/rake . The public git clone URL is
 
   git://github.com/ruby/rake.git
 
@@ -10,13 +10,12 @@ http://github.com/ruby/rake . The public git clone URL is
 If you wish to run the unit and functional tests that come with Rake:
 
 * +cd+ into the top project directory of rake.
-* Install the +hoe+ gem dependency:
+* Install gem dependency using bundler:
 
-    gem install hoe # Unless the hoe gem is already installed
+    bundle install  # Install bundler, minitest and rdoc
 
 * Type one of the following:
 
-    rake newb       # If you have never run rake's tests
     rake            # If you have run rake's tests
 
 = Issues and Bug Reports
@@ -35,4 +34,3 @@ When submitting pull requests please check the rake Travis-CI page for test
 failures:
 
   https://travis-ci.org/ruby/rake
-
