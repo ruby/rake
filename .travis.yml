@@ -16,6 +16,10 @@ before_install:
 before_script:
   - unset JRUBY_OPTS
 script: ruby -Ilib exe/rake
+matrix:
+  allow_failures:
+    - rvm: ruby-head
+    - rvm: jruby-head
 notifications:
   email:
   - drbrain@segment7.net
