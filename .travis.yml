@@ -1,16 +1,5 @@
----
-after_script:
-- ruby -Ilib bin/rake travis:after -t
-before_script:
-- gem install hoe-travis --no-document
-- gem install minitest -v '~> 5.0' --no-document
-- ruby -Ilib bin/rake travis:before -t
-- unset JRUBY_OPTS
 language: ruby
 sudo: false
-notifications:
-  email:
-  - drbrain@segment7.net
 rvm:
   - 1.9.3
   - 2.0.0
@@ -22,4 +11,11 @@ rvm:
   - jruby-9.0.5.0
   - jruby-head
   - rbx-2
-script: ruby -Ilib bin/rake
+before_install:
+  - gem install bundler --no-document
+before_script:
+  - unset JRUBY_OPTS
+script: ruby -Ilib exe/rake
+notifications:
+  email:
+  - drbrain@segment7.net

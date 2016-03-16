@@ -1,6 +1,10 @@
 require File.expand_path('../helper', __FILE__)
 
 class TestRakeRequire < Rake::TestCase
+  def setup
+    super
+    $LOAD_PATH.unshift '.' if jruby17?
+  end
 
   def test_can_load_rake_library
     rakefile_rakelib
@@ -37,4 +41,3 @@ class TestRakeRequire < Rake::TestCase
     assert_match(/testx/, ex.message)
   end
 end
-
