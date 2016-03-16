@@ -1,3 +1,11 @@
+=== 11.2.0(dev) / 2016-
+
+Enhancements:
+
+* Allow to specify dependencies(prerequisites) for Rake::TestTask
+  Pull request #117 by Tim Maslyuchenko
+* Use Bundler task instead of hoe for gem release.
+
 === 11.1.1 / 2016-03-14
 
 Bug fixes:
