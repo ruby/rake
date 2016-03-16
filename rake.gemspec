@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 1.3.2".freeze) if s.respond_to? :required_rubygems_version=
   s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
 
-  s.add_dependency(%q<bundler>.freeze, ["~> 1.11"])
-  s.add_dependency(%q<minitest>.freeze, ["~> 5.8"])
-  s.add_dependency(%q<rdoc>.freeze, ["~> 4.0"])
+  s.add_development_dependency(%q<bundler>.freeze, ["~> 1.11"])
+  s.add_development_dependency(%q<minitest>.freeze, ["~> 5.8"])
+  s.add_development_dependency(%q<rdoc>.freeze, ["~> 4.0"])
 end
