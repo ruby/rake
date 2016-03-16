@@ -28,19 +28,9 @@ class Rake::TestCase < Minitest::Test
   def setup
     ARGV.clear
 
-    test_dir = File.basename File.dirname File.expand_path __FILE__
-
-    @rake_root =
-      if test_dir == 'test'
-        # rake repository
-        File.expand_path '../../', __FILE__
-      else
-        # ruby repository
-        File.expand_path '../../../', __FILE__
-      end
-
     @verbose = ENV['VERBOSE']
 
+    @rake_root = File.expand_path '../../', __FILE__
     @rake_exec = File.join @rake_root, 'exe', 'rake'
     @rake_lib  = File.join @rake_root, 'lib'
     @ruby_options = ["-I#{@rake_lib}", "-I."]
