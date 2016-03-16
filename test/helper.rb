@@ -9,8 +9,8 @@ end
 require 'minitest/autorun'
 require 'rake'
 require 'tmpdir'
-require File.expand_path('../file_creation', __FILE__)
 
+require_relative 'support/file_creation'
 require_relative 'support/ruby_runner'
 require_relative 'support/rakefile_definitions'
 
