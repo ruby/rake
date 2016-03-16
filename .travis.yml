@@ -12,7 +12,7 @@ rvm:
   - jruby-head
   - rbx-2
 before_install:
-  - gem install bundler --no-document
+  - gem update bundler --no-document
 before_script:
   - unset JRUBY_OPTS
 script: ruby -Ilib exe/rake
