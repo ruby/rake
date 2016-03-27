@@ -34,7 +34,6 @@ class TestRakeTestTask < Rake::TestCase
     assert_equal true, tt.verbose
     assert_equal [:env], tt.deps
     assert_match(/-w/, tt.ruby_opts_string)
-    assert_match(/-W/, tt.ruby_opts_string)
     assert Task.task_defined?(:example)
   end
 

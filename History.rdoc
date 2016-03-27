@@ -6,6 +6,13 @@ Enhancements:
   Pull request #117 by Tim Maslyuchenko
 * Use Bundler task instead of hoe for gem release.
 
+=== 11.1.2 / 2016-03-28
+
+Bug fixes:
+
+* Remove `-W` option when Rake::TestTask#verbose enabled. It's misunderstanding
+  specification change with Rake 11. Partly revert #67
+
 === 11.1.1 / 2016-03-14
 
 Bug fixes:
