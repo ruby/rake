@@ -37,11 +37,9 @@ unless Rake::CpuCounter.method_defined?(:count)
         case RbConfig::CONFIG['host_os']
         when /darwin9/
           count_via_hwprefs_cpu_count
-        when /darwin/
-          count_via_hwprefs_thread_count || count_via_sysctl
         when /linux/
           count_via_cpuinfo
-        when /bsd/
+        when /darwin|bsd/
           count_via_sysctl
         when /mswin|mingw/
           count_via_win32
