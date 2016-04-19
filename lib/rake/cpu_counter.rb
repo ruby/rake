@@ -35,8 +35,6 @@ unless Rake::CpuCounter.method_defined?(:count)
         count_via_java_runtime
       else
         case RbConfig::CONFIG['host_os']
-        when /darwin9/
-          count_via_hwprefs_cpu_count
         when /linux/
           count_via_cpuinfo
         when /darwin|bsd/
@@ -46,10 +44,8 @@ unless Rake::CpuCounter.method_defined?(:count)
         else
           # Try everything
           count_via_win32 ||
-            count_via_sysctl ||
-            count_via_hwprefs_thread_count ||
-            count_via_hwprefs_cpu_count ||
-            count_via_cpuinfo
+          count_via_sysctl ||
+          count_via_cpuinfo
         end
       end
     end
@@ -73,14 +69,6 @@ unless Rake::CpuCounter.method_defined?(:count)
       open('/proc/cpuinfo') { |f| f.readlines }.grep(/processor/).size
     rescue StandardError
       nil
-    end
-
-    def count_via_hwprefs_thread_count
-      run 'hwprefs', 'thread_count'
-    end
-
-    def count_via_hwprefs_cpu_count
-      run 'hwprefs', 'cpu_count'
     end
 
     def count_via_sysctl
