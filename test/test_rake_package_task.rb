@@ -19,6 +19,7 @@ class TestRakePackageTask < Rake::TestCase
       p.need_tar = true
       p.need_tar_gz = true
       p.need_tar_bz2 = true
+      p.need_tar_xz = true
       p.need_zip = true
     }
 
@@ -32,6 +33,7 @@ class TestRakePackageTask < Rake::TestCase
     assert Rake::Task['pkg/pkgr-1.2.3.tgz']
     assert Rake::Task['pkg/pkgr-1.2.3.tar.gz']
     assert Rake::Task['pkg/pkgr-1.2.3.tar.bz2']
+    assert Rake::Task['pkg/pkgr-1.2.3.tar.xz']
     assert Rake::Task['pkg/pkgr-1.2.3.zip']
     assert Rake::Task['pkg/pkgr-1.2.3']
     assert Rake::Task[:clobber_package]
@@ -76,4 +78,3 @@ class TestRakePackageTask < Rake::TestCase
   end
 
 end
-

@@ -63,6 +63,9 @@ module Rake
     # is false).
     attr_accessor :need_tar_bz2
 
+    # True if a xz'd tar file (tar.xz) should be produced (default is false)
+    attr_accessor :need_tar_xz
+
     # True if a zip file should be produced (default is false)
     attr_accessor :need_zip
 
@@ -94,6 +97,7 @@ module Rake
       @need_tar = false
       @need_tar_gz = false
       @need_tar_bz2 = false
+      @need_tar_xz = false
       @need_zip = false
       @tar_command = 'tar'
       @zip_command = 'zip'
@@ -120,7 +124,8 @@ module Rake
       [
         [need_tar, tgz_file, "z"],
         [need_tar_gz, tar_gz_file, "z"],
-        [need_tar_bz2, tar_bz2_file, "j"]
+        [need_tar_bz2, tar_bz2_file, "j"],
+        [need_tar_xz, tar_xz_file, "J"]
       ].each do |(need, file, flag)|
         if need
           task :package => ["#{package_dir}/#{file}"]
@@ -187,6 +192,12 @@ module Rake
 
     def tar_bz2_file
       "#{package_name}.tar.bz2"
+    end
+
+    # The package name with .tar.xz added
+
+    def tar_xz_file
+      "#{package_name}.tar.xz"
     end
 
     # The package name with .zip added
