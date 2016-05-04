@@ -1,10 +1,10 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+$LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
+require 'rake/version'
 
 Gem::Specification.new do |s|
   s.name = "rake".freeze
-  s.version = "11.1.2"
+  s.version = Rake::VERSION
   s.date = "2016-03-27"
   s.authors = ["Hiroshi SHIBATA".freeze, "Eric Hodel".freeze, "Jim Weirich".freeze]
   s.email = ["hsbt@ruby-lang.org".freeze, "drbrain@segment7.net".freeze, "".freeze]
