@@ -22,12 +22,6 @@
 # IN THE SOFTWARE.
 #++
 
-begin
-  require 'rubygems'
-  gem 'rake'
-rescue LoadError
-end
-
 require 'rake'
 
 Rake.application.run
