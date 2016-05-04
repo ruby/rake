@@ -12,7 +12,7 @@ rvm:
   - jruby-9.1.0.0
   - jruby-head
   - rbx-2
-  - rbx-3
+  - rbx
 before_install:
   - gem update bundler --no-document
 before_script:
@@ -22,8 +22,6 @@ matrix:
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
-    - rvm: rbx-2
-    - rvm: rbx-3
 notifications:
   email:
   - drbrain@segment7.net
