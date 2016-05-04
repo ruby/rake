@@ -20,8 +20,9 @@ before_script:
 script: ruby -Ilib exe/rake
 matrix:
   allow_failures:
-    - rvm: ruby-head
     - rvm: jruby-head
+    - rvm: rbx-2
+    - rvm: rbx
 notifications:
   email:
   - drbrain@segment7.net
