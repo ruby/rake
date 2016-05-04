@@ -25,4 +25,5 @@ matrix:
     - rvm: rbx
 notifications:
   email:
+  - hsbt@ruby-lang.org
   - drbrain@segment7.net
