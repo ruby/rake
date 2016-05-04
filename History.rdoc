@@ -5,6 +5,8 @@ Enhancements:
 * Allow to specify dependencies(prerequisites) for Rake::TestTask
   Pull request #117 by Tim Maslyuchenko
 * Use Bundler task instead of hoe for gem release.
+* Remove explicitly load to rubygems for Ruby 1.8.
+* Unify to declare `Rake::VERSION`
 
 === 11.1.2 / 2016-03-28
 
