@@ -6,7 +6,8 @@ Enhancements:
   Pull request #117 by Tim Maslyuchenko
 * Use Bundler task instead of hoe for gem release.
 * Remove explicitly load to rubygems for Ruby 1.8.
-* Unify to declare `Rake::VERSION`
+* Unify to declare `Rake::VERSION`.
+* Support xz format for PackageTask.
 
 === 11.1.2 / 2016-03-28
 
