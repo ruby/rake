@@ -1,4 +1,3 @@
-require 'shellwords'
 require 'optparse'
 
 require 'rake/task_manager'
