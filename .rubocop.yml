@@ -1,15 +1,6 @@
 StringLiterals:
   Enabled: false
 
-MultilineBlocks:
-  Enabled: false
-
-SingleLineBlocks:
-  Enabled: false
-
-NewLambdaLiteral:
-  Enabled: false
-
 SpaceAroundEqualsInParameterDefault:
   Enabled: false
 
