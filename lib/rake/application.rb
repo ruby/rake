@@ -35,6 +35,9 @@ module Rake
     # List of the top level task names (task names from the command line).
     attr_reader :top_level_tasks
 
+    # Override the detected TTY output state (mostly for testing)
+    attr_writer :tty_output
+
     DEFAULT_RAKEFILES = [
       'rakefile',
       'Rakefile',
@@ -267,11 +270,6 @@ module Rake
     # True if we are outputting to TTY, false otherwise
     def tty_output? # :nodoc:
       @tty_output
-    end
-
-    # Override the detected TTY output state (mostly for testing)
-    def tty_output=(tty_output_state) # :nodoc:
-      @tty_output = tty_output_state
     end
 
     # We will truncate output if we are outputting to a TTY or if we've been
