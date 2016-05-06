@@ -19,4 +19,3 @@ argv = ARGV.select do |argument|
 end
 
 ARGV.replace argv
-
