@@ -72,7 +72,7 @@ class TestRakeApplicationOptions < Rake::TestCase
 
   def test_execute
     $xyzzy = 0
-    flags('--execute=$xyzzy=1', '-e $xyzzy=1') do |opts|
+    flags('--execute=$xyzzy=1', '-e $xyzzy=1') do
       assert_equal 1, $xyzzy
       assert_equal :exit, @exit
       $xyzzy = 0
@@ -81,7 +81,7 @@ class TestRakeApplicationOptions < Rake::TestCase
 
   def test_execute_and_continue
     $xyzzy = 0
-    flags('--execute-continue=$xyzzy=1', '-E $xyzzy=1') do |opts|
+    flags('--execute-continue=$xyzzy=1', '-E $xyzzy=1') do
       assert_equal 1, $xyzzy
       refute_equal :exit, @exit
       $xyzzy = 0
@@ -91,7 +91,7 @@ class TestRakeApplicationOptions < Rake::TestCase
   def test_execute_and_print
     $xyzzy = 0
     out, = capture_io do
-      flags('--execute-print=$xyzzy="pugh"', '-p $xyzzy="pugh"') do |opts|
+      flags('--execute-print=$xyzzy="pugh"', '-p $xyzzy="pugh"') do
         assert_equal 'pugh', $xyzzy
         assert_equal :exit, @exit
         $xyzzy = 0
@@ -134,7 +134,7 @@ class TestRakeApplicationOptions < Rake::TestCase
   end
 
   def test_libdir
-    flags(['--libdir', 'xx'], ['-I', 'xx'], ['-Ixx']) do |opts|
+    flags(['--libdir', 'xx'], ['-I', 'xx'], ['-Ixx']) do
       $:.include?('xx')
     end
   ensure
@@ -148,7 +148,7 @@ class TestRakeApplicationOptions < Rake::TestCase
   end
 
   def test_rakefile
-    flags(['--rakefile', 'RF'], ['--rakefile=RF'], ['-f', 'RF'], ['-fRF']) do |opts|
+    flags(['--rakefile', 'RF'], ['--rakefile=RF'], ['-f', 'RF'], ['-fRF']) do
       assert_equal ['RF'], @app.instance_eval { @rakefiles }
     end
   end
