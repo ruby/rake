@@ -352,10 +352,22 @@ class TestRakeTask < Rake::TestCase
     assert_equal "A Comment", t.comment
   end
 
-  def test_comments_with_sentences
+  def test_comments_with_sentences_period
     desc "Comment 1. Comment 2."
     t = task(:t, :name, :rev)
     assert_equal "Comment 1", t.comment
+  end
+
+  def test_comments_with_sentences_exclamation_mark
+    desc "An exclamation mark! Comment."
+    t = task(:t, :name, :rev)
+    assert_equal "An exclamation mark", t.comment
+  end
+
+  def test_comments_with_many_periods
+    desc "This is a test...I think ... testing. Comment."
+    t = task(:t, :name, :rev)
+    assert_equal "This is a test...I think ... testing", t.comment
   end
 
   def test_comments_with_tabbed_sentences
