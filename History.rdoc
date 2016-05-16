@@ -1,5 +1,10 @@
 === 11.2.0(dev) / 2016-
 
+Bug fixes:
+
+* Fix unexpected cut-out behavior on task description using triple dots
+  and exclamation. Report #106 from Stephan Kämper and Pull request #134 by Lee
+
 Enhancements:
 
 * Allow to specify dependencies(prerequisites) for Rake::TestTask
