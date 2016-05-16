@@ -17,7 +17,8 @@ module Rake
       @hash = {}
       @values = values
       names.each_with_index { |name, i|
-        @hash[name.to_sym] = values[i] unless values[i].nil?
+        next if values[i].nil? || values[i] == ''
+        @hash[name.to_sym] = values[i]
       }
     end
 
