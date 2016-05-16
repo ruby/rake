@@ -21,7 +21,6 @@ script: ruby -Ilib exe/rake
 matrix:
   allow_failures:
     - rvm: jruby-head
-    - rvm: rbx-2
     - rvm: rbx
 notifications:
   email:
