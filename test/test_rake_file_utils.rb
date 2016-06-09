@@ -165,6 +165,8 @@ class TestRakeFileUtils < Rake::TestCase
   end
 
   def test_sh_with_spawn_options
+    skip 'JRuby does not support spawn options' if jruby?
+
     echocommand
 
     r, w = IO.pipe
@@ -213,6 +215,10 @@ class TestRakeFileUtils < Rake::TestCase
   end
 
   def test_sh_bad_option
+    # Skip on JRuby because option checking is performed by spawn via system
+    # now.
+    skip 'JRuby does not support spawn options' if jruby?
+
     shellcommand
 
     ex = assert_raises(ArgumentError) {
