@@ -141,6 +141,18 @@ class TestRakeFileUtils < Rake::TestCase
     }
   end
 
+  def test_sh_with_env
+    check_environment
+
+    env = {
+      'RAKE_TEST_SH' => 'someval'
+    }
+
+    verbose(false) {
+      sh env, RUBY, 'check_environment.rb', 'RAKE_TEST_SH', 'someval'
+    }
+  end
+
   def test_sh_with_multiple_arguments
     skip if jruby9? # https://github.com/jruby/jruby/issues/3653
 
@@ -241,6 +253,20 @@ class TestRakeFileUtils < Rake::TestCase
     }
   end
 
+  def test_sh_show_command
+    env = {
+      'RAKE_TEST_SH' => 'someval'
+    }
+
+    cmd = [env, RUBY, 'some_file.rb', 'some argument']
+
+    show_cmd = send :sh_show_command, cmd
+
+    expected_cmd = "RAKE_TEST_SH=someval #{RUBY} some_file.rb some argument"
+
+    assert_equal expected_cmd, show_cmd
+  end
+
   def test_ruby_with_multiple_arguments
     skip if jruby9? # https://github.com/jruby/jruby/issues/3653
 
@@ -277,6 +303,16 @@ else
   exit 1
 end
     CHECK_EXPANSION
+  end
+
+  def check_environment
+    command 'check_environment.rb', <<-CHECK_ENVIRONMENT
+if ENV[ARGV[0]] != ARGV[1]
+  exit 1
+else
+  exit 0
+end
+    CHECK_ENVIRONMENT
   end
 
   def check_expansion
