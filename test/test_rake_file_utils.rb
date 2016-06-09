@@ -164,6 +164,20 @@ class TestRakeFileUtils < Rake::TestCase
     }
   end
 
+  def test_sh_with_spawn_options
+    echocommand
+
+    r, w = IO.pipe
+
+    verbose(false) {
+      sh RUBY, 'echocommand.rb', out: w
+    }
+
+    w.close
+
+    assert_equal "echocommand.rb\n", r.read
+  end
+
   def test_sh_failure
     shellcommand
 
@@ -323,6 +337,16 @@ else
   exit 0
 end
     CHECK_EXPANSION
+  end
+
+  def echocommand
+    command 'echocommand.rb', <<-ECHOCOMMAND
+#!/usr/bin/env ruby
+
+puts "echocommand.rb"
+
+exit 0
+    ECHOCOMMAND
   end
 
   def replace_ruby

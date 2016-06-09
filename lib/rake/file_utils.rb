@@ -45,13 +45,15 @@ module FileUtils
   def sh(*cmd, &block)
     options = (Hash === cmd.last) ? cmd.pop : {}
     shell_runner = block_given? ? block : create_shell_runner(cmd)
-    set_verbose_option(options)
-    options[:noop] ||= Rake::FileUtilsExt.nowrite_flag
-    Rake.rake_check_options options, :noop, :verbose
-    Rake.rake_output_message sh_show_command cmd if options[:verbose]
 
-    unless options[:noop]
-      res = system(*cmd)
+    set_verbose_option(options)
+    verbose = options.delete :verbose
+    noop    = options.delete(:noop) || Rake::FileUtilsExt.nowrite_flag
+
+    Rake.rake_output_message sh_show_command cmd if verbose
+
+    unless noop
+      res = system(*cmd, options)
       status = $?
       status = Rake::PseudoStatus.new(1) if !res && status.nil?
       shell_runner.call(res, status)
