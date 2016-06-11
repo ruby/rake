@@ -19,6 +19,11 @@ class TestRakeTaskArguments < Rake::TestCase
     assert_equal({:a => :one, :b => :two, :c => :three}, ta.to_hash)
   end
 
+  def test_blank_values_in_args
+    ta = Rake::TaskArguments.new([:a, :b, :c], ['', :two, ''])
+    assert_equal({:b => :two}, ta.to_hash)
+  end
+
   def test_has_key
     ta = Rake::TaskArguments.new([:a], [:one])
     assert(ta.has_key?(:a))
