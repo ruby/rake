@@ -4,9 +4,12 @@ Bug fixes:
 
 * Fix unexpected cut-out behavior on task description using triple dots
   and exclamation. Report #106 from Stephan Kämper and Pull request #134 by Lee
+* Fix empty argument assignment with `with_defaults` option. Pull request #135
+  by bakunyo
 
 Enhancements:
 
+* Spawn options for sh Pull equest #138 by Eric Hodel.
 * Allow to specify dependencies(prerequisites) for Rake::TestTask
   Pull request #117 by Tim Maslyuchenko
 * Use Bundler task instead of hoe for gem release.
