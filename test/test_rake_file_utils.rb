@@ -141,6 +141,18 @@ class TestRakeFileUtils < Rake::TestCase
     }
   end
 
+  def test_sh_with_env
+    check_environment
+
+    env = {
+      'RAKE_TEST_SH' => 'someval'
+    }
+
+    verbose(false) {
+      sh env, RUBY, 'check_environment.rb', 'RAKE_TEST_SH', 'someval'
+    }
+  end
+
   def test_sh_with_multiple_arguments
     skip if jruby9? # https://github.com/jruby/jruby/issues/3653
 
@@ -150,6 +162,22 @@ class TestRakeFileUtils < Rake::TestCase
     verbose(false) {
       sh RUBY, 'check_no_expansion.rb', env_var, 'someval'
     }
+  end
+
+  def test_sh_with_spawn_options
+    skip 'JRuby does not support spawn options' if jruby?
+
+    echocommand
+
+    r, w = IO.pipe
+
+    verbose(false) {
+      sh RUBY, 'echocommand.rb', out: w
+    }
+
+    w.close
+
+    assert_equal "echocommand.rb\n", r.read
   end
 
   def test_sh_failure
@@ -187,6 +215,10 @@ class TestRakeFileUtils < Rake::TestCase
   end
 
   def test_sh_bad_option
+    # Skip on JRuby because option checking is performed by spawn via system
+    # now.
+    skip 'JRuby does not support spawn options' if jruby?
+
     shellcommand
 
     ex = assert_raises(ArgumentError) {
@@ -241,6 +273,20 @@ class TestRakeFileUtils < Rake::TestCase
     }
   end
 
+  def test_sh_show_command
+    env = {
+      'RAKE_TEST_SH' => 'someval'
+    }
+
+    cmd = [env, RUBY, 'some_file.rb', 'some argument']
+
+    show_cmd = send :sh_show_command, cmd
+
+    expected_cmd = "RAKE_TEST_SH=someval #{RUBY} some_file.rb some argument"
+
+    assert_equal expected_cmd, show_cmd
+  end
+
   def test_ruby_with_multiple_arguments
     skip if jruby9? # https://github.com/jruby/jruby/issues/3653
 
@@ -279,6 +325,16 @@ end
     CHECK_EXPANSION
   end
 
+  def check_environment
+    command 'check_environment.rb', <<-CHECK_ENVIRONMENT
+if ENV[ARGV[0]] != ARGV[1]
+  exit 1
+else
+  exit 0
+end
+    CHECK_ENVIRONMENT
+  end
+
   def check_expansion
     command 'check_expansion.rb', <<-CHECK_EXPANSION
 if ARGV[0] != ARGV[1]
@@ -287,6 +343,16 @@ else
   exit 0
 end
     CHECK_EXPANSION
+  end
+
+  def echocommand
+    command 'echocommand.rb', <<-ECHOCOMMAND
+#!/usr/bin/env ruby
+
+puts "echocommand.rb"
+
+exit 0
+    ECHOCOMMAND
   end
 
   def replace_ruby

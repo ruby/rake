@@ -45,13 +45,15 @@ module FileUtils
   def sh(*cmd, &block)
     options = (Hash === cmd.last) ? cmd.pop : {}
     shell_runner = block_given? ? block : create_shell_runner(cmd)
-    set_verbose_option(options)
-    options[:noop] ||= Rake::FileUtilsExt.nowrite_flag
-    Rake.rake_check_options options, :noop, :verbose
-    Rake.rake_output_message cmd.join(" ") if options[:verbose]
 
-    unless options[:noop]
-      res = system(*cmd)
+    set_verbose_option(options)
+    verbose = options.delete :verbose
+    noop    = options.delete(:noop) || Rake::FileUtilsExt.nowrite_flag
+
+    Rake.rake_output_message sh_show_command cmd if verbose
+
+    unless noop
+      res = system(*cmd, options)
       status = $?
       status = Rake::PseudoStatus.new(1) if !res && status.nil?
       shell_runner.call(res, status)
@@ -59,8 +61,9 @@ module FileUtils
   end
 
   def create_shell_runner(cmd) # :nodoc:
-    show_command = cmd.join(" ")
+    show_command = sh_show_command cmd
     show_command = show_command[0, 42] + "..." unless $trace
+
     lambda do |ok, status|
       ok or
         fail "Command failed with status (#{status.exitstatus}): " +
@@ -68,6 +71,19 @@ module FileUtils
     end
   end
   private :create_shell_runner
+
+  def sh_show_command(cmd) # :nodoc:
+    cmd = cmd.dup
+
+    if Hash === cmd.first
+      env = cmd.first
+      env = env.map { |name, value| "#{name}=#{value}" }.join " "
+      cmd[0] = env
+    end
+
+    cmd.join " "
+  end
+  private :sh_show_command
 
   def set_verbose_option(options) # :nodoc:
     unless options.key? :verbose
