@@ -6,6 +6,7 @@ Bug fixes:
   and exclamation. Report #106 from Stephan Kämper and Pull request #134 by Lee
 * Fix empty argument assignment with `with_defaults` option. Pull request #135
   by bakunyo
+* Ignore to use `hwprefs` on Darwin platform. Use sysctl now. Report #128
 
 Enhancements:
 
