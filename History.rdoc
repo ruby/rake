@@ -1,3 +1,9 @@
+=== 11.2.2 / 2016-06-12
+
+Bug fixes:
+
+* Fix unexpected behavior with multiple dependencies on Rake::TestTask
+
 === 11.2.1 / 2016-06-12
 
 Bug fixes:
