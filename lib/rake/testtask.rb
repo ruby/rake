@@ -94,7 +94,7 @@ module Rake
       @description = "Run tests" + (@name == :test ? "" : " for #{@name}")
       @deps = []
       if @name.is_a?(Hash)
-        @deps = @name.values
+        @deps = @name.values.first
         @name = @name.keys.first
       end
       yield self if block_given?

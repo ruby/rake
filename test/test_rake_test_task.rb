@@ -19,7 +19,14 @@ class TestRakeTestTask < Rake::TestCase
   def test_initialize_deps
     tt = Rake::TestTask.new(:example => :bar)
     refute_nil tt
-    assert_equal [:bar], tt.deps
+    assert_equal :bar, tt.deps
+    assert Task.task_defined?(:example)
+  end
+
+  def test_initialize_multi_deps
+    tt = Rake::TestTask.new(:example => [:foo, :bar])
+    refute_nil tt
+    assert_equal [:foo, :bar], tt.deps
     assert Task.task_defined?(:example)
   end
 
