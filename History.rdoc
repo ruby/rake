@@ -1,3 +1,9 @@
+=== 11.2.1 / 2016-06-12
+
+Bug fixes:
+
+* Fix regression of dependencies handling on Rake::TestTask. Report #139
+
 === 11.2.0 / 2016-06-11
 
 Bug fixes:
