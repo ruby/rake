@@ -128,6 +128,24 @@ class TestRakeTestTask < Rake::TestCase
 
   def test_task_prerequisites
     Rake::TestTask.new :parent
+    Rake::TestTask.new :child => :parent
+
+    task = Rake::Task[:child]
+    assert_includes task.prerequisites, 'parent'
+  end
+
+  def test_task_prerequisites_multi
+    Rake::TestTask.new :parent
+    Rake::TestTask.new :parent2
+    Rake::TestTask.new :child => [:parent, :parent2]
+
+    task = Rake::Task[:child]
+    assert_includes task.prerequisites, 'parent'
+    assert_includes task.prerequisites, 'parent2'
+  end
+
+  def test_task_prerequisites_deps
+    Rake::TestTask.new :parent
 
     Rake::TestTask.new :child do |t|
       t.deps = :parent
