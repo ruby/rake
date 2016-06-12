@@ -16,8 +16,15 @@ class TestRakeTestTask < Rake::TestCase
     assert Task.task_defined?(:test)
   end
 
+  def test_initialize_deps
+    tt = Rake::TestTask.new(:example => :bar)
+    refute_nil tt
+    assert_equal [:bar], tt.deps
+    assert Task.task_defined?(:example)
+  end
+
   def test_initialize_override
-    tt = Rake::TestTask.new(:example) do |t|
+    tt = Rake::TestTask.new(:example => :bar) do |t|
       t.description = "Run example tests"
       t.libs = ['src', 'ext']
       t.pattern = 'test/tc_*.rb'

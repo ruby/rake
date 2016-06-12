@@ -93,6 +93,10 @@ module Rake
       @ruby_opts = []
       @description = "Run tests" + (@name == :test ? "" : " for #{@name}")
       @deps = []
+      if @name.is_a?(Hash)
+        @deps = @name.values
+        @name = @name.keys.first
+      end
       yield self if block_given?
       @pattern = 'test/test*.rb' if @pattern.nil? && @test_files.nil?
       define
