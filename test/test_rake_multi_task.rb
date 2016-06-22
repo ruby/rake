@@ -61,4 +61,25 @@ class TestRakeMultiTask < Rake::TestCase
     assert @runs[0] == "b"
     assert @runs[1] == "bmt"
   end
+
+  def test_cross_thread_prerequisite_failures
+    failed = false
+
+    multitask :fail_once do
+      fail_now = !failed
+      failed = true
+      raise 'failing once' if fail_now
+    end
+
+    task a: :fail_once
+    task b: :fail_once
+
+    assert_raises RuntimeError do
+      Rake::Task[:a].invoke
+    end
+
+    assert_raises RuntimeError do
+      Rake::Task[:b].invoke
+    end
+  end
 end
