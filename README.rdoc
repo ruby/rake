@@ -2,7 +2,7 @@
 
 home :: https://github.com/ruby/rake
 bugs :: https://github.com/ruby/rake/issues
-docs :: http://docs.seattlerb.org/rake/
+docs :: http://docs.seattlerb.org/rake
 build status :: {<img src="https://travis-ci.org/ruby/rake.svg?branch=master" alt="travis-ci">}[https://travis-ci.org/ruby/rake] {<img src="https://ci.appveyor.com/api/projects/status/github/ruby/rake?branch=master&svg=true" alt="appveyor">}[https://ci.appveyor.com/project/ruby/rake]
 
 == Description
