@@ -18,11 +18,6 @@ before_install:
 before_script:
   - unset JRUBY_OPTS
 script: ruby -Ilib exe/rake
-matrix:
-  allow_failures:
-    - rvm: jruby-head
-    - rvm: rbx
-    - rvm: rbx-2
 notifications:
   email:
   - hsbt@ruby-lang.org
