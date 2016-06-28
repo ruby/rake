@@ -115,5 +115,9 @@ end
     jruby? && (JRUBY_VERSION >= '9.0.0.0')
   end
 
+  def rbx?
+    RUBY_ENGINE == 'rbx'
+  end
+
   include RakefileDefinitions
 end
