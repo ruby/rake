@@ -101,7 +101,6 @@ other projects with similar (and not so similar) goals.
 * http://directory.fsf.org/wiki/Bras -- Bras, one of earliest
   implementations of "make in a scripting language".
 * http://www.a-a-p.org -- Make in Python
-* http://www.aromatic.com/tools/jam.txt -- JAM, Java Automated Make
 * http://ant.apache.org -- The Ant project
 * http://search.cpan.org/search?query=PerlBuildSystem -- The Perl Build System
 * http://www.rubydoc.info/gems/rant/0.5.7/frames -- Rant, another Ruby make tool.
