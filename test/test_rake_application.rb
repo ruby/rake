@@ -351,9 +351,9 @@ class TestRakeApplication < Rake::TestCase
     assert_equal 42, app.terminal_columns
   ensure
     if old_rake_columns
-      ENV['RAKE_COLUMNS'].delete
-    else
       ENV['RAKE_COLUMNS'] = old_rake_columns
+    else
+      ENV.delete 'RAKE_COLUMNS'
     end
   end
 
