@@ -382,7 +382,6 @@ module Rake
       # this kind of task.  Generic tasks will accept the scope as
       # part of the name.
       def scope_name(scope, task_name)
-#        (scope + [task_name]).join(':')
         scope.path_with_task_name(task_name)
       end
 
