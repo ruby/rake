@@ -49,6 +49,16 @@ end
     RAKEFILE
   end
 
+  def rakefile_test_task_verbose
+    rakefile <<-RAKEFILE
+    require "rake/testtask"
+
+    Rake::TestTask.new(:unit) do |t|
+      t.verbose = true
+    end
+    RAKEFILE
+  end
+
   def rakefile_chains
     rakefile <<-DEFAULT
 task :default => "play.app"
