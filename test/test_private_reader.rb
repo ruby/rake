@@ -24,7 +24,6 @@ class TestPrivateAttrs < Rake::TestCase
   end
 
   def test_private_reader_is_private
-    skip if rbx?
     assert_private do @sample.reader end
     assert_private do @sample.a end
   end

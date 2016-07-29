@@ -11,8 +11,6 @@ rvm:
   - jruby-9.0.5.0
   - jruby-9.1.0.0
   - jruby-head
-  - rbx-2
-  - rbx
 before_install:
   - gem install bundler --no-document
 before_script:
