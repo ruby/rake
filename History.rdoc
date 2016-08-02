@@ -3,6 +3,7 @@
 Compatibility Changes:
 
 * Removed `rake/contrib` packages. These are extracted to `rake-contrib` gem.
+* Removed to deprecated warnings for `last\_comment`.
 
 === 11.2.2 / 2016-06-12
 
