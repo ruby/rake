@@ -5,19 +5,6 @@ module Rake
     # Track the last comment made in the Rakefile.
     attr_accessor :last_description
 
-    # Remove Rake 12
-    def last_comment # :nodoc:
-      warn "[DEPRECATION] `last_comment` is deprecated.  Please use `last_description` instead."
-      @last_description
-    end
-
-    # Remove Rake 12
-    def last_comment=(comment) # :nodoc:
-      warn "[DEPRECATION] `last_comment=` is deprecated.  Please use `last_description=` instead."
-      @last_description = comment
-      @last_description # ignore warning
-    end
-
     def initialize # :nodoc:
       super
       @tasks = Hash.new
