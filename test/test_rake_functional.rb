@@ -384,6 +384,20 @@ class TestRakeFunctional < Rake::TestCase
     assert_match(/custom test task description/, @out)
   end
 
+  def test_test_task_when_verbose_unless_verbose_passed_not_prompt_testopts
+    rakefile_test_task_verbose
+    rake 'unit'
+    exp = /TESTOPTS="--verbose" to pass --verbose/
+    refute_match exp, @out
+  end
+
+  def test_test_task_when_verbose_passed_prompts_testopts
+    rakefile_test_task
+    rake '--verbose', 'unit'
+    exp = /TESTOPTS="--verbose" to pass --verbose/
+    assert_match exp, @out
+  end
+
   def test_comment_before_task_acts_like_desc
     rakefile_comments
 
