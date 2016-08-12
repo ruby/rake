@@ -126,7 +126,7 @@ module Rake
         [need_tar_gz, tar_gz_file, "z"],
         [need_tar_bz2, tar_bz2_file, "j"],
         [need_tar_xz, tar_xz_file, "J"]
-      ].each do |(need, file, flag)|
+      ].each do |need, file, flag|
         if need
           task :package => ["#{package_dir}/#{file}"]
           file "#{package_dir}/#{file}" =>
