@@ -174,7 +174,7 @@ class TestRakeTask < Rake::TestCase
   def test_task_list
     task :t2
     task :t1 => [:t2]
-    assert_equal ["t1", "t2"], Task.tasks.map { |t| t.name }
+    assert_equal ["t1", "t2"], Task.tasks.map(&:name)
   end
 
   def test_task_gives_name_on_to_s
@@ -325,7 +325,7 @@ class TestRakeTask < Rake::TestCase
     # task should always run in order
     assert_equal ['a', 'b', 'c'], result
 
-    [t_a, t_b, t_c].each { |t| t.reenable }
+    [t_a, t_b, t_c].each(&:reenable)
     result.clear
 
     Rake.application.options.always_multitask = true

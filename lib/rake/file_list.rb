@@ -40,8 +40,7 @@ module Rake
 
     # List of array methods (that are not in +Object+) that need to be
     # delegated.
-    ARRAY_METHODS = (Array.instance_methods - Object.instance_methods).
-      map { |n| n.to_s }
+    ARRAY_METHODS = (Array.instance_methods - Object.instance_methods).map(&:to_s)
 
     # List of additional methods that must be delegated.
     MUST_DEFINE = %w[inspect <=>]
@@ -58,8 +57,7 @@ module Rake
       + - & |
     ]
 
-    DELEGATING_METHODS = (ARRAY_METHODS + MUST_DEFINE - MUST_NOT_DEFINE).
-      map { |s| s.to_s }.sort.uniq
+    DELEGATING_METHODS = (ARRAY_METHODS + MUST_DEFINE - MUST_NOT_DEFINE).map(&:to_s).sort.uniq
 
     # Now do the delegation.
     DELEGATING_METHODS.each do |sym|

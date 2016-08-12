@@ -37,8 +37,8 @@ class TestRakeNameSpace < Rake::TestCase
     end
 
     assert_equal ["n:nn:z", "n:x", "n:y"],
-      ns.tasks.map { |tsk| tsk.name }
-    assert_equal ["n:nn:z"], nns.tasks.map { |t| t.name }
+      ns.tasks.map(&:name)
+    assert_equal ["n:nn:z"], nns.tasks.map(&:name)
   end
 
   def test_scope

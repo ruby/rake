@@ -219,7 +219,7 @@ module Rake
           r.invoke_with_call_chain(prereq_args, invocation_chain)
         end
       end
-      futures.each { |f| f.value }
+      futures.each(&:value)
     end
 
     # Format the trace flags for display.
@@ -314,7 +314,7 @@ module Rake
     # Set the names of the arguments for this task. +args+ should be
     # an array of symbols, one for each argument name.
     def set_arg_names(args)
-      @arg_names = args.map { |a| a.to_sym }
+      @arg_names = args.map(&:to_sym)
     end
 
     # Return a string describing the internal state of a task.  Useful for
@@ -331,7 +331,7 @@ module Rake
       prereqs.each do |p|
         result << "--#{p.name} (#{p.timestamp})\n"
       end
-      latest_prereq = prerequisite_tasks.map { |pre| pre.timestamp }.max
+      latest_prereq = prerequisite_tasks.map(&:timestamp).max
       result <<  "latest-prerequisite time: #{latest_prereq}\n"
       result << "................................\n\n"
       return result

@@ -3,7 +3,7 @@ module Rake
 
     # Path for the scope.
     def path
-      map { |item| item.to_s }.reverse.join(":")
+      map(&:to_s).reverse.join(":")
     end
 
     # Path for the scope + the named path.

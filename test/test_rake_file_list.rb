@@ -548,11 +548,11 @@ class TestRakeFileList < Rake::TestCase
 
   def test_enumeration_methods
     a = FileList['a', 'b']
-    b = a.map { |it| it.upcase }
+    b = a.map(&:upcase)
     assert_equal ['A', 'B'], b
     assert_equal FileList,  b.class
 
-    b = a.map { |it| it.upcase }
+    b = a.map(&:upcase)
     assert_equal ['A', 'B'], b
     assert_equal FileList,  b.class
 

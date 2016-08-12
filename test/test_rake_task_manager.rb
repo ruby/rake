@@ -37,7 +37,7 @@ class TestRakeTaskManager < Rake::TestCase
       t = @tm.define_task(Rake::Task, :t)
       assert_equal "x:t", t.name
     end
-    assert_equal ["x:t"], @tm.tasks.map { |t| t.name }
+    assert_equal ["x:t"], @tm.tasks.map(&:name)
   end
 
   def test_define_namespaced_task
@@ -72,7 +72,7 @@ class TestRakeTaskManager < Rake::TestCase
       assert_equal "fn", t.name
     end
 
-    assert_equal ["fn"], @tm.tasks.map { |t| t.name }
+    assert_equal ["fn"], @tm.tasks.map(&:name)
   end
 
   def test_namespace_yields_same_namespace_as_returned
