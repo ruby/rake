@@ -5,7 +5,7 @@ module Rake
       [ File.join(File.dirname(__FILE__), "..") ]
 
     SUPPRESSED_PATHS = SYS_PATHS.
-      map { |s| s.gsub("\\", "/") }.
+      map { |s| s.tr("\\", "/") }.
       map { |f| File.expand_path(f) }.
       reject { |s| s.nil? || s =~ /^ *$/ }
     SUPPRESSED_PATHS_RE = SUPPRESSED_PATHS.map { |f| Regexp.quote(f) }.join("|")

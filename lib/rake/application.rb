@@ -695,7 +695,7 @@ module Rake
     end
 
     def glob(path, &block) # :nodoc:
-      FileList.glob(path.gsub("\\", '/')).each(&block)
+      FileList.glob(path.tr("\\", '/')).each(&block)
     end
     private :glob
 
