@@ -100,6 +100,18 @@ end
     COMMENTS
   end
 
+  def rakefile_override
+    rakefile <<-OVERRIDE
+    task :t1 do
+      puts :foo
+    end
+
+    task :t1 do
+      puts :bar
+    end
+    OVERRIDE
+  end
+
   def rakefile_default
     rakefile <<-DEFAULT
 if ENV['TESTTOPSCOPE']

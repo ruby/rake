@@ -49,6 +49,14 @@ class TestRakeFunctional < Rake::TestCase
     assert_match(/^TASKSCOPE$/, @out)
   end
 
+  def test_task_override
+    rakefile_override
+
+    rake 't1'
+
+    assert_match(/foo\nbar\n/, @out)
+  end
+
   def test_multi_desc
     ENV['RAKE_COLUMNS'] = '80'
     rakefile_multidesc
