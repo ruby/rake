@@ -24,9 +24,9 @@ Rake has the following features:
   file names and paths.
 
 * A library of prepackaged tasks to make building rakefiles easier. For example,
-  tasks for building tarballs and publishing to FTP or SSH sites.  (Formerly
-  tasks for building RDoc and Gems were included in rake but they're now
-  available in RDoc and RubyGems respectively.)
+  tasks for building tarballs. (Formerly
+  tasks for building RDoc, Gems and publishing to FTP were included in rake but they're now
+  available in RDoc, RubyGems and  respectively.)
 
 * Supports parallel execution of tasks.
 
