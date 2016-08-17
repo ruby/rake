@@ -28,7 +28,7 @@ class TestRakeMultiTask < Rake::TestCase
   def test_running_multitasks
     task :a do 3.times do |i| add_run("A#{i}"); sleep 0.01; end end
     task :b do 3.times do |i| add_run("B#{i}"); sleep 0.01;  end end
-    multitask :both => [:a, :b]
+    multitask both: [:a, :b]
     Task[:both].invoke
     assert_equal 6, @runs.size
     assert @runs.index("A0") < @runs.index("A1")
@@ -39,9 +39,9 @@ class TestRakeMultiTask < Rake::TestCase
 
   def test_all_multitasks_wait_on_slow_prerequisites
     task :slow do 3.times do |i| add_run("S#{i}"); sleep 0.05 end end
-    task :a => [:slow] do 3.times do |i| add_run("A#{i}"); sleep 0.01 end end
-    task :b => [:slow] do 3.times do |i| add_run("B#{i}"); sleep 0.01 end end
-    multitask :both => [:a, :b]
+    task a: [:slow] do 3.times do |i| add_run("A#{i}"); sleep 0.01 end end
+    task b: [:slow] do 3.times do |i| add_run("B#{i}"); sleep 0.01 end end
+    multitask both: [:a, :b]
     Task[:both].invoke
     assert_equal 9, @runs.size
     assert @runs.index("S0") < @runs.index("S1")

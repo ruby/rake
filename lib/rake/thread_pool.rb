@@ -34,7 +34,7 @@ module Rake
       promise.recorder = lambda { |*stats| stat(*stats) }
 
       @queue.enq promise
-      stat :queued, :item_id => promise.object_id
+      stat :queued, item_id: promise.object_id
       start_thread
       promise
     end
@@ -82,8 +82,8 @@ module Rake
     # Return a hash of always collected statistics for the thread pool.
     def statistics              #  :nodoc:
       {
-        :total_threads_in_play => @total_threads_in_play,
-        :max_active_threads => @max_active_threads,
+        total_threads_in_play: @total_threads_in_play,
+        max_active_threads: @max_active_threads,
       }
     end
 
@@ -99,7 +99,7 @@ module Rake
       # is now gone. For this reason we pass true to Queue#deq
       # because we will sleep indefinitely if it is empty.
       promise = @queue.deq(true)
-      stat :dequeued, :item_id => promise.object_id
+      stat :dequeued, item_id: promise.object_id
       promise.work
       return true
 
@@ -125,7 +125,7 @@ module Rake
           ensure
             @threads_mon.synchronize do
               @threads.delete Thread.current
-              stat :ended, :thread_count => @threads.count
+              stat :ended, thread_count: @threads.count
               @join_cond.broadcast if @threads.empty?
             end
           end
@@ -134,8 +134,8 @@ module Rake
         @threads << t
         stat(
           :spawned,
-          :new_thread   => t.object_id,
-          :thread_count => @threads.count)
+          new_thread: t.object_id,
+          thread_count: @threads.count)
         @total_threads_in_play = @threads.count if
           @threads.count > @total_threads_in_play
       end
@@ -144,10 +144,10 @@ module Rake
     def stat(event, data=nil) # :nodoc:
       return if @history_start_time.nil?
       info = {
-        :event  => event,
-        :data   => data,
-        :time   => Time.now,
-        :thread => Thread.current.object_id,
+        event: event,
+        data: data,
+        time: Time.now,
+        thread: Thread.current.object_id,
       }
       @history_mon.synchronize { @history << info }
     end

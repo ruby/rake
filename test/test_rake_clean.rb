@@ -15,7 +15,7 @@ class TestRakeClean < Rake::TestCase
     file_name = create_undeletable_file
 
     out, _ = capture_io do
-      Rake::Cleaner.cleanup(file_name, :verbose => false)
+      Rake::Cleaner.cleanup(file_name, verbose: false)
     end
     assert_match(/failed to remove/i, out)
 
@@ -27,7 +27,7 @@ class TestRakeClean < Rake::TestCase
     file_name = File.join(@tempdir, "missing_directory", "no_such_file")
 
     out, _ = capture_io do
-      Rake::Cleaner.cleanup(file_name, :verbose => false)
+      Rake::Cleaner.cleanup(file_name, verbose: false)
     end
     refute_match(/failed to remove/i, out)
   end
@@ -55,7 +55,7 @@ class TestRakeClean < Rake::TestCase
     file_name = File.join(dir_name, "deleteme")
     FileUtils.chmod(0777, dir_name)
     FileUtils.chmod(0777, file_name)
-    Rake::Cleaner.cleanup(file_name, :verbose => false)
-    Rake::Cleaner.cleanup(dir_name, :verbose => false)
+    Rake::Cleaner.cleanup(file_name, verbose: false)
+    Rake::Cleaner.cleanup(dir_name, verbose: false)
   end
 end

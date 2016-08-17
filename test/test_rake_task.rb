@@ -33,13 +33,13 @@ class TestRakeTask < Rake::TestCase
   end
 
   def test_inspect
-    t = task(:foo => [:bar, :baz])
+    t = task(foo: [:bar, :baz])
     assert_equal "<Rake::Task foo => [bar, baz]>", t.inspect
   end
 
   def test_invoke
     runlist = []
-    t1 = task(:t1 => [:t2, :t3]) { |t| runlist << t.name; 3321 }
+    t1 = task(t1: [:t2, :t3]) { |t| runlist << t.name; 3321 }
     task(:t2) { |t| runlist << t.name }
     task(:t3) { |t| runlist << t.name }
     assert_equal ["t2", "t3"], t1.prerequisites
@@ -49,8 +49,8 @@ class TestRakeTask < Rake::TestCase
 
   def test_invoke_with_circular_dependencies
     runlist = []
-    t1 = task(:t1 => [:t2]) { |t| runlist << t.name; 3321 }
-    t2 = task(:t2 => [:t1]) { |t| runlist << t.name }
+    t1 = task(t1: [:t2]) { |t| runlist << t.name; 3321 }
+    t2 = task(t2: [:t1]) { |t| runlist << t.name }
     assert_equal ["t2"], t1.prerequisites
     assert_equal ["t1"], t2.prerequisites
     ex = assert_raises RuntimeError do
@@ -87,8 +87,8 @@ class TestRakeTask < Rake::TestCase
 
   def test_no_double_invoke
     runlist = []
-    t1 = task(:t1 => [:t2, :t3]) { |t| runlist << t.name; 3321 }
-    task(:t2 => [:t3]) { |t| runlist << t.name }
+    t1 = task(t1: [:t2, :t3]) { |t| runlist << t.name; 3321 }
+    task(t2: [:t3]) { |t| runlist << t.name }
     task(:t3) { |t| runlist << t.name }
     t1.invoke
     assert_equal ["t3", "t2", "t1"], runlist
@@ -134,7 +134,7 @@ class TestRakeTask < Rake::TestCase
 
   def test_clear_comments
     desc "the original foo"
-    task :foo => [:x] do
+    task foo: [:x] do
       # Dummy action
     end
 
@@ -164,8 +164,8 @@ class TestRakeTask < Rake::TestCase
   def test_multi_invocations
     runs = []
     p = proc do |t| runs << t.name end
-    task({ :t1 => [:t2, :t3] }, &p)
-    task({ :t2 => [:t3] }, &p)
+    task({ t1: [:t2, :t3] }, &p)
+    task({ t2: [:t3] }, &p)
     task(:t3, &p)
     Task[:t1].invoke
     assert_equal ["t1", "t2", "t3"], runs.sort
@@ -173,7 +173,7 @@ class TestRakeTask < Rake::TestCase
 
   def test_task_list
     task :t2
-    task :t1 => [:t2]
+    task t1: [:t2]
     assert_equal ["t1", "t2"], Task.tasks.map(&:name)
   end
 
@@ -183,34 +183,34 @@ class TestRakeTask < Rake::TestCase
   end
 
   def test_symbols_can_be_prerequisites
-    task :a => :b
+    task a: :b
     assert_equal ["b"], Task[:a].prerequisites
   end
 
   def test_strings_can_be_prerequisites
-    task :a => "b"
+    task a: "b"
     assert_equal ["b"], Task[:a].prerequisites
   end
 
   def test_arrays_can_be_prerequisites
-    task :a => ["b", "c"]
+    task a: ["b", "c"]
     assert_equal ["b", "c"], Task[:a].prerequisites
   end
 
   def test_filelists_can_be_prerequisites
-    task :a => FileList.new.include("b", "c")
+    task a: FileList.new.include("b", "c")
     assert_equal ["b", "c"], Task[:a].prerequisites
   end
 
   def test_prerequisite_tasks_returns_tasks_not_strings
-    a = task :a => ["b", "c"]
+    a = task a: ["b", "c"]
     b = task :b
     c = task :c
     assert_equal [b, c], a.prerequisite_tasks
   end
 
   def test_prerequisite_tasks_fails_if_prerequisites_are_undefined
-    a = task :a => ["b", "c"]
+    a = task a: ["b", "c"]
     task :b
     assert_raises(RuntimeError) do
       a.prerequisite_tasks
@@ -221,7 +221,7 @@ class TestRakeTask < Rake::TestCase
     task :b
     a = b = nil
     namespace "X" do
-      a = task :a => ["b", "c"]
+      a = task a: ["b", "c"]
       b = task :b
     end
     c = task :c
@@ -232,7 +232,7 @@ class TestRakeTask < Rake::TestCase
   def test_prerequisite_tasks_finds_tasks_with_same_name_outside_namespace
     b1 = nil
     namespace "a" do
-      b1 = task :b => "b"
+      b1 = task b: "b"
     end
     b2 = task :b
 
@@ -246,11 +246,11 @@ class TestRakeTask < Rake::TestCase
       a_m = task :m
 
       namespace "b" do
-        a_b_m = task :m => "m"
+        a_b_m = task m: "m"
       end
 
       namespace "c" do
-        a_c_m = task :m => "a:m"
+        a_c_m = task m: "a:m"
       end
     end
 
@@ -259,9 +259,9 @@ class TestRakeTask < Rake::TestCase
   end
 
   def test_all_prerequisite_tasks_includes_all_prerequisites
-    a = task :a => "b"
-    b = task :b => ["c", "d"]
-    c = task :c => "e"
+    a = task a: "b"
+    b = task b: ["c", "d"]
+    c = task c: "e"
     d = task :d
     e = task :e
 
@@ -269,22 +269,22 @@ class TestRakeTask < Rake::TestCase
   end
 
   def test_all_prerequisite_tasks_does_not_include_duplicates
-    a = task :a => ["b", "c"]
-    b = task :b => "c"
+    a = task a: ["b", "c"]
+    b = task b: "c"
     c = task :c
 
     assert_equal [b, c], a.all_prerequisite_tasks.sort_by { |t| t.name }
   end
 
   def test_all_prerequisite_tasks_includes_self_on_cyclic_dependencies
-    a = task :a => "b"
-    b = task :b => "a"
+    a = task a: "b"
+    b = task b: "a"
 
     assert_equal [a, b], a.all_prerequisite_tasks.sort_by { |t| t.name }
   end
 
   def test_timestamp_returns_now_if_all_prereqs_have_no_times
-    a = task :a => ["b", "c"]
+    a = task a: ["b", "c"]
     task :b
     task :c
 
@@ -292,7 +292,7 @@ class TestRakeTask < Rake::TestCase
   end
 
   def test_timestamp_returns_latest_prereq_timestamp
-    a = task :a => ["b", "c"]
+    a = task a: ["b", "c"]
     b = task :b
     c = task :c
 
@@ -316,7 +316,7 @@ class TestRakeTask < Rake::TestCase
       mx.synchronize { result << t.name }
     end
 
-    t_c = task(:c => [:a, :b]) do |t|
+    t_c = task(c: [:a, :b]) do |t|
       mx.synchronize { result << t.name }
     end
 
@@ -336,7 +336,7 @@ class TestRakeTask < Rake::TestCase
   end
 
   def test_investigation_output
-    t1 = task(:t1 => [:t2, :t3]) { |t| runlist << t.name; 3321 }
+    t1 = task(t1: [:t2, :t3]) { |t| runlist << t.name; 3321 }
     task(:t2)
     task(:t3)
     out = t1.investigation
@@ -436,7 +436,7 @@ class TestRakeTask < Rake::TestCase
   end
 
   def test_source_is_first_prerequisite
-    t = task :t => ["preqA", "preqB"]
+    t = task t: ["preqA", "preqB"]
     assert_equal "preqA", t.source
   end
 end

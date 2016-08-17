@@ -76,7 +76,7 @@ class TestRakeFileTask < Rake::TestCase
     create_timed_files(OLDFILE, NEWFILE)
 
     file NEWFILE => [:obj] do |t| @runs << t.name end
-    task :obj => [OLDFILE] do |t| @runs << t.name end
+    task obj: [OLDFILE] do |t| @runs << t.name end
     file OLDFILE           do |t| @runs << t.name end
 
     Task[:obj].invoke
@@ -150,12 +150,12 @@ class TestRakeFileTask < Rake::TestCase
   end
 
   def test_source_is_first_prerequisite
-    t = file :f => ["preqA", "preqB"]
+    t = file f: ["preqA", "preqB"]
     assert_equal "preqA", t.source
   end
 
   def test_sources_is_all_prerequisites
-    t = file :f => ["preqA", "preqB"]
+    t = file f: ["preqA", "preqB"]
     assert_equal ["preqA", "preqB"], t.sources
   end
 
@@ -169,7 +169,7 @@ class TestRakeFileTask < Rake::TestCase
   end
 
   def test_prerequisite_can_be_pathname
-    t = file :f => Pathname.new("preq")
+    t = file f: Pathname.new("preq")
     assert_equal "preq", t.source
   end
 

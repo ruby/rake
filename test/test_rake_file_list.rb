@@ -165,7 +165,7 @@ class TestRakeFileList < Rake::TestCase
 
   def test_exclude
     fl = FileList['x.c', 'abc.c', 'xyz.c', 'existing']
-    fl.each { |fn| touch fn, :verbose => false }
+    fl.each { |fn| touch fn, verbose: false }
 
     x = fl.exclude(%r{^x.+\.})
 
@@ -184,7 +184,7 @@ class TestRakeFileList < Rake::TestCase
 
   def test_exclude_pathname
     fl = FileList['x.c', 'abc.c', 'other']
-    fl.each { |fn| touch fn, :verbose => false }
+    fl.each { |fn| touch fn, verbose: false }
 
     fl.exclude(Pathname.new('*.c'))
 
@@ -677,7 +677,7 @@ class TestRakeFileList < Rake::TestCase
   def test_file_utils_can_use_filelists
     cfiles = FileList['*.c']
 
-    cp cfiles, @cdir, :verbose => false
+    cp cfiles, @cdir, verbose: false
 
     assert File.exist?(File.join(@cdir, 'abc.c'))
     assert File.exist?(File.join(@cdir, 'xyz.c'))

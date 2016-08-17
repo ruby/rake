@@ -168,7 +168,7 @@ class TestRakeTaskManager < Rake::TestCase
     @tm.define_task(Rake::Task, :z) do values << "top z" end
     @tm.in_namespace("a") do
       @tm.define_task(Rake::Task, :z) do values << "next z" end
-      @tm.define_task(Rake::Task, :x => :z)
+      @tm.define_task(Rake::Task, x: :z)
     end
 
     @tm["a:x"].invoke

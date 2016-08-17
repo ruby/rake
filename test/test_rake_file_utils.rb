@@ -41,7 +41,7 @@ class TestRakeFileUtils < Rake::TestCase
   def test_ln
     open("a", "w") { |f| f.puts "TEST_LN" }
 
-    Rake::FileUtilsExt.safe_ln("a", "b", :verbose => false)
+    Rake::FileUtilsExt.safe_ln("a", "b", verbose: false)
 
     assert_equal "TEST_LN\n", File.read('b')
   end
@@ -210,7 +210,7 @@ class TestRakeFileUtils < Rake::TestCase
   def test_sh_noop
     shellcommand
 
-    verbose(false) { sh %{shellcommand.rb 1}, :noop=>true }
+    verbose(false) { sh %{shellcommand.rb 1}, noop: true }
     assert true, "should not fail"
   end
 
@@ -222,7 +222,7 @@ class TestRakeFileUtils < Rake::TestCase
     shellcommand
 
     ex = assert_raises(ArgumentError) {
-      verbose(false) { sh %{shellcommand.rb}, :bad_option=>true }
+      verbose(false) { sh %{shellcommand.rb}, bad_option: true }
     }
     assert_match(/bad_option/, ex.message)
   end
@@ -232,7 +232,7 @@ class TestRakeFileUtils < Rake::TestCase
 
     _, err = capture_io do
       verbose(true) {
-        sh %{shellcommand.rb}, :noop=>true
+        sh %{shellcommand.rb}, noop: true
       }
     end
 
@@ -244,7 +244,7 @@ class TestRakeFileUtils < Rake::TestCase
 
     _, err = capture_io do
       verbose(false) {
-        sh %{shellcommand.rb}, :noop=>true
+        sh %{shellcommand.rb}, noop: true
       }
     end
 
@@ -257,7 +257,7 @@ class TestRakeFileUtils < Rake::TestCase
     RakeFileUtils.verbose_flag = nil
 
     assert_silent do
-      sh %{shellcommand.rb}, :noop=>true
+      sh %{shellcommand.rb}, noop: true
     end
   end
 

@@ -14,9 +14,9 @@ class TestRakeDefinitions < Rake::TestCase
 
   def test_task
     done = false
-    task :one => [:two] do done = true end
+    task one: [:two] do done = true end
     task :two
-    task :three => [:one, :two]
+    task three: [:one, :two]
     check_tasks(:one, :two, :three)
     assert done, "Should be done"
   end
@@ -44,9 +44,9 @@ class TestRakeDefinitions < Rake::TestCase
 
   def test_incremental_definitions
     runs = []
-    task :t1 => [:t2] do runs << "A"; 4321 end
-    task :t1 => [:t3] do runs << "B"; 1234 end
-    task :t1 => [:t3]
+    task t1: [:t2] do runs << "A"; 4321 end
+    task t1: [:t3] do runs << "B"; 1234 end
+    task t1: [:t3]
     task :t2
     task :t3
     Task[:t1].invoke
@@ -55,19 +55,19 @@ class TestRakeDefinitions < Rake::TestCase
   end
 
   def test_missing_dependencies
-    task :x => ["missing"]
+    task x: ["missing"]
     assert_raises(RuntimeError) { Task[:x].invoke }
   end
 
   def test_falsey_dependencies
-    task :x => nil
+    task x: nil
     assert_equal [], Task[:x].prerequisites
   end
 
   def test_implicit_file_dependencies
     runs = []
     create_existing_file
-    task :y => [EXISTINGFILE] do |t| runs << t.name end
+    task y: [EXISTINGFILE] do |t| runs << t.name end
     Task[:y].invoke
     assert_equal runs, ['y']
   end

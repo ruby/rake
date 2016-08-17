@@ -9,8 +9,8 @@ module Rake
 
     def initialize(stats)
       @stats   = stats
-      @items   = { :_seq_ =>  1  }
-      @threads = { :_seq_ => "A" }
+      @items   = { _seq_: 1  }
+      @threads = { _seq_: "A" }
     end
 
     def show

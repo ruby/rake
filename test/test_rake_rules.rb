@@ -269,7 +269,7 @@ class TestRakeRules < Rake::TestCase
     Task['classes/jw/X.class'].invoke
     assert_equal [:RULE], @runs
   ensure
-    rm_r("src", :verbose=>false) rescue nil
+    rm_r("src", verbose: false) rescue nil
   end
 
   def test_proc_returning_lists_are_flattened_into_prereqs
@@ -278,7 +278,7 @@ class TestRakeRules < Rake::TestCase
     create_file("flatten/a.txt")
     task 'flatten/b.data' do |t|
       ran = true
-      touch t.name, :verbose => false
+      touch t.name, verbose: false
     end
     rule '.html' =>
       proc { |fn|
@@ -291,7 +291,7 @@ class TestRakeRules < Rake::TestCase
     Task['flatten/a.html'].invoke
     assert ran, "Should have triggered flattened dependency"
   ensure
-    rm_r("flatten", :verbose=>false) rescue nil
+    rm_r("flatten", verbose: false) rescue nil
   end
 
   def test_recursive_rules_will_work_as_long_as_they_terminate

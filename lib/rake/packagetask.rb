@@ -112,14 +112,14 @@ module Rake
       task :package
 
       desc "Force a rebuild of the package files"
-      task :repackage => [:clobber_package, :package]
+      task repackage: [:clobber_package, :package]
 
       desc "Remove package products"
       task :clobber_package do
         rm_r package_dir rescue nil
       end
 
-      task :clobber => [:clobber_package]
+      task clobber: [:clobber_package]
 
       [
         [need_tar, tgz_file, "z"],
@@ -128,7 +128,7 @@ module Rake
         [need_tar_xz, tar_xz_file, "J"]
       ].each do |need, file, flag|
         if need
-          task :package => ["#{package_dir}/#{file}"]
+          task package: ["#{package_dir}/#{file}"]
           file "#{package_dir}/#{file}" =>
             [package_dir_path] + package_files do
             chdir(package_dir) do
@@ -139,7 +139,7 @@ module Rake
       end
 
       if need_zip
-        task :package => ["#{package_dir}/#{zip_file}"]
+        task package: ["#{package_dir}/#{zip_file}"]
         file "#{package_dir}/#{zip_file}" =>
           [package_dir_path] + package_files do
           chdir(package_dir) do

@@ -17,21 +17,21 @@ class TestRakeTestTask < Rake::TestCase
   end
 
   def test_initialize_deps
-    tt = Rake::TestTask.new(:example => :bar)
+    tt = Rake::TestTask.new(example: :bar)
     refute_nil tt
     assert_equal :bar, tt.deps
     assert Task.task_defined?(:example)
   end
 
   def test_initialize_multi_deps
-    tt = Rake::TestTask.new(:example => [:foo, :bar])
+    tt = Rake::TestTask.new(example: [:foo, :bar])
     refute_nil tt
     assert_equal [:foo, :bar], tt.deps
     assert Task.task_defined?(:example)
   end
 
   def test_initialize_override
-    tt = Rake::TestTask.new(:example => :bar) do |t|
+    tt = Rake::TestTask.new(example: :bar) do |t|
       t.description = "Run example tests"
       t.libs = ['src', 'ext']
       t.pattern = 'test/tc_*.rb'
@@ -128,7 +128,7 @@ class TestRakeTestTask < Rake::TestCase
 
   def test_task_prerequisites
     Rake::TestTask.new :parent
-    Rake::TestTask.new :child => :parent
+    Rake::TestTask.new child: :parent
 
     task = Rake::Task[:child]
     assert_includes task.prerequisites, 'parent'
@@ -137,7 +137,7 @@ class TestRakeTestTask < Rake::TestCase
   def test_task_prerequisites_multi
     Rake::TestTask.new :parent
     Rake::TestTask.new :parent2
-    Rake::TestTask.new :child => [:parent, :parent2]
+    Rake::TestTask.new child: [:parent, :parent2]
 
     task = Rake::Task[:child]
     assert_includes task.prerequisites, 'parent'
