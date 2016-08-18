@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Rake::TestTask - Rake -- Ruby Make</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="TaskLib.html">Rake::TaskLib</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-define">#define</a>
+    
+    <li ><a href="#method-i-test_files-3D">#test_files=</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Rake::TestTask">
+  <h1 id="class-Rake::TestTask" class="class">
+    class Rake::TestTask
+  </h1>
+
+  <section class="description">
+    
+<p>Create a task that runs a set of tests.</p>
+
+<p>Example:</p>
+
+<pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&quot;rake/testtask&quot;</span>
+
+<span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">TestTask</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">t</span>.<span class="ruby-identifier">libs</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;test&quot;</span>
+  <span class="ruby-identifier">t</span>.<span class="ruby-identifier">test_files</span> = <span class="ruby-constant">FileList</span>[<span class="ruby-string">&#39;test/test*.rb&#39;</span>]
+  <span class="ruby-identifier">t</span>.<span class="ruby-identifier">verbose</span> = <span class="ruby-keyword">true</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>If rake is invoked with a “TEST=filename” command line option, then the
+list of test files will be overridden to include only the filename
+specified on the command line.  This provides an easy way to run just one
+test.</p>
+
+<p>If rake is invoked with a “TESTOPTS=options” command line option, then the
+given options are passed to the test process after a &#39;–&#39;.  This
+allows Test::Unit options to be passed to the test suite.</p>
+
+<p>Examples:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-identifier">test</span>                           <span class="ruby-comment"># run tests normally</span>
+<span class="ruby-identifier">rake</span> <span class="ruby-identifier">test</span> <span class="ruby-constant">TEST</span>=<span class="ruby-identifier">just_one_file</span>.<span class="ruby-identifier">rb</span>     <span class="ruby-comment"># run just one test file.</span>
+<span class="ruby-identifier">rake</span> <span class="ruby-identifier">test</span> <span class="ruby-constant">TESTOPTS</span>=<span class="ruby-string">&quot;-v&quot;</span>             <span class="ruby-comment"># run in verbose mode</span>
+<span class="ruby-identifier">rake</span> <span class="ruby-identifier">test</span> <span class="ruby-constant">TESTOPTS</span>=<span class="ruby-string">&quot;--runner=fox&quot;</span>   <span class="ruby-comment"># use the fox test runner</span>
+</pre>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-deps" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">deps</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p><a href="Task.html">Task</a> prerequisites.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-description" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">description</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Description of the test task. (default is &#39;Run tests&#39;)</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-libs" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">libs</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>List of directories added to $LOAD_PATH before running the tests. (default
+is &#39;lib&#39;)</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-loader" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">loader</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Style of test loader to use.  Options are:</p>
+<ul><li>
+<p>:rake – Rake provided test loading script (default).</p>
+</li><li>
+<p>:testrb – Ruby provided test loading script.</p>
+</li><li>
+<p>:direct – Load tests using command line loader.</p>
+</li></ul>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-name" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">name</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Name of test task. (default is :test)</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-options" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">options</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Test options passed to the test suite.  An explicit TESTOPTS=opts on the
+command line will override this. (default is NONE)</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-pattern" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">pattern</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Glob pattern to match test files. (default is &#39;test/test*.rb&#39;)</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-ruby_opts" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">ruby_opts</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Array of command line options to pass to ruby when running test loader.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-verbose" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">verbose</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>True if verbose test output desired. (default is false)</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-warning" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">warning</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Request that the tests be run with the warning flag set. E.g. warning=true
+implies “ruby -w” used to run the tests.</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(name=:test) { |self| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a testing task.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rake/testtask.rb, line 84</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>=<span class="ruby-value">:test</span>)
+  <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
+  <span class="ruby-ivar">@libs</span> = [<span class="ruby-string">&quot;lib&quot;</span>]
+  <span class="ruby-ivar">@pattern</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@options</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@test_files</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@verbose</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@warning</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-ivar">@loader</span> = <span class="ruby-value">:rake</span>
+  <span class="ruby-ivar">@ruby_opts</span> = []
+  <span class="ruby-ivar">@description</span> = <span class="ruby-string">&quot;Run tests&quot;</span> <span class="ruby-operator">+</span> (<span class="ruby-ivar">@name</span> <span class="ruby-operator">==</span> <span class="ruby-value">:test</span> <span class="ruby-operator">?</span> <span class="ruby-string">&quot;&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-node">&quot; for #{@name}&quot;</span>)
+  <span class="ruby-ivar">@deps</span> = []
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@name</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)
+    <span class="ruby-ivar">@deps</span> = <span class="ruby-ivar">@name</span>.<span class="ruby-identifier">values</span>.<span class="ruby-identifier">first</span>
+    <span class="ruby-ivar">@name</span> = <span class="ruby-ivar">@name</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">first</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">yield</span> <span class="ruby-keyword">self</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
+  <span class="ruby-ivar">@pattern</span> = <span class="ruby-string">&#39;test/test*.rb&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@pattern</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@test_files</span>.<span class="ruby-identifier">nil?</span>
+  <span class="ruby-identifier">define</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-define" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">define</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create the tasks defined by this task lib.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="define-source">
+            <pre><span class="ruby-comment"># File lib/rake/testtask.rb, line 106</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">define</span>
+  <span class="ruby-identifier">desc</span> <span class="ruby-ivar">@description</span>
+  <span class="ruby-identifier">task</span> <span class="ruby-ivar">@name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Array</span>(<span class="ruby-identifier">deps</span>) <span class="ruby-keyword">do</span>
+    <span class="ruby-constant">FileUtilsExt</span>.<span class="ruby-identifier">verbose</span>(<span class="ruby-ivar">@verbose</span>) <span class="ruby-keyword">do</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;Use TESTOPTS=\&quot;--verbose\&quot; to pass --verbose&quot;</span>              <span class="ruby-string">&quot;, etc. to runners.&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">ARGV</span>.<span class="ruby-identifier">include?</span> <span class="ruby-string">&#39;--verbose&#39;</span>
+      <span class="ruby-identifier">args</span> =
+        <span class="ruby-node">&quot;#{ruby_opts_string} #{run_code} &quot;</span> <span class="ruby-operator">+</span>
+        <span class="ruby-node">&quot;#{file_list_string} #{option_list}&quot;</span>
+      <span class="ruby-identifier">ruby</span> <span class="ruby-identifier">args</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ok</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">|</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">ok</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">status</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:signaled?</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">status</span>.<span class="ruby-identifier">signaled?</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-constant">SignalException</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">status</span>.<span class="ruby-identifier">termsig</span>)
+        <span class="ruby-keyword">elsif</span> <span class="ruby-operator">!</span><span class="ruby-identifier">ok</span>
+          <span class="ruby-identifier">fail</span> <span class="ruby-node">&quot;Command failed with status (#{status.exitstatus}): &quot;</span> <span class="ruby-operator">+</span>
+            <span class="ruby-node">&quot;[ruby #{args}]&quot;</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_files-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_files=</span><span
+            class="method-args">(list)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Explicitly define the list of test files to be included in a test. 
+<code>list</code> is expected to be an array of file names (a <a
+href="FileList.html">FileList</a> is acceptable).  If both
+<code>pattern</code> and <code>test_files</code> are used, then the list of
+test files is the union of the two.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_files-3D-source">
+            <pre><span class="ruby-comment"># File lib/rake/testtask.rb, line 79</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_files=</span>(<span class="ruby-identifier">list</span>)
+  <span class="ruby-ivar">@test_files</span> = <span class="ruby-identifier">list</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

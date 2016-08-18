@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module FileUtils - Rake -- Ruby Make</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-ruby">#ruby</a>
+    
+    <li ><a href="#method-i-safe_ln">#safe_ln</a>
+    
+    <li ><a href="#method-i-sh">#sh</a>
+    
+    <li ><a href="#method-i-split_all">#split_all</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-FileUtils">
+  <h1 id="module-FileUtils" class="module">
+    module FileUtils
+  </h1>
+
+  <section class="description">
+    
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="LN_SUPPORTED">LN_SUPPORTED
+        
+        <dd>
+        
+      
+        <dt id="RUBY">RUBY
+        
+        <dd><p>Path to the currently running Ruby program</p>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-ruby" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">ruby</span><span
+            class="method-args">(*args, &block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Run a Ruby interpreter with the given arguments.</p>
+
+<p>Example:</p>
+
+<pre class="ruby"><span class="ruby-identifier">ruby</span> <span class="ruby-string">%Q{-pe &#39;$_.upcase!&#39; &lt;README}</span>
+</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="ruby-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_utils.rb, line 102</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ruby</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">options</span> = (<span class="ruby-constant">Hash</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">last</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">pop</span> <span class="ruby-operator">:</span> {}
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+    <span class="ruby-identifier">sh</span>(<span class="ruby-operator">*</span>([<span class="ruby-constant">RUBY</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">args</span> <span class="ruby-operator">+</span> [<span class="ruby-identifier">options</span>]), <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">sh</span>(<span class="ruby-node">&quot;#{RUBY} #{args.first}&quot;</span>, <span class="ruby-identifier">options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-safe_ln" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">safe_ln</span><span
+            class="method-args">(*args)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Attempt to do a normal file link, but fall back to a copy if the link
+fails.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="safe_ln-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_utils.rb, line 115</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">safe_ln</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span> <span class="ruby-constant">LN_SUPPORTED</span>[<span class="ruby-value">0</span>]
+    <span class="ruby-identifier">cp</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">ln</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">StandardError</span>, <span class="ruby-constant">NotImplementedError</span>
+      <span class="ruby-constant">LN_SUPPORTED</span>[<span class="ruby-value">0</span>] = <span class="ruby-keyword">false</span>
+      <span class="ruby-identifier">cp</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-sh" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">sh</span><span
+            class="method-args">(*cmd, &block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Run the system command <code>cmd</code>.  If multiple arguments are given
+the command is run directly (without the shell, same semantics as
+Kernel::exec and Kernel::system).</p>
+
+<p>It is recommended you use the multiple argument form over interpolating
+user input for both usability and security reasons.  With the multiple
+argument form you can easily process files with spaces or other shell
+reserved characters in them.  With the multiple argument form your rake
+tasks are not vulnerable to users providing an argument like <code>; rm #
+-rf /</code>.</p>
+
+<p>If a block is given, upon command completion the block is called with an OK
+flag (true on a zero exit status) and a Process::Status object. Without a
+block a RuntimeError is raised when the command exits non-zero.</p>
+
+<p>Examples:</p>
+
+<pre class="ruby"><span class="ruby-identifier">sh</span> <span class="ruby-string">&#39;ls -ltr&#39;</span>
+
+<span class="ruby-identifier">sh</span> <span class="ruby-string">&#39;ls&#39;</span>, <span class="ruby-string">&#39;file with spaces&#39;</span>
+
+<span class="ruby-comment"># check exit status after command runs</span>
+<span class="ruby-identifier">sh</span> <span class="ruby-string">%Q{grep pattern file}</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ok</span>, <span class="ruby-identifier">res</span><span class="ruby-operator">|</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span> <span class="ruby-identifier">ok</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;pattern not found (status = #{res.exitstatus})&quot;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="sh-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_utils.rb, line 45</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">sh</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">cmd</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">options</span> = (<span class="ruby-constant">Hash</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">cmd</span>.<span class="ruby-identifier">last</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">cmd</span>.<span class="ruby-identifier">pop</span> <span class="ruby-operator">:</span> {}
+  <span class="ruby-identifier">shell_runner</span> = <span class="ruby-identifier">block_given?</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">block</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">create_shell_runner</span>(<span class="ruby-identifier">cmd</span>)
+
+  <span class="ruby-identifier">set_verbose_option</span>(<span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">verbose</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span> <span class="ruby-value">:verbose</span>
+  <span class="ruby-identifier">noop</span>    = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:noop</span>) <span class="ruby-operator">||</span> <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">FileUtilsExt</span>.<span class="ruby-identifier">nowrite_flag</span>
+
+  <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">rake_output_message</span> <span class="ruby-identifier">sh_show_command</span> <span class="ruby-identifier">cmd</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">verbose</span>
+
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">noop</span>
+    <span class="ruby-identifier">res</span> = <span class="ruby-identifier">system</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">cmd</span>, <span class="ruby-identifier">options</span>)
+    <span class="ruby-identifier">status</span> = <span class="ruby-identifier">$?</span>
+    <span class="ruby-identifier">status</span> = <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">PseudoStatus</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>) <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">res</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">status</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-identifier">shell_runner</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">res</span>, <span class="ruby-identifier">status</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-split_all" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">split_all</span><span
+            class="method-args">(path)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Split a file path into individual directory names.</p>
+
+<p>Example:</p>
+
+<pre>split_all(&quot;a/b/c&quot;) =&gt;  [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="split_all-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_utils.rb, line 133</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">split_all</span>(<span class="ruby-identifier">path</span>)
+  <span class="ruby-identifier">head</span>, <span class="ruby-identifier">tail</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">split</span>(<span class="ruby-identifier">path</span>)
+  <span class="ruby-keyword">return</span> [<span class="ruby-identifier">tail</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">head</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;.&#39;</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">tail</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;/&#39;</span>
+  <span class="ruby-keyword">return</span> [<span class="ruby-identifier">head</span>, <span class="ruby-identifier">tail</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">head</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;/&#39;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">split_all</span>(<span class="ruby-identifier">head</span>) <span class="ruby-operator">+</span> [<span class="ruby-identifier">tail</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

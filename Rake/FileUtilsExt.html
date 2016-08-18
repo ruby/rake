@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module Rake::FileUtilsExt - Rake -- Ruby Make</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><a class="include" href="../FileUtils.html">FileUtils</a>
+  
+  
+  </ul>
+</div>
+
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-nowrite">#nowrite</a>
+    
+    <li ><a href="#method-i-rake_check_options">#rake_check_options</a>
+    
+    <li ><a href="#method-i-rake_merge_option">#rake_merge_option</a>
+    
+    <li ><a href="#method-i-rake_output_message">#rake_output_message</a>
+    
+    <li ><a href="#method-i-verbose">#verbose</a>
+    
+    <li ><a href="#method-i-when_writing">#when_writing</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-Rake::FileUtilsExt">
+  <h1 id="module-Rake::FileUtilsExt" class="module">
+    module Rake::FileUtilsExt
+  </h1>
+
+  <section class="description">
+    
+<p><a href="FileUtilsExt.html">FileUtilsExt</a> provides a custom version of
+the <a href="../FileUtils.html">FileUtils</a> methods that respond to the
+<code>verbose</code> and <code>nowrite</code> commands.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="DEFAULT">DEFAULT
+        
+        <dd>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-c-nowrite_flag" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">nowrite_flag</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+      <div id="attribute-c-verbose_flag" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">verbose_flag</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-nowrite" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">nowrite</span><span
+            class="method-args">(value=nil) { || ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Get/set the nowrite flag controlling output from the <a
+href="../FileUtils.html">FileUtils</a> utilities.  If verbose is true, then
+the utility method is echoed to standard output.</p>
+
+<p>Examples:</p>
+
+<pre class="ruby"><span class="ruby-identifier">nowrite</span>              <span class="ruby-comment"># return the current value of the</span>
+                     <span class="ruby-comment"># nowrite flag</span>
+<span class="ruby-identifier">nowrite</span>(<span class="ruby-identifier">v</span>)           <span class="ruby-comment"># set the nowrite flag to _v_.</span>
+<span class="ruby-identifier">nowrite</span>(<span class="ruby-identifier">v</span>) { <span class="ruby-identifier">code</span> }  <span class="ruby-comment"># Execute code with the nowrite flag set</span>
+                     <span class="ruby-comment"># temporarily to _v_. Return to the</span>
+                     <span class="ruby-comment"># original value when code is done.</span>
+</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="nowrite-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_utils_ext.rb, line 77</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">nowrite</span>(<span class="ruby-identifier">value</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">oldvalue</span> = <span class="ruby-constant">FileUtilsExt</span>.<span class="ruby-identifier">nowrite_flag</span>
+  <span class="ruby-constant">FileUtilsExt</span>.<span class="ruby-identifier">nowrite_flag</span> = <span class="ruby-identifier">value</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">nil?</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-keyword">yield</span>
+    <span class="ruby-keyword">ensure</span>
+      <span class="ruby-constant">FileUtilsExt</span>.<span class="ruby-identifier">nowrite_flag</span> = <span class="ruby-identifier">oldvalue</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">oldvalue</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-rake_check_options" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">rake_check_options</span><span
+            class="method-args">(options, *optdecl)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Check that the options do not contain options not listed in
+<code>optdecl</code>.  An ArgumentError exception is thrown if non-declared
+options are found.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="rake_check_options-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_utils_ext.rb, line 133</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">rake_check_options</span>(<span class="ruby-identifier">options</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">optdecl</span>)
+  <span class="ruby-identifier">h</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">dup</span>
+  <span class="ruby-identifier">optdecl</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">h</span>.<span class="ruby-identifier">delete</span> <span class="ruby-identifier">name</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;no such option: #{h.keys.join(&#39; &#39;)}&quot;</span> <span class="ruby-keyword">unless</span>
+    <span class="ruby-identifier">h</span>.<span class="ruby-identifier">empty?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-rake_merge_option" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">rake_merge_option</span><span
+            class="method-args">(args, defaults)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Merge the given options with the default values.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="rake_merge_option-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_utils_ext.rb, line 116</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">rake_merge_option</span>(<span class="ruby-identifier">args</span>, <span class="ruby-identifier">defaults</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">Hash</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">last</span>
+    <span class="ruby-identifier">defaults</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">args</span>.<span class="ruby-identifier">last</span>)
+    <span class="ruby-identifier">args</span>.<span class="ruby-identifier">pop</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">args</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">defaults</span>
+  <span class="ruby-identifier">args</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-rake_output_message" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">rake_output_message</span><span
+            class="method-args">(message)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Send the message to the default rake output (which is $stderr).</p>
+          
+          
+
+          
+          <div class="method-source-code" id="rake_output_message-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_utils_ext.rb, line 126</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">rake_output_message</span>(<span class="ruby-identifier">message</span>)
+  <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span>(<span class="ruby-identifier">message</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-verbose" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">verbose</span><span
+            class="method-args">(value=nil) { || ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Get/set the verbose flag controlling output from the <a
+href="../FileUtils.html">FileUtils</a> utilities.  If verbose is true, then
+the utility method is echoed to standard output.</p>
+
+<p>Examples:</p>
+
+<pre class="ruby"><span class="ruby-identifier">verbose</span>              <span class="ruby-comment"># return the current value of the</span>
+                     <span class="ruby-comment"># verbose flag</span>
+<span class="ruby-identifier">verbose</span>(<span class="ruby-identifier">v</span>)           <span class="ruby-comment"># set the verbose flag to _v_.</span>
+<span class="ruby-identifier">verbose</span>(<span class="ruby-identifier">v</span>) { <span class="ruby-identifier">code</span> }  <span class="ruby-comment"># Execute code with the verbose flag set</span>
+                     <span class="ruby-comment"># temporarily to _v_.  Return to the</span>
+                     <span class="ruby-comment"># original value when code is done.</span>
+</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="verbose-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_utils_ext.rb, line 53</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">verbose</span>(<span class="ruby-identifier">value</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">oldvalue</span> = <span class="ruby-constant">FileUtilsExt</span>.<span class="ruby-identifier">verbose_flag</span>
+  <span class="ruby-constant">FileUtilsExt</span>.<span class="ruby-identifier">verbose_flag</span> = <span class="ruby-identifier">value</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">nil?</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-keyword">yield</span>
+    <span class="ruby-keyword">ensure</span>
+      <span class="ruby-constant">FileUtilsExt</span>.<span class="ruby-identifier">verbose_flag</span> = <span class="ruby-identifier">oldvalue</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-constant">FileUtilsExt</span>.<span class="ruby-identifier">verbose_flag</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-when_writing" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">when_writing</span><span
+            class="method-args">(msg=nil) { || ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Use this function to prevent potentially destructive ruby code from running
+when the :nowrite flag is set.</p>
+
+<p>Example:</p>
+
+<pre class="ruby"><span class="ruby-identifier">when_writing</span>(<span class="ruby-string">&quot;Building Project&quot;</span>) <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">project</span>.<span class="ruby-identifier">build</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>The following code will build the project under normal conditions. If the
+nowrite(true) flag is set, then the example will print:</p>
+
+<pre>DRYRUN: Building Project</pre>
+
+<p>instead of actually building the project.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="when_writing-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_utils_ext.rb, line 107</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">when_writing</span>(<span class="ruby-identifier">msg</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">FileUtilsExt</span>.<span class="ruby-identifier">nowrite_flag</span>
+    <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;DRYRUN: #{msg}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">msg</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">yield</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

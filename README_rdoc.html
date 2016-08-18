@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>README - Rake -- Ruby Make</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#label-RAKE+--+Ruby+Make">RAKE – Ruby Make</a>
+    <li><a href="#label-Description">Description</a>
+    <li><a href="#label-Installation">Installation</a>
+    <li><a href="#label-Gem+Installation">Gem Installation</a>
+    <li><a href="#label-Usage">Usage</a>
+    <li><a href="#label-Simple+Example">Simple Example</a>
+    <li><a href="#label-Resources">Resources</a>
+    <li><a href="#label-Rake+Information">Rake Information</a>
+    <li><a href="#label-Presentations+and+Articles+about+Rake">Presentations and Articles about Rake</a>
+    <li><a href="#label-Other+Make+Re-envisionings+...">Other Make Re-envisionings …</a>
+    <li><a href="#label-Credits">Credits</a>
+    <li><a href="#label-License">License</a>
+    <li><a href="#label-Other+stuff">Other stuff</a>
+    <li><a href="#label-Warranty">Warranty</a>
+    <li><a href="#label-Historical">Historical</a>
+  </ul>
+</div>
+
+
+  <div id="project-metadata">
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./CONTRIBUTING_rdoc.html">CONTRIBUTING</a>
+  
+    <li><a href="./History_rdoc.html">History</a>
+  
+    <li><a href="./MIT-LICENSE.html">MIT-LICENSE</a>
+  
+    <li><a href="./README_rdoc.html">README</a>
+  
+    <li><a href="./doc/command_line_usage_rdoc.html">command_line_usage</a>
+  
+    <li><a href="./doc/glossary_rdoc.html">glossary</a>
+  
+    <li><a href="./doc/proto_rake_rdoc.html">proto_rake</a>
+  
+    <li><a href="./doc/rakefile_rdoc.html">rakefile</a>
+  
+    <li><a href="./doc/rational_rdoc.html">rational</a>
+  
+    <li><a href="./doc/release_notes/rake-0_4_14_rdoc.html">rake-0.4.14</a>
+  
+    <li><a href="./doc/release_notes/rake-0_4_15_rdoc.html">rake-0.4.15</a>
+  
+    <li><a href="./doc/release_notes/rake-0_5_0_rdoc.html">rake-0.5.0</a>
+  
+    <li><a href="./doc/release_notes/rake-0_5_3_rdoc.html">rake-0.5.3</a>
+  
+    <li><a href="./doc/release_notes/rake-0_5_4_rdoc.html">rake-0.5.4</a>
+  
+    <li><a href="./doc/release_notes/rake-0_6_0_rdoc.html">rake-0.6.0</a>
+  
+    <li><a href="./doc/release_notes/rake-0_7_0_rdoc.html">rake-0.7.0</a>
+  
+    <li><a href="./doc/release_notes/rake-0_7_1_rdoc.html">rake-0.7.1</a>
+  
+    <li><a href="./doc/release_notes/rake-0_7_2_rdoc.html">rake-0.7.2</a>
+  
+    <li><a href="./doc/release_notes/rake-0_7_3_rdoc.html">rake-0.7.3</a>
+  
+    <li><a href="./doc/release_notes/rake-0_8_0_rdoc.html">rake-0.8.0</a>
+  
+    <li><a href="./doc/release_notes/rake-0_8_2_rdoc.html">rake-0.8.2</a>
+  
+    <li><a href="./doc/release_notes/rake-0_8_3_rdoc.html">rake-0.8.3</a>
+  
+    <li><a href="./doc/release_notes/rake-0_8_4_rdoc.html">rake-0.8.4</a>
+  
+    <li><a href="./doc/release_notes/rake-0_8_5_rdoc.html">rake-0.8.5</a>
+  
+    <li><a href="./doc/release_notes/rake-0_8_6_rdoc.html">rake-0.8.6</a>
+  
+    <li><a href="./doc/release_notes/rake-0_8_7_rdoc.html">rake-0.8.7</a>
+  
+    <li><a href="./doc/release_notes/rake-0_9_0_rdoc.html">rake-0.9.0</a>
+  
+    <li><a href="./doc/release_notes/rake-0_9_1_rdoc.html">rake-0.9.1</a>
+  
+    <li><a href="./doc/release_notes/rake-0_9_2_2_rdoc.html">rake-0.9.2.2</a>
+  
+    <li><a href="./doc/release_notes/rake-0_9_2_rdoc.html">rake-0.9.2</a>
+  
+    <li><a href="./doc/release_notes/rake-0_9_3_rdoc.html">rake-0.9.3</a>
+  
+    <li><a href="./doc/release_notes/rake-0_9_4_rdoc.html">rake-0.9.4</a>
+  
+    <li><a href="./doc/release_notes/rake-0_9_5_rdoc.html">rake-0.9.5</a>
+  
+    <li><a href="./doc/release_notes/rake-0_9_6_rdoc.html">rake-0.9.6</a>
+  
+    <li><a href="./doc/release_notes/rake-10_0_0_rdoc.html">rake-10.0.0</a>
+  
+    <li><a href="./doc/release_notes/rake-10_0_1_rdoc.html">rake-10.0.1</a>
+  
+    <li><a href="./doc/release_notes/rake-10_0_2_rdoc.html">rake-10.0.2</a>
+  
+    <li><a href="./doc/release_notes/rake-10_0_3_rdoc.html">rake-10.0.3</a>
+  
+    <li><a href="./doc/release_notes/rake-10_1_0_rdoc.html">rake-10.1.0</a>
+  
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page README.rdoc">
+
+<h1 id="label-RAKE+--+Ruby+Make">RAKE – Ruby Make<span><a href="#label-RAKE+--+Ruby+Make">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<dl class="rdoc-list note-list"><dt>home 
+<dd>
+<p><a href="https://github.com/ruby/rake">github.com/ruby/rake</a></p>
+</dd><dt>bugs 
+<dd>
+<p><a
+href="https://github.com/ruby/rake/issues">github.com/ruby/rake/issues</a></p>
+</dd><dt>docs 
+<dd>
+<p><a href="http://docs.seattlerb.org/rake">docs.seattlerb.org/rake</a></p>
+</dd><dt>build status 
+<dd>
+<p><a href="https://travis-ci.org/ruby/rake"><img
+src="https://travis-ci.org/ruby/rake.svg?branch=master"
+alt="travis-ci"></a> <a
+href="https://ci.appveyor.com/project/ruby/rake"><img
+src="https://ci.appveyor.com/api/projects/status/github/ruby/rake?branch=master&svg=true"
+alt="appveyor"></a></p>
+</dd></dl>
+
+<h2 id="label-Description">Description<span><a href="#label-Description">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Rake is a Make-like program implemented in Ruby. Tasks and dependencies are
+specified in standard Ruby syntax.</p>
+
+<p>Rake has the following features:</p>
+<ul><li>
+<p>Rakefiles (rake&#39;s version of Makefiles) are completely defined in
+standard Ruby syntax.  No XML files to edit.  No quirky Makefile syntax to
+worry about (is that a tab or a space?)</p>
+</li><li>
+<p>Users can specify tasks with prerequisites.</p>
+</li><li>
+<p>Rake supports rule patterns to synthesize implicit tasks.</p>
+</li><li>
+<p>Flexible FileLists that act like arrays but know about manipulating file
+names and paths.</p>
+</li><li>
+<p>A library of prepackaged tasks to make building rakefiles easier. For
+example, tasks for building tarballs. (Formerly tasks for building RDoc,
+Gems and publishing to FTP were included in rake but they&#39;re now
+available in RDoc, RubyGems and  respectively.)</p>
+</li><li>
+<p>Supports parallel execution of tasks.</p>
+</li></ul>
+
+<h2 id="label-Installation">Installation<span><a href="#label-Installation">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<h3 id="label-Gem+Installation">Gem Installation<span><a href="#label-Gem+Installation">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Download and install rake with the following.</p>
+
+<pre class="ruby"><span class="ruby-identifier">gem</span> <span class="ruby-identifier">install</span> <span class="ruby-identifier">rake</span>
+</pre>
+
+<h2 id="label-Usage">Usage<span><a href="#label-Usage">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<h3 id="label-Simple+Example">Simple Example<span><a href="#label-Simple+Example">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>First, you must write a “Rakefile” file which contains the build rules.
+Here&#39;s a simple example:</p>
+
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-identifier">default</span><span class="ruby-operator">:</span> <span class="ruby-node">%w[test]</span>
+
+<span class="ruby-identifier">task</span> :<span class="ruby-identifier">test</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">ruby</span> <span class="ruby-string">&quot;test/unittest.rb&quot;</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>This Rakefile has two tasks:</p>
+<ul><li>
+<p>A task named “test”, which – upon invocation – will run a unit test file in
+Ruby.</p>
+</li><li>
+<p>A task named “default”. This task does nothing by itself, but it has
+exactly one dependency, namely the “test” task. Invoking the “default” task
+will cause Rake to invoke the “test” task as well.</p>
+</li></ul>
+
+<p>Running the “rake” command without any options will cause it to run the
+“default” task in the Rakefile:</p>
+
+<pre>% ls
+Rakefile     test/
+% rake
+(in /home/some_user/Projects/rake)
+ruby test/unittest.rb
+....unit test output here...</pre>
+
+<p>Type “rake –help” for all available options.</p>
+
+<h2 id="label-Resources">Resources<span><a href="#label-Resources">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<h3 id="label-Rake+Information">Rake Information<span><a href="#label-Rake+Information">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p><a href="doc/command_line_usage_rdoc.html">Rake command-line</a></p>
+</li><li>
+<p><a href="doc/rakefile_rdoc.html">Writing Rakefiles</a></p>
+</li><li>
+<p>The original <a href="doc/rational_rdoc.html">Rake announcement</a></p>
+</li><li>
+<p>Rake <a href="doc/glossary_rdoc.html">glossary</a></p>
+</li></ul>
+
+<h3 id="label-Presentations+and+Articles+about+Rake">Presentations and Articles about Rake<span><a href="#label-Presentations+and+Articles+about+Rake">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Avdi Grimm&#39;s rake series:</p>
+<ol><li>
+<p><a href="http://devblog.avdi.org/2014/04/21/rake-part-1-basics/">Rake
+Basics</a></p>
+</li><li>
+<p><a href="http://devblog.avdi.org/2014/04/22/rake-part-2-file-lists/">Rake
+File Lists</a></p>
+</li><li>
+<p><a href="http://devblog.avdi.org/2014/04/23/rake-part-3-rules/">Rake
+Rules</a></p>
+</li><li>
+<p><a href="http://devblog.avdi.org/2014/04/24/rake-part-4-pathmap/">Rake
+Pathmap</a></p>
+</li><li>
+<p><a
+href="http://devblog.avdi.org/2014/04/25/rake-part-5-file-operations/">File
+Operations</a></p>
+</li><li>
+<p><a
+href="http://devblog.avdi.org/2014/04/28/rake-part-6-clean-and-clobber/">Clean
+and Clobber</a></p>
+</li><li>
+<p><a
+href="http://devblog.avdi.org/2014/04/29/rake-part-7-multitask/">MultiTask</a></p>
+</li></ol>
+</li><li>
+<p><a
+href="http://web.archive.org/web/20140221123354/http://onestepback.org/articles/buildingwithrake/">Jim
+Weirich’s 2003 RubyConf presentation</a></p>
+</li><li>
+<p>Martin Fowler&#39;s article on Rake: <a
+href="http://martinfowler.com/articles/rake.html">martinfowler.com/articles/rake.html</a></p>
+</li></ul>
+
+<h2 id="label-Other+Make+Re-envisionings+...">Other Make Re-envisionings …<span><a href="#label-Other+Make+Re-envisionings+...">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Rake is a late entry in the make replacement field.  Here are links to
+other projects with similar (and not so similar) goals.</p>
+<ul><li>
+<p><a
+href="http://directory.fsf.org/wiki/Bras">directory.fsf.org/wiki/Bras</a> –
+Bras, one of earliest implementations of “make in a scripting language”.</p>
+</li><li>
+<p><a href="http://www.a-a-p.org">www.a-a-p.org</a> – Make in Python</p>
+</li><li>
+<p><a href="http://ant.apache.org">ant.apache.org</a> – The Ant project</p>
+</li><li>
+<p><a
+href="http://search.cpan.org/search?query=PerlBuildSystem">search.cpan.org/search?query=PerlBuildSystem</a>
+– The Perl Build System</p>
+</li><li>
+<p><a
+href="http://www.rubydoc.info/gems/rant/0.5.7/frames">www.rubydoc.info/gems/rant/0.5.7/frames</a>
+– Rant, another Ruby make tool.</p>
+</li></ul>
+
+<h2 id="label-Credits">Credits<span><a href="#label-Credits">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<dl class="rdoc-list label-list"><dt>Jim Weirich
+<dd>
+<p>Who originally created Rake.</p>
+</dd><dt>Ryan Dlugosz
+<dd>
+<p>For the initial conversation that sparked Rake.</p>
+</dd><dt>Nobuyoshi Nakada &lt;nobu@ruby-lang.org&gt;
+<dd>
+<p>For the initial patch for rule support.</p>
+</dd><dt>Tilman Sauerbeck &lt;tilman@code-monkey.de&gt;
+<dd>
+<p>For the recursive rule patch.</p>
+</dd><dt>Eric Hodel
+<dd>
+<p>For aid in maintaining rake.</p>
+</dd><dt>Hiroshi SHIBATA
+<dd>
+<p>Maintainer of Rake 10.X and Rake 11.X</p>
+</dd></dl>
+
+<h2 id="label-License">License<span><a href="#label-License">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Rake is available under an MIT-style license.</p>
+
+<p>Copyright © Jim Weirich</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the “Software”),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.</p>
+<hr>
+
+<h1 id="label-Other+stuff">Other stuff<span><a href="#label-Other+stuff">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<dl class="rdoc-list note-list"><dt>Author
+<dd>
+<p>Jim Weirich &lt;jim.weirich@gmail.com&gt;</p>
+</dd><dt>Requires
+<dd>
+<p>Ruby 1.9.3 or later</p>
+</dd><dt>License
+<dd>
+<p>Copyright Jim Weirich. Released under an MIT-style license.  See the
+MIT-LICENSE file included in the distribution.</p>
+</dd></dl>
+
+<h2 id="label-Warranty">Warranty<span><a href="#label-Warranty">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>This software is provided “as is” and without any express or implied
+warranties, including, without limitation, the implied warranties of
+merchantability and fitness for a particular purpose.</p>
+
+<h2 id="label-Historical">Historical<span><a href="#label-Historical">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Rake was originally created by Jim Weirich, who unfortunately passed away
+in February 2014. This repository was originally hosted at <a
+href="https://github.com/jimweirich/rake/">github.com/jimweirich/rake</a>,
+however with his passing, has been moved to <a
+href="https://github.com/ruby/rake">ruby/rake</a>.</p>
+
+<p>You can view Jim&#39;s last commit here: <a
+href="https://github.com/jimweirich/rake/tree/336559f28f55bce418e2ebcc0a57548dcbac4025">github.com/jimweirich/rake/tree/336559f28f55bce418e2ebcc0a57548dcbac4025</a></p>
+
+<p>You can <a href="https://en.wikipedia.org/wiki/Jim_Weirich">read more about
+Jim</a> at Wikipedia.</p>
+
+<p>Thank you for this great tool, Jim. We&#39;ll remember you.</p>
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

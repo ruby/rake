@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>rake-0.7.0 - Rake -- Ruby Make</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+</script>
+
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#label-Rake+0.7.0+Released">Rake 0.7.0 Released</a>
+    <li><a href="#label-Changes">Changes</a>
+    <li><a href="#label-New+Features">New Features</a>
+    <li><a href="#label-Bug+Fixes">Bug Fixes</a>
+    <li><a href="#label-Namespaces">Namespaces</a>
+    <li><a href="#label-Parallel+Tasks">Parallel Tasks</a>
+    <li><a href="#label-What+is+Rake">What is Rake</a>
+    <li><a href="#label-Availability">Availability</a>
+    <li><a href="#label-Thanks">Thanks</a>
+  </ul>
+</div>
+
+
+  <div id="project-metadata">
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../../CONTRIBUTING_rdoc.html">CONTRIBUTING</a>
+  
+    <li><a href="../../History_rdoc.html">History</a>
+  
+    <li><a href="../../MIT-LICENSE.html">MIT-LICENSE</a>
+  
+    <li><a href="../../README_rdoc.html">README</a>
+  
+    <li><a href="../../doc/command_line_usage_rdoc.html">command_line_usage</a>
+  
+    <li><a href="../../doc/glossary_rdoc.html">glossary</a>
+  
+    <li><a href="../../doc/proto_rake_rdoc.html">proto_rake</a>
+  
+    <li><a href="../../doc/rakefile_rdoc.html">rakefile</a>
+  
+    <li><a href="../../doc/rational_rdoc.html">rational</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_4_14_rdoc.html">rake-0.4.14</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_4_15_rdoc.html">rake-0.4.15</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_5_0_rdoc.html">rake-0.5.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_5_3_rdoc.html">rake-0.5.3</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_5_4_rdoc.html">rake-0.5.4</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_6_0_rdoc.html">rake-0.6.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_7_0_rdoc.html">rake-0.7.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_7_1_rdoc.html">rake-0.7.1</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_7_2_rdoc.html">rake-0.7.2</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_7_3_rdoc.html">rake-0.7.3</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_0_rdoc.html">rake-0.8.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_2_rdoc.html">rake-0.8.2</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_3_rdoc.html">rake-0.8.3</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_4_rdoc.html">rake-0.8.4</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_5_rdoc.html">rake-0.8.5</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_6_rdoc.html">rake-0.8.6</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_7_rdoc.html">rake-0.8.7</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_0_rdoc.html">rake-0.9.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_1_rdoc.html">rake-0.9.1</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_2_2_rdoc.html">rake-0.9.2.2</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_2_rdoc.html">rake-0.9.2</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_3_rdoc.html">rake-0.9.3</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_4_rdoc.html">rake-0.9.4</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_5_rdoc.html">rake-0.9.5</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_6_rdoc.html">rake-0.9.6</a>
+  
+    <li><a href="../../doc/release_notes/rake-10_0_0_rdoc.html">rake-10.0.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-10_0_1_rdoc.html">rake-10.0.1</a>
+  
+    <li><a href="../../doc/release_notes/rake-10_0_2_rdoc.html">rake-10.0.2</a>
+  
+    <li><a href="../../doc/release_notes/rake-10_0_3_rdoc.html">rake-10.0.3</a>
+  
+    <li><a href="../../doc/release_notes/rake-10_1_0_rdoc.html">rake-10.1.0</a>
+  
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page doc/release_notes/rake-0.7.0.rdoc">
+
+<h1 id="label-Rake+0.7.0+Released">Rake 0.7.0 Released<span><a href="#label-Rake+0.7.0+Released">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>These changes for Rake have been brewing for a long time.  Here they are, I
+hope you enjoy them.</p>
+
+<h2 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<h3 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Name space support for task names (see below).</p>
+</li><li>
+<p>Prerequisites can be executed in parallel (see below).</p>
+</li><li>
+<p>Added safe_ln support for openAFS (via Ludvig Omholt).</p>
+</li><li>
+<p>RDoc defaults to internal (in-process) invocation.  The old behavior is
+still available by setting the <code>external</code> flag to true.</p>
+</li><li>
+<p>Rakefiles are now loaded with the expanded path to prevent accidental
+polution from the Ruby load path.</p>
+</li><li>
+<p>Task objects my now be used in prerequisite lists directly.</p>
+</li><li>
+<p>Task objects (in addition to task names) may now be included in the
+prerequisite list of a task.</p>
+</li><li>
+<p>Internals cleanup and refactoring.</p>
+</li></ul>
+
+<h3 id="label-Bug+Fixes">Bug Fixes<span><a href="#label-Bug+Fixes">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Compatibility fixes for Ruby 1.8.4 <a
+href="../../FileUtils.html">FileUtils</a> changes.</p>
+</li></ul>
+
+<h3 id="label-Namespaces">Namespaces<span><a href="#label-Namespaces">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Tasks can now be nested inside their own namespaces.  Tasks within one
+namespace will not accidently interfer with tasks named in a different
+namespace.</p>
+
+<p>For example:</p>
+
+<pre class="ruby"><span class="ruby-identifier">namespace</span> <span class="ruby-string">&quot;main&quot;</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">task</span> :<span class="ruby-identifier">build</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-comment"># Build the main program</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-identifier">namespace</span> <span class="ruby-string">&quot;samples&quot;</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">task</span> :<span class="ruby-identifier">build</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-comment"># Build the sample programs</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-identifier">task</span> :<span class="ruby-identifier">build_all</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">&quot;main:build&quot;</span>, <span class="ruby-string">&quot;samples:build&quot;</span>]
+</pre>
+
+<p>Even though both tasks are named :build, they are separate tasks in their
+own namespaces.  The :build_all task (defined in the toplevel namespace)
+references both build tasks in its prerequisites.</p>
+
+<p>You may invoke each of the individual build tasks with the following
+commands:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-identifier">main</span>:<span class="ruby-identifier">build</span>
+<span class="ruby-identifier">rake</span> <span class="ruby-identifier">samples</span>:<span class="ruby-identifier">build</span>
+</pre>
+
+<p>Or invoke both via the :build_all command:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-identifier">build_all</span>
+</pre>
+
+<p>Namespaces may be nested arbitrarily.  Since the name of file tasks
+correspond to the name of a file in the external file system, FileTasks are
+not affected by the namespaces.</p>
+
+<p>See the Rakefile format documentation (in the Rake API documents) for more
+information.</p>
+
+<h3 id="label-Parallel+Tasks">Parallel Tasks<span><a href="#label-Parallel+Tasks">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Sometimes you have several tasks that can be executed in parallel.  By
+specifying these tasks as prerequisites to a <code>multitask</code> task.</p>
+
+<p>In the following example the tasks copy_src, copy_doc and copy_bin will all
+execute in parallel in their own thread.</p>
+
+<pre class="ruby"><span class="ruby-identifier">multitask</span> :<span class="ruby-identifier">copy_files</span> =<span class="ruby-operator">&gt;</span> [:<span class="ruby-identifier">copy_src</span>, :<span class="ruby-identifier">copy_doc</span>, :<span class="ruby-identifier">copy_bin</span>] <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;All Copies Complete&quot;</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<h2 id="label-What+is+Rake">What is Rake<span><a href="#label-What+is+Rake">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Rake is a build tool similar to the make program in many ways.  But instead
+of cryptic make recipes, Rake uses standard Ruby code to declare tasks and
+dependencies.  You have the full power of a modern scripting language built
+right into your build tool.</p>
+
+<h2 id="label-Availability">Availability<span><a href="#label-Availability">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>The easiest way to get and install rake is via RubyGems …</p>
+
+<pre>gem install rake    (you may need root/admin privileges)</pre>
+
+<p>Otherwise, you can get it from the more traditional places:</p>
+<dl class="rdoc-list note-list"><dt>Home Page
+<dd>
+<p><a href="http://rake.rubyforge.org">rake.rubyforge.org</a>/</p>
+</dd><dt>Download
+<dd>
+<p><a
+href="http://rubyforge.org/project/showfiles.php?group_id=50">rubyforge.org/project/showfiles.php?group_id=50</a></p>
+</dd></dl>
+
+<h2 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>As usual, it was input from users that drove a alot of these changes. The
+following people either contributed patches, made suggestions or made
+otherwise helpful comments.  Thanks to …</p>
+<ul><li>
+<p>Doug Young (inspriation for the parallel task)</p>
+</li><li>
+<p>David Heinemeier Hansson (for –trace message enhancement and for pushing
+for namespace support).</p>
+</li><li>
+<p>Ludvig Omholt (for the openAFS fix)</p>
+</li></ul>
+
+<p>– Jim Weirich</p>
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

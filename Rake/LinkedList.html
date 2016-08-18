@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Rake::LinkedList - Rake -- Ruby Make</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="../Object.html">Object</a>
+  
+</div>
+
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><span class="include">Enumerable</span>
+  
+  
+  </ul>
+</div>
+
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-cons">::cons</a>
+    
+    <li ><a href="#method-c-empty">::empty</a>
+    
+    <li ><a href="#method-c-make">::make</a>
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-3D-3D">#==</a>
+    
+    <li ><a href="#method-i-conj">#conj</a>
+    
+    <li ><a href="#method-i-each">#each</a>
+    
+    <li ><a href="#method-i-empty-3F">#empty?</a>
+    
+    <li ><a href="#method-i-inspect">#inspect</a>
+    
+    <li ><a href="#method-i-to_s">#to_s</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Rake::LinkedList">
+  <h1 id="class-Rake::LinkedList" class="class">
+    class Rake::LinkedList
+  </h1>
+
+  <section class="description">
+    
+<p>Polylithic linked list structure used to implement several data structures
+in Rake.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="EMPTY">EMPTY
+        
+        <dd>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-head" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">head</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-tail" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">tail</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-cons" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">cons</span><span
+            class="method-args">(head, tail)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Cons a new head onto the tail list.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="cons-source">
+            <pre><span class="ruby-comment"># File lib/rake/linked_list.rb, line 72</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">cons</span>(<span class="ruby-identifier">head</span>, <span class="ruby-identifier">tail</span>)
+  <span class="ruby-identifier">new</span>(<span class="ruby-identifier">head</span>, <span class="ruby-identifier">tail</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-empty" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">empty</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The standard empty list class for the given <a
+href="LinkedList.html">LinkedList</a> class.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="empty-source">
+            <pre><span class="ruby-comment"># File lib/rake/linked_list.rb, line 77</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">empty</span>
+  <span class="ruby-keyword">self</span><span class="ruby-operator">::</span><span class="ruby-constant">EMPTY</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-make" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">make</span><span
+            class="method-args">(*args)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Make a list out of the given arguments. This method is polymorphic</p>
+          
+          
+
+          
+          <div class="method-source-code" id="make-source">
+            <pre><span class="ruby-comment"># File lib/rake/linked_list.rb, line 58</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">make</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-comment"># return an EmptyLinkedList if there are no arguments</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">empty</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">args</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-comment"># build a LinkedList by starting at the tail and iterating</span>
+  <span class="ruby-comment"># through each argument</span>
+  <span class="ruby-comment"># inject takes an EmptyLinkedList to start</span>
+  <span class="ruby-identifier">args</span>.<span class="ruby-identifier">reverse</span>.<span class="ruby-identifier">inject</span>(<span class="ruby-identifier">empty</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">list</span>, <span class="ruby-identifier">item</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">list</span> = <span class="ruby-identifier">cons</span>(<span class="ruby-identifier">item</span>, <span class="ruby-identifier">list</span>)
+    <span class="ruby-identifier">list</span> <span class="ruby-comment"># return the newly created list for each item in the block</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(head, tail=EMPTY)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rake/linked_list.rb, line 83</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">head</span>, <span class="ruby-identifier">tail</span>=<span class="ruby-constant">EMPTY</span>)
+  <span class="ruby-ivar">@head</span> = <span class="ruby-identifier">head</span>
+  <span class="ruby-ivar">@tail</span> = <span class="ruby-identifier">tail</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-3D-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">==</span><span
+            class="method-args">(other)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Lists are structurally equivalent.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="3D-3D-source">
+            <pre><span class="ruby-comment"># File lib/rake/linked_list.rb, line 24</span>
+<span class="ruby-keyword">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">other</span>)
+  <span class="ruby-identifier">current</span> = <span class="ruby-keyword">self</span>
+  <span class="ruby-keyword">while</span> <span class="ruby-operator">!</span><span class="ruby-identifier">current</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">other</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">current</span>.<span class="ruby-identifier">head</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">head</span>
+    <span class="ruby-identifier">current</span> = <span class="ruby-identifier">current</span>.<span class="ruby-identifier">tail</span>
+    <span class="ruby-identifier">other</span> = <span class="ruby-identifier">other</span>.<span class="ruby-identifier">tail</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">current</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">empty?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-conj" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">conj</span><span
+            class="method-args">(item)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Polymorphically add a new element to the head of a list. The type of head
+node will be the same list type as the tail.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="conj-source">
+            <pre><span class="ruby-comment"># File lib/rake/linked_list.rb, line 11</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">conj</span>(<span class="ruby-identifier">item</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">cons</span>(<span class="ruby-identifier">item</span>, <span class="ruby-keyword">self</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-each" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">each</span><span
+            class="method-args">() { |head| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>For each item in the list.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="each-source">
+            <pre><span class="ruby-comment"># File lib/rake/linked_list.rb, line 47</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">each</span>
+  <span class="ruby-identifier">current</span> = <span class="ruby-keyword">self</span>
+  <span class="ruby-keyword">while</span> <span class="ruby-operator">!</span><span class="ruby-identifier">current</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-keyword">yield</span>(<span class="ruby-identifier">current</span>.<span class="ruby-identifier">head</span>)
+    <span class="ruby-identifier">current</span> = <span class="ruby-identifier">current</span>.<span class="ruby-identifier">tail</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-empty-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">empty?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Is the list empty? .make guards against a list being empty making any
+instantiated <a href="LinkedList.html">LinkedList</a> object not empty by
+default You should consider overriding this method if you implement your
+own .make method</p>
+          
+          
+
+          
+          <div class="method-source-code" id="empty-3F-source">
+            <pre><span class="ruby-comment"># File lib/rake/linked_list.rb, line 19</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">empty?</span>
+  <span class="ruby-keyword">false</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-inspect" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">inspect</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Same as <code>to_s</code>, but with inspected items.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="inspect-source">
+            <pre><span class="ruby-comment"># File lib/rake/linked_list.rb, line 41</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">inspect</span>
+  <span class="ruby-identifier">items</span> = <span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:inspect</span>).<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;, &quot;</span>)
+  <span class="ruby-node">&quot;LL(#{items})&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-to_s" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">to_s</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Convert to string: LL(item, item…)</p>
+          
+          
+
+          
+          <div class="method-source-code" id="to_s-source">
+            <pre><span class="ruby-comment"># File lib/rake/linked_list.rb, line 35</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
+  <span class="ruby-identifier">items</span> = <span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_s</span>).<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;, &quot;</span>)
+  <span class="ruby-node">&quot;LL(#{items})&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

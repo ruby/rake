@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>rake-0.8.4 - Rake -- Ruby Make</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+</script>
+
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#label-Rake+0.8.4+Released">Rake 0.8.4 Released</a>
+    <li><a href="#label-Letter+Writing+Campaign">Letter Writing Campaign</a>
+    <li><a href="#label-Changes">Changes</a>
+    <li><a href="#label-New+Features+-2F+Enhancements+in+Version+0.8.4">New Features / Enhancements in Version 0.8.4</a>
+    <li><a href="#label-Bug+Fixes+in+Version+0.8.4">Bug Fixes in Version 0.8.4</a>
+    <li><a href="#label-Infrastructure+Improvements+in+Version+0.8.4">Infrastructure Improvements in Version 0.8.4</a>
+    <li><a href="#label-What+is+Rake">What is Rake</a>
+    <li><a href="#label-Availability">Availability</a>
+    <li><a href="#label-Task+Argument+Examples">Task Argument Examples</a>
+    <li><a href="#label-Tasks+that+Expect+Parameters">Tasks that Expect Parameters</a>
+    <li><a href="#label-Thanks">Thanks</a>
+  </ul>
+</div>
+
+
+  <div id="project-metadata">
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../../CONTRIBUTING_rdoc.html">CONTRIBUTING</a>
+  
+    <li><a href="../../History_rdoc.html">History</a>
+  
+    <li><a href="../../MIT-LICENSE.html">MIT-LICENSE</a>
+  
+    <li><a href="../../README_rdoc.html">README</a>
+  
+    <li><a href="../../doc/command_line_usage_rdoc.html">command_line_usage</a>
+  
+    <li><a href="../../doc/glossary_rdoc.html">glossary</a>
+  
+    <li><a href="../../doc/proto_rake_rdoc.html">proto_rake</a>
+  
+    <li><a href="../../doc/rakefile_rdoc.html">rakefile</a>
+  
+    <li><a href="../../doc/rational_rdoc.html">rational</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_4_14_rdoc.html">rake-0.4.14</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_4_15_rdoc.html">rake-0.4.15</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_5_0_rdoc.html">rake-0.5.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_5_3_rdoc.html">rake-0.5.3</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_5_4_rdoc.html">rake-0.5.4</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_6_0_rdoc.html">rake-0.6.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_7_0_rdoc.html">rake-0.7.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_7_1_rdoc.html">rake-0.7.1</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_7_2_rdoc.html">rake-0.7.2</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_7_3_rdoc.html">rake-0.7.3</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_0_rdoc.html">rake-0.8.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_2_rdoc.html">rake-0.8.2</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_3_rdoc.html">rake-0.8.3</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_4_rdoc.html">rake-0.8.4</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_5_rdoc.html">rake-0.8.5</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_6_rdoc.html">rake-0.8.6</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_7_rdoc.html">rake-0.8.7</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_0_rdoc.html">rake-0.9.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_1_rdoc.html">rake-0.9.1</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_2_2_rdoc.html">rake-0.9.2.2</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_2_rdoc.html">rake-0.9.2</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_3_rdoc.html">rake-0.9.3</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_4_rdoc.html">rake-0.9.4</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_5_rdoc.html">rake-0.9.5</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_6_rdoc.html">rake-0.9.6</a>
+  
+    <li><a href="../../doc/release_notes/rake-10_0_0_rdoc.html">rake-10.0.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-10_0_1_rdoc.html">rake-10.0.1</a>
+  
+    <li><a href="../../doc/release_notes/rake-10_0_2_rdoc.html">rake-10.0.2</a>
+  
+    <li><a href="../../doc/release_notes/rake-10_0_3_rdoc.html">rake-10.0.3</a>
+  
+    <li><a href="../../doc/release_notes/rake-10_1_0_rdoc.html">rake-10.1.0</a>
+  
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page doc/release_notes/rake-0.8.4.rdoc">
+
+<h1 id="label-Rake+0.8.4+Released">Rake 0.8.4 Released<span><a href="#label-Rake+0.8.4+Released">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>Rake version 0.8.4 is a bug-fix release of rake.</p>
+
+<p>NOTE: The version of Rake that comes with Ruby 1.9 has diverged</p>
+
+<pre>slightly from the core Rake code base.  Rake 0.8.4 will work
+with Ruby 1.9, but is not a strict upgrade for the Rake that
+comes with Ruby 1.9.  A (near) future release of Rake will unify
+those two codebases.</pre>
+
+<h2 id="label-Letter+Writing+Campaign">Letter Writing Campaign<span><a href="#label-Letter+Writing+Campaign">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Thanks to Aaron Patterson (@tenderlove) and Eric Hodel (@drbrain) for their
+encouraging support in organizing a letter writing campaign to lobby for
+the “Warning Free” release of rake 0.8.4.  A special callout goes to
+Jonathan D. Lord, Sr (Dr. Wingnut) whose postcard was the first to actually
+reach me. (see <a
+href="http://tenderlovemaking.com/2009/02/26/we-need-a-new-version-of-rake">tenderlovemaking.com/2009/02/26/we-need-a-new-version-of-rake</a>/
+for details)</p>
+
+<h2 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<h3 id="label-New+Features+-2F+Enhancements+in+Version+0.8.4">New Features / Enhancements in Version 0.8.4<span><a href="#label-New+Features+-2F+Enhancements+in+Version+0.8.4">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Case is preserved on rakefile names. (patch from James</p>
+<ol style="list-style-type: upper-alpha"><li>
+<p>Lawrence/quix)</p>
+</li></ol>
+</li><li>
+<p>Improved Rakefile case insensitivity testing (patch from Luis Lavena).</p>
+</li><li>
+<p>Windows system dir search order is now: HOME, HOMEDRIVE + HOMEPATH,
+APPDATA, USERPROFILE (patch from Luis Lavena)</p>
+</li><li>
+<p>MingGW is now recognized as a windows platform.  (patch from Luis Lavena)</p>
+</li></ul>
+
+<h3 id="label-Bug+Fixes+in+Version+0.8.4">Bug Fixes in Version 0.8.4<span><a href="#label-Bug+Fixes+in+Version+0.8.4">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Removed reference to manage_gem to fix the warning produced by the gem
+package task.</p>
+</li><li>
+<p>Fixed stray ARGV option problem that was interfering with
+Test::Unit::Runner. (patch from Pivotal Labs)</p>
+</li></ul>
+
+<h3 id="label-Infrastructure+Improvements+in+Version+0.8.4">Infrastructure Improvements in Version 0.8.4<span><a href="#label-Infrastructure+Improvements+in+Version+0.8.4">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Numerous fixes to the windows test suite (patch from Luis Lavena).</p>
+</li><li>
+<p>Improved Rakefile case insensitivity testing (patch from Luis Lavena).</p>
+</li><li>
+<p>Better support for windows paths in the test task (patch from Simon
+Chiang/bahuvrihi)</p>
+</li></ul>
+
+<h2 id="label-What+is+Rake">What is Rake<span><a href="#label-What+is+Rake">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Rake is a build tool similar to the make program in many ways. But instead
+of cryptic make recipes, Rake uses standard Ruby code to declare tasks and
+dependencies. You have the full power of a modern scripting language built
+right into your build tool.</p>
+
+<h2 id="label-Availability">Availability<span><a href="#label-Availability">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>The easiest way to get and install rake is via RubyGems …</p>
+
+<pre>gem install rake    (you may need root/admin privileges)</pre>
+
+<p>Otherwise, you can get it from the more traditional places:</p>
+<dl class="rdoc-list note-list"><dt>Home Page
+<dd>
+<p><a href="http://rake.rubyforge.org">rake.rubyforge.org</a>/</p>
+</dd><dt>Download
+<dd>
+<p><a
+href="http://rubyforge.org/project/showfiles.php?group_id=50">rubyforge.org/project/showfiles.php?group_id=50</a></p>
+</dd><dt>GitHub
+<dd>
+<p>git://github.com/jimweirich/rake.git</p>
+</dd></dl>
+
+<h2 id="label-Task+Argument+Examples">Task Argument Examples<span><a href="#label-Task+Argument+Examples">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Prior to version 0.8.0, rake was only able to handle command line arguments
+of the form NAME=VALUE that were passed into Rake via the ENV hash.  Many
+folks had asked for some kind of simple command line arguments, perhaps
+using “–” to separate regular task names from argument values on the
+command line.  The problem is that there was no easy way to associate
+positional arguments on the command line with different tasks.  Suppose
+both tasks :a and :b expect a command line argument: does the first value
+go with :a?  What if :b is run first? Should it then get the first command
+line argument.</p>
+
+<p>Rake 0.8.0 solves this problem by explicitly passing values directly to the
+tasks that need them.  For example, if I had a release task that required a
+version number, I could say:</p>
+
+<pre>rake release[0.8.4]</pre>
+
+<p>And the string “0.8.4” will be passed to the :release task.  Multiple
+arguments can be passed by separating them with a comma, for example:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-identifier">name</span>[<span class="ruby-identifier">john</span>,<span class="ruby-identifier">doe</span>]
+</pre>
+
+<p>Just a few words of caution.  The rake task name and its arguments need to
+be a single command line argument to rake.  This generally means no spaces.
+If spaces are needed, then the entire rake + argument string should be
+quoted.  Something like this:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-string">&quot;name[billy bob, smith]&quot;</span>
+</pre>
+
+<p>(Quoting rules vary between operating systems and shells, so make sure you
+consult the proper docs for your OS/shell).</p>
+
+<h3 id="label-Tasks+that+Expect+Parameters">Tasks that Expect Parameters<span><a href="#label-Tasks+that+Expect+Parameters">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Parameters are only given to tasks that are setup to expect them.  In order
+to handle named parameters, the task declaration syntax for tasks has been
+extended slightly.</p>
+
+<p>For example, a task that needs a first name and last name might be declared
+as:</p>
+
+<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">name</span>, :<span class="ruby-identifier">first_name</span>, :<span class="ruby-identifier">last_name</span>
+</pre>
+
+<p>The first argument is still the name of the task (:name in this case). The
+next to argumements are the names of the parameters expected by :name
+(:first_name and :last_name in the example).</p>
+
+<p>To access the values of the paramters, the block defining the task
+behaviour can now accept a second parameter:</p>
+
+<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">name</span>, :<span class="ruby-identifier">first_name</span>, :<span class="ruby-identifier">last_name</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span>, <span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;First name is #{args.first_name}&quot;</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Last  name is #{args.last_name}&quot;</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>The first argument of the block “t” is always bound to the current task
+object.  The second argument “args” is an open-struct like object that
+allows access to the task arguments.  Extra command line arguments to a
+task are ignored.  Missing command line arguments are given the nil value.</p>
+
+<h2 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>As usual, it was input from users that drove a alot of these changes. The
+following people either contributed patches, made suggestions or made
+otherwise helpful comments.  Thanks to …</p>
+<ul><li>
+<p>James M. Lawrence/quix</p>
+</li><li>
+<p>Luis Lavena</p>
+</li><li>
+<p>Pivotal Labs</p>
+</li><li>
+<p>Simon Chiang/bahuvrihi</p>
+</li></ul>
+
+<p>– Jim Weirich</p>
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

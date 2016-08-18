@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>rake-0.5.3 - Rake -- Ruby Make</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+</script>
+
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#label-Rake+0.5.3+Released">Rake 0.5.3 Released</a>
+    <li><a href="#label-Changes">Changes</a>
+    <li><a href="#label-What+is+Rake">What is Rake</a>
+    <li><a href="#label-Availability">Availability</a>
+    <li><a href="#label-Thanks">Thanks</a>
+  </ul>
+</div>
+
+
+  <div id="project-metadata">
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../../CONTRIBUTING_rdoc.html">CONTRIBUTING</a>
+  
+    <li><a href="../../History_rdoc.html">History</a>
+  
+    <li><a href="../../MIT-LICENSE.html">MIT-LICENSE</a>
+  
+    <li><a href="../../README_rdoc.html">README</a>
+  
+    <li><a href="../../doc/command_line_usage_rdoc.html">command_line_usage</a>
+  
+    <li><a href="../../doc/glossary_rdoc.html">glossary</a>
+  
+    <li><a href="../../doc/proto_rake_rdoc.html">proto_rake</a>
+  
+    <li><a href="../../doc/rakefile_rdoc.html">rakefile</a>
+  
+    <li><a href="../../doc/rational_rdoc.html">rational</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_4_14_rdoc.html">rake-0.4.14</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_4_15_rdoc.html">rake-0.4.15</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_5_0_rdoc.html">rake-0.5.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_5_3_rdoc.html">rake-0.5.3</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_5_4_rdoc.html">rake-0.5.4</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_6_0_rdoc.html">rake-0.6.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_7_0_rdoc.html">rake-0.7.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_7_1_rdoc.html">rake-0.7.1</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_7_2_rdoc.html">rake-0.7.2</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_7_3_rdoc.html">rake-0.7.3</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_0_rdoc.html">rake-0.8.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_2_rdoc.html">rake-0.8.2</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_3_rdoc.html">rake-0.8.3</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_4_rdoc.html">rake-0.8.4</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_5_rdoc.html">rake-0.8.5</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_6_rdoc.html">rake-0.8.6</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_8_7_rdoc.html">rake-0.8.7</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_0_rdoc.html">rake-0.9.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_1_rdoc.html">rake-0.9.1</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_2_2_rdoc.html">rake-0.9.2.2</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_2_rdoc.html">rake-0.9.2</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_3_rdoc.html">rake-0.9.3</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_4_rdoc.html">rake-0.9.4</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_5_rdoc.html">rake-0.9.5</a>
+  
+    <li><a href="../../doc/release_notes/rake-0_9_6_rdoc.html">rake-0.9.6</a>
+  
+    <li><a href="../../doc/release_notes/rake-10_0_0_rdoc.html">rake-10.0.0</a>
+  
+    <li><a href="../../doc/release_notes/rake-10_0_1_rdoc.html">rake-10.0.1</a>
+  
+    <li><a href="../../doc/release_notes/rake-10_0_2_rdoc.html">rake-10.0.2</a>
+  
+    <li><a href="../../doc/release_notes/rake-10_0_3_rdoc.html">rake-10.0.3</a>
+  
+    <li><a href="../../doc/release_notes/rake-10_1_0_rdoc.html">rake-10.1.0</a>
+  
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page doc/release_notes/rake-0.5.3.rdoc">
+
+<h1 id="label-Rake+0.5.3+Released">Rake 0.5.3 Released<span><a href="#label-Rake+0.5.3+Released">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>Although it has only been two weeks since the last release, we have enough
+updates to the Rake program to make it time for another release.</p>
+
+<h2 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Here are the changes for version 0.5.3 …</p>
+<ul><li>
+<p>FileLists have been extensively changed so that they mimic the behavior of
+real arrays even more closely.  In particular, operations on FileLists that
+return a new collection (e.g. collect, reject) will now return a FileList
+rather than an array.  In addition, several places where FileLists were not
+properly expanded before use have been fixed.</p>
+</li><li>
+<p>A method (<code>ext</code>) to simplify the handling of file extensions was
+added to <a href="../../String.html">String</a> and to Array.</p>
+</li><li>
+<p>The &#39;testrb&#39; script in test/unit tends to silently swallow syntax
+errors in test suites.  Because of that, the default test loader is now a
+rake-provided script.  You can still use &#39;testrb&#39; by setting the
+loader flag in the test task to :testrb.  (See the API documents for
+TestTask for all the loader flag values).</p>
+</li><li>
+<p>FileUtil methods (e.g. cp, mv, install) are now declared to be private. 
+This will cut down on the interference with user defined methods of the
+same name.</p>
+</li><li>
+<p>Fixed the verbose flag in the TestTask so that the test code is controlled
+by the flag.  Also shortened up some failure messages. (Thanks to Tobias
+Luetke for the suggestion).</p>
+</li><li>
+<p>Rules will now properly detect a task that can generate a source file. 
+Previously rules would only consider source files that were already
+present.</p>
+</li><li>
+<p>Added an <code>import</code> command that allows Rake to dynamically import
+dependendencies into a running Rake session.  The <code>import</code>
+command can run tasks to update the dependency file before loading them.
+Dependency files can be in rake or make format, allowing rake to work with
+tools designed to generate dependencies for make.</p>
+</li></ul>
+
+<h2 id="label-What+is+Rake">What is Rake<span><a href="#label-What+is+Rake">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Rake is a build tool similar to the make program in many ways.  But instead
+of cryptic make recipes, Rake uses standard Ruby code to declare tasks and
+dependencies.  You have the full power of a modern scripting language built
+right into your build tool.</p>
+
+<h2 id="label-Availability">Availability<span><a href="#label-Availability">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>The easiest way to get and install rake is via RubyGems …</p>
+
+<pre>gem install rake    (you may need root/admin privileges)</pre>
+
+<p>Otherwise, you can get it from the more traditional places:</p>
+<dl class="rdoc-list note-list"><dt>Home Page
+<dd>
+<p><a href="http://rake.rubyforge.org">rake.rubyforge.org</a>/</p>
+</dd><dt>Download
+<dd>
+<p><a
+href="http://rubyforge.org/project/showfiles.php?group_id=50">rubyforge.org/project/showfiles.php?group_id=50</a></p>
+</dd></dl>
+
+<h2 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>As usual, it was input from users that drove a alot of these changes.
+Thanks to …</p>
+<ul><li>
+<p>Brian Gernhardt for the rules fix (especially for the patience to explain
+the problem to me until I got what he was talking about).</p>
+</li><li>
+<p>Stefan Lang for pointing out problems in the dark corners of the FileList
+implementation.</p>
+</li><li>
+<p>Alexey Verkhovsky pointing out the silently swallows syntax errors in
+tests.</p>
+</li><li>
+<p>Tobias Luetke for beautifying the test task output.</p>
+</li><li>
+<p>Sam Roberts for some of the ideas behind dependency loading.</p>
+</li></ul>
+
+<p>– Jim Weirich</p>
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

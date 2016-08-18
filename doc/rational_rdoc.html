@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>rational - Rake -- Ruby Make</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="project-metadata">
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../CONTRIBUTING_rdoc.html">CONTRIBUTING</a>
+  
+    <li><a href="../History_rdoc.html">History</a>
+  
+    <li><a href="../MIT-LICENSE.html">MIT-LICENSE</a>
+  
+    <li><a href="../README_rdoc.html">README</a>
+  
+    <li><a href="../doc/command_line_usage_rdoc.html">command_line_usage</a>
+  
+    <li><a href="../doc/glossary_rdoc.html">glossary</a>
+  
+    <li><a href="../doc/proto_rake_rdoc.html">proto_rake</a>
+  
+    <li><a href="../doc/rakefile_rdoc.html">rakefile</a>
+  
+    <li><a href="../doc/rational_rdoc.html">rational</a>
+  
+    <li><a href="../doc/release_notes/rake-0_4_14_rdoc.html">rake-0.4.14</a>
+  
+    <li><a href="../doc/release_notes/rake-0_4_15_rdoc.html">rake-0.4.15</a>
+  
+    <li><a href="../doc/release_notes/rake-0_5_0_rdoc.html">rake-0.5.0</a>
+  
+    <li><a href="../doc/release_notes/rake-0_5_3_rdoc.html">rake-0.5.3</a>
+  
+    <li><a href="../doc/release_notes/rake-0_5_4_rdoc.html">rake-0.5.4</a>
+  
+    <li><a href="../doc/release_notes/rake-0_6_0_rdoc.html">rake-0.6.0</a>
+  
+    <li><a href="../doc/release_notes/rake-0_7_0_rdoc.html">rake-0.7.0</a>
+  
+    <li><a href="../doc/release_notes/rake-0_7_1_rdoc.html">rake-0.7.1</a>
+  
+    <li><a href="../doc/release_notes/rake-0_7_2_rdoc.html">rake-0.7.2</a>
+  
+    <li><a href="../doc/release_notes/rake-0_7_3_rdoc.html">rake-0.7.3</a>
+  
+    <li><a href="../doc/release_notes/rake-0_8_0_rdoc.html">rake-0.8.0</a>
+  
+    <li><a href="../doc/release_notes/rake-0_8_2_rdoc.html">rake-0.8.2</a>
+  
+    <li><a href="../doc/release_notes/rake-0_8_3_rdoc.html">rake-0.8.3</a>
+  
+    <li><a href="../doc/release_notes/rake-0_8_4_rdoc.html">rake-0.8.4</a>
+  
+    <li><a href="../doc/release_notes/rake-0_8_5_rdoc.html">rake-0.8.5</a>
+  
+    <li><a href="../doc/release_notes/rake-0_8_6_rdoc.html">rake-0.8.6</a>
+  
+    <li><a href="../doc/release_notes/rake-0_8_7_rdoc.html">rake-0.8.7</a>
+  
+    <li><a href="../doc/release_notes/rake-0_9_0_rdoc.html">rake-0.9.0</a>
+  
+    <li><a href="../doc/release_notes/rake-0_9_1_rdoc.html">rake-0.9.1</a>
+  
+    <li><a href="../doc/release_notes/rake-0_9_2_2_rdoc.html">rake-0.9.2.2</a>
+  
+    <li><a href="../doc/release_notes/rake-0_9_2_rdoc.html">rake-0.9.2</a>
+  
+    <li><a href="../doc/release_notes/rake-0_9_3_rdoc.html">rake-0.9.3</a>
+  
+    <li><a href="../doc/release_notes/rake-0_9_4_rdoc.html">rake-0.9.4</a>
+  
+    <li><a href="../doc/release_notes/rake-0_9_5_rdoc.html">rake-0.9.5</a>
+  
+    <li><a href="../doc/release_notes/rake-0_9_6_rdoc.html">rake-0.9.6</a>
+  
+    <li><a href="../doc/release_notes/rake-10_0_0_rdoc.html">rake-10.0.0</a>
+  
+    <li><a href="../doc/release_notes/rake-10_0_1_rdoc.html">rake-10.0.1</a>
+  
+    <li><a href="../doc/release_notes/rake-10_0_2_rdoc.html">rake-10.0.2</a>
+  
+    <li><a href="../doc/release_notes/rake-10_0_3_rdoc.html">rake-10.0.3</a>
+  
+    <li><a href="../doc/release_notes/rake-10_1_0_rdoc.html">rake-10.1.0</a>
+  
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page doc/rational.rdoc">
+
+<h1 id="label-Why+rake-3F">Why rake?<span><a href="#label-Why+rake-3F">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>Ok, let me state from the beginning that I never intended to write this
+code.  I&#39;m not convinced it is useful, and I&#39;m not convinced anyone
+would even be interested in it.  All I can say is that Why&#39;s onion
+truck must by been passing through the Ohio valley.</p>
+
+<p>What am I talking about? … A Ruby version of Make.</p>
+
+<p>See, I can sense you cringing already, and I agree.  The world certainly
+doesn&#39;t need yet another reworking of the “make” program.  I mean, we
+already have “ant”.  Isn&#39;t that enough?</p>
+
+<p>It started yesterday.  I was helping a coworker fix a problem in one of the
+Makefiles we use in our project.  Not a particularly tough problem, but
+during the course of the conversation I began lamenting some of the
+shortcomings of make.  In particular, in one of my makefiles I wanted to
+determine the name of a file dynamically and had to resort to some simple
+scripting (in Ruby) to make it work.  “Wouldn&#39;t it be nice if you could
+just use Ruby inside a Makefile” I said.</p>
+
+<p>My coworker (a recent convert to Ruby) agreed, but wondered what it would
+look like.  So I sketched the following on the whiteboard…</p>
+
+<pre>&quot;What if you could specify the make tasks in Ruby, like this ...&quot;
+
+  task &quot;build&quot; do
+    java_compile(...args, etc ...)
+  end
+
+&quot;The task function would register &quot;build&quot; as a target to be made,
+and the block would be the action executed whenever the build
+system determined that it was time to do the build target.&quot;</pre>
+
+<p>We agreed that would be cool, but writing make from scratch would be WAY
+too much work.  And that was the end of that!</p>
+
+<p>… Except I couldn&#39;t get the thought out of my head.  What exactly would
+be needed to make the about syntax work as a make file?  Hmmm, you would
+need to register the tasks, you need some way of specifying dependencies
+between tasks, and some way of kicking off the process. Hey!  What if we
+did … and fifteen minutes later I had a working prototype of Ruby make,
+complete with dependencies and actions.</p>
+
+<p>I showed the code to my coworker and we had a good laugh.  It was just
+about a page worth of code that reproduced an amazing amount of the
+functionality of make.  We were both truly stunned with the power of Ruby.</p>
+
+<p>But it didn&#39;t do everything make did.  In particular, it didn&#39;t
+have timestamp based file dependencies (where a file is rebuilt if any of
+its prerequisite files have a later timestamp).  Obviously THAT would be a
+pain to add and so Ruby Make would remain an interesting experiment.</p>
+
+<p>… Except as I walked back to my desk, I started thinking about what file
+based dependencies would really need.  Rats!  I was hooked again, and by
+adding a new class and two new methods, file/timestamp dependencies were
+implemented.</p>
+
+<p>Ok, now I was really hooked.  Last night (during CSI!) I massaged the code
+and cleaned it up a bit.  The result is a bare-bones replacement for make
+in exactly 100 lines of code.</p>
+
+<p>For the curious, you can see it at …</p>
+<ul><li>
+<p><a href="proto_rake_rdoc.html">doc/proto_rake.rdoc</a></p>
+</li></ul>
+
+<p>Oh, about the name.  When I wrote the example Ruby Make task on my
+whiteboard, my coworker exclaimed “Oh! I have the perfect name: Rake … Get
+it?  Ruby-Make. Rake!”  He said he envisioned the tasks as leaves and Rake
+would clean them up  … or something like that.  Anyways, the name stuck.</p>
+
+<p>Some quick examples …</p>
+
+<p>A simple task to delete backup files …</p>
+
+<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">clean</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-constant">Dir</span>[<span class="ruby-string">&#39;*~&#39;</span>].<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span> <span class="ruby-identifier">rm</span> <span class="ruby-identifier">fn</span> <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>}
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>Note that task names are symbols (they are slightly easier to type than
+quoted strings … but you may use quoted string if you would rather). Rake
+makes the methods of the <a href="../FileUtils.html">FileUtils</a> module
+directly available, so we take advantage of the <code>rm</code> command. 
+Also note the use of “rescue nil” to trap and ignore errors in the
+<code>rm</code> command.</p>
+
+<p>To run it, just type “rake clean”.  Rake will automatically find a Rakefile
+in the current directory (or above!) and will invoke the targets named on
+the command line.  If there are no targets explicitly named, rake will
+invoke the task “default”.</p>
+
+<p>Here&#39;s another task with dependencies …</p>
+
+<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">clobber</span> =<span class="ruby-operator">&gt;</span> [:<span class="ruby-identifier">clean</span>] <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">rm_r</span> <span class="ruby-string">&quot;tempdir&quot;</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>Task :clobber depends upon task :clean, so :clean will be run before
+:clobber is executed.</p>
+
+<p>Files are specified by using the “file” command.  It is similar to the task
+command, except that the task name represents a file, and the task will be
+run only if the file doesn&#39;t exist, or if its modification time is
+earlier than any of its prerequisites.</p>
+
+<p>Here is a file based dependency that will compile “hello.cc” to “hello.o”.</p>
+
+<pre class="ruby"><span class="ruby-identifier">file</span> <span class="ruby-string">&quot;hello.cc&quot;</span>
+<span class="ruby-identifier">file</span> <span class="ruby-string">&quot;hello.o&quot;</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">&quot;hello.cc&quot;</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">srcfile</span> = <span class="ruby-identifier">t</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\.o$/</span>, <span class="ruby-string">&quot;.cc&quot;</span>)
+  <span class="ruby-identifier">sh</span> <span class="ruby-node">%Q{g++ #{srcfile} -c -o #{t.name}}</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>I normally specify file tasks with string (rather than symbols).  Some file
+names can&#39;t be represented by symbols.  Plus it makes the distinction
+between them more clear to the casual reader.</p>
+
+<p>Currently writing a task for each and every file in the project would be
+tedious at best.  I envision a set of libraries to make this job easier. 
+For instance, perhaps something like this …</p>
+
+<pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;rake/ctools&#39;</span>
+<span class="ruby-constant">Dir</span>[<span class="ruby-string">&#39;*.c&#39;</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">c_source_file</span>(<span class="ruby-identifier">fn</span>)
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>where “c_source_file” will create all the tasks need to compile all the C
+source files in a directory.  Any number of useful libraries could be
+created for rake.</p>
+
+<p>That&#39;s it.  There&#39;s no documentation (other than whats in this
+message).  Does this sound interesting to anyone?  If so, I&#39;ll continue
+to clean it up and write it up and publish it on RAA.  Otherwise, I&#39;ll
+leave it as an interesting exercise and a tribute to the power of Ruby.</p>
+
+<p>Why /might/ rake be interesting to Ruby programmers.  I don&#39;t know,
+perhaps …</p>
+<ul><li>
+<p>No weird make syntax (only weird Ruby syntax :-)</p>
+</li><li>
+<p>No need to edit or read XML (a la ant)</p>
+</li><li>
+<p>Platform independent build scripts.</p>
+</li><li>
+<p>Will run anywhere Ruby exists, so no need to have “make” installed. If you
+stay away from the “sys” command and use things like &#39;ftools&#39;, you
+can have a perfectly platform independent build script.  Also rake is only
+100 lines of code, so it can easily be packaged along with the rest of your
+code.</p>
+</li></ul>
+
+<p>So … Sorry for the long rambling message.  Like I said, I never intended to
+write this code at all.</p>
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

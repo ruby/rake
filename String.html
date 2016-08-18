@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class String - Rake -- Ruby Make</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="Object.html">Object</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-ext">#ext</a>
+    
+    <li ><a href="#method-i-pathmap">#pathmap</a>
+    
+    <li ><a href="#method-i-pathmap_explode">#pathmap_explode</a>
+    
+    <li ><a href="#method-i-pathmap_partial">#pathmap_partial</a>
+    
+    <li ><a href="#method-i-pathmap_replace">#pathmap_replace</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-String">
+  <h1 id="class-String" class="class">
+    class String
+  </h1>
+
+  <section class="description">
+    
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-ext" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">ext</span><span
+            class="method-args">(newext='')</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Replace the file extension with <code>newext</code>.  If there is no
+extension on the string, append the new extension to the end.  If the new
+extension is not given, or is the empty string, remove any existing
+extension.</p>
+
+<p><code>ext</code> is a user added method for the <a
+href="String.html">String</a> class.</p>
+
+<p>This <a href="String.html">String</a> extension comes from Rake</p>
+          
+          
+
+          
+          <div class="method-source-code" id="ext-source">
+            <pre><span class="ruby-comment"># File lib/rake/ext/string.rb, line 13</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ext</span>(<span class="ruby-identifier">newext</span>=<span class="ruby-string">&#39;&#39;</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">dup</span> <span class="ruby-keyword">if</span> [<span class="ruby-string">&#39;.&#39;</span>, <span class="ruby-string">&#39;..&#39;</span>].<span class="ruby-identifier">include?</span> <span class="ruby-keyword">self</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">newext</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&#39;&#39;</span>
+    <span class="ruby-identifier">newext</span> = <span class="ruby-string">&quot;.&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">newext</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">newext</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\./</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">chomp</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">extname</span>(<span class="ruby-keyword">self</span>)) <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">newext</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-pathmap" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">pathmap</span><span
+            class="method-args">(spec=nil, &block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Map the path according to the given specification.  The specification
+controls the details of the mapping.  The following special patterns are
+recognized:</p>
+<dl class="rdoc-list note-list"><dt><code>%p</code> 
+<dd>
+<p>The complete path.</p>
+</dd><dt><code>%f</code> 
+<dd>
+<p>The base file name of the path, with its file extension, but without any
+directories.</p>
+</dd><dt><code>%n</code> 
+<dd>
+<p>The file name of the path without its file extension.</p>
+</dd><dt><code>%d</code> 
+<dd>
+<p>The directory list of the path.</p>
+</dd><dt><code>%x</code> 
+<dd>
+<p>The file extension of the path.  An empty string if there is no extension.</p>
+</dd><dt><code>%X</code> 
+<dd>
+<p>Everything <strong>but</strong> the file extension.</p>
+</dd><dt><code>%s</code> 
+<dd>
+<p>The alternate file separator if defined, otherwise use # the standard file
+separator.</p>
+</dd><dt><code>%%</code> 
+<dd>
+<p>A percent sign.</p>
+</dd></dl>
+
+<p>The <code>%d</code> specifier can also have a numeric prefix (e.g.
+&#39;%2d&#39;). If the number is positive, only return (up to)
+<code>n</code> directories in the path, starting from the left hand side. 
+If <code>n</code> is negative, return (up to) <code>n</code> directories
+from the right hand side of the path.</p>
+
+<p>Examples:</p>
+
+<pre>&#39;a/b/c/d/file.txt&#39;.pathmap(&quot;%2d&quot;)   =&gt; &#39;a/b&#39;
+&#39;a/b/c/d/file.txt&#39;.pathmap(&quot;%-2d&quot;)  =&gt; &#39;c/d&#39;</pre>
+
+<p>Also the <code>%d</code>, <code>%p</code>, <code>%f</code>,
+<code>%n</code>, <code>%x</code>, and <code>%X</code> operators can take a
+pattern/replacement argument to perform simple string substitutions on a
+particular part of the path.  The pattern and replacement are separated by
+a comma and are enclosed by curly braces.  The replacement spec comes after
+the % character but before the operator letter.  (e.g. “%{old,new}d”).
+Multiple replacement specs should be separated by semi-colons (e.g.
+“%{old,new;src,bin}d”).</p>
+
+<p>Regular expressions may be used for the pattern, and back refs may be used
+in the replacement text.  Curly braces, commas and semi-colons are excluded
+from both the pattern and replacement text (let&#39;s keep parsing
+reasonable).</p>
+
+<p>For example:</p>
+
+<pre class="ruby"><span class="ruby-string">&quot;src/org/onestepback/proj/A.java&quot;</span>.<span class="ruby-identifier">pathmap</span>(<span class="ruby-string">&quot;%{^src,class}X.class&quot;</span>)
+</pre>
+
+<p>returns:</p>
+
+<pre class="ruby"><span class="ruby-string">&quot;class/org/onestepback/proj/A.class&quot;</span>
+</pre>
+
+<p>If the replacement text is &#39;*&#39;, then a block may be provided to
+perform some arbitrary calculation for the replacement.</p>
+
+<p>For example:</p>
+
+<pre class="ruby"><span class="ruby-string">&quot;/path/to/file.TXT&quot;</span>.<span class="ruby-identifier">pathmap</span>(<span class="ruby-string">&quot;%X%{.*,*}x&quot;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">ext</span><span class="ruby-operator">|</span>
+   <span class="ruby-identifier">ext</span>.<span class="ruby-identifier">downcase</span>
+}
+</pre>
+
+<p>Returns:</p>
+
+<pre class="ruby"><span class="ruby-string">&quot;/path/to/file.txt&quot;</span>
+</pre>
+
+<p>This <a href="String.html">String</a> extension comes from Rake</p>
+          
+          
+
+          
+          <div class="method-source-code" id="pathmap-source">
+            <pre><span class="ruby-comment"># File lib/rake/ext/string.rb, line 137</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">pathmap</span>(<span class="ruby-identifier">spec</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">spec</span>.<span class="ruby-identifier">nil?</span>
+  <span class="ruby-identifier">result</span> = <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-identifier">spec</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/%\{[^}]*\}-?\d*[sdpfnxX%]|%-?\d+d|%.|[^%]+/</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">frag</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">case</span> <span class="ruby-identifier">frag</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;%f&#39;</span>
+      <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-keyword">self</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;%n&#39;</span>
+      <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-keyword">self</span>).<span class="ruby-identifier">ext</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;%d&#39;</span>
+      <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-keyword">self</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;%x&#39;</span>
+      <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">extname</span>(<span class="ruby-keyword">self</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;%X&#39;</span>
+      <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">ext</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;%p&#39;</span>
+      <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-keyword">self</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;%s&#39;</span>
+      <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-constant">File</span><span class="ruby-operator">::</span><span class="ruby-constant">ALT_SEPARATOR</span> <span class="ruby-operator">||</span> <span class="ruby-constant">File</span><span class="ruby-operator">::</span><span class="ruby-constant">SEPARATOR</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;%-&#39;</span>
+      <span class="ruby-comment"># do nothing</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;%%&#39;</span>
+      <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;%&quot;</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/%(-?\d+)d/</span>
+      <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">pathmap_partial</span>(<span class="ruby-node">$1</span>.<span class="ruby-identifier">to_i</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^%\{([^}]*)\}(\d*[dpfnxX])/</span>
+      <span class="ruby-identifier">patterns</span>, <span class="ruby-identifier">operator</span> = <span class="ruby-node">$1</span>, <span class="ruby-node">$2</span>
+      <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">pathmap</span>(<span class="ruby-string">&#39;%&#39;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">operator</span>).<span class="ruby-identifier">pathmap_replace</span>(<span class="ruby-identifier">patterns</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^%/</span>
+      <span class="ruby-identifier">fail</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;Unknown pathmap specifier #{frag} in &#39;#{spec}&#39;&quot;</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">frag</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">result</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-pathmap_explode" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">pathmap_explode</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Explode a path into individual components.  Used by <code>pathmap</code>.</p>
+
+<p>This <a href="String.html">String</a> extension comes from Rake</p>
+          
+          
+
+          
+          <div class="method-source-code" id="pathmap_explode-source">
+            <pre><span class="ruby-comment"># File lib/rake/ext/string.rb, line 26</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">pathmap_explode</span>
+  <span class="ruby-identifier">head</span>, <span class="ruby-identifier">tail</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">split</span>(<span class="ruby-keyword">self</span>)
+  <span class="ruby-keyword">return</span> [<span class="ruby-keyword">self</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">head</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">self</span>
+  <span class="ruby-keyword">return</span> [<span class="ruby-identifier">tail</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">head</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;.&#39;</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">tail</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;/&#39;</span>
+  <span class="ruby-keyword">return</span> [<span class="ruby-identifier">head</span>, <span class="ruby-identifier">tail</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">head</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;/&#39;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">head</span>.<span class="ruby-identifier">pathmap_explode</span> <span class="ruby-operator">+</span> [<span class="ruby-identifier">tail</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-pathmap_partial" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">pathmap_partial</span><span
+            class="method-args">(n)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Extract a partial path from the path.  Include <code>n</code> directories
+from the front end (left hand side) if <code>n</code> is positive.  Include
+|<code>n</code>| directories from the back end (right hand side) if
+<code>n</code> is negative.</p>
+
+<p>This <a href="String.html">String</a> extension comes from Rake</p>
+          
+          
+
+          
+          <div class="method-source-code" id="pathmap_partial-source">
+            <pre><span class="ruby-comment"># File lib/rake/ext/string.rb, line 40</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">pathmap_partial</span>(<span class="ruby-identifier">n</span>)
+  <span class="ruby-identifier">dirs</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-keyword">self</span>).<span class="ruby-identifier">pathmap_explode</span>
+  <span class="ruby-identifier">partial_dirs</span> =
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">dirs</span>[<span class="ruby-value">0</span><span class="ruby-operator">...</span><span class="ruby-identifier">n</span>]
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">dirs</span>.<span class="ruby-identifier">reverse</span>[<span class="ruby-value">0</span><span class="ruby-operator">...</span><span class="ruby-operator">-</span><span class="ruby-identifier">n</span>].<span class="ruby-identifier">reverse</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-string">&quot;.&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">partial_dirs</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-pathmap_replace" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">pathmap_replace</span><span
+            class="method-args">(patterns, &block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Perform the pathmap replacement operations on the given path. The patterns
+take the form &#39;pat1,rep1;pat2,rep2…&#39;.</p>
+
+<p>This <a href="String.html">String</a> extension comes from Rake</p>
+          
+          
+
+          
+          <div class="method-source-code" id="pathmap_replace-source">
+            <pre><span class="ruby-comment"># File lib/rake/ext/string.rb, line 58</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">pathmap_replace</span>(<span class="ruby-identifier">patterns</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">result</span> = <span class="ruby-keyword">self</span>
+  <span class="ruby-identifier">patterns</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;;&#39;</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pair</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">pattern</span>, <span class="ruby-identifier">replacement</span> = <span class="ruby-identifier">pair</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;,&#39;</span>)
+    <span class="ruby-identifier">pattern</span> = <span class="ruby-constant">Regexp</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">pattern</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">replacement</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;*&#39;</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">block_given?</span>
+      <span class="ruby-identifier">result</span> = <span class="ruby-identifier">result</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-identifier">pattern</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">replacement</span>
+      <span class="ruby-identifier">result</span> = <span class="ruby-identifier">result</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-identifier">pattern</span>, <span class="ruby-identifier">replacement</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">result</span> = <span class="ruby-identifier">result</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-identifier">pattern</span>, <span class="ruby-string">&#39;&#39;</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">result</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

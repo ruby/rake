@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Rake::PackageTask - Rake -- Ruby Make</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">TaskLib
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-define">#define</a>
+    
+    <li ><a href="#method-i-init">#init</a>
+    
+    <li ><a href="#method-i-package_dir_path">#package_dir_path</a>
+    
+    <li ><a href="#method-i-package_name">#package_name</a>
+    
+    <li ><a href="#method-i-tar_bz2_file">#tar_bz2_file</a>
+    
+    <li ><a href="#method-i-tar_gz_file">#tar_gz_file</a>
+    
+    <li ><a href="#method-i-tar_xz_file">#tar_xz_file</a>
+    
+    <li ><a href="#method-i-tgz_file">#tgz_file</a>
+    
+    <li ><a href="#method-i-zip_file">#zip_file</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Rake::PackageTask">
+  <h1 id="class-Rake::PackageTask" class="class">
+    class Rake::PackageTask
+  </h1>
+
+  <section class="description">
+    
+<p>Create a packaging task that will package the project into distributable
+files (e.g zip archive or tar files).</p>
+
+<p>The <a href="PackageTask.html">PackageTask</a> will create the following
+targets:</p>
+<dl class="rdoc-list note-list"><dt><code>:package</code> 
+<dd>
+<p>Create all the requested package files.</p>
+</dd><dt><code>:clobber_package</code> 
+<dd>
+<p>Delete all the package files.  This target is automatically added to the
+main clobber target.</p>
+</dd><dt><code>:repackage</code> 
+<dd>
+<p>Rebuild the package files from scratch, even if they are not out of date.</p>
+</dd><dt><code>&quot;<em>package_dir</em>/<em>name</em>-<em>version</em>.tgz&quot;</code> 
+<dd>
+<p>Create a gzipped tar package (if <em>need_tar</em> is true).</p>
+</dd><dt><code>&quot;<em>package_dir</em>/<em>name</em>-<em>version</em>.tar.gz&quot;</code> 
+<dd>
+<p>Create a gzipped tar package (if <em>need_tar_gz</em> is true).</p>
+</dd><dt><code>&quot;<em>package_dir</em>/<em>name</em>-<em>version</em>.tar.bz2&quot;</code> 
+<dd>
+<p>Create a bzip2&#39;d tar package (if <em>need_tar_bz2</em> is true).</p>
+</dd><dt><code>&quot;<em>package_dir</em>/<em>name</em>-<em>version</em>.zip&quot;</code> 
+<dd>
+<p>Create a zip package archive (if <em>need_zip</em> is true).</p>
+</dd></dl>
+
+<p>Example:</p>
+
+<pre class="ruby"><span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">PackageTask</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;rake&quot;</span>, <span class="ruby-string">&quot;1.2.3&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">p</span>.<span class="ruby-identifier">need_tar</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-identifier">p</span>.<span class="ruby-identifier">package_files</span>.<span class="ruby-identifier">include</span>(<span class="ruby-string">&quot;lib   /*.rb&quot;</span>)
+<span class="ruby-keyword">end</span>
+</pre>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-name" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">name</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Name of the package (from the GEM Spec).</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-need_tar" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">need_tar</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>True if a gzipped tar file (tgz) should be produced (default is false).</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-need_tar_bz2" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">need_tar_bz2</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>True if a bzip2&#39;d tar file (tar.bz2) should be produced (default is
+false).</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-need_tar_gz" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">need_tar_gz</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>True if a gzipped tar file (tar.gz) should be produced (default is false).</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-need_tar_xz" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">need_tar_xz</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>True if a xz&#39;d tar file (tar.xz) should be produced (default is false)</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-need_zip" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">need_zip</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>True if a zip file should be produced (default is false)</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-package_dir" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">package_dir</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Directory used to store the package files (default is &#39;pkg&#39;).</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-package_files" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">package_files</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>List of files to be included in the package.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-tar_command" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">tar_command</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Tar command for gzipped or bzip2ed archives.  The default is &#39;tar&#39;.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-version" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">version</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Version of the package (e.g. &#39;1.3.2&#39;).</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-zip_command" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">zip_command</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Zip command for zipped archives.  The default is &#39;zip&#39;.</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(name=nil, version=nil) { |self| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a Package <a href="Task.html">Task</a> with the given name and
+version.  Use <code>:noversion</code> as the version to build a package
+without a version or to provide a fully-versioned package name.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 85</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">version</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">init</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">version</span>)
+  <span class="ruby-keyword">yield</span> <span class="ruby-keyword">self</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
+  <span class="ruby-identifier">define</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">name</span>.<span class="ruby-identifier">nil?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-define" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">define</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create the tasks defined by this task library.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="define-source">
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 107</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">define</span>
+  <span class="ruby-identifier">fail</span> <span class="ruby-string">&quot;Version required (or :noversion)&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@version</span>.<span class="ruby-identifier">nil?</span>
+  <span class="ruby-ivar">@version</span> = <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-value">:noversion</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@version</span>
+
+  <span class="ruby-identifier">desc</span> <span class="ruby-string">&quot;Build all the packages&quot;</span>
+  <span class="ruby-identifier">task</span> <span class="ruby-value">:package</span>
+
+  <span class="ruby-identifier">desc</span> <span class="ruby-string">&quot;Force a rebuild of the package files&quot;</span>
+  <span class="ruby-identifier">task</span> <span class="ruby-identifier">repackage</span><span class="ruby-operator">:</span> [<span class="ruby-value">:clobber_package</span>, <span class="ruby-value">:package</span>]
+
+  <span class="ruby-identifier">desc</span> <span class="ruby-string">&quot;Remove package products&quot;</span>
+  <span class="ruby-identifier">task</span> <span class="ruby-value">:clobber_package</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">rm_r</span> <span class="ruby-identifier">package_dir</span> <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">task</span> <span class="ruby-identifier">clobber</span><span class="ruby-operator">:</span> [<span class="ruby-value">:clobber_package</span>]
+
+  [
+    [<span class="ruby-identifier">need_tar</span>, <span class="ruby-identifier">tgz_file</span>, <span class="ruby-string">&quot;z&quot;</span>],
+    [<span class="ruby-identifier">need_tar_gz</span>, <span class="ruby-identifier">tar_gz_file</span>, <span class="ruby-string">&quot;z&quot;</span>],
+    [<span class="ruby-identifier">need_tar_bz2</span>, <span class="ruby-identifier">tar_bz2_file</span>, <span class="ruby-string">&quot;j&quot;</span>],
+    [<span class="ruby-identifier">need_tar_xz</span>, <span class="ruby-identifier">tar_xz_file</span>, <span class="ruby-string">&quot;J&quot;</span>]
+  ].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">need</span>, <span class="ruby-identifier">file</span>, <span class="ruby-identifier">flag</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">need</span>
+      <span class="ruby-identifier">task</span> <span class="ruby-identifier">package</span><span class="ruby-operator">:</span> [<span class="ruby-node">&quot;#{package_dir}/#{file}&quot;</span>]
+      <span class="ruby-identifier">file</span> <span class="ruby-node">&quot;#{package_dir}/#{file}&quot;</span> =<span class="ruby-operator">&gt;</span>
+        [<span class="ruby-identifier">package_dir_path</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">package_files</span> <span class="ruby-keyword">do</span>
+        <span class="ruby-identifier">chdir</span>(<span class="ruby-identifier">package_dir</span>) <span class="ruby-keyword">do</span>
+          <span class="ruby-identifier">sh</span> <span class="ruby-ivar">@tar_command</span>, <span class="ruby-node">&quot;#{flag}cvf&quot;</span>, <span class="ruby-identifier">file</span>, <span class="ruby-identifier">package_name</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">need_zip</span>
+    <span class="ruby-identifier">task</span> <span class="ruby-identifier">package</span><span class="ruby-operator">:</span> [<span class="ruby-node">&quot;#{package_dir}/#{zip_file}&quot;</span>]
+    <span class="ruby-identifier">file</span> <span class="ruby-node">&quot;#{package_dir}/#{zip_file}&quot;</span> =<span class="ruby-operator">&gt;</span>
+      [<span class="ruby-identifier">package_dir_path</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">package_files</span> <span class="ruby-keyword">do</span>
+      <span class="ruby-identifier">chdir</span>(<span class="ruby-identifier">package_dir</span>) <span class="ruby-keyword">do</span>
+        <span class="ruby-identifier">sh</span> <span class="ruby-ivar">@zip_command</span>, <span class="ruby-string">&quot;-r&quot;</span>, <span class="ruby-identifier">zip_file</span>, <span class="ruby-identifier">package_name</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">directory</span> <span class="ruby-identifier">package_dir_path</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@package_files</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-ivar">@package_files</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">f</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">package_dir_path</span>, <span class="ruby-identifier">fn</span>)
+      <span class="ruby-identifier">fdir</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">f</span>)
+      <span class="ruby-identifier">mkdir_p</span>(<span class="ruby-identifier">fdir</span>) <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">fdir</span>)
+      <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span>(<span class="ruby-identifier">fn</span>)
+        <span class="ruby-identifier">mkdir_p</span>(<span class="ruby-identifier">f</span>)
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">rm_f</span> <span class="ruby-identifier">f</span>
+        <span class="ruby-identifier">safe_ln</span>(<span class="ruby-identifier">fn</span>, <span class="ruby-identifier">f</span>)
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-init" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">init</span><span
+            class="method-args">(name, version)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Initialization that bypasses the “yield self” and “define” step.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="init-source">
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 92</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">init</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">version</span>)
+  <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
+  <span class="ruby-ivar">@version</span> = <span class="ruby-identifier">version</span>
+  <span class="ruby-ivar">@package_files</span> = <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">FileList</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@package_dir</span> = <span class="ruby-string">&#39;pkg&#39;</span>
+  <span class="ruby-ivar">@need_tar</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@need_tar_gz</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@need_tar_bz2</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@need_tar_xz</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@need_zip</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@tar_command</span> = <span class="ruby-string">&#39;tar&#39;</span>
+  <span class="ruby-ivar">@zip_command</span> = <span class="ruby-string">&#39;zip&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-package_dir_path" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">package_dir_path</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The directory this package will be built in</p>
+          
+          
+
+          
+          <div class="method-source-code" id="package_dir_path-source">
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 175</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">package_dir_path</span>
+  <span class="ruby-node">&quot;#{package_dir}/#{package_name}&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-package_name" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">package_name</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The name of this package</p>
+          
+          
+
+          
+          <div class="method-source-code" id="package_name-source">
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 169</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">package_name</span>
+  <span class="ruby-ivar">@version</span> <span class="ruby-operator">?</span> <span class="ruby-node">&quot;#{@name}-#{@version}&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-ivar">@name</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-tar_bz2_file" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">tar_bz2_file</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The package name with .tar.bz2 added</p>
+          
+          
+
+          
+          <div class="method-source-code" id="tar_bz2_file-source">
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 193</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">tar_bz2_file</span>
+  <span class="ruby-node">&quot;#{package_name}.tar.bz2&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-tar_gz_file" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">tar_gz_file</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The package name with .tar.gz added</p>
+          
+          
+
+          
+          <div class="method-source-code" id="tar_gz_file-source">
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 187</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">tar_gz_file</span>
+  <span class="ruby-node">&quot;#{package_name}.tar.gz&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-tar_xz_file" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">tar_xz_file</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The package name with .tar.xz added</p>
+          
+          
+
+          
+          <div class="method-source-code" id="tar_xz_file-source">
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 199</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">tar_xz_file</span>
+  <span class="ruby-node">&quot;#{package_name}.tar.xz&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-tgz_file" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">tgz_file</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The package name with .tgz added</p>
+          
+          
+
+          
+          <div class="method-source-code" id="tgz_file-source">
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 181</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">tgz_file</span>
+  <span class="ruby-node">&quot;#{package_name}.tgz&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-zip_file" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">zip_file</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The package name with .zip added</p>
+          
+          
+
+          
+          <div class="method-source-code" id="zip_file-source">
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 205</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">zip_file</span>
+  <span class="ruby-node">&quot;#{package_name}.zip&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
