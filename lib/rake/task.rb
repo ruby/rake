@@ -141,11 +141,12 @@ module Rake
       @already_invoked = false
     end
 
-    # Clear the existing prerequisites and actions of a rake task.
+    # Clear the existing prerequisites, actions, comments, and arguments of a rake task.
     def clear
       clear_prerequisites
       clear_actions
       clear_comments
+      clear_args
       self
     end
 
@@ -164,6 +165,12 @@ module Rake
     # Clear the existing comments on a rake task.
     def clear_comments
       @comments = []
+      self
+    end
+
+    # Clear the existing arguments on a rake task.
+    def clear_args
+      @arg_names = nil
       self
     end
 

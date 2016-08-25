@@ -112,11 +112,12 @@ class TestRakeTask < Rake::TestCase
 
   def test_clear
     desc "a task"
-    t = task("t" => "a") { }
+    t = task("t", ["b"] => "a") { }
     t.clear
     assert t.prerequisites.empty?, "prerequisites should be empty"
     assert t.actions.empty?, "actions should be empty"
     assert_nil t.comment, "comments should be empty"
+    assert_empty t.arg_names, "arg names should be empty"
   end
 
   def test_clear_prerequisites
@@ -146,6 +147,18 @@ class TestRakeTask < Rake::TestCase
     assert_equal "a slightly different foo", task(:foo).comment
     assert_equal ["x"], task(:foo).prerequisites
     assert_equal 1, task(:foo).actions.size
+  end
+
+  def test_clear_args
+    task :foo, [:x] do
+      # Dummy action
+    end
+
+    task(:foo).clear_args
+
+    task :foo
+
+    assert_empty task(:foo).arg_names
   end
 
   def test_find
