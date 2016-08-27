@@ -229,11 +229,10 @@ Bug fixes:
 * Fixed bug in can\_detect\_signals? in test.  Patch from #243 by Alexey
   Borzenkov.
 
-=== 10.1.1 and earlier
+=== 10.1.1
 
-Additions to the old CHANGES file were not made consistently so some
-versions are missing from this file.  These changes are usually described in
-the individual release notes files.
+* Use http://github.com/jimweirich/rake instead of http://rake.rubyforge.org for
+  canonical project url.
 
 === 10.1.0
 
