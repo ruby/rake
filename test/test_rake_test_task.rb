@@ -82,18 +82,24 @@ class TestRakeTestTask < Rake::TestCase
   end
 
   def test_pattern_equals
+    ['gl.rb', 'ob.rb'].each do |f|
+      create_file(f)
+    end
     tt = Rake::TestTask.new do |t|
       t.pattern = "*.rb"
     end
-    assert_equal ["*.rb"], tt.file_list.to_a
+    assert_equal ["gl.rb", "ob.rb"], tt.file_list.to_a
   end
 
   def test_pattern_equals_test_files_equals
+    ['gl.rb', 'ob.rb'].each do |f|
+      create_file(f)
+    end
     tt = Rake::TestTask.new do |t|
       t.test_files = FileList["a.rb", "b.rb"]
       t.pattern = "*.rb"
     end
-    assert_equal ["a.rb", "b.rb", "*.rb"], tt.file_list.to_a
+    assert_equal ["a.rb", "b.rb", "gl.rb", "ob.rb"], tt.file_list.to_a
   end
 
   def test_run_code_direct
