@@ -4,19 +4,19 @@ AllCops:
   Exclude:
     - rake.gemspec
 
+LineLength:
+  Enabled: true
+  Max: 120
+
+Style/HashSyntax:
+  Enabled: true
+
 Style/StringLiterals:
   Enabled: true
   EnforcedStyle: double_quotes
 
 SpaceAroundEqualsInParameterDefault:
   Enabled: false
-
-Style/HashSyntax:
-  Enabled: true
-
-LineLength:
-  Enabled: true
-  Max: 120
 
 WhileUntilModifier:
   Enabled: false
