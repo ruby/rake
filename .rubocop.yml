@@ -5,7 +5,7 @@ AllCops:
     - doc/**/*.rb
     - rake.gemspec
 
-LineLength:
+Style/LineLength:
   Enabled: true
   Max: 120
 
