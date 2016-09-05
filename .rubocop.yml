@@ -30,12 +30,3 @@ Style/TrailingBlankLines:
 
 Style/TrailingWhitespace:
   Enabled: true
-
-SpaceAroundEqualsInParameterDefault:
-  Enabled: false
-
-WhileUntilModifier:
-  Enabled: false
-
-IfUnlessModifier:
-  Enabled: false
