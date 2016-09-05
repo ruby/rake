@@ -642,7 +642,7 @@ class TestRakeApplication < Rake::TestCase
     loader = Object.new
 
     loader.instance_variable_set :@load_called, false
-    def loader.load arg
+    def loader.load(arg)
       raise ArgumentError, arg unless arg == "x.dummy"
       @load_called = true
     end
