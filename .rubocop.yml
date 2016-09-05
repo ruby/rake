@@ -1,3 +1,9 @@
+AllCops:
+  TargetRubyVersion: 2.3
+  DisabledByDefault: true
+  Exclude:
+    - rake.gemspec
+
 StringLiterals:
   Enabled: false
 
