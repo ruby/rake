@@ -93,14 +93,14 @@ class TestRakeTaskArguments < Rake::TestCase
 
   def test_default_arguments_values_can_be_merged
     ta = Rake::TaskArguments.new(["aa", "bb"], [nil, "original_val"])
-    ta.with_defaults({ aa: "default_val" })
+    ta.with_defaults(aa: "default_val")
     assert_equal "default_val", ta[:aa]
     assert_equal "original_val", ta[:bb]
   end
 
   def test_default_arguments_that_dont_match_names_are_ignored
     ta = Rake::TaskArguments.new(["aa", "bb"], [nil, "original_val"])
-    ta.with_defaults({ "cc" => "default_val" })
+    ta.with_defaults("cc" => "default_val")
     assert_nil ta[:cc]
   end
 

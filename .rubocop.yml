@@ -46,6 +46,9 @@ Style/CaseIndentation:
 Style/MethodDefParentheses:
   Enabled: true
 
+Style/BracesAroundHashParameters:
+  Enabled: true
+
 Lint/EndAlignment:
   Enabled: true
   AlignWith: variable
