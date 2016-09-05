@@ -30,3 +30,12 @@ Style/TrailingBlankLines:
 
 Style/TrailingWhitespace:
   Enabled: true
+
+Style/SpaceBeforeBlockBraces:
+  Enabled: true
+
+Style/SpaceInsideBlockBraces:
+  Enabled: true
+
+Style/SpaceInsideHashLiteralBraces:
+  Enabled: true

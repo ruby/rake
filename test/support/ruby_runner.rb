@@ -18,13 +18,13 @@ module RubyRunner
   def run_ruby(option_list)
     puts "COMMAND: [#{RUBY} #{option_list.join ' '}]" if @verbose
 
-    Open3.popen3(RUBY, *option_list) {|inn, out, err, wait|
+    Open3.popen3(RUBY, *option_list) do |inn, out, err, wait|
       inn.close
 
       @exit = wait ? wait.value : $?
       @out = out.read
       @err = err.read
-    }
+    end
 
     puts "OUTPUT:  [#{@out}]" if @verbose
     puts "ERROR:   [#{@err}]" if @verbose

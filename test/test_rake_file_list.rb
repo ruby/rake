@@ -377,7 +377,7 @@ class TestRakeFileList < Rake::TestCase
 
   def test_egrep_returns_0_if_no_matches
     files = FileList["test/lib/*_test.rb"].exclude("test/lib/filelist_test.rb")
-    assert_equal 0, files.egrep(/XYZZY/) { }
+    assert_equal 0, files.egrep(/XYZZY/) {}
   end
 
   def test_egrep_with_output

@@ -344,7 +344,7 @@ class TestRakeRules < Rake::TestCase
   def test_string_rule_with_args_and_lambda_prereq
     delete_file(OBJFILE)
     create_file(SRCFILE)
-    rule ".o", [:a] => [lambda{SRCFILE}]do |t, args|
+    rule ".o", [:a] => [lambda { SRCFILE }]do |t, args|
       assert_equal "arg", args.a
     end
     Task[OBJFILE].invoke("arg")
@@ -353,7 +353,7 @@ class TestRakeRules < Rake::TestCase
   def test_regex_rule_with_args_and_lambda_prereq
     delete_file(OBJFILE)
     create_file(SRCFILE)
-    rule(/.o$/, [:a] => [lambda{SRCFILE}]) do |t, args|
+    rule(/.o$/, [:a] => [lambda { SRCFILE }]) do |t, args|
       assert_equal "arg", args.a
     end
     Task[OBJFILE].invoke("arg")

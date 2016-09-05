@@ -479,7 +479,7 @@ class TestRakeApplication < Rake::TestCase
     @app.intern(Rake::Task, "default").enhance { fail }
     setup_command_line("-f", "-s",  '--rakelib=""')
     _, err = capture_io {
-      assert_raises(SystemExit){ @app.run }
+      assert_raises(SystemExit) { @app.run }
     }
     assert_match(/see full trace/i, err)
   ensure

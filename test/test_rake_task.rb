@@ -112,7 +112,7 @@ class TestRakeTask < Rake::TestCase
 
   def test_clear
     desc "a task"
-    t = task("t", ["b"] => "a") { }
+    t = task("t", ["b"] => "a") {}
     t.clear
     assert t.prerequisites.empty?, "prerequisites should be empty"
     assert t.actions.empty?, "actions should be empty"
@@ -128,7 +128,7 @@ class TestRakeTask < Rake::TestCase
   end
 
   def test_clear_actions
-    t = task("t") { }
+    t = task("t") {}
     t.clear_actions
     assert t.actions.empty?, "actions should be empty"
   end

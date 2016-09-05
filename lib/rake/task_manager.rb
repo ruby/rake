@@ -256,7 +256,7 @@ module Rake
           return nil
         end
       }
-      task = FileTask.define_task(task_name, {args => prereqs}, &block)
+      task = FileTask.define_task(task_name, { args => prereqs }, &block)
       task.sources = prereqs
       task
     end

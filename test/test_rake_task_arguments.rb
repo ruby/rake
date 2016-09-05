@@ -16,12 +16,12 @@ class TestRakeTaskArguments < Rake::TestCase
 
   def test_multiple_values_in_args
     ta = Rake::TaskArguments.new([:a, :b, :c], [:one, :two, :three])
-    assert_equal({a: :one, b: :two, c: :three}, ta.to_hash)
+    assert_equal({ a: :one, b: :two, c: :three }, ta.to_hash)
   end
 
   def test_blank_values_in_args
     ta = Rake::TaskArguments.new([:a, :b, :c], ["", :two, ""])
-    assert_equal({b: :two}, ta.to_hash)
+    assert_equal({ b: :two }, ta.to_hash)
   end
 
   def test_has_key
@@ -78,7 +78,7 @@ class TestRakeTaskArguments < Rake::TestCase
   def test_creating_new_argument_scopes
     parent = Rake::TaskArguments.new(["p"], [1])
     child = parent.new_scope(["c", "p"])
-    assert_equal({p: 1}, child.to_hash)
+    assert_equal({ p: 1 }, child.to_hash)
     assert_equal 1, child.p
     assert_equal 1, child["p"]
     assert_equal 1, child[:p]
