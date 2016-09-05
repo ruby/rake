@@ -9,7 +9,7 @@ module Rake
     end
 
     def to_s
-      '<LATE TIME>'
+      "<LATE TIME>"
     end
   end
 

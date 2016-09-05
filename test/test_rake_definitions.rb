@@ -1,5 +1,5 @@
-require File.expand_path('../helper', __FILE__)
-require 'fileutils'
+require File.expand_path("../helper", __FILE__)
+require "fileutils"
 
 class TestRakeDefinitions < Rake::TestCase
   include Rake
@@ -69,7 +69,7 @@ class TestRakeDefinitions < Rake::TestCase
     create_existing_file
     task y: [EXISTINGFILE] do |t| runs << t.name end
     Task[:y].invoke
-    assert_equal runs, ['y']
+    assert_equal runs, ["y"]
   end
 
   private # ----------------------------------------------------------

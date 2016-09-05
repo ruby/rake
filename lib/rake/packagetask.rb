@@ -1,8 +1,8 @@
 # Define a package task library to aid in the definition of
 # redistributable package files.
 
-require 'rake'
-require 'rake/tasklib'
+require "rake"
+require "rake/tasklib"
 
 module Rake
 
@@ -93,14 +93,14 @@ module Rake
       @name = name
       @version = version
       @package_files = Rake::FileList.new
-      @package_dir = 'pkg'
+      @package_dir = "pkg"
       @need_tar = false
       @need_tar_gz = false
       @need_tar_bz2 = false
       @need_tar_xz = false
       @need_zip = false
-      @tar_command = 'tar'
-      @zip_command = 'zip'
+      @tar_command = "tar"
+      @zip_command = "zip"
     end
 
     # Create the tasks defined by this task library.

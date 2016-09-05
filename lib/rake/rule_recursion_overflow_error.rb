@@ -12,7 +12,7 @@ module Rake
     end
 
     def message
-      super + ": [" + @targets.reverse.join(' => ') + "]"
+      super + ": [" + @targets.reverse.join(" => ") + "]"
     end
   end
 

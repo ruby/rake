@@ -1,13 +1,13 @@
-require File.expand_path('../helper', __FILE__)
-require 'rake/clean'
+require File.expand_path("../helper", __FILE__)
+require "rake/clean"
 
 class TestRakeClean < Rake::TestCase
   def test_clean
-    load 'rake/clean.rb', true
+    load "rake/clean.rb", true
 
-    assert Rake::Task['clean'], "Should define clean"
-    assert Rake::Task['clobber'], "Should define clobber"
-    assert Rake::Task['clobber'].prerequisites.include?("clean"),
+    assert Rake::Task["clean"], "Should define clean"
+    assert Rake::Task["clobber"], "Should define clobber"
+    assert Rake::Task["clobber"].prerequisites.include?("clean"),
       "Clobber should require clean"
   end
 

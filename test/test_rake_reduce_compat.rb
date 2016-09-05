@@ -1,5 +1,5 @@
-require File.expand_path('../helper', __FILE__)
-require 'open3'
+require File.expand_path("../helper", __FILE__)
+require "open3"
 
 class TestRakeReduceCompat < Rake::TestCase
   include RubyRunner

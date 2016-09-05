@@ -1,10 +1,10 @@
-require File.expand_path('../helper', __FILE__)
+require File.expand_path("../helper", __FILE__)
 
 ######################################################################
 class TestRakeTaskArguments < Rake::TestCase
   def teardown
-    ENV.delete('rev')
-    ENV.delete('VER')
+    ENV.delete("rev")
+    ENV.delete("VER")
 
     super
   end
@@ -20,7 +20,7 @@ class TestRakeTaskArguments < Rake::TestCase
   end
 
   def test_blank_values_in_args
-    ta = Rake::TaskArguments.new([:a, :b, :c], ['', :two, ''])
+    ta = Rake::TaskArguments.new([:a, :b, :c], ["", :two, ""])
     assert_equal({b: :two}, ta.to_hash)
   end
 
@@ -69,15 +69,15 @@ class TestRakeTaskArguments < Rake::TestCase
 
   def test_args_do_not_reference_env_values
     ta = Rake::TaskArguments.new(["aa"], [1])
-    ENV['rev'] = "1.2"
-    ENV['VER'] = "2.3"
+    ENV["rev"] = "1.2"
+    ENV["VER"] = "2.3"
     assert_nil ta.rev
     assert_nil ta.ver
   end
 
   def test_creating_new_argument_scopes
-    parent = Rake::TaskArguments.new(['p'], [1])
-    child = parent.new_scope(['c', 'p'])
+    parent = Rake::TaskArguments.new(["p"], [1])
+    child = parent.new_scope(["c", "p"])
     assert_equal({p: 1}, child.to_hash)
     assert_equal 1, child.p
     assert_equal 1, child["p"]
@@ -86,16 +86,16 @@ class TestRakeTaskArguments < Rake::TestCase
   end
 
   def test_child_hides_parent_arg_names
-    parent = Rake::TaskArguments.new(['aa'], [1])
-    child = Rake::TaskArguments.new(['aa'], [2], parent)
+    parent = Rake::TaskArguments.new(["aa"], [1])
+    child = Rake::TaskArguments.new(["aa"], [2], parent)
     assert_equal 2, child.aa
   end
 
   def test_default_arguments_values_can_be_merged
     ta = Rake::TaskArguments.new(["aa", "bb"], [nil, "original_val"])
-    ta.with_defaults({ aa: 'default_val' })
-    assert_equal 'default_val', ta[:aa]
-    assert_equal 'original_val', ta[:bb]
+    ta.with_defaults({ aa: "default_val" })
+    assert_equal "default_val", ta[:aa]
+    assert_equal "original_val", ta[:bb]
   end
 
   def test_default_arguments_that_dont_match_names_are_ignored
@@ -109,8 +109,8 @@ class TestRakeTaskArguments < Rake::TestCase
     _, args = app.parse_task_string("task[1,two,more]")
     ta = Rake::TaskArguments.new([], args)
     assert_equal [], ta.names
-    assert_equal ['1', 'two', 'more'], ta.to_a
-    assert_equal ['1', 'two', 'more'], ta.extras
+    assert_equal ["1", "two", "more"], ta.to_a
+    assert_equal ["1", "two", "more"], ta.extras
   end
 
   def test_all_and_extra_arguments_with_named_arguments
@@ -120,8 +120,8 @@ class TestRakeTaskArguments < Rake::TestCase
     assert_equal [:first, :second], ta.names
     assert_equal "1", ta[:first]
     assert_equal "two", ta[:second]
-    assert_equal ['1', 'two', 'more', 'still more'], ta.to_a
-    assert_equal ['more', 'still more'], ta.extras
+    assert_equal ["1", "two", "more", "still more"], ta.to_a
+    assert_equal ["more", "still more"], ta.extras
   end
 
   def test_extra_args_with_less_than_named_arguments
@@ -132,7 +132,7 @@ class TestRakeTaskArguments < Rake::TestCase
     assert_equal "1", ta[:first]
     assert_equal "two", ta[:second]
     assert_equal nil, ta[:third]
-    assert_equal ['1', 'two'], ta.to_a
+    assert_equal ["1", "two"], ta.to_a
     assert_equal [], ta.extras
   end
 

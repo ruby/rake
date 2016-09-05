@@ -1,5 +1,5 @@
-require 'rake/task.rb'
-require 'rake/early_time'
+require "rake/task.rb"
+require "rake/early_time"
 
 module Rake
 

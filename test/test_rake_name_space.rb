@@ -1,4 +1,4 @@
-require File.expand_path('../helper', __FILE__)
+require File.expand_path("../helper", __FILE__)
 
 class TestRakeNameSpace < Rake::TestCase
 
@@ -44,8 +44,8 @@ class TestRakeNameSpace < Rake::TestCase
   def test_scope
     mgr = TM.new
 
-    scope = Rake::LinkedList.new 'b'
-    scope = scope.conj 'a'
+    scope = Rake::LinkedList.new "b"
+    scope = scope.conj "a"
 
     ns = Rake::NameSpace.new mgr, scope
 

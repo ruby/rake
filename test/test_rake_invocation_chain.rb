@@ -1,4 +1,4 @@
-require File.expand_path('../helper', __FILE__)
+require File.expand_path("../helper", __FILE__)
 
 class TestRakeInvocationChain < Rake::TestCase
   include Rake
@@ -29,7 +29,7 @@ class TestRakeInvocationChain < Rake::TestCase
   def test_append_with_one_argument
     chain = @empty.append("A")
 
-    assert_equal 'TOP => A', chain.to_s # HACK
+    assert_equal "TOP => A", chain.to_s # HACK
   end
 
   def test_append_one_circular

@@ -1,6 +1,6 @@
-require 'set'
+require "set"
 
-require 'rake/promise'
+require "rake/promise"
 
 module Rake
 

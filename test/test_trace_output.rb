@@ -1,5 +1,5 @@
-require File.expand_path('../helper', __FILE__)
-require 'stringio'
+require File.expand_path("../helper", __FILE__)
+require "stringio"
 
 class TestTraceOutput < Rake::TestCase
   include Rake::TraceOutput

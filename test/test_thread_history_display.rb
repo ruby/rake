@@ -1,6 +1,6 @@
-require File.expand_path('../helper', __FILE__)
+require File.expand_path("../helper", __FILE__)
 
-require 'rake/thread_history_display'
+require "rake/thread_history_display"
 
 class TestThreadHistoryDisplay < Rake::TestCase
   def setup

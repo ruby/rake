@@ -1,5 +1,5 @@
-require File.expand_path('../helper', __FILE__)
-require 'fileutils'
+require File.expand_path("../helper", __FILE__)
+require "fileutils"
 
 class TestRakeTask < Rake::TestCase
   include Rake
@@ -122,7 +122,7 @@ class TestRakeTask < Rake::TestCase
 
   def test_clear_prerequisites
     t = task("t" => ["a", "b"])
-    assert_equal ['a', 'b'], t.prerequisites
+    assert_equal ["a", "b"], t.prerequisites
     t.clear_prerequisites
     assert_equal [], t.prerequisites
   end
@@ -301,7 +301,7 @@ class TestRakeTask < Rake::TestCase
     task :b
     task :c
 
-    assert_in_delta Time.now, a.timestamp, 0.1, 'computer too slow?'
+    assert_in_delta Time.now, a.timestamp, 0.1, "computer too slow?"
   end
 
   def test_timestamp_returns_latest_prereq_timestamp
@@ -313,7 +313,7 @@ class TestRakeTask < Rake::TestCase
     def b.timestamp() Time.now + 10 end
     def c.timestamp() Time.now + 5 end
 
-    assert_in_delta now, a.timestamp, 0.1, 'computer too slow?'
+    assert_in_delta now, a.timestamp, 0.1, "computer too slow?"
   end
 
   def test_always_multitask
@@ -336,7 +336,7 @@ class TestRakeTask < Rake::TestCase
     t_c.invoke
 
     # task should always run in order
-    assert_equal ['a', 'b', 'c'], result
+    assert_equal ["a", "b", "c"], result
 
     [t_a, t_b, t_c].each(&:reenable)
     result.clear
@@ -345,7 +345,7 @@ class TestRakeTask < Rake::TestCase
     t_c.invoke
 
     # with multitask, task 'b' should grab the mutex first
-    assert_equal ['b', 'a', 'c'], result
+    assert_equal ["b", "a", "c"], result
   end
 
   def test_investigation_output

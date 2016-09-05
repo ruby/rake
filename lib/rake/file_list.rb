@@ -1,6 +1,6 @@
-require 'rake/cloneable'
-require 'rake/file_utils_ext'
-require 'rake/ext/string'
+require "rake/cloneable"
+require "rake/file_utils_ext"
+require "rake/ext/string"
 
 module Rake
 
@@ -280,7 +280,7 @@ module Rake
     #    array.collect { |item| item.ext(newext) }
     #
     # +ext+ is a user added method for the Array class.
-    def ext(newext='')
+    def ext(newext="")
       collect { |fn| fn.ext(newext) }
     end
 
@@ -342,7 +342,7 @@ module Rake
     # Convert a FileList to a string by joining all elements with a space.
     def to_s
       resolve
-      self.join(' ')
+      self.join(" ")
     end
 
     # Add matching glob patterns.
@@ -416,7 +416,7 @@ module Rake
     # Yield each file or directory component.
     def each_dir_parent(dir)    # :nodoc:
       old_length = nil
-      while dir != '.' && dir.length != old_length
+      while dir != "." && dir.length != old_length
         yield(dir)
         old_length = dir.length
         dir = File.dirname(dir)

@@ -24,7 +24,7 @@ module Rake
       lines = File.read fn
       lines.gsub!(/\\ /, SPACE_MARK)
       lines.gsub!(/#[^\n]*\n/m, "")
-      lines.gsub!(/\\\n/, ' ')
+      lines.gsub!(/\\\n/, " ")
       lines.each_line do |line|
         process_line(line)
       end
@@ -34,7 +34,7 @@ module Rake
 
     # Process one logical line of makefile data.
     def process_line(line) # :nodoc:
-      file_tasks, args = line.split(':', 2)
+      file_tasks, args = line.split(":", 2)
       return if args.nil?
       dependents = args.split.map { |d| respace(d) }
       file_tasks.scan(/\S+/) do |file_task|
@@ -44,10 +44,10 @@ module Rake
     end
 
     def respace(str) # :nodoc:
-      str.tr SPACE_MARK, ' '
+      str.tr SPACE_MARK, " "
     end
   end
 
   # Install the handler
-  Rake.application.add_loader('mf', MakefileLoader.new)
+  Rake.application.add_loader("mf", MakefileLoader.new)
 end

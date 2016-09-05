@@ -1,4 +1,4 @@
-require 'rake/private_reader'
+require "rake/private_reader"
 
 module Rake
 

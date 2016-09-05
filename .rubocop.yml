@@ -4,8 +4,9 @@ AllCops:
   Exclude:
     - rake.gemspec
 
-StringLiterals:
-  Enabled: false
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes
 
 SpaceAroundEqualsInParameterDefault:
   Enabled: false
