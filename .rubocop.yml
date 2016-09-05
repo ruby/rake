@@ -10,8 +10,8 @@ StringLiterals:
 SpaceAroundEqualsInParameterDefault:
   Enabled: false
 
-HashSyntax:
-  Enabled: false
+Style/HashSyntax:
+  Enabled: true
 
 LineLength:
   Enabled: true

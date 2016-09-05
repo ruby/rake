@@ -26,7 +26,7 @@ RDoc::Task.new do |doc|
   doc.rdoc_dir = 'html'
 end
 
-task :ghpages => :rdoc do
+task ghpages: :rdoc do
   `git checkout gh-pages`
   require 'fileutils'
   FileUtils.rm_rf '/tmp/html'
@@ -35,4 +35,4 @@ task :ghpages => :rdoc do
   FileUtils.cp_r Dir.glob('/tmp/html/*'), '.'
 end
 
-task :default => :test
+task default: :test
