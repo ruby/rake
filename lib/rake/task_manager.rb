@@ -24,7 +24,7 @@ module Rake
 
       original_scope = @scope
       if String === task_name and
-         not task_class.ancestors.include? Rake::FileTask then
+         not task_class.ancestors.include? Rake::FileTask
         task_name, *definition_scope = *(task_name.split(":").reverse)
         @scope = Scope.make(*(definition_scope + @scope.to_a))
       end

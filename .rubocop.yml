@@ -43,6 +43,9 @@ Style/SpaceInsideHashLiteralBraces:
 Style/CaseIndentation:
   Enabled: true
 
+Style/MultilineIfThen:
+  Enabled: true
+
 Style/MethodDefParentheses:
   Enabled: true
 
