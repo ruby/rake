@@ -515,7 +515,7 @@ class TestRakeApplication < Rake::TestCase
 
   def test_bad_run_includes_exception_name
     @app.intern(Rake::Task, "default").enhance {
-        raise CustomError, "intentional"
+      raise CustomError, "intentional"
     }
     setup_command_line("-f", "-s")
     _, err = capture_io {
@@ -535,7 +535,7 @@ class TestRakeApplication < Rake::TestCase
       assert_raises(SystemExit) {
         @app.run
       }
-   }
+    }
    refute_match(/RuntimeError/, err)
    assert_match(/intentional/, err)
   end

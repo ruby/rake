@@ -160,12 +160,12 @@ class TestRakeFileTask < Rake::TestCase
   end
 
   def test_task_can_be_pathname
-      name = "dummy"
-      file Pathname.new name
+    name = "dummy"
+    file Pathname.new name
 
-      ftask = Task[name]
+    ftask = Task[name]
 
-      assert_equal name.to_s, ftask.name
+    assert_equal name.to_s, ftask.name
   end
 
   def test_prerequisite_can_be_pathname

@@ -2,6 +2,7 @@ AllCops:
   TargetRubyVersion: 2.3
   DisabledByDefault: true
   Exclude:
+    - doc/**/*.rb
     - rake.gemspec
 
 LineLength:
@@ -14,6 +15,12 @@ Style/HashSyntax:
 Style/StringLiterals:
   Enabled: true
   EnforcedStyle: double_quotes
+
+Style/IndentationWidth:
+  Enabled: true
+
+Style/Tab:
+  Enabled: true
 
 SpaceAroundEqualsInParameterDefault:
   Enabled: false

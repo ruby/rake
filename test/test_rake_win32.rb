@@ -54,7 +54,7 @@ class TestRakeWin32 < Rake::TestCase
   def test_win32_backtrace_with_different_case
     ex = nil
     begin
-     raise "test exception"
+      raise "test exception"
     rescue => ex
     end
 
