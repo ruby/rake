@@ -15,7 +15,7 @@ HashSyntax:
 
 LineLength:
   Enabled: true
-  Max: 90
+  Max: 120
 
 WhileUntilModifier:
   Enabled: false
