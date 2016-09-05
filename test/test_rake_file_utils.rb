@@ -1,17 +1,17 @@
-require File.expand_path('../helper', __FILE__)
-require 'fileutils'
-require 'stringio'
+require File.expand_path("../helper", __FILE__)
+require "fileutils"
+require "stringio"
 
 class TestRakeFileUtils < Rake::TestCase
   def setup
     super
-    @rake_test_sh = ENV['RAKE_TEST_SH']
+    @rake_test_sh = ENV["RAKE_TEST_SH"]
   end
 
   def teardown
     FileUtils::LN_SUPPORTED[0] = true
     RakeFileUtils.verbose_flag = Rake::FileUtilsExt::DEFAULT
-    ENV['RAKE_TEST_SH'] = @rake_test_sh
+    ENV["RAKE_TEST_SH"] = @rake_test_sh
 
     super
   end
@@ -43,7 +43,7 @@ class TestRakeFileUtils < Rake::TestCase
 
     Rake::FileUtilsExt.safe_ln("a", "b", verbose: false)
 
-    assert_equal "TEST_LN\n", File.read('b')
+    assert_equal "TEST_LN\n", File.read("b")
   end
 
   class BadLink
@@ -69,16 +69,16 @@ class TestRakeFileUtils < Rake::TestCase
     FileUtils::LN_SUPPORTED[0] = true
     c = BadLink.new(StandardError)
     c.safe_ln "a", "b"
-    assert_equal ['a', 'b'], c.cp_args
+    assert_equal ["a", "b"], c.cp_args
     c.safe_ln "x", "y"
-    assert_equal ['x', 'y'], c.cp_args
+    assert_equal ["x", "y"], c.cp_args
   end
 
   def test_safe_ln_failover_to_cp_on_not_implemented_error
     FileUtils::LN_SUPPORTED[0] = true
     c = BadLink.new(NotImplementedError)
     c.safe_ln "a", "b"
-    assert_equal ['a', 'b'], c.cp_args
+    assert_equal ["a", "b"], c.cp_args
   end
 
   def test_safe_ln_fails_on_script_error
@@ -135,7 +135,7 @@ class TestRakeFileUtils < Rake::TestCase
   def test_sh_with_a_single_string_argument
     check_expansion
 
-    ENV['RAKE_TEST_SH'] = 'someval'
+    ENV["RAKE_TEST_SH"] = "someval"
     verbose(false) {
       sh %{#{RUBY} check_expansion.rb #{env_var} someval}
     }
@@ -145,11 +145,11 @@ class TestRakeFileUtils < Rake::TestCase
     check_environment
 
     env = {
-      'RAKE_TEST_SH' => 'someval'
+      "RAKE_TEST_SH" => "someval"
     }
 
     verbose(false) {
-      sh env, RUBY, 'check_environment.rb', 'RAKE_TEST_SH', 'someval'
+      sh env, RUBY, "check_environment.rb", "RAKE_TEST_SH", "someval"
     }
   end
 
@@ -157,22 +157,22 @@ class TestRakeFileUtils < Rake::TestCase
     skip if jruby9? # https://github.com/jruby/jruby/issues/3653
 
     check_no_expansion
-    ENV['RAKE_TEST_SH'] = 'someval'
+    ENV["RAKE_TEST_SH"] = "someval"
 
     verbose(false) {
-      sh RUBY, 'check_no_expansion.rb', env_var, 'someval'
+      sh RUBY, "check_no_expansion.rb", env_var, "someval"
     }
   end
 
   def test_sh_with_spawn_options
-    skip 'JRuby does not support spawn options' if jruby?
+    skip "JRuby does not support spawn options" if jruby?
 
     echocommand
 
     r, w = IO.pipe
 
     verbose(false) {
-      sh RUBY, 'echocommand.rb', out: w
+      sh RUBY, "echocommand.rb", out: w
     }
 
     w.close
@@ -217,7 +217,7 @@ class TestRakeFileUtils < Rake::TestCase
   def test_sh_bad_option
     # Skip on JRuby because option checking is performed by spawn via system
     # now.
-    skip 'JRuby does not support spawn options' if jruby?
+    skip "JRuby does not support spawn options" if jruby?
 
     shellcommand
 
@@ -248,7 +248,7 @@ class TestRakeFileUtils < Rake::TestCase
       }
     end
 
-    assert_equal '', err
+    assert_equal "", err
   end
 
   def test_sh_verbose_flag_nil
@@ -264,7 +264,7 @@ class TestRakeFileUtils < Rake::TestCase
   def test_ruby_with_a_single_string_argument
     check_expansion
 
-    ENV['RAKE_TEST_SH'] = 'someval'
+    ENV["RAKE_TEST_SH"] = "someval"
 
     verbose(false) {
       replace_ruby {
@@ -275,10 +275,10 @@ class TestRakeFileUtils < Rake::TestCase
 
   def test_sh_show_command
     env = {
-      'RAKE_TEST_SH' => 'someval'
+      "RAKE_TEST_SH" => "someval"
     }
 
-    cmd = [env, RUBY, 'some_file.rb', 'some argument']
+    cmd = [env, RUBY, "some_file.rb", "some argument"]
 
     show_cmd = send :sh_show_command, cmd
 
@@ -292,31 +292,31 @@ class TestRakeFileUtils < Rake::TestCase
 
     check_no_expansion
 
-    ENV['RAKE_TEST_SH'] = 'someval'
+    ENV["RAKE_TEST_SH"] = "someval"
     verbose(false) {
       replace_ruby {
-        ruby 'check_no_expansion.rb', env_var, 'someval'
+        ruby "check_no_expansion.rb", env_var, "someval"
       }
     }
   end
 
   def test_split_all
-    assert_equal ['a'], Rake::FileUtilsExt.split_all('a')
-    assert_equal ['..'], Rake::FileUtilsExt.split_all('..')
-    assert_equal ['/'], Rake::FileUtilsExt.split_all('/')
-    assert_equal ['a', 'b'], Rake::FileUtilsExt.split_all('a/b')
-    assert_equal ['/', 'a', 'b'], Rake::FileUtilsExt.split_all('/a/b')
-    assert_equal ['..', 'a', 'b'], Rake::FileUtilsExt.split_all('../a/b')
+    assert_equal ["a"], Rake::FileUtilsExt.split_all("a")
+    assert_equal [".."], Rake::FileUtilsExt.split_all("..")
+    assert_equal ["/"], Rake::FileUtilsExt.split_all("/")
+    assert_equal ["a", "b"], Rake::FileUtilsExt.split_all("a/b")
+    assert_equal ["/", "a", "b"], Rake::FileUtilsExt.split_all("/a/b")
+    assert_equal ["..", "a", "b"], Rake::FileUtilsExt.split_all("../a/b")
   end
 
   def command(name, text)
-    open name, 'w', 0750 do |io|
+    open name, "w", 0750 do |io|
       io << text
     end
   end
 
   def check_no_expansion
-    command 'check_no_expansion.rb', <<-CHECK_EXPANSION
+    command "check_no_expansion.rb", <<-CHECK_EXPANSION
 if ARGV[0] != ARGV[1]
   exit 0
 else
@@ -326,7 +326,7 @@ end
   end
 
   def check_environment
-    command 'check_environment.rb', <<-CHECK_ENVIRONMENT
+    command "check_environment.rb", <<-CHECK_ENVIRONMENT
 if ENV[ARGV[0]] != ARGV[1]
   exit 1
 else
@@ -336,7 +336,7 @@ end
   end
 
   def check_expansion
-    command 'check_expansion.rb', <<-CHECK_EXPANSION
+    command "check_expansion.rb", <<-CHECK_EXPANSION
 if ARGV[0] != ARGV[1]
   exit 1
 else
@@ -346,7 +346,7 @@ end
   end
 
   def echocommand
-    command 'echocommand.rb', <<-ECHOCOMMAND
+    command "echocommand.rb", <<-ECHOCOMMAND
 #!/usr/bin/env ruby
 
 puts "echocommand.rb"
@@ -366,7 +366,7 @@ exit 0
   end
 
   def shellcommand
-    command 'shellcommand.rb', <<-SHELLCOMMAND
+    command "shellcommand.rb", <<-SHELLCOMMAND
 #!/usr/bin/env ruby
 
 exit((ARGV[0] || "0").to_i)
@@ -374,7 +374,7 @@ exit((ARGV[0] || "0").to_i)
   end
 
   def env_var
-    windows? ? '%RAKE_TEST_SH%' : '$RAKE_TEST_SH'
+    windows? ? "%RAKE_TEST_SH%" : "$RAKE_TEST_SH"
   end
 
   def windows?

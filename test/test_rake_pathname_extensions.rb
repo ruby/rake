@@ -1,5 +1,5 @@
-require File.expand_path('../helper', __FILE__)
-require 'rake/ext/pathname'
+require File.expand_path("../helper", __FILE__)
+require "rake/ext/pathname"
 
 class TestRakePathnameExtensions < Rake::TestCase
   def test_ext_works_on_pathnames

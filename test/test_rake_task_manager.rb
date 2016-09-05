@@ -1,4 +1,4 @@
-require File.expand_path('../helper', __FILE__)
+require File.expand_path("../helper", __FILE__)
 
 class TestRakeTaskManager < Rake::TestCase
 
@@ -21,7 +21,7 @@ class TestRakeTaskManager < Rake::TestCase
 
   def test_index
     e = assert_raises RuntimeError do
-      @tm['bad']
+      @tm["bad"]
     end
 
     assert_equal "Don't know how to build task 'bad' (see --tasks)", e.message
@@ -41,7 +41,7 @@ class TestRakeTaskManager < Rake::TestCase
   end
 
   def test_define_namespaced_task
-    t = @tm.define_task(Rake::Task, 'n:a:m:e:t')
+    t = @tm.define_task(Rake::Task, "n:a:m:e:t")
     assert_equal Rake::Scope.make("e", "m", "a", "n"), t.scope
     assert_equal "n:a:m:e:t", t.name
     assert_equal @tm, t.application
@@ -50,7 +50,7 @@ class TestRakeTaskManager < Rake::TestCase
   def test_define_namespace_in_namespace
     t = nil
     @tm.in_namespace("n") do
-      t = @tm.define_task(Rake::Task, 'a:m:e:t')
+      t = @tm.define_task(Rake::Task, "a:m:e:t")
     end
     assert_equal Rake::Scope.make("e", "m", "a", "n"), t.scope
     assert_equal "n:a:m:e:t", t.name
@@ -84,7 +84,7 @@ class TestRakeTaskManager < Rake::TestCase
   end
 
   def test_name_lookup_with_implicit_file_tasks
-    FileUtils.touch 'README.rdoc'
+    FileUtils.touch "README.rdoc"
 
     t = @tm["README.rdoc"]
 
@@ -141,8 +141,8 @@ class TestRakeTaskManager < Rake::TestCase
     assert_equal Rake::Scope.make, @tm.current_scope
 
     assert_equal Rake::Scope.make, xx.scope
-    assert_equal Rake::Scope.make('a'), aa.scope
-    assert_equal Rake::Scope.make('b', 'a'), bb.scope
+    assert_equal Rake::Scope.make("a"), aa.scope
+    assert_equal Rake::Scope.make("b", "a"), bb.scope
   end
 
   def test_lookup_with_explicit_scopes

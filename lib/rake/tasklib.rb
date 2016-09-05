@@ -1,4 +1,4 @@
-require 'rake'
+require "rake"
 
 module Rake
 

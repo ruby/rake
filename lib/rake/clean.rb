@@ -11,7 +11,7 @@
 #            The intent of this task is to return a project to its
 #            pristine, just unpacked state.
 
-require 'rake'
+require "rake"
 
 # :stopdoc:
 
@@ -60,7 +60,7 @@ end
 
 CLEAN = ::Rake::FileList["**/*~", "**/*.bak", "**/core"]
 CLEAN.clear_exclude.exclude { |fn|
-  fn.pathmap("%f").downcase == 'core' && File.directory?(fn)
+  fn.pathmap("%f").downcase == "core" && File.directory?(fn)
 }
 
 desc "Remove any temporary products."

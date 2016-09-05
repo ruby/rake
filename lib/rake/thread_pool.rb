@@ -1,6 +1,6 @@
-require 'set'
+require "set"
 
-require 'rake/promise'
+require "rake/promise"
 
 module Rake
 
@@ -103,7 +103,7 @@ module Rake
       promise.work
       return true
 
-      rescue ThreadError # this means the queue is empty
+    rescue ThreadError # this means the queue is empty
       false
     end
 

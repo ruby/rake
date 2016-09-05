@@ -1,18 +1,18 @@
-require 'rbconfig'
-require 'fileutils'
+require "rbconfig"
+require "fileutils"
 
 #--
 # This a FileUtils extension that defines several additional commands to be
 # added to the FileUtils utility functions.
 module FileUtils
   # Path to the currently running Ruby program
-  RUBY = ENV['RUBY'] || File.join(
-    RbConfig::CONFIG['bindir'],
-    RbConfig::CONFIG['ruby_install_name'] + RbConfig::CONFIG['EXEEXT']).
+  RUBY = ENV["RUBY"] || File.join(
+    RbConfig::CONFIG["bindir"],
+    RbConfig::CONFIG["ruby_install_name"] + RbConfig::CONFIG["EXEEXT"]).
     sub(/.*\s.*/m, '"\&"')
 
-  OPT_TABLE['sh']  = %w(noop verbose)
-  OPT_TABLE['ruby'] = %w(noop verbose)
+  OPT_TABLE["sh"]  = %w(noop verbose)
+  OPT_TABLE["ruby"] = %w(noop verbose)
 
   # Run the system command +cmd+.  If multiple arguments are given the command
   # is run directly (without the shell, same semantics as Kernel::exec and
@@ -132,8 +132,8 @@ module FileUtils
   #
   def split_all(path)
     head, tail = File.split(path)
-    return [tail] if head == '.' || tail == '/'
-    return [head, tail] if head == '/'
+    return [tail] if head == "." || tail == "/"
+    return [head, tail] if head == "/"
     return split_all(head) + [tail]
   end
 end

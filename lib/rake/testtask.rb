@@ -1,5 +1,5 @@
-require 'rake'
-require 'rake/tasklib'
+require "rake"
+require "rake/tasklib"
 
 module Rake
 
@@ -98,7 +98,7 @@ module Rake
         @name = @name.keys.first
       end
       yield self if block_given?
-      @pattern = 'test/test*.rb' if @pattern.nil? && @test_files.nil?
+      @pattern = "test/test*.rb" if @pattern.nil? && @test_files.nil?
       define
     end
 
@@ -108,7 +108,7 @@ module Rake
       task @name => Array(deps) do
         FileUtilsExt.verbose(@verbose) do
           puts "Use TESTOPTS=\"--verbose\" to pass --verbose" \
-            ", etc. to runners." if ARGV.include? '--verbose'
+            ", etc. to runners." if ARGV.include? "--verbose"
           args =
             "#{ruby_opts_string} #{run_code} " +
             "#{file_list_string} #{option_list}"
@@ -126,10 +126,10 @@ module Rake
     end
 
     def option_list # :nodoc:
-      (ENV['TESTOPTS'] ||
-        ENV['TESTOPT'] ||
-        ENV['TEST_OPTS'] ||
-        ENV['TEST_OPT'] ||
+      (ENV["TESTOPTS"] ||
+        ENV["TESTOPT"] ||
+        ENV["TEST_OPTS"] ||
+        ENV["TEST_OPT"] ||
         @options ||
         "")
     end
@@ -146,12 +146,12 @@ module Rake
     end
 
     def file_list_string # :nodoc:
-      file_list.map { |fn| "\"#{fn}\"" }.join(' ')
+      file_list.map { |fn| "\"#{fn}\"" }.join(" ")
     end
 
     def file_list # :nodoc:
-      if ENV['TEST']
-        FileList[ENV['TEST']]
+      if ENV["TEST"]
+        FileList[ENV["TEST"]]
       else
         result = []
         result += @test_files.to_a if @test_files
@@ -176,7 +176,7 @@ module Rake
     end
 
     def rake_loader # :nodoc:
-      find_file('rake/rake_test_loader') or
+      find_file("rake/rake_test_loader") or
         fail "unable to find rake test loader"
     end
 
@@ -189,7 +189,7 @@ module Rake
     end
 
     def rake_include_arg # :nodoc:
-      spec = Gem.loaded_specs['rake']
+      spec = Gem.loaded_specs["rake"]
       if spec.respond_to?(:default_gem?) && spec.default_gem?
         ""
       else
@@ -198,7 +198,7 @@ module Rake
     end
 
     def rake_lib_dir # :nodoc:
-      find_dir('rake') or
+      find_dir("rake") or
         fail "unable to find rake lib"
     end
 

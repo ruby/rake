@@ -1,4 +1,4 @@
-require 'rake/invocation_exception_mixin'
+require "rake/invocation_exception_mixin"
 
 module Rake
 

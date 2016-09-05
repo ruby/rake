@@ -1,4 +1,4 @@
-require File.expand_path('../helper', __FILE__)
+require File.expand_path("../helper", __FILE__)
 
 class TestRakePathMapPartial < Rake::TestCase
   def test_pathmap_partial
@@ -15,4 +15,3 @@ class TestRakePathMapPartial < Rake::TestCase
     assert_equal("1/2", @path.call(-3))
   end
 end
-

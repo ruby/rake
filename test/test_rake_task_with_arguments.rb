@@ -1,4 +1,4 @@
-require File.expand_path('../helper', __FILE__)
+require File.expand_path("../helper", __FILE__)
 
 class TestRakeTaskWithArguments < Rake::TestCase
   include Rake
@@ -48,7 +48,7 @@ class TestRakeTaskWithArguments < Rake::TestCase
 
   def test_tasks_can_access_arguments_as_hash
     t = task :t, :a, :b, :c do |tt, args|
-      assert_equal({a: 1, b: 2, c: 3}, args.to_hash)
+      assert_equal({ a: 1, b: 2, c: 3 }, args.to_hash)
       assert_equal 1, args[:a]
       assert_equal 2, args[:b]
       assert_equal 3, args[:c]
@@ -74,7 +74,7 @@ class TestRakeTaskWithArguments < Rake::TestCase
     t.enhance do |t2, args|
       notes << :d
       assert_equal t, t2
-      assert_equal({x: 1}, args.to_hash)
+      assert_equal({ x: 1 }, args.to_hash)
     end
     t.invoke(1)
     assert_equal [:a, :b, :c, :d], notes
@@ -111,7 +111,7 @@ class TestRakeTaskWithArguments < Rake::TestCase
   end
 
   def test_block_with_no_parameters_is_ok
-    t = task(:t) { }
+    t = task(:t) {}
     t.invoke(1, 2)
   end
 

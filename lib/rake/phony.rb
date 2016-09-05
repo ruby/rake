@@ -4,7 +4,7 @@
 #
 # See FileTask#out_of_date? and Task#timestamp for more info.
 
-require 'rake'
+require "rake"
 
 task :phony
 

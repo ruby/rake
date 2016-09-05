@@ -1,5 +1,5 @@
-require 'rake/ext/core'
-require 'pathname'
+require "rake/ext/core"
+require "pathname"
 
 class Pathname
 
@@ -7,7 +7,7 @@ class Pathname
     # Return a new Pathname with <tt>String#ext</tt> applied to it.
     #
     # This Pathname extension comes from Rake
-    def ext(newext='')
+    def ext(newext="")
       Pathname.new(Rake.from_pathname(self).ext(newext))
     end
   end

@@ -1,5 +1,5 @@
-require File.expand_path('../helper', __FILE__)
-require 'rake/testtask'
+require File.expand_path("../helper", __FILE__)
+require "rake/testtask"
 
 class TestRakeTestTask < Rake::TestCase
   include Rake
@@ -8,8 +8,8 @@ class TestRakeTestTask < Rake::TestCase
     tt = Rake::TestTask.new do |t| end
     refute_nil tt
     assert_equal :test, tt.name
-    assert_equal ['lib'], tt.libs
-    assert_equal 'test/test*.rb', tt.pattern
+    assert_equal ["lib"], tt.libs
+    assert_equal "test/test*.rb", tt.pattern
     assert_equal false, tt.verbose
     assert_equal true, tt.warning
     assert_equal [], tt.deps
@@ -33,8 +33,8 @@ class TestRakeTestTask < Rake::TestCase
   def test_initialize_override
     tt = Rake::TestTask.new(example: :bar) do |t|
       t.description = "Run example tests"
-      t.libs = ['src', 'ext']
-      t.pattern = 'test/tc_*.rb'
+      t.libs = ["src", "ext"]
+      t.pattern = "test/tc_*.rb"
       t.warning = true
       t.verbose = true
       t.deps = [:env]
@@ -42,8 +42,8 @@ class TestRakeTestTask < Rake::TestCase
     refute_nil tt
     assert_equal "Run example tests", tt.description
     assert_equal :example, tt.name
-    assert_equal ['src', 'ext'], tt.libs
-    assert_equal 'test/tc_*.rb', tt.pattern
+    assert_equal ["src", "ext"], tt.libs
+    assert_equal "test/tc_*.rb", tt.pattern
     assert_equal true, tt.warning
     assert_equal true, tt.verbose
     assert_equal [:env], tt.deps
@@ -52,14 +52,14 @@ class TestRakeTestTask < Rake::TestCase
   end
 
   def test_file_list_env_test
-    ENV['TEST'] = 'testfile.rb'
+    ENV["TEST"] = "testfile.rb"
     tt = Rake::TestTask.new do |t|
-      t.pattern = '*'
+      t.pattern = "*"
     end
 
     assert_equal ["testfile.rb"], tt.file_list.to_a
   ensure
-    ENV.delete 'TEST'
+    ENV.delete "TEST"
   end
 
   def test_libs_equals
@@ -78,22 +78,22 @@ class TestRakeTestTask < Rake::TestCase
       t.warning = false
     end
 
-    assert_equal '', test_task.ruby_opts_string
+    assert_equal "", test_task.ruby_opts_string
   end
 
   def test_pattern_equals
     tt = Rake::TestTask.new do |t|
-      t.pattern = '*.rb'
+      t.pattern = "*.rb"
     end
-    assert_equal ['*.rb'], tt.file_list.to_a
+    assert_equal ["*.rb"], tt.file_list.to_a
   end
 
   def test_pattern_equals_test_files_equals
     tt = Rake::TestTask.new do |t|
-      t.test_files = FileList['a.rb', 'b.rb']
-      t.pattern = '*.rb'
+      t.test_files = FileList["a.rb", "b.rb"]
+      t.pattern = "*.rb"
     end
-    assert_equal ['a.rb', 'b.rb', '*.rb'], tt.file_list.to_a
+    assert_equal ["a.rb", "b.rb", "*.rb"], tt.file_list.to_a
   end
 
   def test_run_code_direct
@@ -105,9 +105,9 @@ class TestRakeTestTask < Rake::TestCase
   end
 
   def test_run_code_rake
-    spec = Gem::Specification.new 'rake', 0
-    spec.loaded_from = File.join Gem::Specification.dirs.last, 'rake-0.gemspec'
-    rake, Gem.loaded_specs['rake'] = Gem.loaded_specs['rake'], spec
+    spec = Gem::Specification.new "rake", 0
+    spec.loaded_from = File.join Gem::Specification.dirs.last, "rake-0.gemspec"
+    rake, Gem.loaded_specs["rake"] = Gem.loaded_specs["rake"], spec
 
     test_task = Rake::TestTask.new do |t|
       t.loader = :rake
@@ -115,15 +115,15 @@ class TestRakeTestTask < Rake::TestCase
 
     assert_match(/\A-I".*?" ".*?"\Z/, test_task.run_code)
   ensure
-    Gem.loaded_specs['rake'] = rake
+    Gem.loaded_specs["rake"] = rake
   end
 
   def test_test_files_equals
     tt = Rake::TestTask.new do |t|
-      t.test_files = FileList['a.rb', 'b.rb']
+      t.test_files = FileList["a.rb", "b.rb"]
     end
 
-    assert_equal ["a.rb", 'b.rb'], tt.file_list.to_a
+    assert_equal ["a.rb", "b.rb"], tt.file_list.to_a
   end
 
   def test_task_prerequisites
@@ -131,7 +131,7 @@ class TestRakeTestTask < Rake::TestCase
     Rake::TestTask.new child: :parent
 
     task = Rake::Task[:child]
-    assert_includes task.prerequisites, 'parent'
+    assert_includes task.prerequisites, "parent"
   end
 
   def test_task_prerequisites_multi
@@ -140,8 +140,8 @@ class TestRakeTestTask < Rake::TestCase
     Rake::TestTask.new child: [:parent, :parent2]
 
     task = Rake::Task[:child]
-    assert_includes task.prerequisites, 'parent'
-    assert_includes task.prerequisites, 'parent2'
+    assert_includes task.prerequisites, "parent"
+    assert_includes task.prerequisites, "parent2"
   end
 
   def test_task_prerequisites_deps
@@ -152,6 +152,6 @@ class TestRakeTestTask < Rake::TestCase
     end
 
     task = Rake::Task[:child]
-    assert_includes task.prerequisites, 'parent'
+    assert_includes task.prerequisites, "parent"
   end
 end

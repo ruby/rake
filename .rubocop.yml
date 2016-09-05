@@ -1,18 +1,57 @@
-StringLiterals:
-  Enabled: false
+AllCops:
+  TargetRubyVersion: 2.3
+  DisabledByDefault: true
+  Exclude:
+    - doc/**/*.rb
+    - rake.gemspec
 
-SpaceAroundEqualsInParameterDefault:
-  Enabled: false
-
-HashSyntax:
-  Enabled: false
-
-LineLength:
+Style/LineLength:
   Enabled: true
-  Max: 90
+  Max: 120
 
-WhileUntilModifier:
-  Enabled: false
+Style/HashSyntax:
+  Enabled: true
 
-IfUnlessModifier:
-  Enabled: false
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes
+
+Style/IndentationWidth:
+  Enabled: true
+
+Style/Tab:
+  Enabled: true
+
+Style/EmptyLines:
+  Enabled: true
+
+Style/TrailingBlankLines:
+  Enabled: true
+
+Style/TrailingWhitespace:
+  Enabled: true
+
+Style/SpaceBeforeBlockBraces:
+  Enabled: true
+
+Style/SpaceInsideBlockBraces:
+  Enabled: true
+
+Style/SpaceInsideHashLiteralBraces:
+  Enabled: true
+
+Style/CaseIndentation:
+  Enabled: true
+
+Style/MultilineIfThen:
+  Enabled: true
+
+Style/MethodDefParentheses:
+  Enabled: true
+
+Style/BracesAroundHashParameters:
+  Enabled: true
+
+Lint/EndAlignment:
+  Enabled: true
+  AlignWith: variable
