@@ -39,3 +39,10 @@ Style/SpaceInsideBlockBraces:
 
 Style/SpaceInsideHashLiteralBraces:
   Enabled: true
+
+Style/CaseIndentation:
+  Enabled: true
+
+Lint/EndAlignment:
+  Enabled: true
+  AlignWith: variable

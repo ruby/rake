@@ -665,10 +665,10 @@ class TestRakeFileList < Rake::TestCase
 
     FileList::SPECIAL_RETURN.each do |m|
       r = if [].method(m).arity == 1
-            f.send(m, [])
-          else
-            f.send(m)
-          end
+        f.send(m, [])
+      else
+        f.send(m)
+      end
 
       assert_equal custom_file_list, r.class
     end
