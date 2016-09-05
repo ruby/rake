@@ -293,7 +293,6 @@ class TestRakeApplication < Rake::TestCase
       options.silent = true
     end
 
-
     ex = assert_raises(RuntimeError) do
       @app.instance_eval do
         raw_load_rakefile

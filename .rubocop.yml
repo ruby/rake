@@ -22,6 +22,15 @@ Style/IndentationWidth:
 Style/Tab:
   Enabled: true
 
+Style/EmptyLines:
+  Enabled: true
+
+Style/TrailingBlankLines:
+  Enabled: true
+
+Style/TrailingWhitespace:
+  Enabled: true
+
 SpaceAroundEqualsInParameterDefault:
   Enabled: false
 

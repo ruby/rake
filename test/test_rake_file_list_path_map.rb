@@ -12,4 +12,3 @@ class TestRakeFileListPathMap < Rake::TestCase
     assert_equal ["A", "B"], mapped
   end
 end
-

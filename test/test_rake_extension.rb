@@ -29,7 +29,6 @@ class TestRakeExtension < Rake::TestCase
       end
     end
 
-
     DUP_ERRS = error_redirect do
       rake_extension("duplicate_method") do
         def duplicate_method

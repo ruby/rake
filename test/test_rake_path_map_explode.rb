@@ -31,4 +31,3 @@ class TestRakePathMapExplode < Rake::TestCase
     end
   end
 end
-

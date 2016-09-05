@@ -15,4 +15,3 @@ class TestRakePathMapPartial < Rake::TestCase
     assert_equal("1/2", @path.call(-3))
   end
 end
-

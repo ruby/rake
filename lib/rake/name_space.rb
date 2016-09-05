@@ -35,4 +35,3 @@ class Rake::NameSpace
   end
 
 end
-
