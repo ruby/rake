@@ -32,7 +32,6 @@ require 'optparse'
 require 'ostruct'
 
 require 'rake/ext/string'
-require 'rake/ext/fixnum'
 
 require 'rake/win32'
 
