@@ -103,11 +103,19 @@ class TestRakeTestTask < Rake::TestCase
   end
 
   def test_run_code_direct
+    globbed = ['test_gl.rb', 'test_ob.rb'].map { |f| File.join('test', f) }
+    others = ['a.rb', 'b.rb'].map { |f| File.join('test', f) }
+    (globbed + others).each do |f|
+      create_file(f)
+    end
     test_task = Rake::TestTask.new do |t|
       t.loader = :direct
+      # if t.pettern and t.test_files are nil,
+      # t.pettern is "test/test*.rb"
     end
 
     assert_equal '-e "ARGV.each{|f| require f}"', test_task.run_code
+    assert_equal globbed, test_task.file_list.to_a
   end
 
   def test_run_code_rake
