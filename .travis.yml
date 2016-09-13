@@ -12,9 +12,7 @@ rvm:
   - jruby-9.1.0.0
   - jruby-head
 before_install:
-  - gem uninstall bundler
-  - gem install bundler -v '~> 1.12.5' --no-document
-
+  - gem install bundler --no-document
 before_script:
   - unset JRUBY_OPTS
 script: ruby -Ilib exe/rake
