@@ -4,9 +4,8 @@ clone_depth: 10
 install:
   - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
   - ruby --version
-  - gem update --system
   - gem --version
-  - gem install minitest --no-document
+  - gem install minitest bundler --no-document
 build_script:
   - net user
   - net localgroup
