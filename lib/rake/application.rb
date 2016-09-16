@@ -449,7 +449,7 @@ module Rake
             "(default is number of CPU cores + 4)",
             lambda { |value|
               if value.nil? || value == ""
-                value = Fixnum::MAX
+                value = Float::INFINITY
               elsif value =~ /^\d+$/
                 value = value.to_i
               else
