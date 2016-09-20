@@ -118,7 +118,14 @@ module Rake
             elsif !ok
               status  = "Command failed with status (#{status.exitstatus})"
               details = ": [ruby #{args}]"
-              fail (ARGV.include?('--trace') || @verbose) ? (status + details) : status
+              message =
+                if Rake.application.options.trace or @verbose then
+                  status + details
+                else
+                  status
+                end
+
+              fail message
             end
           end
         end
