@@ -5,7 +5,7 @@ require 'rake/version'
 Gem::Specification.new do |s|
   s.name = "rake".freeze
   s.version = Rake::VERSION
-  s.date = "2016-06-12"
+  s.date = "2016-09-20"
   s.authors = ["Hiroshi SHIBATA".freeze, "Eric Hodel".freeze, "Jim Weirich".freeze]
   s.email = ["hsbt@ruby-lang.org".freeze, "drbrain@segment7.net".freeze, "".freeze]
 
