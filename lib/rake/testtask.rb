@@ -116,8 +116,16 @@ module Rake
             if !ok && status.respond_to?(:signaled?) && status.signaled?
               raise SignalException.new(status.termsig)
             elsif !ok
-              fail "Command failed with status (#{status.exitstatus}): " +
-                "[ruby #{args}]"
+              status  = "Command failed with status (#{status.exitstatus})"
+              details = ": [ruby #{args}]"
+              message =
+                if Rake.application.options.trace or @verbose then
+                  status + details
+                else
+                  status
+                end
+
+              fail message
             end
           end
         end
