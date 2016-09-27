@@ -46,7 +46,7 @@ class TestRakeClean < Rake::TestCase
     rescue
       file_name
     else
-      skip "Permission to delete files is different on thie system"
+      skip "Permission to delete files is different on this system"
     end
   end
 
