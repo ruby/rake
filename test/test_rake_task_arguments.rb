@@ -43,6 +43,14 @@ class TestRakeTaskArguments < Rake::TestCase
     assert_equal ta.to_hash.inspect, ta.inspect
   end
 
+  def test_to_hash
+    ta = Rake::TaskArguments.new([:one], [1])
+    h = ta.to_hash
+    h[:one] = 0
+    assert_equal 1, ta.fetch(:one)
+    assert_equal 0,  h.fetch(:one)
+  end
+
   def test_enumerable_behavior
     ta = Rake::TaskArguments.new([:a, :b, :c], [1, 2, 3])
     assert_equal [10, 20, 30], ta.map { |k, v| v * 10 }.sort
