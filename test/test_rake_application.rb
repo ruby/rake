@@ -284,6 +284,8 @@ class TestRakeApplication < Rake::TestCase
   end
 
   def test_load_rakefile_not_found
+    skip if jruby9?
+
     ARGV.clear
     Dir.chdir @tempdir
     ENV["RAKE_SYSTEM"] = "not_exist"

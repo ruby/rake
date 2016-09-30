@@ -122,6 +122,8 @@ class TestRakeFunctional < Rake::TestCase
   end
 
   def test_implicit_system
+    skip if jruby9?
+
     rake_system_dir
     Dir.chdir @tempdir
 
