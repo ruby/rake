@@ -68,7 +68,7 @@ module Rake
 
     # Returns a Hash of arguments and their values
     def to_hash
-      @hash
+      @hash.dup
     end
 
     def to_s # :nodoc:
