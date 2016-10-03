@@ -6,6 +6,12 @@
 * Removed `rake/contrib` packages. These are extracted to `rake-contrib` gem.
 * Removed to deprecated warnings for `last\_comment`.
 
+=== 11.3.0 / 2016-09-20
+
+Enhancements:
+
+* Remove to reference `Fixnum` constant. Pull request #160 by nobu
+
 === 11.2.2 / 2016-06-12
 
 ==== Bug fixes
