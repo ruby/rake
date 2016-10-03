@@ -11,9 +11,6 @@ module FileUtils
     RbConfig::CONFIG["ruby_install_name"] + RbConfig::CONFIG["EXEEXT"]).
     sub(/.*\s.*/m, '"\&"')
 
-  OPT_TABLE["sh"]  = %w(noop verbose)
-  OPT_TABLE["ruby"] = %w(noop verbose)
-
   # Run the system command +cmd+.  If multiple arguments are given the command
   # is run directly (without the shell, same semantics as Kernel::exec and
   # Kernel::system).
