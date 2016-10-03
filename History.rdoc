@@ -6,6 +6,10 @@
 * Removed `rake/contrib` packages. These are extracted to `rake-contrib` gem.
 * Removed to deprecated warnings for `last\_comment`.
 
+==== Enhancements:
+
+* Re-use trace option on `cleanup` task. #164 by Brian Henderson
+
 === 11.3.0 / 2016-09-20
 
 ==== Enhancements:
