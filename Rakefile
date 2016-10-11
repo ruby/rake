@@ -9,9 +9,6 @@
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-# XXX: https://github.com/bundler/bundler/pull/4981
-require "bundler/plugin/api/source"
-
 require "bundler/gem_tasks"
 require "rake/testtask"
 require "rdoc/task"
