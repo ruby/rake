@@ -39,8 +39,9 @@ class TestRakeTaskArguments < Rake::TestCase
 
   def test_to_s
     ta = Rake::TaskArguments.new([:a, :b, :c], [1, 2, 3])
-    assert_equal ta.to_hash.inspect, ta.to_s
-    assert_equal ta.to_hash.inspect, ta.inspect
+    expectation = "#<Rake::TaskArguments a: 1, b: 2, c: 3>"
+    assert_equal expectation, ta.to_s
+    assert_equal expectation, ta.inspect
   end
 
   def test_to_hash

@@ -72,11 +72,15 @@ module Rake
     end
 
     def to_s # :nodoc:
-      @hash.inspect
+      inspect
     end
 
     def inspect # :nodoc:
-      to_s
+      inspection = @hash.map do |k,v|
+        "#{k.to_s}: #{v.to_s}"
+      end.join(", ")
+
+      "#<#{self.class} #{inspection}>"
     end
 
     # Returns true if +key+ is one of the arguments
