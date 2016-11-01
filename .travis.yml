@@ -8,21 +8,13 @@ rvm:
   - 2.3.1
   - ruby-head
   - jruby-1.7.20
-  - jruby-9.0.5.0
-  - jruby-9.1.0.0
+  - jruby-9.1.5.0
   - jruby-head
-  - rbx-2
-  - rbx
 before_install:
-  - gem update bundler --no-document
+  - gem install bundler --no-document -v '~> 1.13.3'
 before_script:
   - unset JRUBY_OPTS
 script: ruby -Ilib exe/rake
-matrix:
-  allow_failures:
-    - rvm: jruby-head
-    - rvm: rbx-2
-    - rvm: rbx
 notifications:
   email:
   - hsbt@ruby-lang.org

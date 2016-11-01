@@ -5,19 +5,6 @@ module Rake
     # Track the last comment made in the Rakefile.
     attr_accessor :last_description
 
-    # Remove Rake 12
-    def last_comment # :nodoc:
-      warn "[DEPRECATION] `last_comment` is deprecated.  Please use `last_description` instead."
-      @last_description
-    end
-
-    # Remove Rake 12
-    def last_comment=(comment) # :nodoc:
-      warn "[DEPRECATION] `last_comment=` is deprecated.  Please use `last_description=` instead."
-      @last_description = comment
-      @last_description # ignore warning
-    end
-
     def initialize # :nodoc:
       super
       @tasks = Hash.new
@@ -28,7 +15,7 @@ module Rake
 
     def create_rule(*args, &block) # :nodoc:
       pattern, args, deps = resolve_args(args)
-      pattern = Regexp.new(Regexp.quote(pattern) + '$') if String === pattern
+      pattern = Regexp.new(Regexp.quote(pattern) + "$") if String === pattern
       @rules << [pattern, args, deps, block]
     end
 
@@ -37,7 +24,7 @@ module Rake
 
       original_scope = @scope
       if String === task_name and
-         not task_class.ancestors.include? Rake::FileTask then
+         not task_class.ancestors.include? Rake::FileTask
         task_name, *definition_scope = *(task_name.split(":").reverse)
         @scope = Scope.make(*(definition_scope + @scope.to_a))
       end
@@ -180,10 +167,10 @@ module Rake
       task_name = task_name.to_s
       if task_name =~ /^rake:/
         scopes = Scope.make
-        task_name = task_name.sub(/^rake:/, '')
+        task_name = task_name.sub(/^rake:/, "")
       elsif task_name =~ /^(\^+)/
         scopes = initial_scope.trim($1.size)
-        task_name = task_name.sub(/^(\^+)/, '')
+        task_name = task_name.sub(/^(\^+)/, "")
       else
         scopes = initial_scope
       end
@@ -269,7 +256,7 @@ module Rake
           return nil
         end
       }
-      task = FileTask.define_task(task_name, {args => prereqs}, &block)
+      task = FileTask.define_task(task_name, { args => prereqs }, &block)
       task.sources = prereqs
       task
     end

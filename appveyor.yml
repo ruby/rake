@@ -1,18 +1,13 @@
 ---
-version: "{build}"
 clone_depth: 10
 install:
   - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
-  - ruby --version
-  - gem update --system
-  - gem --version
-  - gem install minitest --no-document
-build_script:
-  - net user
-  - net localgroup
+  - gem install bundler --no-document
+  - bundle install
+build: off
 test_script:
   - ruby -Ilib exe/rake
-
+deploy: off
 environment:
   matrix:
     - ruby_version: "193"
@@ -22,3 +17,5 @@ environment:
     - ruby_version: "21-x64"
     - ruby_version: "22"
     - ruby_version: "22-x64"
+    - ruby_version: "23"
+    - ruby_version: "23-x64"

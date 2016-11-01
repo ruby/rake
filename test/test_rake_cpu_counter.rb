@@ -1,4 +1,4 @@
-require File.expand_path('../helper', __FILE__)
+require File.expand_path("../helper", __FILE__)
 
 class TestRakeCpuCounter < Rake::TestCase
 
@@ -10,7 +10,7 @@ class TestRakeCpuCounter < Rake::TestCase
 
   def test_count
     num = @cpu_counter.count
-    skip 'cannot count CPU' if num == nil
+    skip "cannot count CPU" if num == nil
     assert_kind_of Numeric, num
     assert_operator num, :>=, 1
   end

@@ -1,4 +1,4 @@
-require File.expand_path('../helper', __FILE__)
+require File.expand_path("../helper", __FILE__)
 
 class TestRakePseudoStatus < Rake::TestCase
   def test_with_zero_exit_status

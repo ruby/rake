@@ -1,12 +1,12 @@
-require File.expand_path('../helper', __FILE__)
-require 'fileutils'
+require File.expand_path("../helper", __FILE__)
+require "fileutils"
 
 ######################################################################
 class TestRakeFileCreationTask < Rake::TestCase
   include Rake
   include Rake::DSL
 
-  DUMMY_DIR = 'dummy_dir'
+  DUMMY_DIR = "dummy_dir"
 
   def setup
     super

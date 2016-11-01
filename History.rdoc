@@ -1,7 +1,46 @@
-=== 11.2.0(dev) / 2016-
+=== 12.0.0(dev)
 
-Enhancements:
+==== Compatibility Changes
 
+* Remove arguments on clear #157 by Jesse Bowes
+* Removed `rake/contrib` packages. These are extracted to `rake-contrib` gem.
+* Removed to deprecated warnings for `last\_comment`.
+
+==== Enhancements:
+
+* Re-use trace option on `cleanup` task. #164 by Brian Henderson
+
+=== 11.3.0 / 2016-09-20
+
+==== Enhancements:
+
+* Remove to reference `Fixnum` constant. Pull request #160 by nobu
+
+=== 11.2.2 / 2016-06-12
+
+==== Bug fixes
+
+* Fix unexpected behavior with multiple dependencies on Rake::TestTask
+
+=== 11.2.1 / 2016-06-12
+
+==== Bug fixes
+
+* Fix regression of dependencies handling on Rake::TestTask. Report #139
+
+=== 11.2.0 / 2016-06-11
+
+==== Bug fixes
+
+* Fix unexpected cut-out behavior on task description using triple dots
+  and exclamation. Report #106 from Stephan Kämper and Pull request #134 by Lee
+* Fix empty argument assignment with `with_defaults` option. Pull request #135
+  by bakunyo
+* Ignore to use `hwprefs` on Darwin platform. Use sysctl now. Report #128
+
+==== Enhancements
+
+* Spawn options for sh Pull equest #138 by Eric Hodel.
 * Allow to specify dependencies(prerequisites) for Rake::TestTask
   Pull request #117 by Tim Maslyuchenko
 * Use Bundler task instead of hoe for gem release.
@@ -11,39 +50,39 @@ Enhancements:
 
 === 11.1.2 / 2016-03-28
 
-Bug fixes:
+==== Bug fixes
 
 * Remove `-W` option when Rake::TestTask#verbose enabled. It's misunderstanding
   specification change with Rake 11. Partly revert #67
 
 === 11.1.1 / 2016-03-14
 
-Bug fixes:
+==== Bug fixes
 
 * Use `-W` instead of `--verbose` when Rake::TestTask#verbose enabled.
   JRuby doesn't have `--verbose` option.
 
 === 11.1.0 / 2016-03-11
 
-Compatibility Changes:
+==== Compatibility Changes
 
 * Revert to remove `last\_comment`. It will remove Rake 12.
 
 === 11.0.1 / 2016-03-09
 
-Bug fixes:
+==== Bug fixes
 
 * Fixed packaging manifest.
 
 === 11.0.0 / 2016-03-09
 
-Bug fixes:
+==== Bug fixes
 
 * Correctly handle bad encoding in exception messages. Pull request #113
   by Tomer Brisker
 * Fix verbose option at TestTask. Pull request #67 by Mike Blumtritt
 
-Enhancements:
+==== Enhancements
 
 * Make FileList#exclude more analogous to FileList#include.
 * Use IO.open instead of Open3.popen3 for CPU counter.
@@ -57,7 +96,7 @@ Enhancements:
   Pull request #12 by Chris Keathley
 * Use ruby warnings by default. Pull request #97 by Harold Giménez
 
-Compatibility Changes:
+==== Compatibility Changes
 
 * Removed to support Ruby 1.8.x
 * Removed constant named `RAKEVERSION`
@@ -71,7 +110,7 @@ Compatibility Changes:
 
 === 10.5.0 / 2016-01-13
 
-Enhancements:
+==== Enhancements
 
 * Removed monkey patching for Ruby 1.8. Pull request #46 by Pablo Herrero.
 * Inheritance class of Rake::FileList returns always self class.
@@ -79,7 +118,7 @@ Enhancements:
 
 === 10.4.2 / 2014-12-02
 
-Bug fixes:
+==== Bug fixes
 
 * Rake no longer edits ARGV.  This allows you to re-exec rake from a rake
   task.  Pull requset #9 by Matt Palmer.
@@ -90,14 +129,14 @@ Bug fixes:
 
 === 10.4.1 / 2014-12-01
 
-Bug fixes:
+==== Bug fixes
 
 * Reverted fix for #277 as it caused numerous issues for rake users.
   rails/spring issue #366 by Gustavo Dutra.
 
 === 10.4.0 / 2014-11-22
 
-Enhancements:
+==== Enhancements
 
 * Upgraded to minitest 5.  Pull request #292 by Teo Ljungberg.
 * Added support for Pathname in rake tasks.  Pull request #271 by Randy
@@ -108,7 +147,7 @@ Enhancements:
   task.  Issue #277 by Matt Palmer.
 * Etc.nprocessors is used for counting the number of CPUs.
 
-Bug fixes:
+==== Bug fixes
 
 * Updated rake manpage.  Issue #283 by Nathan Long, pull request #291 by
   skittleys.
@@ -121,7 +160,7 @@ Bug fixes:
 
 === 10.3.2 / 2014-05-15
 
-Bug fixes:
+==== Bug fixes
 
 * Rake no longer infinitely loops when showing exception causes that refer to
   each other.  Bug #272 by Chris Bandy.
@@ -129,7 +168,7 @@ Bug fixes:
 
 === 10.3.1 / 2014-04-17
 
-Bug fixes:
+==== Bug fixes
 
 * Really stop reporting an error when cleaning already-deleted files.  Pull
   request #269 by Randy Coulman
@@ -137,13 +176,13 @@ Bug fixes:
 
 === 10.3 / 2014-04-15
 
-Enhancements:
+==== Enhancements
 
 * Added --build-all option to rake which treats all file prerequisites as
   out-of-date.  Pull request #254 by Andrew Gilbert.
 * Added Rake::NameSpace#scope.  Issue #263 by Jon San Miguel.
 
-Bug fixes:
+==== Bug fixes
 
 * Suppress org.jruby package files in rake error messages for JRuby users.
   Issue #213 by Charles Nutter.
@@ -155,13 +194,13 @@ Bug fixes:
 
 === 10.2.2 / 2014-03-27
 
-Bug fixes:
+==== Bug fixes
 
 * Restored Ruby 1.8.7 compatibility
 
 === 10.2.1 / 2014-03-25
 
-Bug fixes:
+==== Bug fixes
 
 * File tasks including a ':' are now top-level tasks again.  Issue #262 by
   Josh Holtrop.
@@ -170,7 +209,7 @@ Bug fixes:
 
 === 10.2.0 / 2014-03-24
 
-Enhancements:
+==== Enhancements
 
 * Rake now requires Ruby 1.9 or newer.  For me, this is a breaking change, but
   it seems that Jim planned to release it with Rake 10.2.  See also pull
@@ -188,7 +227,7 @@ Enhancements:
   Filip Hrbek.
 * Rake now prints the exception class on errors.  Patch #251 by David Cornu.
 
-Bug fixes:
+==== Bug fixes
 
 * Fixed typos.  Pull request #256 by Valera Rozuvan, #250 via Jake Worth, #260
   by Zachary Scott.
@@ -200,11 +239,10 @@ Bug fixes:
 * Fixed bug in can\_detect\_signals? in test.  Patch from #243 by Alexey
   Borzenkov.
 
-=== 10.1.1 and earlier
+=== 10.1.1
 
-Additions to the old CHANGES file were not made consistently so some
-versions are missing from this file.  These changes are usually described in
-the individual release notes files.
+* Use http://github.com/jimweirich/rake instead of http://rake.rubyforge.org for
+  canonical project url.
 
 === 10.1.0
 

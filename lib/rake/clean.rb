@@ -11,7 +11,7 @@
 #            The intent of this task is to return a project to its
 #            pristine, just unpacked state.
 
-require 'rake'
+require "rake"
 
 # :stopdoc:
 
@@ -29,6 +29,7 @@ module Rake
 
     def cleanup(file_name, opts={})
       begin
+        opts = {:verbose => Rake.application.options.trace}.merge(opts)
         rm_r file_name, opts
       rescue StandardError => ex
         puts "Failed to remove #{file_name}: #{ex}" unless file_already_gone?(file_name)
@@ -60,7 +61,7 @@ end
 
 CLEAN = ::Rake::FileList["**/*~", "**/*.bak", "**/core"]
 CLEAN.clear_exclude.exclude { |fn|
-  fn.pathmap("%f").downcase == 'core' && File.directory?(fn)
+  fn.pathmap("%f").downcase == "core" && File.directory?(fn)
 }
 
 desc "Remove any temporary products."
@@ -71,6 +72,6 @@ end
 CLOBBER = ::Rake::FileList.new
 
 desc "Remove any generated files."
-task :clobber => [:clean] do
+task clobber: [:clean] do
   Rake::Cleaner.cleanup_files(CLOBBER)
 end

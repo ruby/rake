@@ -1,6 +1,6 @@
-require File.expand_path('../helper', __FILE__)
+require File.expand_path("../helper", __FILE__)
 
-require 'rake/thread_history_display'
+require "rake/thread_history_display"
 
 class TestThreadHistoryDisplay < Rake::TestCase
   def setup
@@ -18,7 +18,7 @@ class TestThreadHistoryDisplay < Rake::TestCase
   end
 
   def test_item_queued
-    @stats << event(:item_queued,  :item_id => 123)
+    @stats << event(:item_queued,  item_id: 123)
     out, _ = capture_io do
       @display.show
     end
@@ -26,7 +26,7 @@ class TestThreadHistoryDisplay < Rake::TestCase
   end
 
   def test_item_dequeued
-    @stats << event(:item_dequeued,  :item_id => 123)
+    @stats << event(:item_dequeued,  item_id: 123)
     out, _ = capture_io do
       @display.show
     end
@@ -34,8 +34,8 @@ class TestThreadHistoryDisplay < Rake::TestCase
   end
 
   def test_multiple_items
-    @stats << event(:item_queued,  :item_id => 123)
-    @stats << event(:item_queued,  :item_id => 124)
+    @stats << event(:item_queued,  item_id: 123)
+    @stats << event(:item_queued,  item_id: 124)
     out, _ = capture_io do
       @display.show
     end
@@ -44,7 +44,7 @@ class TestThreadHistoryDisplay < Rake::TestCase
   end
 
   def test_waiting
-    @stats << event(:waiting, :item_id => 123)
+    @stats << event(:waiting, item_id: 123)
     out, _ = capture_io do
       @display.show
     end
@@ -52,7 +52,7 @@ class TestThreadHistoryDisplay < Rake::TestCase
   end
 
   def test_continue
-    @stats << event(:continue, :item_id => 123)
+    @stats << event(:continue, item_id: 123)
     out, _ = capture_io do
       @display.show
     end
@@ -62,8 +62,8 @@ class TestThreadHistoryDisplay < Rake::TestCase
   def test_thread_deleted
     @stats << event(
       :thread_deleted,
-      :deleted_thread => 123_456,
-      :thread_count => 12)
+      deleted_thread: 123_456,
+      thread_count: 12)
     out, _ = capture_io do
       @display.show
     end
@@ -75,8 +75,8 @@ class TestThreadHistoryDisplay < Rake::TestCase
   def test_thread_created
     @stats << event(
       :thread_created,
-      :new_thread => 123_456,
-      :thread_count => 13)
+      new_thread: 123_456,
+      thread_count: 13)
     out, _ = capture_io do
       @display.show
     end
@@ -89,10 +89,10 @@ class TestThreadHistoryDisplay < Rake::TestCase
 
   def event(type, data = {})
     result = {
-      :event => type,
-      :time  => @time / 1_000_000.0,
-      :data  => data,
-      :thread => Thread.current.object_id
+      event: type,
+      time: @time / 1_000_000.0,
+      data: data,
+      thread: Thread.current.object_id
     }
     @time += 1
     result

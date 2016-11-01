@@ -1,8 +1,8 @@
 # Define a package task library to aid in the definition of
 # redistributable package files.
 
-require 'rake'
-require 'rake/tasklib'
+require "rake"
+require "rake/tasklib"
 
 module Rake
 
@@ -93,14 +93,14 @@ module Rake
       @name = name
       @version = version
       @package_files = Rake::FileList.new
-      @package_dir = 'pkg'
+      @package_dir = "pkg"
       @need_tar = false
       @need_tar_gz = false
       @need_tar_bz2 = false
       @need_tar_xz = false
       @need_zip = false
-      @tar_command = 'tar'
-      @zip_command = 'zip'
+      @tar_command = "tar"
+      @zip_command = "zip"
     end
 
     # Create the tasks defined by this task library.
@@ -112,23 +112,23 @@ module Rake
       task :package
 
       desc "Force a rebuild of the package files"
-      task :repackage => [:clobber_package, :package]
+      task repackage: [:clobber_package, :package]
 
       desc "Remove package products"
       task :clobber_package do
         rm_r package_dir rescue nil
       end
 
-      task :clobber => [:clobber_package]
+      task clobber: [:clobber_package]
 
       [
         [need_tar, tgz_file, "z"],
         [need_tar_gz, tar_gz_file, "z"],
         [need_tar_bz2, tar_bz2_file, "j"],
         [need_tar_xz, tar_xz_file, "J"]
-      ].each do |(need, file, flag)|
+      ].each do |need, file, flag|
         if need
-          task :package => ["#{package_dir}/#{file}"]
+          task package: ["#{package_dir}/#{file}"]
           file "#{package_dir}/#{file}" =>
             [package_dir_path] + package_files do
             chdir(package_dir) do
@@ -139,7 +139,7 @@ module Rake
       end
 
       if need_zip
-        task :package => ["#{package_dir}/#{zip_file}"]
+        task package: ["#{package_dir}/#{zip_file}"]
         file "#{package_dir}/#{zip_file}" =>
           [package_dir_path] + package_files do
           chdir(package_dir) do

@@ -1,4 +1,3 @@
-
 module Rake
 
   # Error indicating a recursion overflow error in task selection.
@@ -13,7 +12,7 @@ module Rake
     end
 
     def message
-      super + ": [" + @targets.reverse.join(' => ') + "]"
+      super + ": [" + @targets.reverse.join(" => ") + "]"
     end
   end
 
