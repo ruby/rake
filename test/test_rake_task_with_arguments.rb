@@ -82,6 +82,10 @@ class TestRakeTaskWithArguments < Rake::TestCase
 
 
   def test_actions_adore_keywords
+    # A brutish trick to avoid parsing. Remove it once support for 1.9 and 2.0 is dropped
+    # https://ci.appveyor.com/project/ruby/rake/build/1.0.301
+    skip 'Keywords aren\'t a feature in this version' if RUBY_VERSION =~ /^1|^2\.0/
+    eval <<-RUBY, binding, __FILE__, __LINE__
     notes = []
     t = task :t, [:reqr, :ovrd, :dflt] # required, overridden-optional, default-optional
     verify = lambda do |name, expecteds, actuals|
@@ -103,6 +107,7 @@ class TestRakeTaskWithArguments < Rake::TestCase
 
     t.invoke('r', 'o')
     assert_equal [*:a..:h], notes
+    RUBY
   end
 
   def test_arguments_are_passed_to_block
