@@ -80,6 +80,31 @@ class TestRakeTaskWithArguments < Rake::TestCase
     assert_equal [:a, :b, :c, :d], notes
   end
 
+
+  def test_actions_adore_keywords
+    notes = []
+    t = task :t, [:reqr, :ovrd, :dflt] # required, overridden-optional, default-optional
+    verify = lambda do |name, expecteds, actuals|
+      notes << name
+      assert_equal expecteds.length, actuals.length
+      expecteds.zip(actuals) { |e, a| assert_equal e, a, "(TEST #{name})" }
+    end
+
+    t.enhance { |dflt: 'd', **| verify.call :a, ['d'], [dflt] }
+    t.enhance { |ovrd: '-', **| verify.call :b, ['o'], [ovrd] }
+    t.enhance { |reqr:    , **| verify.call :c, ['r'], [reqr] }
+
+    t.enhance { |t2, dflt: 'd', **| verify.call :d, [t,'d'], [t2,dflt] }
+    t.enhance { |t2, ovrd: 'd', **| verify.call :e, [t,'o'], [t2,ovrd] }
+    t.enhance { |t2, reqr:    , **| verify.call :f, [t,'r'], [t2,reqr] }
+
+    t.enhance { |t2, dflt: 'd', reqr:, **| verify.call :g, [t,'d','r'], [t2,dflt,reqr] }
+    t.enhance { |t2, ovrd: '-', reqr:, **| verify.call :h, [t,'o','r'], [t2,ovrd,reqr] }
+
+    t.invoke('r', 'o')
+    assert_equal [*:a..:h], notes
+  end
+
   def test_arguments_are_passed_to_block
     t = task(:t, :a, :b) { |tt, args|
       assert_equal({ a: 1, b: 2 }, args.to_hash)

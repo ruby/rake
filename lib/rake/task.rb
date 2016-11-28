@@ -247,14 +247,7 @@ module Rake
       end
       application.trace "** Execute #{name}" if application.options.trace
       application.enhance_with_matching_rule(name) if @actions.empty?
-      @actions.each do |act|
-        case act.arity
-        when 1
-          act.call(self)
-        else
-          act.call(self, args)
-        end
-      end
+      @actions.each { |act| act.call(self, args) }
     end
 
     # Is this task needed?
