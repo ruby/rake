@@ -85,13 +85,13 @@ class TestRakeTaskWithArguments < Rake::TestCase
     # A brutish trick to avoid parsing. Remove it once support for 1.9 and 2.0 is dropped
     # https://ci.appveyor.com/project/ruby/rake/build/1.0.301
     skip 'Keywords aren\'t a feature in this version' if RUBY_VERSION =~ /^1|^2\.0/
-    eval <<-RUBY, binding, __FILE__, __LINE__
+    eval <<-RUBY, binding, __FILE__, __LINE__+1
     notes = []
     t = task :t, [:reqr, :ovrd, :dflt] # required, overridden-optional, default-optional
     verify = lambda do |name, expecteds, actuals|
       notes << name
       assert_equal expecteds.length, actuals.length
-      expecteds.zip(actuals) { |e, a| assert_equal e, a, "(TEST #{name})" }
+      expecteds.zip(actuals) { |e, a| assert_equal e, a, "(TEST \#{name})" }
     end
 
     t.enhance { |dflt: 'd', **| verify.call :a, ['d'], [dflt] }
