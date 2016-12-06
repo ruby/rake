@@ -142,7 +142,7 @@ class TestRakeTaskArguments < Rake::TestCase
     assert_equal [:first, :second, :third], ta.names
     assert_equal "1", ta[:first]
     assert_equal "two", ta[:second]
-    assert_equal nil, ta[:third]
+    assert_nil ta[:third]
     assert_equal ["1", "two"], ta.to_a
     assert_equal [], ta.extras
   end

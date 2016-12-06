@@ -397,13 +397,13 @@ class TestRakeTask < Rake::TestCase
 
   def test_comments_do_not_set
     t = task(:t, :name, :rev)
-    assert_equal nil, t.comment
+    assert_nil t.comment
   end
 
   def test_comments_is_nil
     t = task(:t, :name, :rev)
     t.comment = nil
-    assert_equal nil, t.comment
+    assert_nil t.comment
   end
 
   def test_extended_comments

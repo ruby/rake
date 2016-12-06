@@ -328,12 +328,12 @@ class TestRakeApplicationOptions < Rake::TestCase
     flags("--tasks", "-T") do |opts|
       assert_equal :tasks, opts.show_tasks
       assert_equal(//.to_s, opts.show_task_pattern.to_s)
-      assert_equal nil, opts.show_all_tasks
+      assert_nil opts.show_all_tasks
     end
     flags(["--tasks", "xyz"], ["-Txyz"]) do |opts|
       assert_equal :tasks, opts.show_tasks
       assert_equal(/xyz/.to_s, opts.show_task_pattern.to_s)
-      assert_equal nil, opts.show_all_tasks
+      assert_nil opts.show_all_tasks
     end
     flags(["--tasks", "xyz", "--comments"]) do |opts|
       assert_equal :tasks, opts.show_tasks

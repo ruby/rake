@@ -28,7 +28,7 @@ class TestRakeFileTask < Rake::TestCase
 
     open(ftask.name, "w") { |f| f.puts "HI" }
 
-    assert_equal nil, ftask.prerequisites.map { |n| Task[n].timestamp }.max
+    assert_nil ftask.prerequisites.map { |n| Task[n].timestamp }.max
     assert ! ftask.needed?, "file should not be needed"
   ensure
     File.delete(ftask.name) rescue nil

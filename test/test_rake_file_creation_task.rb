@@ -21,7 +21,7 @@ class TestRakeFileCreationTask < Rake::TestCase
     FileUtils.rm_rf fc_task.name
     assert fc_task.needed?, "file should be needed"
     FileUtils.mkdir fc_task.name
-    assert_equal nil, fc_task.prerequisites.map { |n| Task[n].timestamp }.max
+    assert_nil fc_task.prerequisites.map { |n| Task[n].timestamp }.max
     assert ! fc_task.needed?, "file should not be needed"
   end
 

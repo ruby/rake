@@ -53,7 +53,7 @@ class TestRakePackageTask < Rake::TestCase
 
     assert_equal "pkg",  pkg.package_dir
     assert_equal "pkgr", pkg.name
-    assert_equal nil,    pkg.version
+    assert_nil pkg.version
   end
 
   def test_clone
