@@ -36,4 +36,5 @@ Rake has the following features:
   s.add_development_dependency(%q<bundler>.freeze)
   s.add_development_dependency(%q<minitest>.freeze)
   s.add_development_dependency(%q<rdoc>.freeze, ["~> 5.0.0.beta2"])
+  s.add_development_dependency(%q<rubocop>.freeze)
 end
