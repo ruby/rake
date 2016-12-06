@@ -1,6 +1,5 @@
 require File.expand_path("../helper", __FILE__)
 
-######################################################################
 class TestRakeTaskArguments < Rake::TestCase
   def teardown
     ENV.delete("rev")
