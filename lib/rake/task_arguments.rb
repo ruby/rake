@@ -87,6 +87,7 @@ module Rake
     def has_key?(key)
       @hash.has_key?(key)
     end
+    alias key? has_key?
 
     def fetch(*args, &block)
       @hash.fetch(*args, &block)
