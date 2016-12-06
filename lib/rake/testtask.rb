@@ -119,7 +119,7 @@ module Rake
               status  = "Command failed with status (#{status.exitstatus})"
               details = ": [ruby #{args}]"
               message =
-                if Rake.application.options.trace or @verbose then
+                if Rake.application.options.trace or @verbose
                   status + details
                 else
                   status

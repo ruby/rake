@@ -82,7 +82,7 @@ class TestRakeTestTask < Rake::TestCase
   end
 
   def test_pattern_equals
-    ['gl.rb', 'ob.rb'].each do |f|
+    ["gl.rb", "ob.rb"].each do |f|
       create_file(f)
     end
     tt = Rake::TestTask.new do |t|
@@ -92,7 +92,7 @@ class TestRakeTestTask < Rake::TestCase
   end
 
   def test_pattern_equals_test_files_equals
-    ['gl.rb', 'ob.rb'].each do |f|
+    ["gl.rb", "ob.rb"].each do |f|
       create_file(f)
     end
     tt = Rake::TestTask.new do |t|
@@ -103,8 +103,8 @@ class TestRakeTestTask < Rake::TestCase
   end
 
   def test_run_code_direct
-    globbed = ['test_gl.rb', 'test_ob.rb'].map { |f| File.join('test', f) }
-    others = ['a.rb', 'b.rb'].map { |f| File.join('test', f) }
+    globbed = ["test_gl.rb", "test_ob.rb"].map { |f| File.join("test", f) }
+    others = ["a.rb", "b.rb"].map { |f| File.join("test", f) }
     (globbed + others).each do |f|
       create_file(f)
     end

@@ -80,7 +80,6 @@ class TestRakeTaskWithArguments < Rake::TestCase
     assert_equal [:a, :b, :c, :d], notes
   end
 
-
   def test_actions_adore_keywords
     # A brutish trick to avoid parsing. Remove it once support for 1.9 and 2.0 is dropped
     # https://ci.appveyor.com/project/ruby/rake/build/1.0.301

@@ -107,7 +107,7 @@ class TestRakeClean < Rake::TestCase
     Rake::Cleaner.cleanup(dir_name, verbose: false)
   end
 
-  def with_trace value
+  def with_trace(value)
     old, Rake.application.options.trace =
       Rake.application.options.trace, value
 
