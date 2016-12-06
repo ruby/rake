@@ -2,9 +2,9 @@
 
 ==== Compatibility Changes
 
-* Remove arguments on clear #157 by Jesse Bowes
+* Removed arguments on clear #157 by Jesse Bowes
 * Removed `rake/contrib` packages. These are extracted to `rake-contrib` gem.
-* Removed to deprecated warnings for `last\_comment`.
+* Removed deprecated method named `last\_comment`.
 
 ==== Enhancements:
 
