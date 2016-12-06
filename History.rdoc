@@ -10,6 +10,7 @@
 
 * Re-use trace option on `cleanup` task. #164 by Brian Henderson
 * Actions adore keyword arguments #174 by Josh Cheek
+* Rake::TaskArguments#key? alias of #has_key? #175 by Paul Annesley
 
 === 11.3.0 / 2016-09-20
 
