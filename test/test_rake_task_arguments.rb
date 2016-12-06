@@ -27,7 +27,9 @@ class TestRakeTaskArguments < Rake::TestCase
   def test_has_key
     ta = Rake::TaskArguments.new([:a], [:one])
     assert(ta.has_key?(:a))
+    assert(ta.key?(:a))
     refute(ta.has_key?(:b))
+    refute(ta.key?(:b))
   end
 
   def test_fetch
