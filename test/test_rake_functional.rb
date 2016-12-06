@@ -295,6 +295,25 @@ class TestRakeFunctional < Rake::TestCase
            "'play.app' file should exist"
   end
 
+  def dryrun_tasks
+    @err.split("\n").select { |line|
+      line.match(/^\*\* Execute/)
+    }.map { |line|
+      line.gsub(/^\*\* Execute \(dry run\) /, "")
+    }
+  end
+
+  def test_update_midway_through_chaining_to_file_task
+    rakefile_file_chains
+
+    rake "-n"
+    assert_equal(%w{fileA fileB fileC default}, dryrun_tasks)
+    rake
+    FileUtils.touch("fileA")
+    rake "-n"
+    assert_equal(%w{fileB fileC default}, dryrun_tasks)
+  end
+
   def test_file_creation_task
     rakefile_file_creation
 
