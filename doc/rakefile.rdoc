@@ -410,7 +410,7 @@ display a list of tasks that have a description.  If you use +desc+ to
 describe your major tasks, you have a semi-automatic way of generating
 a summary of your Rake file.
 
-  traken$ rake -T
+  $ rake -T
   (in /home/.../rake)
   rake clean            # Remove any temporary products.
   rake clobber          # Remove any generated file.
