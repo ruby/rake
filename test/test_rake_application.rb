@@ -80,11 +80,11 @@ class TestRakeApplication < Rake::TestCase
     begin
       begin
         raise "cause a"
-      rescue => a
+      rescue
         begin
           raise "cause b"
         rescue
-          raise a
+          raise
         end
       end
     rescue => ex
