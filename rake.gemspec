@@ -36,4 +36,5 @@ Rake has the following features:
   s.add_development_dependency(%q<bundler>.freeze)
   s.add_development_dependency(%q<minitest>.freeze)
   s.add_development_dependency(%q<rdoc>.freeze)
+  s.add_development_dependency(%q<coveralls>.freeze)
 end

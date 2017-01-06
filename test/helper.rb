@@ -1,5 +1,8 @@
 $:.unshift File.expand_path("../../lib", __FILE__)
 
+require 'coveralls'
+Coveralls.wear!
+
 gem "minitest", "~> 5"
 require "minitest/autorun"
 require "rake"
