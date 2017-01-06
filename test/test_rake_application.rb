@@ -97,7 +97,6 @@ class TestRakeApplication < Rake::TestCase
     assert_empty out
 
     assert_match "cause a", err
-    assert_match "cause b", err
   end
 
   def test_display_tasks
