@@ -309,7 +309,7 @@ class TestRakeFunctional < Rake::TestCase
     rake "-n"
     assert_equal(%w{fileA fileB fileC default}, dryrun_tasks)
     rake
-    sleep 1 # for stride seconds surely for timestamp
+    sleep 1 # Ensure the timestamp is on a new second
     FileUtils.touch("fileA")
     rake "-n"
     assert_equal(%w{fileB fileC default}, dryrun_tasks)
