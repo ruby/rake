@@ -77,6 +77,24 @@ end
     DEFAULT
   end
 
+  def rakefile_file_chains
+    rakefile <<-RAKEFILE
+file "fileA" do |t|
+  sh "echo contentA >\#{t.name}"
+end
+
+file "fileB" => "fileA" do |t|
+  sh "(cat fileA; echo transformationB) >\#{t.name}"
+end
+
+file "fileC" => "fileB" do |t|
+  sh "(cat fileB; echo transformationC) >\#{t.name}"
+end
+
+task default: "fileC"
+    RAKEFILE
+  end
+
   def rakefile_comments
     rakefile <<-COMMENTS
 # comment for t1
