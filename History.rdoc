@@ -385,7 +385,7 @@ we'll repeat the changes for versions 0.9.3 through 0.9.5 here.
   programatically add rake task libraries.
 
 * You can specific backtrace suppression patterns (see
-  --supress-backtrace)
+  --suppress-backtrace)
 
 * Directory tasks can now take prerequisites and actions
 
@@ -633,7 +633,7 @@ we'll repeat the changes for version 0.9.3 here.
   programatically add rake task libraries.
 
 * You can specific backtrace suppression patterns (see
-  --supress-backtrace)
+  --suppress-backtrace)
 
 * Directory tasks can now take prerequisites and actions
 
@@ -843,7 +843,7 @@ a number of bug fixes.
   programatically add rake task libraries.
 
 * You can specific backtrace suppression patterns (see
-  --supress-backtrace)
+  --suppress-backtrace)
 
 * Directory tasks can now take prerequisites and actions
 
@@ -1415,7 +1415,7 @@ The first argument is still the name of the task (:name in this case).
 The next to argumements are the names of the parameters expected by
 :name (:first_name and :last_name in the example).
 
-To access the values of the paramters, the block defining the task
+To access the values of the parameters, the block defining the task
 behaviour can now accept a second parameter:
 
    task :name, :first_name, :last_name do |t, args|
@@ -1518,7 +1518,7 @@ The first argument is still the name of the task (:name in this case).
 The next to argumements are the names of the parameters expected by
 :name (:first_name and :last_name in the example).
 
-To access the values of the paramters, the block defining the task
+To access the values of the parameters, the block defining the task
 behaviour can now accept a second parameter:
 
    task :name, :first_name, :last_name do |t, args|
@@ -1738,7 +1738,7 @@ are, I hope you enjoy them.
 * RDoc defaults to internal (in-process) invocation.  The old behavior
   is still available by setting the +external+ flag to true.
 * Rakefiles are now loaded with the expanded path to prevent
-  accidental polution from the Ruby load path.
+  accidental pollution from the Ruby load path.
 * Task objects my now be used in prerequisite lists directly.
 * Task objects (in addition to task names) may now be included in the
   prerequisite list of a task.
@@ -1751,7 +1751,7 @@ are, I hope you enjoy them.
 ===== Namespaces
 
 Tasks can now be nested inside their own namespaces.  Tasks within one
-namespace will not accidently interfer with tasks named in a different
+namespace will not accidentally interfer with tasks named in a different
 namespace.
 
 For example:
@@ -1809,7 +1809,7 @@ As usual, it was input from users that drove a alot of these changes.
 The following people either contributed patches, made suggestions or
 made otherwise helpful comments.  Thanks to ...
 
-* Doug Young (inspriation for the parallel task)
+* Doug Young (inspiration for the parallel task)
 * David Heinemeier Hansson (for --trace message enhancement and for
   pushing for namespace support).
 * Ludvig Omholt (for the openAFS fix)
