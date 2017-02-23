@@ -24,18 +24,23 @@ class TestRakeRakeTestLoader < Rake::TestCase
   end
 
   def test_load_error
-    expected = <<-EXPECTED
-
-File does not exist: #{File.join @tempdir, 'no_such_test_file.rb'}
-
-    EXPECTED
-
-    assert_output nil, expected do
+    out, err = capture_io do
       ARGV.replace %w[no_such_test_file.rb]
 
       assert_raises SystemExit do
         load @loader
       end
     end
+
+    assert_empty out
+
+    no_such_path = File.join @tempdir, 'no_such_test_file'
+
+    expected =
+      /\A\n
+       File\ does\ not\ exist:\ #{no_such_path}(\.rb)? # JRuby is different
+       \n\n\Z/x
+
+    assert_match expected, err
   end
 end
