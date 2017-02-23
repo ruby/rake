@@ -26,7 +26,7 @@ class TestRakeRakeTestLoader < Rake::TestCase
   def test_load_error
     expected = <<-EXPECTED
 
-cannot load such file -- #{File.join @tempdir, 'no_such_test_file.rb'}
+File does not exist: #{File.join @tempdir, 'no_such_test_file.rb'}
 
     EXPECTED
 

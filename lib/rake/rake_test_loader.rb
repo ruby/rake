@@ -18,7 +18,7 @@ argv = ARGV.select do |argument|
       false
     end
   rescue LoadError => e
-    abort "\n#{e.message}\n\n"
+    abort "\nFile does not exist: #{e.path}\n\n"
   end
 end
 
