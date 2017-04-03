@@ -10,7 +10,7 @@ class TestRakeRules < Rake::TestCase
   OBJFILE    = "abc.o"
   FOOFILE    = "foo"
   DOTFOOFILE = ".foo"
-  MINFILE = 'abc.min.o'
+  MINFILE    = 'abc.min.o'
 
   def setup
     super
