@@ -106,7 +106,7 @@ module Rake
 
     # Enhance a task with prerequisites or actions.  Returns self.
     def enhance(deps=nil, &block)
-      @prerequisites |= deps if deps
+      @prerequisites += deps if deps
       @actions << block if block_given?
       self
     end
@@ -127,7 +127,9 @@ module Rake
 
     # Argument description (nil if none).
     def arg_description # :nodoc:
-      @arg_names ? "[#{arg_names.join(',')}]" : nil
+      if @arg_names
+        "[#{arg_names.join(',')}]"
+      end
     end
 
     # Name of arguments for this task.
