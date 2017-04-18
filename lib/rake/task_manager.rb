@@ -127,7 +127,7 @@ module Rake
         "Rule Recursion Too Deep" if level >= 16
       @rules.each do |pattern, args, extensions, block|
         if pattern.match(task_name)
-          task = attempt_rule(task_name, args, extensions, block, level)
+          task = attempt_rule(task_name, pattern, args, extensions, block, level)
           return task if task
         end
       end
@@ -241,8 +241,8 @@ module Rake
     end
 
     # Attempt to create a rule given the list of prerequisites.
-    def attempt_rule(task_name, args, extensions, block, level)
-      sources = make_sources(task_name, extensions)
+    def attempt_rule(task_name, task_pattern, args, extensions, block, level)
+      sources = make_sources(task_name, task_pattern, extensions)
       prereqs = sources.map { |source|
         trace_rule level, "Attempting Rule #{task_name} => #{source}"
         if File.exist?(source) || Rake::Task.task_defined?(source)
@@ -263,7 +263,7 @@ module Rake
 
     # Make a list of sources from the list of file name extensions /
     # translation procs.
-    def make_sources(task_name, extensions)
+    def make_sources(task_name, task_pattern, extensions)
       result = extensions.map { |ext|
         case ext
         when /%/
@@ -271,7 +271,8 @@ module Rake
         when %r{/}
           ext
         when /^\./
-          task_name.ext(ext)
+          source = task_name.sub(task_pattern, ext)
+          source == ext ? task_name.ext(ext) : source
         when String
           ext
         when Proc, Method
