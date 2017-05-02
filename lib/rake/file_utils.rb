@@ -50,7 +50,7 @@ module FileUtils
     Rake.rake_output_message sh_show_command cmd if verbose
 
     unless noop
-      res = system(*cmd, options)
+      res = (Hash === cmd.last) ? system(*cmd) : system(*cmd, options)
       status = $?
       status = Rake::PseudoStatus.new(1) if !res && status.nil?
       shell_runner.call(res, status)
