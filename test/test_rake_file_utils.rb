@@ -180,6 +180,15 @@ class TestRakeFileUtils < Rake::TestCase
     assert_equal "echocommand.rb\n", r.read
   end
 
+  def test_sh_with_hash_option
+    skip "JRuby does not support spawn options" if jruby?
+    check_expansion
+
+    verbose(false) {
+      sh "#{RUBY} check_expansion.rb", {chdir: "."}, { verbose: false }
+    }
+  end
+
   def test_sh_failure
     shellcommand
 
