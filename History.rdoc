@@ -1,3 +1,19 @@
+=== 12.1.0(development)
+
+==== Enhancements:
+
+* Enabled to dependency chained by extensions. Pull request #39 by Petr Skocik.
+
+==== Bug fixes
+
+* Typo fixes in rakefile.rdoc. Pull request #180 by Yuta Kurotaki.
+* Fix unexpected behavior of file task with dryrun option.
+  Pull request #183 by @aycabta.
+* Make LoadError from running tests more obvious. Pull request #195
+  by Eric Hodel.
+* Fix unexpected TypeError with hash stayle option. Pull request #202
+  by Kuniaki IGARASHI.
+
 === 12.0.0
 
 ==== Compatibility Changes
