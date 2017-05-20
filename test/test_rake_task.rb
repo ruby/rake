@@ -296,24 +296,26 @@ class TestRakeTask < Rake::TestCase
     assert_equal [a, b], a.all_prerequisite_tasks.sort_by { |t| t.name }
   end
 
-  def test_timestamp_returns_now_if_all_prereqs_have_no_times
-    a = task a: ["b", "c"]
-    task :b
-    task :c
-
-    assert_in_delta Time.now, a.timestamp, 0.1, "computer too slow?"
-  end
-
-  def test_timestamp_returns_latest_prereq_timestamp
+  def test_timestamp_returns_now_regardless_prereq_times
     a = task a: ["b", "c"]
     b = task :b
     c = task :c
 
-    now = Time.now
     def b.timestamp() Time.now + 10 end
     def c.timestamp() Time.now + 5 end
 
-    assert_in_delta now, a.timestamp, 0.1, "computer too slow?"
+    assert_in_delta Time.now, a.timestamp, 0.1, "computer too slow?"
+  end
+
+  def test_timestamp_returns_time_zero_if_phony
+    a = task(a: ["b", "c"]).phony
+    b = task :b
+    c = task :c
+
+    def b.timestamp() Time.now + 10 end
+    def c.timestamp() Time.now + 5 end
+
+    assert_equal Time.at(0), a.timestamp, "computer too slow?"
   end
 
   def test_always_multitask
