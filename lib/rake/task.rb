@@ -102,6 +102,7 @@ module Rake
       @scope           = app.current_scope
       @arg_names       = nil
       @locations       = []
+      @phony           = false
     end
 
     # Enhance a task with prerequisites or actions.  Returns self.
@@ -258,7 +259,12 @@ module Rake
     # Timestamp for this task.  Basic tasks return the current time for their
     # time stamp.  Other tasks can be more sophisticated.
     def timestamp
-      Time.now
+      @phony ? Time.at(0) : Time.now
+    end
+
+    def phony
+      @phony = true
+      self
     end
 
     # Add a description to the task.  The description can consist of an option
