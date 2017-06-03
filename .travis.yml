@@ -3,11 +3,11 @@ sudo: false
 rvm:
   - 2.0.0
   - 2.1.10
-  - 2.2.6
-  - 2.3.3
+  - 2.2.7
+  - 2.3.4
   - 2.4.1
   - ruby-head
-  - jruby-9.1.6.0
+  - jruby-9.1.9.0
   - jruby-head
 before_install:
   - gem install bundler --no-document -v '~> 1.13.3'
