@@ -62,7 +62,7 @@ module Rake
     end
 
     # Returns the value of the given argument via method_missing
-    def method_missing(sym, *args)
+    def method_missing(sym)
       lookup(sym.to_sym)
     end
 
