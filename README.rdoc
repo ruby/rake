@@ -91,6 +91,8 @@ Type "rake --help" for all available options.
   6. {Clean and Clobber}[http://devblog.avdi.org/2014/04/28/rake-part-6-clean-and-clobber/]
   7. {MultiTask}[http://devblog.avdi.org/2014/04/29/rake-part-7-multitask/]
 * {Jim Weirich's 2003 RubyConf presentation}[http://web.archive.org/web/20140221123354/http://onestepback.org/articles/buildingwithrake/]
+* {Jim Weirich's 2012 Basic Rake presentation}[http://confreaks.tv/videos/railsconf2012-basic-rake]
+
 * Martin Fowler's article on Rake: http://martinfowler.com/articles/rake.html
 
 == Other Make Re-envisionings ...
