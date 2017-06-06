@@ -140,13 +140,9 @@ class TestRakeTask < Rake::TestCase
     end
 
     task(:foo).clear_comments
-
-    desc "a slightly different foo"
-    task :foo
-
-    assert_equal "a slightly different foo", task(:foo).comment
-    assert_equal ["x"], task(:foo).prerequisites
-    assert_equal 1, task(:foo).actions.size
+    
+    assert_nil task(:foo).comment
+    assert_empty task.prerequisites
   end
 
   def test_clear_args
