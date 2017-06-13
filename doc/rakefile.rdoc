@@ -611,9 +611,9 @@ lists.
 
 === Phony Task
 
-The phony task can be used as a dependency to allow file-based tasks to use
-non-file-based-tasks as prerequisites without forcing them to rebuild.  You
-can <tt>require 'rake/phony'</tt> to add the +phony+ task.
+A task marked as phony can be used as a dependency to allow file-based tasks to use
+non-file-based-tasks as prerequisites without forcing them to rebuild. To mark it as
+phony call the `phony` method on the task.
 
 ----
 

@@ -44,8 +44,6 @@ class TestRakeFileTask < Rake::TestCase
   end
 
   def test_file_times_new_depend_on_regular_task_timestamps
-    load_phony
-
     name = "dummy"
     task name
 
@@ -55,9 +53,9 @@ class TestRakeFileTask < Rake::TestCase
 
     assert t1.needed?, "depending on non-file task uses Time.now"
 
-    task(name => :phony)
+    task(name).phony
 
-    assert t1.needed?, "unless the non-file task has a timestamp"
+    refute t1.needed?, "unless the non-file task has a timestamp"
   end
 
   def test_file_times_old_depends_on_new
@@ -188,10 +186,6 @@ class TestRakeFileTask < Rake::TestCase
     rescue Exception
     end
     assert(! File.exist?(NEWFILE), "NEWFILE should be deleted")
-  end
-
-  def load_phony
-    load File.join(@rake_lib, "rake/phony.rb")
   end
 
 end

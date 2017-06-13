@@ -6,6 +6,7 @@
 
 ==== Bug fixes
 
+* Enable phony tasks feature again through the Rake::Task#phony method.
 * Typo fixes in rakefile.rdoc. Pull request #180 by Yuta Kurotaki.
 * Fix unexpected behavior of file task with dryrun option.
   Pull request #183 by @aycabta.
