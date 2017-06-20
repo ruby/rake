@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+# frozen_string_literal: true
 module Rake
   # LateTime is a fake timestamp that occurs _after_ any other time value.
   class LateTime

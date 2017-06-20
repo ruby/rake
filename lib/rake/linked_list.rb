@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+# frozen_string_literal: true
 module Rake
 
   # Polylithic linked list structure used to implement several data

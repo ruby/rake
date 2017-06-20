@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+# frozen_string_literal: true
 require "rake/task.rb"
 require "rake/early_time"
 

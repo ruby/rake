@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+# frozen_string_literal: true
 class Module
   # Check for an existing method in the current class before extending.  If
   # the method already exists, then a warning is printed and the extension is

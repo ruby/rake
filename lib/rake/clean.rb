@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+# frozen_string_literal: true
 # The 'rake/clean' file defines two file lists (CLEAN and CLOBBER) and
 # two rake tasks (:clean and :clobber).
 #

@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+# frozen_string_literal: true
 # Define a package task library to aid in the definition of
 # redistributable package files.
 
