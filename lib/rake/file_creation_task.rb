@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require "rake/file_task"
 require "rake/early_time"
 

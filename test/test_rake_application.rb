@@ -1,4 +1,4 @@
-#encoding: UTF-8
+# frozen_string_literal: false
 require File.expand_path("../helper", __FILE__)
 
 class TestRakeApplication < Rake::TestCase

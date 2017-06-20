@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 module Rake
 
   # Include PrivateReader to use +private_reader+.

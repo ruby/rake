@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 module Rake
   ##
   # Mixin for creating easily cloned objects.

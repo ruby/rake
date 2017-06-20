@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require File.expand_path("../helper", __FILE__)
 
 require "rake/thread_history_display"

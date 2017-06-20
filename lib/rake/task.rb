@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require "rake/invocation_exception_mixin"
 
 module Rake

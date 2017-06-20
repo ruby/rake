@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 # Rake DSL functions.
 require "rake/file_utils_ext"
 

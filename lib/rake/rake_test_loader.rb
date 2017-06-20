@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require "rake"
 
 # Load the test files from the command line.

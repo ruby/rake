@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 module Rake
 
   # EarlyTime is a fake timestamp that occurs _before_ any other time value.

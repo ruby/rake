@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 module Rake
 
   # InvocationChain tracks the chain of task invocations to detect

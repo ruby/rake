@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 module Rake
   VERSION = "12.0.0"
 
