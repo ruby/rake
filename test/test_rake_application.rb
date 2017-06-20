@@ -37,7 +37,7 @@ class TestRakeApplication < Rake::TestCase
 
   def test_display_exception_details_bad_encoding
     begin
-      raise "El Niño is coming!".force_encoding("US-ASCII")
+      raise "El Niño is coming!".dup.force_encoding("US-ASCII")
     rescue => ex
     end
 

@@ -137,7 +137,7 @@ class String
     # This String extension comes from Rake
     def pathmap(spec=nil, &block)
       return self if spec.nil?
-      result = ""
+      result = "".dup
       spec.scan(/%\{[^}]*\}-?\d*[sdpfnxX%]|%-?\d+d|%.|[^%]+/) do |frag|
         case frag
         when "%f"

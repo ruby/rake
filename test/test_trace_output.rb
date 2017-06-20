@@ -9,7 +9,7 @@ class TestTraceOutput < Rake::TestCase
     attr_reader :result, :calls
 
     def initialize
-      @result = ""
+      @result = "".dup
       @calls = 0
     end
 
