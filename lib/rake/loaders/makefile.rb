@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Rake
 
   # Makefile loader to be used with the import file loader.  Use this to

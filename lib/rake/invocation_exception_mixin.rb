@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Rake
   module InvocationExceptionMixin
     # Return the invocation chain (list of Rake tasks) that were in

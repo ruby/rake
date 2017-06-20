@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Rake
   module Backtrace # :nodoc: all
     SYS_KEYS  = RbConfig::CONFIG.keys.grep(/(?:[a-z]prefix|libdir)\z/)

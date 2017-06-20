@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Rake
 
   # Same as a regular task, but the immediate prerequisites are done in

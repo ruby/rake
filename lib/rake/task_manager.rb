@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Rake
 
   # The TaskManager module is a mixin for managing tasks.

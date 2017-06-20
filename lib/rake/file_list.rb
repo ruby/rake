@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "rake/cloneable"
 require "rake/file_utils_ext"
 require "rake/ext/string"

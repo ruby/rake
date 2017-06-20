@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Defines a :phony task that you can use as a dependency. This allows
 # file-based tasks to use non-file-based tasks as prerequisites
 # without forcing them to rebuild.

@@ -1,4 +1,4 @@
-#encoding: UTF-8
+# frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 
 class TestRakeApplication < Rake::TestCase
@@ -37,7 +37,7 @@ class TestRakeApplication < Rake::TestCase
 
   def test_display_exception_details_bad_encoding
     begin
-      raise "El Niño is coming!".force_encoding("US-ASCII")
+      raise "El Niño is coming!".dup.force_encoding("US-ASCII")
     rescue => ex
     end
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Rake
 
   # A Promise object represents a promise to do work (a chore) in the

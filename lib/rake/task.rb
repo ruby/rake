@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "rake/invocation_exception_mixin"
 
 module Rake
@@ -320,7 +321,7 @@ module Rake
     # Return a string describing the internal state of a task.  Useful for
     # debugging.
     def investigation
-      result = "------------------------------\n"
+      result = "------------------------------\n".dup
       result << "Investigating #{name}\n"
       result << "class: #{self.class}\n"
       result <<  "task needed: #{needed?}\n"
