@@ -46,8 +46,6 @@ module Rake
     #   Dir.chdir 'other/directory'
     #
     #   other_rake = Rake.with_application do |rake|
-    #     rake.set_default_options
-    #
     #     rake.load_rakefile
     #   end
     #

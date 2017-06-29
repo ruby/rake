@@ -62,6 +62,8 @@ module Rake
       add_loader("rake", DefaultLoader.new)
       @tty_output = STDOUT.tty?
       @terminal_columns = ENV["RAKE_COLUMNS"].to_i
+
+      set_default_options
     end
 
     # Run the Rake application.  The run method performs the following

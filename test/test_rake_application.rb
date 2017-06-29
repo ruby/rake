@@ -49,6 +49,8 @@ class TestRakeApplication < Rake::TestCase
     end
 
     out, err = capture_io do
+      @app.set_default_options # reset trace output IO
+
       @app.display_error_message ex
     end
 
@@ -65,6 +67,8 @@ class TestRakeApplication < Rake::TestCase
     end
 
     out, err = capture_io do
+      @app.set_default_options # reset trace output IO
+
       @app.display_error_message ex
     end
 
@@ -86,6 +90,8 @@ class TestRakeApplication < Rake::TestCase
     end
 
     out, err = capture_io do
+      @app.set_default_options # reset trace output IO
+
       @app.display_error_message ex
     end
 
@@ -472,6 +478,7 @@ class TestRakeApplication < Rake::TestCase
   def test_bad_run_with_trace
     @app.intern(Rake::Task, "default").enhance { fail }
     _, err = capture_io {
+      @app.set_default_options
       assert_raises(SystemExit) { @app.run %w[-f -s -t] }
     }
     refute_match(/see full trace/i, err)
@@ -563,6 +570,8 @@ class TestRakeApplication < Rake::TestCase
 
   def test_standard_exception_handling_other
     out, err = capture_io do
+      @app.set_default_options # reset trace output IO
+
       e = assert_raises SystemExit do
         @app.standard_exception_handling do
           raise "blah"
