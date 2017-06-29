@@ -30,19 +30,19 @@ class TestRakeApplicationOptions < Rake::TestCase
 
   def test_default_options
     opts = command_line
-    assert_nil opts.backtrace
-    assert_nil opts.dryrun
-    assert_nil opts.ignore_system
-    assert_nil opts.load_system
-    assert_nil opts.always_multitask
-    assert_nil opts.nosearch
+    assert_equal false, opts.backtrace
+    assert_equal false, opts.dryrun
+    assert_equal false, opts.ignore_system
+    assert_equal false, opts.load_system
+    assert_equal false, opts.always_multitask
+    assert_equal false, opts.nosearch
     assert_equal ["rakelib"], opts.rakelib
-    assert_nil opts.show_prereqs
+    assert_equal false, opts.show_prereqs
     assert_nil opts.show_task_pattern
     assert_nil opts.show_tasks
-    assert_nil opts.silent
-    assert_nil opts.trace
-    assert_nil opts.thread_pool_size
+    assert_equal false, opts.silent
+    assert_equal false, opts.trace
+    assert_equal Rake.suggested_thread_count, opts.thread_pool_size
     assert_equal ["rakelib"], opts.rakelib
     assert ! Rake::FileUtilsExt.verbose_flag
     assert ! Rake::FileUtilsExt.nowrite_flag
@@ -115,7 +115,7 @@ class TestRakeApplicationOptions < Rake::TestCase
 
   def test_jobs
     flags([]) do |opts|
-      assert_nil opts.thread_pool_size
+      assert_equal Rake.suggested_thread_count, opts.thread_pool_size
     end
     flags(["--jobs", "0"], ["-j", "0"]) do |opts|
       assert_equal 0, opts.thread_pool_size
@@ -329,12 +329,12 @@ class TestRakeApplicationOptions < Rake::TestCase
     flags("--tasks", "-T") do |opts|
       assert_equal :tasks, opts.show_tasks
       assert_equal(//.to_s, opts.show_task_pattern.to_s)
-      assert_nil opts.show_all_tasks
+      assert_equal false, opts.show_all_tasks
     end
     flags(["--tasks", "xyz"], ["-Txyz"]) do |opts|
       assert_equal :tasks, opts.show_tasks
       assert_equal(/xyz/.to_s, opts.show_task_pattern.to_s)
-      assert_nil opts.show_all_tasks
+      assert_equal false, opts.show_all_tasks
     end
     flags(["--tasks", "xyz", "--comments"]) do |opts|
       assert_equal :tasks, opts.show_tasks

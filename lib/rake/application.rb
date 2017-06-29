@@ -619,8 +619,7 @@ module Rake
     # arguments that we didn't understand, which should (in theory) be just
     # task names and env vars.
     def handle_options # :nodoc:
-      options.rakelib = ["rakelib"]
-      options.trace_output = $stderr
+      set_default_options
 
       OptionParser.new do |opts|
         opts.banner = "#{Rake.application.name} [-f rakefile] {options} targets..."
@@ -780,6 +779,29 @@ module Rake
       re = /#{re.source}/i if windows?
 
       backtrace.find { |str| str =~ re } || ""
+    end
+
+    def set_default_options
+      options.always_multitask           = false
+      options.backtrace                  = false
+      options.build_all                  = false
+      options.dryrun                     = false
+      options.ignore_deprecate           = false
+      options.ignore_system              = false
+      options.job_stats                  = false
+      options.load_system                = false
+      options.nosearch                   = false
+      options.rakelib                    = %w[rakelib]
+      options.show_all_tasks             = false
+      options.show_prereqs               = false
+      options.show_task_pattern          = nil
+      options.show_tasks                 = nil
+      options.silent                     = false
+      options.suppress_backtrace_pattern = nil
+      options.thread_pool_size           = Rake.suggested_thread_count
+      options.trace                      = false
+      options.trace_output               = $stderr
+      options.trace_rules                = false
     end
 
   end
