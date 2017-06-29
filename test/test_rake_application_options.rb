@@ -9,7 +9,6 @@ class TestRakeApplicationOptions < Rake::TestCase
     super
 
     @testkey = ENV["TESTKEY"]
-    clear_argv
     Rake::FileUtilsExt.verbose_flag = false
     Rake::FileUtilsExt.nowrite_flag = false
     TESTING_REQUIRE.clear
@@ -17,15 +16,10 @@ class TestRakeApplicationOptions < Rake::TestCase
 
   def teardown
     ENV["TESTKEY"] = @testkey
-    clear_argv
     Rake::FileUtilsExt.verbose_flag = false
     Rake::FileUtilsExt.nowrite_flag = false
 
     super
-  end
-
-  def clear_argv
-    ARGV.pop until ARGV.empty?
   end
 
   def test_default_options
