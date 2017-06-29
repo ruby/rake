@@ -10,6 +10,36 @@ class TestRakeApplication < Rake::TestCase
     @app.options.rakelib = []
   end
 
+  def test_class_with_application
+    orig_app = Rake.application
+
+    return_app = Rake.with_application do |yield_app|
+      refute_equal orig_app, yield_app, 'new application must be yielded'
+
+      assert_equal yield_app, Rake.application,
+                   'new application must be default in block'
+    end
+
+    refute_equal orig_app, return_app, 'new application not returned'
+    assert_equal orig_app, Rake.application, 'original application not default'
+  end
+
+  def test_class_with_application_user_defined
+    orig_app = Rake.application
+
+    user_app = Rake::Application.new
+
+    return_app = Rake.with_application user_app do |yield_app|
+      assert_equal user_app, yield_app, 'user application must be yielded'
+
+      assert_equal user_app, Rake.application,
+                   'user application must be default in block'
+    end
+
+    assert_equal user_app, return_app, 'user application not returned'
+    assert_equal orig_app, Rake.application, 'original application not default'
+  end
+
   def test_display_exception_details
     obj = Object.new
     obj.instance_eval("def #{__method__}; raise 'test'; end", "ruby")
