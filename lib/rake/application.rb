@@ -74,19 +74,19 @@ module Rake
     # If you wish to build a custom rake command, you should call
     # +init+ on your application.  Then define any tasks.  Finally,
     # call +top_level+ to run your top level tasks.
-    def run
+    def run(argv = ARGV)
       standard_exception_handling do
-        init
+        init 'rake', argv
         load_rakefile
         top_level
       end
     end
 
     # Initialize the command line parameters and app name.
-    def init(app_name="rake")
+    def init(app_name="rake", argv = ARGV)
       standard_exception_handling do
         @name = app_name
-        args = handle_options
+        args = handle_options argv
         collect_command_line_tasks(args)
       end
     end
@@ -618,7 +618,7 @@ module Rake
     # Read and handle the command line options.  Returns the command line
     # arguments that we didn't understand, which should (in theory) be just
     # task names and env vars.
-    def handle_options # :nodoc:
+    def handle_options(argv) # :nodoc:
       set_default_options
 
       OptionParser.new do |opts|
@@ -633,7 +633,7 @@ module Rake
 
         standard_rake_options.each { |args| opts.on(*args) }
         opts.environment("RAKEOPT")
-      end.parse(ARGV)
+      end.parse(argv)
     end
 
     # Similar to the regular Ruby +require+ command, but will check

@@ -445,8 +445,6 @@ class TestRakeApplicationOptions < Rake::TestCase
 
   def flags(*sets)
     sets.each do |set|
-      ARGV.clear
-
       @exit = catch(:system_exit) { command_line(*set) }
 
       yield(@app.options) if block_given?
@@ -454,13 +452,12 @@ class TestRakeApplicationOptions < Rake::TestCase
   end
 
   def command_line(*options)
-    options.each do |opt| ARGV << opt end
     @app = Rake::Application.new
     def @app.exit(*args)
       throw :system_exit, :exit
     end
     @app.instance_eval do
-      args = handle_options
+      args = handle_options options
       collect_command_line_tasks(args)
     end
     @tasks = @app.top_level_tasks
