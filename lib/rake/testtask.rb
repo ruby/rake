@@ -51,6 +51,7 @@ module Rake
 
     # Request that the tests be run with the warning flag set.
     # E.g. warning=true implies "ruby -w" used to run the tests.
+    # (default is true)
     attr_accessor :warning
 
     # Glob pattern to match test files. (default is 'test/test*.rb')
