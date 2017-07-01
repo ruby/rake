@@ -343,6 +343,17 @@ class TestRakeRules < Rake::TestCase
     Task[OBJFILE].invoke("arg")
   end
 
+  # for https://github.com/ruby/rake/pull/182
+  def test_single_dependent_with_nil_args
+    create_file(SRCFILE)
+    rule nil => ".cpp" do |t| p t.name end
+    rule(/\.o$/ => ".c") do |t|
+      @runs << t.name
+    end
+    Task[OBJFILE].invoke
+    assert_equal [OBJFILE], @runs
+  end
+
   def test_string_rule_with_args_and_lambda_prereq
     delete_file(OBJFILE)
     create_file(SRCFILE)
