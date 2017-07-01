@@ -3,6 +3,7 @@
 ==== Enhancements:
 
 * Enabled to dependency chained by extensions. Pull request #39 by Petr Skocik.
+* Make all of string literals to frozen objects on Ruby 2.4 or later.
 
 ==== Bug fixes
 
