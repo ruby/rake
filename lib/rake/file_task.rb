@@ -20,9 +20,9 @@ module Rake
     # Time stamp for file task.
     def timestamp
       begin
-        return File.mtime(name.to_s)
+        File.mtime(name.to_s)
       rescue Errno::ENOENT
-        return Rake::LATE
+        Rake::LATE
       end
     end
 
