@@ -6,7 +6,7 @@ class TestRakeRakeTestLoader < Rake::TestCase
   def setup
     super
 
-    @loader = File.join @rake_lib, 'rake/rake_test_loader.rb'
+    @loader = File.join @rake_lib, "rake/rake_test_loader.rb"
   end
 
   def test_pattern
@@ -35,7 +35,7 @@ class TestRakeRakeTestLoader < Rake::TestCase
 
     assert_empty out
 
-    no_such_path = File.join @tempdir, 'no_such_test_file'
+    no_such_path = File.join @tempdir, "no_such_test_file"
 
     expected =
       /\A\n
