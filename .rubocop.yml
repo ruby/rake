@@ -54,4 +54,4 @@ Style/BracesAroundHashParameters:
 
 Lint/EndAlignment:
   Enabled: true
-  AlignWith: variable
+  EnforcedStyleAlignWith: variable
