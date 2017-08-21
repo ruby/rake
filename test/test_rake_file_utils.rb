@@ -186,7 +186,7 @@ class TestRakeFileUtils < Rake::TestCase
     check_expansion
 
     verbose(false) {
-      sh "#{RUBY} check_expansion.rb", {chdir: "."}, { verbose: false }
+      sh "#{RUBY} check_expansion.rb", { chdir: "." }, verbose: false
     }
   end
 
