@@ -5,7 +5,7 @@ AllCops:
     - doc/**/*.rb
     - rake.gemspec
 
-Style/LineLength:
+Metrics/LineLength:
   Enabled: true
   Max: 120
 
@@ -16,31 +16,31 @@ Style/StringLiterals:
   Enabled: true
   EnforcedStyle: double_quotes
 
-Style/IndentationWidth:
+Layout/IndentationWidth:
   Enabled: true
 
-Style/Tab:
+Layout/Tab:
   Enabled: true
 
-Style/EmptyLines:
+Layout/EmptyLines:
   Enabled: true
 
-Style/TrailingBlankLines:
+Layout/TrailingBlankLines:
   Enabled: true
 
-Style/TrailingWhitespace:
+Layout/TrailingWhitespace:
   Enabled: true
 
-Style/SpaceBeforeBlockBraces:
+Layout/SpaceBeforeBlockBraces:
   Enabled: true
 
-Style/SpaceInsideBlockBraces:
+Layout/SpaceInsideBlockBraces:
   Enabled: true
 
-Style/SpaceInsideHashLiteralBraces:
+Layout/SpaceInsideHashLiteralBraces:
   Enabled: true
 
-Style/CaseIndentation:
+Layout/CaseIndentation:
   Enabled: true
 
 Style/MultilineIfThen:
