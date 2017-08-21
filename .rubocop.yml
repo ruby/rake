@@ -16,6 +16,15 @@ Style/StringLiterals:
   Enabled: true
   EnforcedStyle: double_quotes
 
+Style/MultilineIfThen:
+  Enabled: true
+
+Style/MethodDefParentheses:
+  Enabled: true
+
+Style/BracesAroundHashParameters:
+  Enabled: true
+
 Layout/IndentationWidth:
   Enabled: true
 
@@ -41,15 +50,6 @@ Layout/SpaceInsideHashLiteralBraces:
   Enabled: true
 
 Layout/CaseIndentation:
-  Enabled: true
-
-Style/MultilineIfThen:
-  Enabled: true
-
-Style/MethodDefParentheses:
-  Enabled: true
-
-Style/BracesAroundHashParameters:
   Enabled: true
 
 Lint/EndAlignment:
