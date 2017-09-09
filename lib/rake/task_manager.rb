@@ -56,7 +56,21 @@ module Rake
       self.lookup(task_name, scopes) or
         enhance_with_matching_rule(task_name) or
         synthesize_file_task(task_name) or
-        fail "Don't know how to build task '#{task_name}' (see --tasks)"
+        fail generate_message_for_undefined_task(task_name)
+    end
+
+    def generate_message_for_undefined_task(task_name)
+      message = "Don't know how to build task '#{task_name}' (see --tasks)"
+
+      suggestion_message = \
+        if defined?(::DidYouMean::SpellChecker) && defined?(::DidYouMean::Formatter)
+          suggestions = ::DidYouMean::SpellChecker.new(dictionary: @tasks.keys).correct(task_name.to_s)
+          ::DidYouMean::Formatter.new(suggestions).to_s
+        else
+          ""
+        end
+
+      message + suggestion_message
     end
 
     def synthesize_file_task(task_name) # :nodoc:

@@ -453,4 +453,15 @@ class TestRakeTask < Rake::TestCase
     t = task t: ["preqA", "preqB"]
     assert_equal "preqA", t.source
   end
+
+  def test_suggests_valid_rake_task_names
+    task :test
+    error = assert_raises(RuntimeError) { Task[:testt] }
+
+    assert_match /Don\'t know how to build task \'testt\'/, error.message
+
+    if defined?(::DidYouMean::SpellChecker) && defined?(::DidYouMean::Formatter)
+      assert_match /Did you mean\?  test/, error.message
+    end
+  end
 end
