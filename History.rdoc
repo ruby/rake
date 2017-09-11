@@ -1,4 +1,4 @@
-=== 12.1.0(development)
+=== 12.1.0
 
 ==== Enhancements:
 
