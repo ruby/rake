@@ -87,6 +87,11 @@ module Rake
       standard_exception_handling do
         @name = app_name
         args = handle_options
+        if args.size > 1 && args.last =~ /.*\]/
+          clean_args = ""
+          args.each{ |arg| clean_args += arg }
+          args = [clean_args]
+        end
         collect_command_line_tasks(args)
       end
     end
