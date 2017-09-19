@@ -62,10 +62,14 @@ class TestRakeTask < Rake::TestCase
   end
 
   def test_dry_run_prevents_actions
-    Rake.application.options.dryrun = true
     runlist = []
     t1 = task(:t1) { |t| runlist << t.name; 3321 }
-    _, err = capture_io { t1.invoke }
+    _, err = capture_io {
+      Rake.application.set_default_options # reset trace output IO
+      Rake.application.options.dryrun = true
+
+      t1.invoke
+    }
     assert_match(/execute .*t1/i, err)
     assert_match(/dry run/i, err)
     refute_match(/invoke/i, err)
@@ -75,9 +79,11 @@ class TestRakeTask < Rake::TestCase
   end
 
   def test_tasks_can_be_traced
-    Rake.application.options.trace = true
     t1 = task(:t1)
     _, err = capture_io {
+      Rake.application.set_default_options # reset trace output IO
+      Rake.application.options.trace = true
+
       t1.invoke
     }
     assert_match(/invoke t1/i, err)

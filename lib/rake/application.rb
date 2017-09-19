@@ -62,6 +62,8 @@ module Rake
       add_loader("rake", DefaultLoader.new)
       @tty_output = STDOUT.tty?
       @terminal_columns = ENV["RAKE_COLUMNS"].to_i
+
+      set_default_options
     end
 
     # Run the Rake application.  The run method performs the following
@@ -74,19 +76,19 @@ module Rake
     # If you wish to build a custom rake command, you should call
     # +init+ on your application.  Then define any tasks.  Finally,
     # call +top_level+ to run your top level tasks.
-    def run
+    def run(argv = ARGV)
       standard_exception_handling do
-        init
+        init 'rake', argv
         load_rakefile
         top_level
       end
     end
 
     # Initialize the command line parameters and app name.
-    def init(app_name="rake")
+    def init(app_name="rake", argv = ARGV)
       standard_exception_handling do
         @name = app_name
-        args = handle_options
+        args = handle_options argv
         collect_command_line_tasks(args)
       end
     end
@@ -618,9 +620,8 @@ module Rake
     # Read and handle the command line options.  Returns the command line
     # arguments that we didn't understand, which should (in theory) be just
     # task names and env vars.
-    def handle_options # :nodoc:
-      options.rakelib = ["rakelib"]
-      options.trace_output = $stderr
+    def handle_options(argv) # :nodoc:
+      set_default_options
 
       OptionParser.new do |opts|
         opts.banner = "#{Rake.application.name} [-f rakefile] {options} targets..."
@@ -634,7 +635,7 @@ module Rake
 
         standard_rake_options.each { |args| opts.on(*args) }
         opts.environment("RAKEOPT")
-      end.parse(ARGV)
+      end.parse(argv)
     end
 
     # Similar to the regular Ruby +require+ command, but will check
@@ -780,6 +781,29 @@ module Rake
       re = /#{re.source}/i if windows?
 
       backtrace.find { |str| str =~ re } || ""
+    end
+
+    def set_default_options
+      options.always_multitask           = false
+      options.backtrace                  = false
+      options.build_all                  = false
+      options.dryrun                     = false
+      options.ignore_deprecate           = false
+      options.ignore_system              = false
+      options.job_stats                  = false
+      options.load_system                = false
+      options.nosearch                   = false
+      options.rakelib                    = %w[rakelib]
+      options.show_all_tasks             = false
+      options.show_prereqs               = false
+      options.show_task_pattern          = nil
+      options.show_tasks                 = nil
+      options.silent                     = false
+      options.suppress_backtrace_pattern = nil
+      options.thread_pool_size           = Rake.suggested_thread_count
+      options.trace                      = false
+      options.trace_output               = $stderr
+      options.trace_rules                = false
     end
 
   end

@@ -96,16 +96,14 @@ class TestRakeTaskArgumentParsing < Rake::TestCase
   end
 
   def test_no_rakeopt
-    ARGV << "--trace"
     app = Rake::Application.new
-    app.init
+    app.init %w[--trace]
     assert !app.options.silent
   end
 
   def test_rakeopt_with_blank_options
-    ARGV << "--trace"
     app = Rake::Application.new
-    app.init
+    app.init %w[--trace]
     assert !app.options.silent
   end
 
