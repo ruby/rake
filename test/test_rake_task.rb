@@ -464,10 +464,10 @@ class TestRakeTask < Rake::TestCase
     task :test
     error = assert_raises(RuntimeError) { Task[:testt] }
 
-    assert_match /Don\'t know how to build task \'testt\'/, error.message
+    assert_match(/Don\'t know how to build task \'testt\'/, error.message)
 
     if defined?(::DidYouMean::SpellChecker) && defined?(::DidYouMean::Formatter)
-      assert_match /Did you mean\?  test/, error.message
+      assert_match(/Did you mean\?  test/, error.message)
     end
   end
 end
