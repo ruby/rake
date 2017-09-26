@@ -3,18 +3,13 @@ sudo: false
 rvm:
   - 2.0.0
   - 2.1.10
-  - 2.2.7
-  - 2.3.4
-  - 2.4.1
+  - 2.2.8
+  - 2.3.5
+  - 2.4.2
   - ruby-head
   - jruby-9.1.13.0
   - jruby-head
-before_install:
-  - gem install bundler --no-document -v '~> 1.13.3'
 before_script:
   - unset JRUBY_OPTS
+  - unset _JAVA_OPTIONS
 script: ruby -Ilib exe/rake
-notifications:
-  email:
-  - hsbt@ruby-lang.org
-  - drbrain@segment7.net
