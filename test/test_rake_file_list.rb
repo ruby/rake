@@ -415,13 +415,13 @@ class TestRakeFileList < Rake::TestCase
   end
 
   def test_existing
-    fl = FileList["abc.c", "notthere.c"]
+    fl = FileList["*c.c", "notthere.c", "a*.c"]
     assert_equal ["abc.c"], fl.existing
     assert fl.existing.is_a?(FileList)
   end
 
   def test_existing!
-    fl = FileList["abc.c", "notthere.c"]
+    fl = FileList["*c.c", "notthere.c", "a*.c"]
     result = fl.existing!
     assert_equal ["abc.c"], fl
     assert_equal fl.object_id, result.object_id
