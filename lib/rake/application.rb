@@ -207,13 +207,22 @@ module Rake
     end
 
     def display_exception_details(ex) # :nodoc:
-      seen = Thread.current[:rake_display_exception_details_seen] ||= []
-      return if seen.include? ex
-      seen << ex
+      display_exception_details_seen << ex
 
       display_exception_message_details(ex)
       display_exception_backtrace(ex)
-      display_exception_details(ex.cause) if has_cause?(ex)
+      display_cause_details(ex.cause) if has_cause?(ex)
+    end
+
+    def display_cause_details(ex) # :nodoc:
+      return if display_exception_details_seen.include? ex
+
+      trace "\nCaused by:"
+      display_exception_details(ex)
+    end
+
+    def display_exception_details_seen # :nodoc:
+      Thread.current[:rake_display_exception_details_seen] ||= []
     end
 
     def has_cause?(ex) # :nodoc:
