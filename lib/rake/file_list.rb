@@ -318,14 +318,14 @@ module Rake
     # Return a new file list that only contains file names from the current
     # file list that exist on the file system.
     def existing
-      select { |fn| File.exist?(fn) }
+      select { |fn| File.exist?(fn) }.uniq
     end
 
     # Modify the current file list so that it contains only file name that
     # exist on the file system.
     def existing!
       resolve
-      @items = @items.select { |fn| File.exist?(fn) }
+      @items = @items.select { |fn| File.exist?(fn) }.uniq
       self
     end
 
