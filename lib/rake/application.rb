@@ -78,7 +78,7 @@ module Rake
     # call +top_level+ to run your top level tasks.
     def run(argv = ARGV)
       standard_exception_handling do
-        init 'rake', argv
+        init "rake", argv
         load_rakefile
         top_level
       end

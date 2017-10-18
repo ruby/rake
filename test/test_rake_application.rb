@@ -14,14 +14,14 @@ class TestRakeApplication < Rake::TestCase
     orig_app = Rake.application
 
     return_app = Rake.with_application do |yield_app|
-      refute_equal orig_app, yield_app, 'new application must be yielded'
+      refute_equal orig_app, yield_app, "new application must be yielded"
 
       assert_equal yield_app, Rake.application,
-                   'new application must be default in block'
+                   "new application must be default in block"
     end
 
-    refute_equal orig_app, return_app, 'new application not returned'
-    assert_equal orig_app, Rake.application, 'original application not default'
+    refute_equal orig_app, return_app, "new application not returned"
+    assert_equal orig_app, Rake.application, "original application not default"
   end
 
   def test_class_with_application_user_defined
@@ -30,14 +30,14 @@ class TestRakeApplication < Rake::TestCase
     user_app = Rake::Application.new
 
     return_app = Rake.with_application user_app do |yield_app|
-      assert_equal user_app, yield_app, 'user application must be yielded'
+      assert_equal user_app, yield_app, "user application must be yielded"
 
       assert_equal user_app, Rake.application,
-                   'user application must be default in block'
+                   "user application must be default in block"
     end
 
-    assert_equal user_app, return_app, 'user application not returned'
-    assert_equal orig_app, Rake.application, 'original application not default'
+    assert_equal user_app, return_app, "user application not returned"
+    assert_equal orig_app, Rake.application, "original application not default"
   end
 
   def test_display_exception_details
@@ -393,7 +393,7 @@ class TestRakeApplication < Rake::TestCase
     argv = %w[--trace]
     @app.handle_options argv
 
-    assert_includes argv, '--trace'
+    assert_includes argv, "--trace"
     assert @app.options.trace
   end
 
@@ -470,7 +470,7 @@ class TestRakeApplication < Rake::TestCase
   def test_bad_run
     @app.intern(Rake::Task, "default").enhance { fail }
     _, err = capture_io {
-      assert_raises(SystemExit) { @app.run %w[-f -s --rakelib=""]}
+      assert_raises(SystemExit) { @app.run %w[-f -s --rakelib=""] }
     }
     assert_match(/see full trace/i, err)
   end
