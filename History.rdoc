@@ -1,3 +1,19 @@
+=== 12.2.0
+
+==== Enhancements:
+
+* Make rake easier to use as a library
+  Pull request #211 by @drbrain
+* Fix quadratic performance in FileTask#out_of_date?
+  Pull request #224 by @doudou
+* Clarify output when printing nested exception traces
+  Pull request #232 by @urbanautomaton
+
+==== Bug fixes
+
+* Account for a file that match 2 or more patterns.
+  Pull request #231 by @styd
+
 === 12.1.0
 
 ==== Enhancements:
