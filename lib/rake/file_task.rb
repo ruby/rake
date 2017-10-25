@@ -19,9 +19,9 @@ module Rake
 
     # Time stamp for file task.
     def timestamp
-      if File.exist?(name)
+      begin
         File.mtime(name.to_s)
-      else
+      rescue Errno::ENOENT
         Rake::LATE
       end
     end
