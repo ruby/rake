@@ -88,7 +88,12 @@ module Rake
     def init(app_name="rake", argv = ARGV)
       standard_exception_handling do
         @name = app_name
-        args = handle_options argv
+        begin
+          args = handle_options argv
+        rescue ArgumentError
+          # Backword compatibility for capistrano
+          args = handle_options
+        end
         collect_command_line_tasks(args)
       end
     end
