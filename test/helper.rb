@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 $:.unshift File.expand_path("../../lib", __FILE__)
 
-require "coveralls"
-Coveralls.wear!
+begin
+  gem "coveralls"
+  require "coveralls"
+  Coveralls.wear!
+rescue Gem::LoadError
+end
 
 gem "minitest", "~> 5"
 require "minitest/autorun"
