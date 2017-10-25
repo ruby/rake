@@ -1,3 +1,9 @@
+=== 12.2.1
+
+==== Bug fixes
+
+* Fixed to break Capistrano::Application on capistrano3.
+
 === 12.2.0
 
 ==== Enhancements:
