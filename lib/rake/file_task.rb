@@ -44,9 +44,9 @@ module Rake
     # Task class methods.
     #
     class << self
-      # Apply the scope to the task name according to the rules for this kind
-      # of task.  File based tasks ignore the scope when creating the name.
-      def scope_name(scope, task_name)
+      # This method signature is from Task.  FileTasks ignore the scope when
+      # creating the name.
+      def scope_name(_scope, task_name)
         Rake.from_pathname(task_name)
       end
     end
