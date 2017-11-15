@@ -1,3 +1,14 @@
+=== 12.3.0
+
+==== Compatibility Changes
+
+* Bump `required_ruby_verion` to Ruby 2.0.0. Rake was already
+  removed to support for Ruby 1.9.x.
+
+=== Enhancements:
+
+* Support `test-bundled-gems` task on ruby core.
+
 === 12.2.1
 
 ==== Bug fixes
