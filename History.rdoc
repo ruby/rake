@@ -2,8 +2,8 @@
 
 ==== Compatibility Changes
 
-* Bump `required_ruby_verion` to Ruby 2.0.0. Rake was already
-  removed to support for Ruby 1.9.x.
+* Bump `required_ruby_version` to Ruby 2.0.0. Rake has already
+  removed support for Ruby 1.9.x.
 
 === Enhancements:
 
