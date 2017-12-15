@@ -25,8 +25,8 @@ Rake has the following features:
 
 * A library of prepackaged tasks to make building rakefiles easier. For example,
   tasks for building tarballs. (Formerly
-  tasks for building RDoc, Gems and publishing to FTP were included in rake but they're now
-  available in RDoc, RubyGems and  respectively.)
+  tasks for building RDoc, Gems, and publishing to FTP were included in rake but they're now
+  available in RDoc, RubyGems, and rake-contrib respectively.)
 
 * Supports parallel execution of tasks.
 
