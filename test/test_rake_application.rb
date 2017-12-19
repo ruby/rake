@@ -634,4 +634,22 @@ class TestRakeApplication < Rake::TestCase
     loader
   end
 
+  def test_running
+    was_running = false
+
+    @app.instance_eval do
+      app = self
+      intern(Rake::Task, "default").enhance do
+        was_running = app.running?
+      end
+    end
+
+    rakefile_default
+
+    assert !@app.running?
+    @app.run %w[--rakelib=""]
+    assert !@app.running?
+    assert was_running
+  end
+
 end

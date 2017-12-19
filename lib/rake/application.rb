@@ -56,6 +56,7 @@ module Rake
       @loaders = {}
       @default_loader = Rake::DefaultLoader.new
       @original_dir = Dir.pwd
+      @running = false
       @top_level_tasks = []
       add_loader("rb", DefaultLoader.new)
       add_loader("rf", DefaultLoader.new)
@@ -77,11 +78,13 @@ module Rake
     # +init+ on your application.  Then define any tasks.  Finally,
     # call +top_level+ to run your top level tasks.
     def run(argv = ARGV)
+      @running = true
       standard_exception_handling do
         init "rake", argv
         load_rakefile
         top_level
       end
+      @running = false
     end
 
     # Initialize the command line parameters and app name.
@@ -149,6 +152,12 @@ module Rake
     # Return the thread pool used for multithreaded processing.
     def thread_pool             # :nodoc:
       @thread_pool ||= ThreadPool.new(options.thread_pool_size || Rake.suggested_thread_count-1)
+    end
+
+    # Is true, if the Rake application is currently running
+    # (in other words, that the +rake+ command line script was invoked)
+    def running?
+      @running
     end
 
     # internal ----------------------------------------------------------------
