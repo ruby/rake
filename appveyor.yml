@@ -2,7 +2,7 @@
 clone_depth: 10
 install:
   - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
-  - gem install bundler --no-document
+  - gem install bundler --no-document -f
   - bundle install
 build: off
 test_script:
