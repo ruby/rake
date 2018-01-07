@@ -9,16 +9,19 @@
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-require "bundler/gem_tasks"
-require "rake/testtask"
-require "rdoc/task"
+begin
+  require "bundler/gem_tasks"
+rescue LoadError
+end
 
+require "rake/testtask"
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
   t.verbose = true
   t.test_files = FileList["test/**/test_*.rb"]
 end
 
+require "rdoc/task"
 RDoc::Task.new do |doc|
   doc.main   = "README.rdoc"
   doc.title  = "Rake -- Ruby Make"
