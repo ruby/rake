@@ -30,7 +30,7 @@ RDoc::Task.new do |doc|
 end
 
 task ghpages: :rdoc do
-  `git checkout gh-pages`
+  %x[git checkout gh-pages]
   require "fileutils"
   FileUtils.rm_rf "/tmp/html"
   FileUtils.mv "html", "/tmp"

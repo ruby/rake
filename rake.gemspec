@@ -24,7 +24,7 @@ Rake has the following features:
   s.homepage = "https://github.com/ruby/rake".freeze
   s.licenses = ["MIT".freeze]
 
-  s.files = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) } -
+  s.files = %x[git ls-files -z].split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) } -
             %w[.rubocop.yml .travis.yml appveyor.yml]
   s.bindir = "exe"
   s.executables = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
