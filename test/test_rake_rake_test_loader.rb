@@ -24,7 +24,7 @@ class TestRakeRakeTestLoader < Rake::TestCase
     $:.replace orig_loaded_features
   end
 
-  def test_load_error
+  def test_load_error_from_require
     out, err = capture_io do
       ARGV.replace %w[no_such_test_file.rb]
 
@@ -43,5 +43,19 @@ class TestRakeRakeTestLoader < Rake::TestCase
        \n\n\Z/x
 
     assert_match expected, err
+  end
+
+  def test_load_error_raised_explicitly
+    File.write("error_test.rb", "raise LoadError, 'explicitly raised'")
+    out, err = capture_io do
+      ARGV.replace %w[error_test.rb]
+
+      exc = assert_raises(LoadError) do
+        load @loader
+      end
+      assert_equal "explicitly raised", exc.message
+    end
+    assert_empty out
+    assert_empty err
   end
 end
