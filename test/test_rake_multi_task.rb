@@ -4,7 +4,6 @@ require "thread"
 
 class TestRakeMultiTask < Rake::TestCase
   include Rake
-  include Rake::DSL
 
   def setup
     super
