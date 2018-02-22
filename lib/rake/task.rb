@@ -192,7 +192,12 @@ module Rake
         return if @already_invoked
         @already_invoked = true
         invoke_prerequisites(task_args, new_chain)
-        execute(task_args) if needed?
+
+        if needed?
+          execute(task_args)
+        elsif application.options.dryrun && prerequisite_tasks.any? { |p| p.is_a?(Rake::FileTask) }
+          application.trace "** Execute (dry run) #{name}"
+        end
       end
     rescue Exception => ex
       add_chain_to(ex, new_chain)
