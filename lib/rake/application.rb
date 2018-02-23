@@ -172,7 +172,7 @@ module Rake
       args = []
 
       begin
-        /((?:[^\\,]|\\.)*?)\s*(?:,\s*(.*))?$/ =~ remaining_args
+        /\s*((?:[^\\,]|\\.)*?)\s*(?:,\s*(.*))?$/ =~ remaining_args
 
         remaining_args = $2
         args << $1.gsub(/\\(.)/, '\1')
