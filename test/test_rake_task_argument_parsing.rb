@@ -38,6 +38,12 @@ class TestRakeTaskArgumentParsing < Rake::TestCase
     assert_equal ["one", "two", "three", "four"], args
   end
 
+  def test_can_handle_spaces_between_all_args
+    name, args = @app.parse_task_string("name[ one , two ,\tthree , \tfour ]")
+    assert_equal "name", name
+    assert_equal ["one", "two", "three", "four"], args
+  end
+
   def test_keeps_embedded_spaces
     name, args = @app.parse_task_string("name[a one ana, two]")
     assert_equal "name", name
