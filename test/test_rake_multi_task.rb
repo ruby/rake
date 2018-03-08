@@ -101,7 +101,7 @@ class TestRakeMultiTask < Rake::TestCase
     rescue RuntimeError
     ensure
       sleep 0.5
-      assert !task_two_was_executed
+      refute task_two_was_executed
     end
   end
 end
