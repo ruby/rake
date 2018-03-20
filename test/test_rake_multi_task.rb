@@ -84,14 +84,14 @@ class TestRakeMultiTask < Rake::TestCase
   end
 
   def test_task_not_executed_if_dependant_task_failed_concurrently
-    multitask :default => [:one, :two]
+    multitask default: [:one, :two]
 
     task :one do
       raise
     end
 
     task_two_was_executed = false
-    task :two => :one do
+    task two: :one do
       task_two_was_executed = true
     end
 

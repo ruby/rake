@@ -52,6 +52,6 @@ Layout/SpaceInsideHashLiteralBraces:
 Layout/CaseIndentation:
   Enabled: true
 
-Lint/EndAlignment:
+Layout/EndAlignment:
   Enabled: true
   EnforcedStyleAlignWith: variable
