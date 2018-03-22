@@ -5,7 +5,7 @@
 * Bump `required_ruby_version` to Ruby 2.0.0. Rake has already
   removed support for Ruby 1.9.x.
 
-=== Enhancements:
+==== Enhancements:
 
 * Support `test-bundled-gems` task on ruby core.
 
