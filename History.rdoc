@@ -1,3 +1,21 @@
+=== 12.3.1
+
+==== Bug fixes
+
+* Support did_you_mean >= v1.2.0 which has a breaking change on formatters.
+  Pull request #262 by FUJI Goro.
+
+==== Enhancements:
+
+* Don't run task if it depends on already invoked but failed task.
+  Pull request #252 by Gonzalo Rodriguez.
+* Make space trimming consistent for all task arguments.
+  Pull request #259 by Gonzalo Rodriguez.
+* Removes duplicated inclusion of Rake::DSL in tests.
+  Pull request #254 by Gonzalo Rodriguez.
+* Re-raise a LoadError that didn't come from require in the test loader.
+  Pull request #250 by Dylan Thacker-Smith.
+
 === 12.3.0
 
 ==== Compatibility Changes
