@@ -103,6 +103,7 @@ module Rake
       @scope           = app.current_scope
       @arg_names       = nil
       @locations       = []
+      @invocation_exception = nil
     end
 
     # Enhance a task with prerequisites or actions.  Returns self.
@@ -183,25 +184,44 @@ module Rake
 
     # Same as invoke, but explicitly pass a call chain to detect
     # circular dependencies.
-    def invoke_with_call_chain(task_args, invocation_chain) # :nodoc:
-      new_chain = InvocationChain.append(self, invocation_chain)
+    #
+    # If multiple tasks depend on this
+    # one in parallel, they will all fail if the first execution of
+    # this task fails.
+    def invoke_with_call_chain(task_args, invocation_chain)
+      new_chain = Rake::InvocationChain.append(self, invocation_chain)
       @lock.synchronize do
-        if application.options.trace
-          application.trace "** Invoke #{name} #{format_trace_flags}"
-        end
-        return if @already_invoked
-        @already_invoked = true
-        invoke_prerequisites(task_args, new_chain)
+        begin
+          if application.options.trace
+            application.trace "** Invoke #{name} #{format_trace_flags}"
+          end
 
-        if needed?
-          execute(task_args)
-        elsif application.options.dryrun && prerequisite_tasks.any? { |p| p.is_a?(Rake::FileTask) }
-          application.trace "** Execute (dry run) #{name}"
+          if @already_invoked
+            if @invocation_exception
+              if application.options.trace
+                application.trace "** Previous invocation of #{name} failed #{format_trace_flags}"
+              end
+              raise @invocation_exception
+            else
+              return
+            end
+          end
+
+          @already_invoked = true
+
+          invoke_prerequisites(task_args, new_chain)
+
+          if needed?
+            execute(task_args)
+          elsif application.options.dryrun && prerequisite_tasks.any? { |p| p.is_a?(Rake::FileTask) }
+            application.trace "** Execute (dry run) #{name}"
+          end
+        rescue Exception => ex
+          add_chain_to(ex, new_chain)
+          @invocation_exception = ex
+          raise ex
         end
       end
-    rescue Exception => ex
-      add_chain_to(ex, new_chain)
-      raise ex
     end
     protected :invoke_with_call_chain
 

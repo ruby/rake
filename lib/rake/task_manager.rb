@@ -61,16 +61,20 @@ module Rake
 
     def generate_message_for_undefined_task(task_name)
       message = "Don't know how to build task '#{task_name}' (see --tasks)"
+      message + generate_did_you_mean_suggestions(task_name)
+    end
 
-      suggestion_message = \
-        if defined?(::DidYouMean::SpellChecker) && defined?(::DidYouMean::Formatter)
-          suggestions = ::DidYouMean::SpellChecker.new(dictionary: @tasks.keys).correct(task_name.to_s)
-          ::DidYouMean::Formatter.new(suggestions).to_s
-        else
-          ""
-        end
+    def generate_did_you_mean_suggestions(task_name)
+      return "" unless defined?(::DidYouMean::SpellChecker)
 
-      message + suggestion_message
+      suggestions = ::DidYouMean::SpellChecker.new(dictionary: @tasks.keys).correct(task_name.to_s)
+      if ::DidYouMean.respond_to?(:formatter)# did_you_mean v1.2.0 or later
+        ::DidYouMean.formatter.message_for(suggestions)
+      elsif defined?(::DidYouMean::Formatter) # before did_you_mean v1.2.0
+        ::DidYouMean::Formatter.new(suggestions).to_s
+      else
+        ""
+      end
     end
 
     def synthesize_file_task(task_name) # :nodoc:

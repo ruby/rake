@@ -4,7 +4,6 @@ require "thread"
 
 class TestRakeMultiTask < Rake::TestCase
   include Rake
-  include Rake::DSL
 
   def setup
     super
@@ -81,6 +80,27 @@ class TestRakeMultiTask < Rake::TestCase
 
     assert_raises RuntimeError do
       Rake::Task[:b].invoke
+    end
+  end
+
+  def test_task_not_executed_if_dependant_task_failed_concurrently
+    multitask default: [:one, :two]
+
+    task :one do
+      raise
+    end
+
+    task_two_was_executed = false
+    task two: :one do
+      task_two_was_executed = true
+    end
+
+    begin
+      Rake::Task[:default].invoke
+    rescue RuntimeError
+    ensure
+      sleep 0.5
+      refute task_two_was_executed
     end
   end
 end

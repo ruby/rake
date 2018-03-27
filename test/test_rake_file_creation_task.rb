@@ -4,7 +4,6 @@ require "fileutils"
 
 class TestRakeFileCreationTask < Rake::TestCase
   include Rake
-  include Rake::DSL
 
   DUMMY_DIR = "dummy_dir"
 
