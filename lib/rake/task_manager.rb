@@ -275,6 +275,8 @@ module Rake
           return nil
         end
       }
+      match_data = task_pattern.match(task_name)
+      block.binding.eval("proc { |match_data| $~ = match_data }").call(match_data)
       task = FileTask.define_task(task_name, { args => prereqs }, &block)
       task.sources = prereqs
       task
@@ -288,13 +290,23 @@ module Rake
         when /%/
           task_name.pathmap(ext)
         when %r{/}
-          ext
+          task_pattern.match(task_name)
+          pre_match = Regexp.new("^" + Regexp.quote(Regexp.last_match.pre_match))
+          post_match = Regexp.new(Regexp.quote(Regexp.last_match.post_match) + "$")
+          task_name.sub(task_pattern, ext).sub(pre_match, "").sub(post_match, "")
         when /^\./
           source = task_name.sub(task_pattern, ext)
           source == ext ? task_name.ext(ext) : source
         when String
-          ext
+          task_pattern.match(task_name)
+          pre_match = Regexp.new("^" + Regexp.quote(Regexp.last_match.pre_match))
+          post_match = Regexp.new(Regexp.quote(Regexp.last_match.post_match) + "$")
+          task_name.sub(task_pattern, ext).sub(pre_match, "").sub(post_match, "")
         when Proc, Method
+          if ext.is_a?(Proc)
+            match_data = task_pattern.match(task_name)
+            ext.binding.eval("proc { |match_data| $~ = match_data }").call(match_data)
+          end
           if ext.arity == 1
             ext.call(task_name)
           else
