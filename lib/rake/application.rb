@@ -84,6 +84,7 @@ module Rake
         load_rakefile
         top_level
       end
+    ensure
       @running = false
     end
 
