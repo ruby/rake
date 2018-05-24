@@ -32,7 +32,7 @@ unless Rake::CpuCounter.method_defined?(:count)
     require 'rbconfig'
 
     def count
-      if defined?(Java::Java)
+      if defined?(JRUBY_VERSION) && (Java::Java rescue nil)
         count_via_java_runtime
       else
         case RbConfig::CONFIG['host_os']
