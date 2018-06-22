@@ -15,6 +15,7 @@ module Rake
   class Task
     # List of prerequisites for a task.
     attr_reader :prerequisites
+    alias prereqs prerequisites
 
     # List of actions attached to a task.
     attr_reader :actions

@@ -470,4 +470,9 @@ class TestRakeTask < Rake::TestCase
       assert_match(/Did you mean\?  test/, error.message)
     end
   end
+
+  def test_prereqs
+    t = task(a: %w[b c d e])
+    assert_equal %w[b c d e], t.prereqs
+  end
 end
