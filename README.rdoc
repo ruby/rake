@@ -45,19 +45,22 @@ Download and install rake with the following.
 First, you must write a "Rakefile" file which contains the build rules. Here's
 a simple example:
 
-  task default: %w[test]
+  task default: %w[hello]
 
-  task :test do
-    ruby "test/unittest.rb"
+  task :hello do
+    puts "Hello World"
   end
 
 This Rakefile has two tasks:
 
-* A task named "test", which -- upon invocation -- will run a unit test file
-  in Ruby.
+* A task named "hello", which -- upon invocation -- will print "Hello World" to
+  the console
 * A task named "default". This task does nothing by itself, but it has exactly
-  one dependency, namely the "test" task. Invoking the "default" task will
-  cause Rake to invoke the "test" task as well.
+  one dependency, namely the "hello" task. Invoking the "default" task will
+  cause Rake to invoke the "hello" task as well.
+
+  % rake hello
+  Hello World
 
 Running the "rake" command without any options will cause it to run the
 "default" task in the Rakefile:
@@ -65,11 +68,23 @@ Running the "rake" command without any options will cause it to run the
   % ls
   Rakefile     test/
   % rake
-  (in /home/some_user/Projects/rake)
-  ruby test/unittest.rb
-  ....unit test output here...
+  Hello World
 
 Type "rake --help" for all available options.
+
+A common usage of Rake is to invoke a test suite. For example - to invoke Rake's
+test suite, run:
+
+    % gem install bundler
+    % git clone https://github.com/ruby/rake && cd rake
+    % bundle install
+    % rake
+    Running:
+
+    .....................................................
+
+This feature is available via the {TestClass}[https://ruby.github.io/rake/Rake/TestTask.html]
+in Rake.
 
 == Resources
 
