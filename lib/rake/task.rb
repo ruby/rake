@@ -141,7 +141,7 @@ module Rake
     # Reenable the task, allowing its tasks to be executed if the task
     # is invoked again.
     def reenable
-      @already_invoked      = false
+      @already_invoked = false
       @invocation_exception = nil
     end
 
