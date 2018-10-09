@@ -91,7 +91,7 @@ module Rake
         begin
           args = handle_options argv
         rescue ArgumentError
-          # Backword compatibility for capistrano
+          # Backward compatibility for capistrano
           args = handle_options
         end
         collect_command_line_tasks(args)
