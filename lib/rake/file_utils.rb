@@ -35,7 +35,7 @@ module FileUtils
   #
   #   # check exit status after command runs
   #   sh %{grep pattern file} do |ok, res|
-  #     if ! ok
+  #     if !ok
   #       puts "pattern not found (status = #{res.exitstatus})"
   #     end
   #   end
@@ -111,7 +111,7 @@ module FileUtils
   #  Attempt to do a normal file link, but fall back to a copy if the link
   #  fails.
   def safe_ln(*args)
-    if ! LN_SUPPORTED[0]
+    if !LN_SUPPORTED[0]
       cp(*args)
     else
       begin
