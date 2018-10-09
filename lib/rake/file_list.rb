@@ -385,7 +385,7 @@ module Rake
       /~$/
     ]
     DEFAULT_IGNORE_PROCS = [
-      proc { |fn| fn =~ /(^|[\/\\])core$/ && ! File.directory?(fn) }
+      proc { |fn| fn =~ /(^|[\/\\])core$/ && !File.directory?(fn) }
     ]
 
     def import(array) # :nodoc:

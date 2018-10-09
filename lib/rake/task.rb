@@ -288,7 +288,7 @@ module Rake
     def add_description(description)
       return unless description
       comment = description.strip
-      add_comment(comment) if comment && ! comment.empty?
+      add_comment(comment) if comment && !comment.empty?
     end
 
     def comment=(comment) # :nodoc:

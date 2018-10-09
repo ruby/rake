@@ -687,7 +687,7 @@ module Rake
 
     def raw_load_rakefile # :nodoc:
       rakefile, location = find_rakefile_location
-      if (! options.ignore_system) &&
+      if (!options.ignore_system) &&
           (options.load_system || rakefile.nil?) &&
           system_dir && File.directory?(system_dir)
         print_rakefile_directory(location)

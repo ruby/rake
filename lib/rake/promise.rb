@@ -71,12 +71,12 @@ module Rake
 
     # Do we have a result for the promise
     def result?
-      ! @result.equal?(NOT_SET)
+      !@result.equal?(NOT_SET)
     end
 
     # Did the promise throw an error
     def error?
-      ! @error.equal?(NOT_SET)
+      !@error.equal?(NOT_SET)
     end
 
     # Are we done with the promise
