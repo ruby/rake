@@ -25,12 +25,12 @@ require "rdoc/task"
 RDoc::Task.new do |doc|
   doc.main   = "README.rdoc"
   doc.title  = "Rake -- Ruby Make"
-  doc.rdoc_files = FileList.new %w[lib MIT-LICENSE doc/**/*.rdoc *.rdoc]
   doc.rdoc_dir = "html"
+  doc.rdoc_files.include %w[lib MIT-LICENSE doc/**/*.rdoc *.rdoc]
 end
 
 task ghpages: :rdoc do
-  %x[git checkout gh-pages]
+  %x(git checkout gh-pages)
   require "fileutils"
   FileUtils.rm_rf "/tmp/html"
   FileUtils.mv "html", "/tmp"
