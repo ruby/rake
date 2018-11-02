@@ -132,9 +132,7 @@ module Rake
           task package: ["#{package_dir}/#{file}"]
           file "#{package_dir}/#{file}" =>
             [package_dir_path] + package_files do
-            chdir(package_dir) do
-              sh @tar_command, "#{flag}cvf", file, package_name
-            end
+            chdir(package_dir) { sh @tar_command, "#{flag}cvf", file, package_name }
           end
         end
       end
@@ -143,9 +141,7 @@ module Rake
         task package: ["#{package_dir}/#{zip_file}"]
         file "#{package_dir}/#{zip_file}" =>
           [package_dir_path] + package_files do
-          chdir(package_dir) do
-            sh @zip_command, "-r", zip_file, package_name
-          end
+          chdir(package_dir) { sh @zip_command, "-r", zip_file, package_name }
         end
       end
 
