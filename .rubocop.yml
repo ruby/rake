@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.0
   DisabledByDefault: true
   Exclude:
     - doc/**/*.rb
@@ -52,6 +52,6 @@ Layout/SpaceInsideHashLiteralBraces:
 Layout/CaseIndentation:
   Enabled: true
 
-Layout/EndAlignment:
+Lint/EndAlignment:
   Enabled: true
   EnforcedStyleAlignWith: variable

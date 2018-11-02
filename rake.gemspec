@@ -38,5 +38,5 @@ Rake has the following features:
   s.add_development_dependency(%q<minitest>.freeze)
   s.add_development_dependency(%q<rdoc>.freeze)
   s.add_development_dependency(%q<coveralls>.freeze)
-  s.add_development_dependency(%q<rubocop>.freeze)
+  s.add_development_dependency(%q<rubocop>.freeze, '~> 0.50.0')
 end
