@@ -18,6 +18,13 @@ If you wish to run the unit and functional tests that come with Rake:
 
     rake            # If you have run rake's tests
 
+= Rubocop
+
+Rake uses Rubocop to enforce a consistent style on new changes being
+proposed. You can check your code with Rubocop using:
+
+  ./bin/rubocop
+
 = Issues and Bug Reports
 
 Feel free to submit commits or feature requests.  If you send a patch,
