@@ -13,4 +13,7 @@ rvm:
 before_script:
   - unset JRUBY_OPTS
   - unset _JAVA_OPTIONS
-script: ruby -Ilib exe/rake
+  - bundle install
+script:
+  - rubocop
+  - ruby -Ilib exe/rake
