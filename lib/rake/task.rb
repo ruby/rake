@@ -248,7 +248,8 @@ module Rake
           r.invoke_with_call_chain(prereq_args, invocation_chain)
         end
       end
-      futures.each(&:value)
+      # Iterate in reverse to improve performance related to thread waiting and switching
+      futures.reverse_each(&:value)
     end
 
     # Format the trace flags for display.
