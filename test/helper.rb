@@ -2,9 +2,11 @@
 $:.unshift File.expand_path("../../lib", __FILE__)
 
 begin
-  gem "coveralls"
-  require "coveralls"
-  Coveralls.wear!
+  if ENV['COVERALLS']
+    gem "coveralls"
+    require "coveralls"
+    Coveralls.wear!
+  end
 rescue Gem::LoadError
 end
 

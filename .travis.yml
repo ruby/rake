@@ -10,6 +10,12 @@ rvm:
   - ruby-head
   - jruby-9.2.4.0
   - jruby-head
+
+matrix:
+  include:
+    - rvm: 2.5.3
+      env: COVERALLS=yes
+
 before_script:
   - unset JRUBY_OPTS
   - unset _JAVA_OPTIONS
