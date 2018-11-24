@@ -797,7 +797,7 @@ module Rake
       backtrace.find { |str| str =~ re } || ""
     end
 
-    def set_default_options
+    def set_default_options # :nodoc:
       options.always_multitask           = false
       options.backtrace                  = false
       options.build_all                  = false
