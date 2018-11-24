@@ -2,7 +2,7 @@
 require File.expand_path("../helper", __FILE__)
 require "fileutils"
 
-class TestRakeDefinitions < Rake::TestCase
+class TestRakeDefinitions < Rake::TestCase # :nodoc:
   include Rake
 
   EXISTINGFILE = "existing"

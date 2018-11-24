@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 
-class TestRakeNameSpace < Rake::TestCase
+class TestRakeNameSpace < Rake::TestCase # :nodoc:
 
-  class TM
+  class TM # :nodoc:
     include Rake::TaskManager
   end
 

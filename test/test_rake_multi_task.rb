@@ -2,7 +2,7 @@
 require File.expand_path("../helper", __FILE__)
 require "thread"
 
-class TestRakeMultiTask < Rake::TestCase
+class TestRakeMultiTask < Rake::TestCase # :nodoc:
   include Rake
 
   def setup

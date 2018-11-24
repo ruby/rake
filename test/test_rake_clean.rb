@@ -2,7 +2,7 @@
 require File.expand_path("../helper", __FILE__)
 require "rake/clean"
 
-class TestRakeClean < Rake::TestCase
+class TestRakeClean < Rake::TestCase # :nodoc:
   def test_clean
     load "rake/clean.rb", true
 

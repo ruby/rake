@@ -2,7 +2,7 @@
 require File.expand_path("../helper", __FILE__)
 require "rake/packagetask"
 
-class TestRakePackageTask < Rake::TestCase
+class TestRakePackageTask < Rake::TestCase # :nodoc:
 
   def test_initialize
     touch "install.rb"

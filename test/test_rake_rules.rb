@@ -2,7 +2,7 @@
 require File.expand_path("../helper", __FILE__)
 require "fileutils"
 
-class TestRakeRules < Rake::TestCase
+class TestRakeRules < Rake::TestCase # :nodoc:
   include Rake
 
   SRCFILE    = "abc.c"

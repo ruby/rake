@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 
-class TestRakeInvocationChain < Rake::TestCase
+class TestRakeInvocationChain < Rake::TestCase # :nodoc:
   include Rake
 
   def setup

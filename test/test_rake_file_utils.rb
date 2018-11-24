@@ -3,7 +3,7 @@ require File.expand_path("../helper", __FILE__)
 require "fileutils"
 require "stringio"
 
-class TestRakeFileUtils < Rake::TestCase
+class TestRakeFileUtils < Rake::TestCase # :nodoc:
   def setup
     super
     @rake_test_sh = ENV["RAKE_TEST_SH"]
@@ -47,7 +47,7 @@ class TestRakeFileUtils < Rake::TestCase
     assert_equal "TEST_LN\n", File.read("b")
   end
 
-  class BadLink
+  class BadLink # :nodoc:
     include Rake::FileUtilsExt
     attr_reader :cp_args
 

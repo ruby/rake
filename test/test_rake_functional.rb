@@ -3,7 +3,7 @@ require File.expand_path("../helper", __FILE__)
 require "fileutils"
 require "open3"
 
-class TestRakeFunctional < Rake::TestCase
+class TestRakeFunctional < Rake::TestCase # :nodoc:
   include RubyRunner
 
   def setup

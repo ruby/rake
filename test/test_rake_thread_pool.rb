@@ -2,7 +2,7 @@
 require File.expand_path("../helper", __FILE__)
 require "rake/thread_pool"
 
-class TestRakeTestThreadPool < Rake::TestCase
+class TestRakeTestThreadPool < Rake::TestCase # :nodoc:
   include Rake
 
   def test_pool_executes_in_current_thread_for_zero_threads

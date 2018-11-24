@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 
-class TestRakeApplication < Rake::TestCase
+class TestRakeApplication < Rake::TestCase # :nodoc:
 
   def setup
     super

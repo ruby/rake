@@ -2,7 +2,7 @@
 require File.expand_path("../helper", __FILE__)
 require "open3"
 
-class TestRakeReduceCompat < Rake::TestCase
+class TestRakeReduceCompat < Rake::TestCase # :nodoc:
   include RubyRunner
 
   def invoke_normal(task_name)
