@@ -3,7 +3,7 @@
 Rake is currently hosted at github. The github web page is
 https://github.com/ruby/rake . The public git clone URL is
 
-  git://github.com/ruby/rake.git
+  https://github.com/ruby/rake.git
 
 = Running the Rake Test Suite
 
