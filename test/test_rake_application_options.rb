@@ -3,7 +3,7 @@ require File.expand_path("../helper", __FILE__)
 
 TESTING_REQUIRE = []
 
-class TestRakeApplicationOptions < Rake::TestCase
+class TestRakeApplicationOptions < Rake::TestCase # :nodoc:
 
   def setup
     super

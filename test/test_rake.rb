@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 
-class TestRake < Rake::TestCase
+class TestRake < Rake::TestCase # :nodoc:
   def test_each_dir_parent
     assert_equal ["a"], alldirs("a")
     assert_equal ["a/b", "a"], alldirs("a/b")

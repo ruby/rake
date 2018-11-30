@@ -2,8 +2,8 @@
 require File.expand_path("../helper", __FILE__)
 require "pathname"
 
-class TestRakeFileList < Rake::TestCase
-  FileList = Rake::FileList
+class TestRakeFileList < Rake::TestCase # :nodoc:
+  FileList = Rake::FileList # :nodoc:
 
   def setup
     super

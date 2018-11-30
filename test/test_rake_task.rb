@@ -2,7 +2,7 @@
 require File.expand_path("../helper", __FILE__)
 require "fileutils"
 
-class TestRakeTask < Rake::TestCase
+class TestRakeTask < Rake::TestCase # :nodoc:
   include Rake
 
   def setup

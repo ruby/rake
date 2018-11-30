@@ -3,7 +3,7 @@ require File.expand_path("../helper", __FILE__)
 require "fileutils"
 require "pathname"
 
-class TestRakeDirectoryTask < Rake::TestCase
+class TestRakeDirectoryTask < Rake::TestCase # :nodoc:
   include Rake
 
   def test_directory

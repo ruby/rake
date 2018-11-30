@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 
-class TestRakeCpuCounter < Rake::TestCase
+class TestRakeCpuCounter < Rake::TestCase # :nodoc:
 
   def setup
     super
@@ -28,7 +28,7 @@ class TestRakeCpuCounter < Rake::TestCase
     assert_equal(4, @cpu_counter.count_with_default)
   end
 
-  class TestClassMethod < Rake::TestCase
+  class TestClassMethod < Rake::TestCase  # :nodoc:
     def setup
       super
 

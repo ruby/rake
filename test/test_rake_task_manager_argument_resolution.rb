@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 
-class TestRakeTaskManagerArgumentResolution < Rake::TestCase
+class TestRakeTaskManagerArgumentResolution < Rake::TestCase # :nodoc:
 
   def test_good_arg_patterns
     assert_equal [:t, [], []],       task(:t)

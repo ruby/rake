@@ -3,7 +3,7 @@ require File.expand_path("../helper", __FILE__)
 
 require "rake/thread_history_display"
 
-class TestThreadHistoryDisplay < Rake::TestCase
+class TestThreadHistoryDisplay < Rake::TestCase # :nodoc:
   def setup
     super
     @time = 1_000_000

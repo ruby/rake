@@ -26,9 +26,9 @@ module Rake
     private
 
     # :call-seq:
-    #   task task_name
-    #   task task_name: dependencies
-    #   task task_name, arguments => dependencies
+    #   task(task_name)
+    #   task(task_name: dependencies)
+    #   task(task_name, arguments => dependencies)
     #
     # Declare a basic task.  The +task_name+ is always the first argument.  If
     # the task name contains a ":" it is defined in that namespace.

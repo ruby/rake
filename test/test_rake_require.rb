@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 
-class TestRakeRequire < Rake::TestCase
+class TestRakeRequire < Rake::TestCase # :nodoc:
   def setup
     super
     $LOAD_PATH.unshift "." if jruby17?

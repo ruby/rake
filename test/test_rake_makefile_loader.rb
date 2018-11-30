@@ -2,7 +2,7 @@
 require File.expand_path("../helper", __FILE__)
 require "rake/loaders/makefile"
 
-class TestRakeMakefileLoader < Rake::TestCase
+class TestRakeMakefileLoader < Rake::TestCase  # :nodoc:
   include Rake
 
   def test_parse

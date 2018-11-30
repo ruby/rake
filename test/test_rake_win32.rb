@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 
-class TestRakeWin32 < Rake::TestCase
+class TestRakeWin32 < Rake::TestCase # :nodoc:
 
-  Win32 = Rake::Win32
+  Win32 = Rake::Win32 # :nodoc:
 
   def test_win32_system_dir_uses_home_if_defined
     ENV["HOME"] = 'C:\\HP'

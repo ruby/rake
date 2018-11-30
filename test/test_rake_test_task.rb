@@ -2,7 +2,7 @@
 require File.expand_path("../helper", __FILE__)
 require "rake/testtask"
 
-class TestRakeTestTask < Rake::TestCase
+class TestRakeTestTask < Rake::TestCase # :nodoc:
   include Rake
 
   def test_initialize
