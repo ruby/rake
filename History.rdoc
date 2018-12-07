@@ -1,3 +1,19 @@
+=== 12.3.2
+
+==== Bug fixes
+
+* Fixed test fails caused by 2.6 warnings.
+  Pull Request #297 by hsbt
+
+==== Enhancements:
+
+* Rdoc improvements.
+  Pull Request #293 by colby-swandale
+* Improve multitask performance.
+  Pull Request #273 by jsm
+* Add alias `prereqs`.
+  Pull Request #268 by take-cheeze
+
 === 12.3.1
 
 ==== Bug fixes
