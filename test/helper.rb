@@ -2,7 +2,7 @@
 $:.unshift File.expand_path("../../lib", __FILE__)
 
 begin
-  if ENV['COVERALLS']
+  if ENV["COVERALLS"]
     gem "coveralls"
     require "coveralls"
     Coveralls.wear!
