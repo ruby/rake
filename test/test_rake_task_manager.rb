@@ -28,6 +28,16 @@ class TestRakeTaskManager < Rake::TestCase # :nodoc:
     assert_equal "Don't know how to build task 'bad' (See the list of available tasks with `rake --tasks`)", e.message
   end
 
+  def test_undefined_task_with_custom_application
+    Rake.application.init("myrake", nil)
+
+    e = assert_raises RuntimeError do
+      @tm["bad"]
+    end
+
+    assert_equal "Don't know how to build task 'bad' (See the list of available tasks with `myrake --tasks`)", e.message
+  end
+
   def test_name_lookup
     t = @tm.define_task(Rake::Task, :t)
     assert_equal t, @tm[:t]
