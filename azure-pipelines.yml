@@ -27,7 +27,7 @@ jobs:
   strategy:
     matrix:
       ruby 2.6:
-        ruby_version: '2.6.1'
+        ruby_version: '2.6.1p33'
   steps:
   - task: UseRubyVersion@0
     inputs:
