@@ -1,29 +1,66 @@
-# Ruby
-# Package your Ruby project.
-# Add steps that install rails, analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/ruby
+jobs:
+- job: Linux
+  pool:
+    vmImage: 'ubuntu-16.04'
+  strategy:
+    matrix:
+      ruby 2.3:
+        ruby_version: '2.3.7'
+      ruby 2.4:
+        ruby_version: '2.4.4'
+      ruby 2.5:
+        ruby_version: '2.5.1'
+  steps:
+  - task: UseRubyVersion@0
+    inputs:
+      versionSpec: $(ruby_version)
+  - script: |
+      gem install bundler
+      bundle install --retry=3 --jobs=4
+    displayName: 'bundle install'
+  - script: ruby -Ilib exe/rake
+    displayName: 'ruby -Ilib exe/rake'
 
-strategy:
-  matrix:
-    linux:
-      imageName: 'ubuntu-16.04'
-    mac:
-      imageName: 'macos-10.13'
-    windows:
-      imageName: 'vs2017-win2016'
+- job: macOS
+  pool:
+    vmImage: 'macos-10.13'
+  strategy:
+    matrix:
+      ruby 2.3:
+        ruby_version: '2.3.7'
+      ruby 2.4:
+        ruby_version: '2.4.4'
+      ruby 2.5:
+        ruby_version: '2.5.1'
+  steps:
+  - task: UseRubyVersion@0
+    inputs:
+      versionSpec: $(ruby_version)
+  - script: |
+      gem install bundler
+      bundle install --retry=3 --jobs=4
+    displayName: 'bundle install'
+  - script: ruby -Ilib exe/rake
+    displayName: 'ruby -Ilib exe/rake'
 
-pool:
-  vmImage: $(imageName)
-
-steps:
-- task: UseRubyVersion@0
-  inputs:
-    versionSpec: '>= 2.0'
-
-- script: |
-    gem install bundler
-    bundle install --retry=3 --jobs=4
-  displayName: 'bundle install'
-
-- script: ruby -Ilib exe/rake
-  displayName: 'ruby -Ilib exe/rake'
+- job: Windows
+  pool:
+    vmImage: 'vs2017-win2016'
+  strategy:
+    matrix:
+      ruby 2.3:
+        ruby_version: '2.3.7'
+      ruby 2.4:
+        ruby_version: '2.4.4'
+      ruby 2.5:
+        ruby_version: '2.5.1'
+  steps:
+  - task: UseRubyVersion@0
+    inputs:
+      versionSpec: $(ruby_version)
+  - script: |
+      gem install bundler
+      bundle install --retry=3 --jobs=4
+    displayName: 'bundle install'
+  - script: ruby -Ilib exe/rake
+    displayName: 'ruby -Ilib exe/rake'
