@@ -25,9 +25,6 @@ jobs:
   pool:
     vmImage: 'macos-10.13'
   steps:
-  - task: UseRubyVersion@0
-    inputs:
-      versionSpec: '>= 2.4'
   - script: |
       gem install bundler
       bundle install --retry=3 --jobs=4
