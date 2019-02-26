@@ -28,7 +28,7 @@ class Rake::TestCase < Minitest::Test
     include Rake::TaskManager
   end
 
-  RUBY = ENV["BUNDLE_RUBY"] || Gem.ruby
+  RUBY = File.realpath(ENV["BUNDLE_RUBY"] || Gem.ruby)
 
   def setup
     ARGV.clear
