@@ -12,6 +12,9 @@ strategy:
     windows:
       imageName: 'vs2017-win2016'
 
+pool:
+  vmImage: $(imageName)
+
 steps:
 - task: UseRubyVersion@0
   inputs:
