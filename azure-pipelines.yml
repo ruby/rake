@@ -26,12 +26,8 @@ jobs:
     vmImage: 'macos-10.13'
   strategy:
     matrix:
-      ruby 2.3:
-        ruby_version: '2.3.7'
-      ruby 2.4:
-        ruby_version: '2.4.4'
-      ruby 2.5:
-        ruby_version: '2.5.1'
+      ruby 2.6:
+        ruby_version: '2.6.1'
   steps:
   - task: UseRubyVersion@0
     inputs:
@@ -48,12 +44,10 @@ jobs:
     vmImage: 'vs2017-win2016'
   strategy:
     matrix:
-      ruby 2.3:
-        ruby_version: '2.3.7'
       ruby 2.4:
-        ruby_version: '2.4.4'
+        ruby_version: '2.4.3'
       ruby 2.5:
-        ruby_version: '2.5.1'
+        ruby_version: '2.5.0'
   steps:
   - task: UseRubyVersion@0
     inputs:
