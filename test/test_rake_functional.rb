@@ -97,6 +97,14 @@ class TestRakeFunctional < Rake::TestCase # :nodoc:
     assert_match %r{^OK$}, @out
   end
 
+  def test_tasks
+    rakefile_tasks
+
+    rake "-N"
+
+    assert_match %r{^OK$}, @out
+  end
+
   def test_system
     rake_system_dir
 

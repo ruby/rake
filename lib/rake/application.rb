@@ -42,7 +42,8 @@ module Rake
       "rakefile",
       "Rakefile",
       "rakefile.rb",
-      "Rakefile.rb"
+      "Rakefile.rb",
+      "tasks.rb"
     ].freeze
 
     # Initialize a Rake::Application object.

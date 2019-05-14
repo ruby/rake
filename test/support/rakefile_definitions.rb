@@ -411,6 +411,12 @@ end
     end
   end
 
+  def rakefile_tasks
+    open "tasks.rb", "w" do |io|
+      io << 'task :default do puts "OK" end'
+    end
+  end
+
   def rakefile_unittest
     rakefile "# Empty Rakefile for Unit Test"
 
