@@ -24,7 +24,7 @@ Rake has the following features:
   s.licenses = ["MIT".freeze]
 
   s.files = %x[git ls-files -z].split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) } -
-            %w[.rubocop.yml .travis.yml appveyor.yml]
+            %w[.rubocop.yml .gitignore .travis.yml appveyor.yml]
   s.bindir = "exe"
   s.executables = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
   s.require_paths = ["lib".freeze]
