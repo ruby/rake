@@ -1,4 +1,4 @@
-name: ubuntu
+name: macos
 
 on: [push]
 

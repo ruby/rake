@@ -1,4 +1,4 @@
-name: ubuntu
+name: windows
 
 on: [push]
 
