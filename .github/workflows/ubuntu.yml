@@ -14,7 +14,7 @@ jobs:
       uses: actions/setup-ruby@v1
       with:
         version: ${{ matrix.ruby }}
-    - name: Build and test with Rake
-      run: |
-        gem install minitest
-        ruby -Ilib exe/rake
+    - name: Install dependencies
+      run: gem install minitest
+    - name: Run test
+      run: ruby -Ilib exe/rake
