@@ -1,19 +1,12 @@
 language: ruby
 rvm:
-  - 2.0.0
-  - 2.1.10
-  - 2.2.10
-  - 2.3.8
-  - 2.4.5
-  - 2.5.3
-  - 2.6.1
   - ruby-head
   - jruby-9.2.4.0
   - jruby-head
 
 matrix:
   include:
-    - rvm: 2.5.3
+    - rvm: ruby-head
       env: COVERALLS=yes
 
 before_script:

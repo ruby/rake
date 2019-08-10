@@ -1,0 +1,13 @@
+name: macos
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Install dependencies
+      run: gem install minitest
+    - name: Run test
+      run: ruby -Ilib exe/rake
