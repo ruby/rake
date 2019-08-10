@@ -33,10 +33,4 @@ Rake has the following features:
   s.rubygems_version = "2.6.1".freeze
   s.required_rubygems_version = Gem::Requirement.new(">= 1.3.2".freeze)
   s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
-
-  s.add_development_dependency(%q<bundler>.freeze)
-  s.add_development_dependency(%q<minitest>.freeze)
-  s.add_development_dependency(%q<rdoc>.freeze)
-  s.add_development_dependency(%q<coveralls>.freeze)
-  s.add_development_dependency(%q<rubocop>.freeze)
 end
