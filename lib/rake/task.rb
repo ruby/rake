@@ -17,6 +17,9 @@ module Rake
     attr_reader :prerequisites
     alias prereqs prerequisites
 
+    # List of order only prerequisites for a task.
+    attr_reader :order_only_prerequisites
+
     # List of actions attached to a task.
     attr_reader :actions
 
@@ -56,7 +59,7 @@ module Rake
 
     # List of prerequisite tasks
     def prerequisite_tasks
-      prerequisites.map { |pre| lookup_prerequisite(pre) }
+      (prerequisites + order_only_prerequisites).map { |pre| lookup_prerequisite(pre) }
     end
 
     def lookup_prerequisite(prerequisite_name) # :nodoc:
@@ -105,6 +108,7 @@ module Rake
       @arg_names       = nil
       @locations       = []
       @invocation_exception = nil
+      @order_only_prerequisites = []
     end
 
     # Enhance a task with prerequisites or actions.  Returns self.
@@ -358,6 +362,18 @@ module Rake
       result <<  "latest-prerequisite time: #{latest_prereq}\n"
       result << "................................\n\n"
       return result
+    end
+
+    # Format dependencies parameter to pass to task.
+    def self.format_deps(deps)
+      deps = [deps] unless deps.respond_to?(:to_ary)
+      deps.map { |d| Rake.from_pathname(d).to_s }
+    end
+
+    # Add order only dependencies.
+    def |(deps)
+      @order_only_prerequisites |= Task.format_deps(deps) - @prerequisites
+      self
     end
 
     # ----------------------------------------------------------------

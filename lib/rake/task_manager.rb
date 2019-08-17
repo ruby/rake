@@ -15,13 +15,13 @@ module Rake
     end
 
     def create_rule(*args, &block) # :nodoc:
-      pattern, args, deps = resolve_args(args)
+      pattern, args, deps, order_only = resolve_args(args)
       pattern = Regexp.new(Regexp.quote(pattern) + "$") if String === pattern
-      @rules << [pattern, args, deps, block]
+      @rules << [pattern, args, deps, order_only, block]
     end
 
     def define_task(task_class, *args, &block) # :nodoc:
-      task_name, arg_names, deps = resolve_args(args)
+      task_name, arg_names, deps, order_only = resolve_args(args)
 
       original_scope = @scope
       if String === task_name and
@@ -31,15 +31,15 @@ module Rake
       end
 
       task_name = task_class.scope_name(@scope, task_name)
-      deps = [deps] unless deps.respond_to?(:to_ary)
-      deps = deps.map { |d| Rake.from_pathname(d).to_s }
       task = intern(task_class, task_name)
       task.set_arg_names(arg_names) unless arg_names.empty?
       if Rake::TaskManager.record_task_metadata
         add_location(task)
         task.add_description(get_description(task))
       end
-      task.enhance(deps, &block)
+      task.enhance(Task.format_deps(deps), &block)
+      task | order_only unless order_only.nil?
+      task
     ensure
       @scope = original_scope
     end
@@ -109,7 +109,7 @@ module Rake
       else
         arg_names = args
       end
-      [task_name, arg_names, []]
+      [task_name, arg_names, [], nil]
     end
     private :resolve_args_without_dependencies
 
@@ -122,7 +122,10 @@ module Rake
     #   task :t, [a] => [:d]
     #
     def resolve_args_with_dependencies(args, hash) # :nodoc:
-      fail "Task Argument Error" if hash.size != 1
+      fail "Task Argument Error" if
+        hash.size != 1 &&
+        (hash.size != 2 || !hash.key?(:order_only))
+      order_only = hash.delete(:order_only)
       key, value = hash.map { |k, v| [k, v] }.first
       if args.empty?
         task_name = key
@@ -134,7 +137,7 @@ module Rake
         deps = value
       end
       deps = [deps] unless deps.respond_to?(:to_ary)
-      [task_name, arg_names, deps]
+      [task_name, arg_names, deps, order_only]
     end
     private :resolve_args_with_dependencies
 
@@ -145,9 +148,10 @@ module Rake
     def enhance_with_matching_rule(task_name, level=0)
       fail Rake::RuleRecursionOverflowError,
         "Rule Recursion Too Deep" if level >= 16
-      @rules.each do |pattern, args, extensions, block|
+      @rules.each do |pattern, args, extensions, order_only, block|
         if pattern && pattern.match(task_name)
           task = attempt_rule(task_name, pattern, args, extensions, block, level)
+          task | order_only unless order_only.nil?
           return task if task
         end
       end
