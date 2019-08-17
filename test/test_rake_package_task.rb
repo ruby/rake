@@ -78,4 +78,16 @@ class TestRakePackageTask < Rake::TestCase # :nodoc:
     assert_equal "a", pkg.package_name
   end
 
+  def test_without_parent_dir
+    pkg = Rake::PackageTask.new("foo", :noversion)
+
+    assert_equal "pkg", pkg.working_dir
+    assert_equal "foo", pkg.target_dir
+
+    pkg.without_parent_dir = true
+
+    assert_equal "pkg/foo", pkg.working_dir
+    assert_equal ".", pkg.target_dir
+  end
+
 end
