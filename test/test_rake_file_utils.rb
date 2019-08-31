@@ -39,6 +39,22 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
     refute File.exist?("b")
   end
 
+  def test_rm_nowrite
+    create_file("a")
+    nowrite(true) {
+      rm_rf "a"
+    }
+    assert File.exist?("a")
+    nowrite(false) {
+      rm_rf "a", noop: true
+    }
+    assert File.exist?("a")
+    nowrite(true) {
+      rm_rf "a", noop: false
+    }
+    refute File.exist?("a")
+  end
+
   def test_ln
     open("a", "w") { |f| f.puts "TEST_LN" }
 

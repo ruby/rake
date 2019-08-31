@@ -274,7 +274,11 @@ module Rake
       end
       application.trace "** Execute #{name}" if application.options.trace
       application.enhance_with_matching_rule(name) if @actions.empty?
-      @actions.each { |act| act.call(self, args) }
+      if opts = Hash.try_convert(args) and !opts.empty?
+        @actions.each { |act| act.call(self, args, **opts)}
+      else
+        @actions.each { |act| act.call(self, args)}
+      end
     end
 
     # Is this task needed?
