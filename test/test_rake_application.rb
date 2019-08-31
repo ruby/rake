@@ -77,9 +77,6 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
   end
 
   def test_display_exception_details_cause
-    skip "Exception#cause not implemented" unless
-      Exception.method_defined? :cause
-
     begin
       raise "cause a"
     rescue

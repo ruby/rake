@@ -212,7 +212,6 @@ class TestRakeFileList < Rake::TestCase # :nodoc:
   end
 
   def test_exclude_curly_bracket_pattern
-    skip "brace pattern matches not supported" unless defined? File::FNM_EXTGLOB
     fl = FileList["*"].exclude("{abc,xyz}.c")
     assert_equal %w[abc.h abc.x cfiles existing x.c xyzzy.txt], fl
   end
