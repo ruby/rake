@@ -111,16 +111,14 @@ module FileUtils
   #  Attempt to do a normal file link, but fall back to a copy if the link
   #  fails.
   def safe_ln(*args)
-    if !LN_SUPPORTED[0]
-      cp(*args)
-    else
+    if LN_SUPPORTED[0]
       begin
-        ln(*args)
+        return ln(*args)
       rescue StandardError, NotImplementedError
         LN_SUPPORTED[0] = false
-        cp(*args)
       end
     end
+    cp(*args)
   end
 
   # Split a file path into individual directory names.
