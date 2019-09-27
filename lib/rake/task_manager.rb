@@ -83,8 +83,8 @@ module Rake
       define_task(Rake::FileTask, task_name)
     end
 
-    # Resolve the arguments for a task/rule.  Returns a triplet of
-    # [task_name, arg_name_list, prerequisites].
+    # Resolve the arguments for a task/rule.  Returns a tuple of
+    # [task_name, arg_name_list, prerequisites, order_only_prerequisites].
     def resolve_args(args)
       if args.last.is_a?(Hash)
         deps = args.pop
@@ -118,8 +118,11 @@ module Rake
     #
     # The patterns recognized by this argument resolving function are:
     #
+    #   task :t, order_only: [:e]
     #   task :t => [:d]
+    #   task :t => [:d], order_only: [:e]
     #   task :t, [a] => [:d]
+    #   task :t, [a] => [:d], order_only: [:e]
     #
     def resolve_args_with_dependencies(args, hash) # :nodoc:
       fail "Task Argument Error" if
