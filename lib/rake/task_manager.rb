@@ -133,8 +133,8 @@ module Rake
         deps = value || []
       else
         task_name = args.shift
-        arg_names = key
-        deps = value
+        arg_names = key || args.shift|| []
+        deps = value || []
       end
       deps = [deps] unless deps.respond_to?(:to_ary)
       [task_name, arg_names, deps, order_only]
