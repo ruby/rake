@@ -23,6 +23,13 @@ Rake has the following features:
   s.homepage = "https://github.com/ruby/rake".freeze
   s.licenses = ["MIT".freeze]
 
+  s.metadata = {
+    "bug_tracker_uri"   => "https://github.com/ruby/rake/issues",
+    "changelog_uri"     => "https://github.com/ruby/rake/blob/v#{s.version}/History.rdoc",
+    "documentation_uri" => "https://ruby.github.io/rake",
+    "source_code_uri"   => "https://github.com/ruby/rake/tree/v#{s.version}",
+  }
+
   s.files = %x[git ls-files -z].split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) } -
             %w[.rubocop.yml .gitignore .travis.yml appveyor.yml]
   s.bindir = "exe"
