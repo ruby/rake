@@ -117,6 +117,33 @@ class TestRakeTask < Rake::TestCase # :nodoc:
     assert_equal ["t1", "t1"], runlist
   end
 
+  def test_can_triple_invoke_after_exception_with_reenable
+    raise_exception = true
+    invoked         = 0
+
+    t1 = task(:t1) do |t|
+      invoked += 1
+      next if !raise_exception
+
+      raise_exception = false
+      raise 'Some error'
+    end
+
+    assert_raises(RuntimeError) { t1.invoke }
+    assert_equal 1, invoked
+
+    t1.reenable
+
+    # actually invoke second time
+    t1.invoke
+    assert_equal 2, invoked
+
+    # recognize already invoked and
+    # don't raise pre-reenable exception
+    t1.invoke
+    assert_equal 2, invoked
+  end
+
   def test_clear
     desc "a task"
     t = task("t", ["b"] => "a") {}

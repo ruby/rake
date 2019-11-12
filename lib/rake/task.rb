@@ -146,6 +146,7 @@ module Rake
     # is invoked again.
     def reenable
       @already_invoked = false
+      @invocation_exception = nil
     end
 
     # Clear the existing prerequisites, actions, comments, and arguments of a rake task.
