@@ -13,7 +13,7 @@ jobs:
     - name: Set up Ruby
       uses: actions/setup-ruby@v1
       with:
-        version: ${{ matrix.ruby }}
+        ruby-version: ${{ matrix.ruby }}
     - name: Install dependencies
       run: gem install minitest
     - name: Run test
