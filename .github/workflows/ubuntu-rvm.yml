@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: [ 'jruby-head', 'jruby-9.2.9.0', 'ruby-head', '2.3.8', '2.2.10' ]
+        ruby: [ 'jruby-head', 'jruby-9.2.9.0', 'truffleruby', 'ruby-head', '2.3.8', '2.2.10' ]
     steps:
     - uses: actions/checkout@master
     - name: Set up RVM
