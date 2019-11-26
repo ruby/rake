@@ -4,7 +4,11 @@ require "rake/clean"
 
 class TestRakeClean < Rake::TestCase # :nodoc:
   def test_clean
-    load "rake/clean.rb", true
+    if RUBY_ENGINE == 'truffleruby' and RUBY_ENGINE_VERSION == '19.3.0'
+      load "rake/clean.rb" # TruffleRuby 19.3 does not set self correctly with wrap=true
+    else
+      load "rake/clean.rb", true
+    end
 
     assert Rake::Task["clean"], "Should define clean"
     assert Rake::Task["clobber"], "Should define clobber"
