@@ -30,7 +30,7 @@ Rake has the following features:
     "source_code_uri"   => "https://github.com/ruby/rake/tree/v#{s.version}",
   }
 
-  s.files = %x[git ls-files -z].split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) } -
+  s.files = %x[git ls-files -z].split("\x0").reject { |f| f.match(%r{^(test|spec|features|\.github)/}) } -
             %w[.rubocop.yml .gitignore .travis.yml appveyor.yml]
   s.bindir = "exe"
   s.executables = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
