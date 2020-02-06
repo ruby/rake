@@ -4,7 +4,7 @@ require "rake/clean"
 
 class TestRakeClean < Rake::TestCase # :nodoc:
   def test_clean
-    if RUBY_ENGINE == 'truffleruby' and RUBY_ENGINE_VERSION == '19.3.0'
+    if RUBY_ENGINE == 'truffleruby' and RUBY_ENGINE_VERSION.start_with?('19.3.')
       load "rake/clean.rb" # TruffleRuby 19.3 does not set self correctly with wrap=true
     else
       load "rake/clean.rb", true
