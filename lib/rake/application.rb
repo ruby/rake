@@ -130,6 +130,7 @@ module Rake
     # Run the top level tasks of a Rake application.
     def top_level
       run_with_threads do
+        execute_all_lazy_definitions if options.loadlazydefinitions
         if options.show_tasks
           display_tasks_and_comments
         elsif options.show_prereqs
@@ -530,6 +531,10 @@ module Rake
             "-N", "Do not search parent directories for the Rakefile.",
             lambda { |value| options.nosearch = true }
           ],
+          ["--load-lazy-definitions", "--loadlazydefinitions", 
+            "-L", "Include all lazy definitions when listing tasks with --tasks",
+            lambda { |value| options.loadlazydefinitions = true}
+          ],
           ["--prereqs", "-P",
             "Display the tasks and dependencies, then exit.",
             lambda { |value| options.show_prereqs = true }
@@ -838,6 +843,7 @@ module Rake
       options.job_stats                  = false
       options.load_system                = false
       options.nosearch                   = false
+      options.loadlazydefinitions        = false
       options.rakelib                    = %w[rakelib]
       options.show_all_tasks             = false
       options.show_prereqs               = false
