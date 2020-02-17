@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: [ 2.6, 2.5, 2.4, 2.3, 2.2, jruby, truffleruby, ruby-head ]
+        ruby: [ 2.6, 2.5, 2.4, 2.3, 2.2, jruby, jruby-head, truffleruby, ruby-head ]
     steps:
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
