@@ -1,3 +1,9 @@
+=== 10.5.1 / 2020-03-04
+
+Enhancements:
+
+* Use File.open explicitly.
+
 === 10.5.0 / 2016-01-13
 
 Enhancements:
