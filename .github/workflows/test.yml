@@ -12,6 +12,10 @@ jobs:
         exclude:
           - os: windows-latest
             ruby: truffleruby
+          - os: windows-latest
+            ruby: jruby-head
+          - os: windows-latest
+            ruby: jruby
     steps:
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
@@ -21,4 +25,3 @@ jobs:
       run: gem install minitest
     - name: Run test
       run: ruby -Ilib exe/rake
-      continue-on-error: ${{ matrix.ruby == 'jruby-head' }}
