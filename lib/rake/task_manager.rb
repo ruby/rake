@@ -56,7 +56,7 @@ module Rake
       self.lookup(task_name, scopes) or
         enhance_with_matching_rule(task_name) or
         synthesize_file_task(task_name) or
-        fail generate_message_for_undefined_task(task_name)
+        fail TaskUndefinedError, generate_message_for_undefined_task(task_name)
     end
 
     def generate_message_for_undefined_task(task_name)

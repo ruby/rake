@@ -21,7 +21,7 @@ class TestRakeTaskManager < Rake::TestCase # :nodoc:
   end
 
   def test_index
-    e = assert_raises RuntimeError do
+    e = assert_raises Rake::TaskUndefinedError do
       @tm["bad"]
     end
 
@@ -31,7 +31,7 @@ class TestRakeTaskManager < Rake::TestCase # :nodoc:
   def test_undefined_task_with_custom_application
     Rake.application.init("myrake", nil)
 
-    e = assert_raises RuntimeError do
+    e = assert_raises Rake::TaskUndefinedError do
       @tm["bad"]
     end
 

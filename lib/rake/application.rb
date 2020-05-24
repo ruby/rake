@@ -235,7 +235,7 @@ module Rake
     end
 
     def display_exception_message_details(ex) # :nodoc:
-      if ex.instance_of?(RuntimeError)
+      if ex.instance_of?(RuntimeError) || ex.instance_of?(Rake::TaskUndefinedError)
         trace ex.message
       else
         trace "#{ex.class.name}: #{ex.message}"
