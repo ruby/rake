@@ -181,43 +181,8 @@ module Rake
       when :testrb
         "-S testrb"
       when :rake
-        "#{rake_include_arg} \"#{rake_loader}\""
+        "-r#{__dir__}/rake_test_loader"
       end
-    end
-
-    def rake_loader # :nodoc:
-      find_file("rake/rake_test_loader") or
-        fail "unable to find rake test loader"
-    end
-
-    def find_file(fn) # :nodoc:
-      $LOAD_PATH.each do |path|
-        file_path = File.join(path, "#{fn}.rb")
-        return file_path if File.exist? file_path
-      end
-      nil
-    end
-
-    def rake_include_arg # :nodoc:
-      spec = Gem.loaded_specs["rake"]
-      if spec.respond_to?(:default_gem?) && spec.default_gem?
-        ""
-      else
-        "-I\"#{rake_lib_dir}\""
-      end
-    end
-
-    def rake_lib_dir # :nodoc:
-      find_dir("rake") or
-        fail "unable to find rake lib"
-    end
-
-    def find_dir(fn) # :nodoc:
-      $LOAD_PATH.each do |path|
-        file_path = File.join(path, "#{fn}.rb")
-        return path if File.exist? file_path
-      end
-      nil
     end
 
   end
