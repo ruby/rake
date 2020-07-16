@@ -40,10 +40,19 @@ class TestRakeClean < Rake::TestCase # :nodoc:
   def test_cleanup_trace
     file_name = create_file
 
-    assert_output "", "rm -r #{file_name}\n" do
+    out, err = capture_io do
       with_trace true do
         Rake::Cleaner.cleanup(file_name)
       end
+    end
+
+    if err == ""
+      # Current FileUtils
+      assert_equal "rm -r #{file_name}\n", out
+    else
+      # Old FileUtils
+      assert_equal "", out
+      assert_equal "rm -r #{file_name}\n", err
     end
   end
 
@@ -70,10 +79,17 @@ class TestRakeClean < Rake::TestCase # :nodoc:
   def test_cleanup_opt_overrides_trace_verbose
     file_name = create_file
 
-    assert_output "", "rm -r #{file_name}\n" do
+    out, err = capture_io do
       with_trace false do
         Rake::Cleaner.cleanup(file_name, verbose: true)
       end
+    end
+
+    if err == ""
+      assert_equal "rm -r #{file_name}\n", out
+    else
+      assert_equal "", out
+      assert_equal "rm -r #{file_name}\n", err
     end
   end
 
