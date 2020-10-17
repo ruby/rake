@@ -240,6 +240,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
   def test_load_rakefile_from_subdir
     rakefile_unittest
     Dir.chdir "subdir"
+    @app = Rake::Application.new
 
     @app.instance_eval do
       handle_options []
@@ -437,6 +438,19 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     assert ran
     assert_empty err
     assert_equal "DEFAULT\n", out
+  end
+
+  def test_runs_in_rakefile_directory_from_subdir
+    rakefile_unittest
+    Dir.chdir "subdir"
+    @app = Rake::Application.new
+
+    pwd = nil
+    @app.define_task(Rake::Task, "default") { pwd = Dir.pwd }
+
+    @app.run %w[--silent]
+
+    assert_equal @tempdir, pwd
   end
 
   def test_display_task_run
