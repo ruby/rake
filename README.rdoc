@@ -99,7 +99,7 @@ other projects with similar (and not so similar) goals.
 
 * https://directory.fsf.org/wiki/Bras -- Bras, one of earliest
   implementations of "make in a scripting language".
-* http://http://www.a-a-p.org -- Make in Python
+* http://www.a-a-p.org -- Make in Python
 * https://ant.apache.org -- The Ant project
 * https://search.cpan.org/search?query=PerlBuildSystem -- The Perl Build System
 * https://www.rubydoc.info/gems/rant/0.5.7/frames -- Rant, another Ruby make tool.
