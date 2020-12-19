@@ -1,5 +1,18 @@
 === 13.0.1
 
+==== Enhancements
+
+* Fix tests to work with current FileUtils
+  Pull Request #358 by jeremyevans
+* Simplify default rake test loader
+  Pull Request #357 by deivid-rodriguez
+* Update rdoc
+  Pull Request #366 by bahasalien
+* Update broken links to rake articles from Avdi in README
+  Pull Request #360 by svl7
+
+=== 13.0.1
+
 ==== Bug fixes
 
 * Fixed bug: Reenabled task raises previous exception on second invokation 
