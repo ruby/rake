@@ -1,4 +1,9 @@
-=== 13.0.1
+=== 13.0.3
+
+* Fix breaking change of execution order on TestTask.
+  Pull request #368 by ysakasin
+
+=== 13.0.2
 
 ==== Enhancements
 
