@@ -181,7 +181,7 @@ module Rake
       when :testrb
         "-S testrb"
       when :rake
-        "-r#{__dir__}/rake_test_loader"
+        "#{__dir__}/rake_test_loader.rb"
       end
     end
 
