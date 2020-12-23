@@ -38,6 +38,10 @@ module Rake
     # will be skipped unless you reenable them.
     attr_reader :already_invoked
 
+    # MatchData object returned when matching the task name
+    # against the rule pattern.
+    attr_accessor :match_data
+
     # Return task name
     def to_s
       name

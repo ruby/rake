@@ -409,4 +409,13 @@ class TestRakeRules < Rake::TestCase # :nodoc:
     assert_equal [MINFILE], @runs
   end
 
+  def test_rule_match_data
+    rule(/^(?<timestamp>\d{14})_(?<migration_name>[a-z_]+)\.rb$/) do |t|
+      @runs << t.match_data[:timestamp]
+      @runs << t.match_data[:migration_name]
+    end
+    Task["20191015182958_create_users.rb"].invoke
+    assert_equal ["20191015182958", "create_users"], @runs
+  end
+
 end
