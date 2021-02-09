@@ -155,19 +155,24 @@ module Rake
 
     # Invokes a task with arguments that are extracted from +task_string+
     def invoke_task(task_string) # :nodoc:
-      name, args = parse_task_string(task_string)
+      name, args, safe_call = parse_task_string(task_string)
+      return if safe_call && !lookup(name)
+
       t = self[name]
       t.invoke(*args)
     end
 
     def parse_task_string(string) # :nodoc:
-      /^([^\[]+)(?:\[(.*)\])$/ =~ string.to_s
+      string = string.to_s.dup
+      safe_call = !!string.chomp!('?')
+
+      /^([^\[]+)(?:\[(.*)\])$/ =~ string
 
       name           = $1
       remaining_args = $2
 
-      return string, [] unless name
-      return name,   [] if     remaining_args.empty?
+      return string, [], safe_call unless name
+      return name,   [], safe_call if remaining_args.empty?
 
       args = []
 
@@ -178,7 +183,7 @@ module Rake
         args << $1.gsub(/\\(.)/, '\1')
       end while remaining_args
 
-      return name, args
+      return name, args, safe_call
     end
 
     # Provide standard exception handling for the given block.
