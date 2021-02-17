@@ -65,6 +65,28 @@ class TestRakeApplicationOptions < Rake::TestCase # :nodoc:
     end
   end
 
+  def test_directory
+    pwd = Dir.pwd
+    [["--directory"], "--directory=", ["-C"], "-C"].each do |flag|
+      Dir.mktmpdir do |dir|
+        begin
+          flags(flag.dup << dir) do
+            assert_equal(File.realpath(dir), @app.original_dir)
+          end
+        ensure
+          Dir.chdir(pwd)
+        end
+        begin
+          assert_raises(Errno::ENOENT) do
+            flags(flag.dup << dir+"/nonexistent")
+          end
+        ensure
+          Dir.chdir(pwd)
+        end
+      end
+    end
+  end
+
   def test_execute
     $xyzzy = 0
     flags("--execute=$xyzzy=1", "-e $xyzzy=1") do
