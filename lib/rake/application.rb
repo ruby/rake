@@ -568,7 +568,7 @@ module Rake
           ["--tasks", "-T [PATTERN]",
             "Display the tasks (matching optional PATTERN) " +
             "with descriptions, then exit. " +
-            "-AT combination displays all of tasks contained no description.",
+            "-AT combination displays all the tasks, including those without descriptions.",
             lambda { |value|
               select_tasks_to_show(options, :tasks, value)
             }
