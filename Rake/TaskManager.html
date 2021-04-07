@@ -8,13 +8,18 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
+
 
 
 
@@ -71,6 +76,10 @@
     
     <li ><a href="#method-i-enhance_with_matching_rule">#enhance_with_matching_rule</a>
     
+    <li ><a href="#method-i-generate_did_you_mean_suggestions">#generate_did_you_mean_suggestions</a>
+    
+    <li ><a href="#method-i-generate_message_for_undefined_task">#generate_message_for_undefined_task</a>
+    
     <li ><a href="#method-i-in_namespace">#in_namespace</a>
     
     <li ><a href="#method-i-intern">#intern</a>
@@ -96,13 +105,10 @@
 
   <section class="description">
     
-<p>The <a href="TaskManager.html">TaskManager</a> module is a mixin for
-managing tasks.</p>
+<p>The <a href="TaskManager.html"><code>TaskManager</code></a> module is a mixin for managing tasks.</p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -160,13 +166,13 @@ managing tasks.</p>
 
           
           <div class="method-source-code" id="5B-5D-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 53</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">task_name</span>, <span class="ruby-identifier">scopes</span>=<span class="ruby-keyword">nil</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 54</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">[]</span>(<span class="ruby-identifier">task_name</span>, <span class="ruby-identifier">scopes</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">task_name</span> = <span class="ruby-identifier">task_name</span>.<span class="ruby-identifier">to_s</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">lookup</span>(<span class="ruby-identifier">task_name</span>, <span class="ruby-identifier">scopes</span>) <span class="ruby-keyword">or</span>
     <span class="ruby-identifier">enhance_with_matching_rule</span>(<span class="ruby-identifier">task_name</span>) <span class="ruby-keyword">or</span>
     <span class="ruby-identifier">synthesize_file_task</span>(<span class="ruby-identifier">task_name</span>) <span class="ruby-keyword">or</span>
-    <span class="ruby-identifier">fail</span> <span class="ruby-node">&quot;Don&#39;t know how to build task &#39;#{task_name}&#39; (see --tasks)&quot;</span>
+    <span class="ruby-identifier">fail</span> <span class="ruby-identifier">generate_message_for_undefined_task</span>(<span class="ruby-identifier">task_name</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -197,8 +203,8 @@ managing tasks.</p>
 
           
           <div class="method-source-code" id="clear-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 155</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">clear</span>
+            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 182</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clear</span>
   <span class="ruby-ivar">@tasks</span>.<span class="ruby-identifier">clear</span>
   <span class="ruby-ivar">@rules</span>.<span class="ruby-identifier">clear</span>
 <span class="ruby-keyword">end</span></pre>
@@ -231,8 +237,8 @@ managing tasks.</p>
 
           
           <div class="method-source-code" id="current_scope-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 195</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">current_scope</span>
+            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 222</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">current_scope</span>
   <span class="ruby-ivar">@scope</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -258,29 +264,104 @@ managing tasks.</p>
 
         <div class="method-description">
           
-          <p>If a rule can be found that matches the task name, enhance the task with
-the prerequisites and actions from the rule.  Set the source attribute of
-the task appropriately for the rule.  Return the enhanced task or nil of no
-rule was found.</p>
+          <p>If a rule can be found that matches the task name, enhance the task with the prerequisites and actions from the rule.  Set the source attribute of the task appropriately for the rule.  Return the enhanced task or nil of no rule was found.</p>
           
           
 
           
           <div class="method-source-code" id="enhance_with_matching_rule-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 125</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">enhance_with_matching_rule</span>(<span class="ruby-identifier">task_name</span>, <span class="ruby-identifier">level</span>=<span class="ruby-value">0</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 151</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">enhance_with_matching_rule</span>(<span class="ruby-identifier">task_name</span>, <span class="ruby-identifier">level</span>=<span class="ruby-value">0</span>)
   <span class="ruby-identifier">fail</span> <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">RuleRecursionOverflowError</span>,
     <span class="ruby-string">&quot;Rule Recursion Too Deep&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">level</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">16</span>
-  <span class="ruby-ivar">@rules</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pattern</span>, <span class="ruby-identifier">args</span>, <span class="ruby-identifier">extensions</span>, <span class="ruby-identifier">block</span><span class="ruby-operator">|</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">pattern</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">task_name</span>)
-      <span class="ruby-identifier">task</span> = <span class="ruby-identifier">attempt_rule</span>(<span class="ruby-identifier">task_name</span>, <span class="ruby-identifier">args</span>, <span class="ruby-identifier">extensions</span>, <span class="ruby-identifier">block</span>, <span class="ruby-identifier">level</span>)
+  <span class="ruby-ivar">@rules</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pattern</span>, <span class="ruby-identifier">args</span>, <span class="ruby-identifier">extensions</span>, <span class="ruby-identifier">order_only</span>, <span class="ruby-identifier">block</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">pattern</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">pattern</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">task_name</span>)
+      <span class="ruby-identifier">task</span> = <span class="ruby-identifier">attempt_rule</span>(<span class="ruby-identifier">task_name</span>, <span class="ruby-identifier">pattern</span>, <span class="ruby-identifier">args</span>, <span class="ruby-identifier">extensions</span>, <span class="ruby-identifier">block</span>, <span class="ruby-identifier">level</span>)
+      <span class="ruby-identifier">task</span> <span class="ruby-operator">|</span> <span class="ruby-identifier">order_only</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">order_only</span>.<span class="ruby-identifier">nil?</span>
       <span class="ruby-keyword">return</span> <span class="ruby-identifier">task</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">task</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">nil</span>
-<span class="ruby-keyword">rescue</span> <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">RuleRecursionOverflowError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ex</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">RuleRecursionOverflowError</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">ex</span>
   <span class="ruby-identifier">ex</span>.<span class="ruby-identifier">add_target</span>(<span class="ruby-identifier">task_name</span>)
   <span class="ruby-identifier">fail</span> <span class="ruby-identifier">ex</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-generate_did_you_mean_suggestions" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generate_did_you_mean_suggestions</span><span
+            class="method-args">(task_name)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="generate_did_you_mean_suggestions-source">
+            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 68</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_did_you_mean_suggestions</span>(<span class="ruby-identifier">task_name</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-string">&quot;&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">DidYouMean</span><span class="ruby-operator">::</span><span class="ruby-constant">SpellChecker</span>)
+
+  <span class="ruby-identifier">suggestions</span> = <span class="ruby-operator">::</span><span class="ruby-constant">DidYouMean</span><span class="ruby-operator">::</span><span class="ruby-constant">SpellChecker</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">dictionary:</span> <span class="ruby-ivar">@tasks</span>.<span class="ruby-identifier">keys</span>).<span class="ruby-identifier">correct</span>(<span class="ruby-identifier">task_name</span>.<span class="ruby-identifier">to_s</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">::</span><span class="ruby-constant">DidYouMean</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:formatter</span>)<span class="ruby-comment"># did_you_mean v1.2.0 or later</span>
+    <span class="ruby-operator">::</span><span class="ruby-constant">DidYouMean</span>.<span class="ruby-identifier">formatter</span>.<span class="ruby-identifier">message_for</span>(<span class="ruby-identifier">suggestions</span>)
+  <span class="ruby-keyword">elsif</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">DidYouMean</span><span class="ruby-operator">::</span><span class="ruby-constant">Formatter</span>) <span class="ruby-comment"># before did_you_mean v1.2.0</span>
+    <span class="ruby-operator">::</span><span class="ruby-constant">DidYouMean</span><span class="ruby-operator">::</span><span class="ruby-constant">Formatter</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">suggestions</span>).<span class="ruby-identifier">to_s</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-generate_message_for_undefined_task" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generate_message_for_undefined_task</span><span
+            class="method-args">(task_name)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="generate_message_for_undefined_task-source">
+            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 62</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_message_for_undefined_task</span>(<span class="ruby-identifier">task_name</span>)
+  <span class="ruby-identifier">message</span> = <span class="ruby-node">&quot;Don&#39;t know how to build task &#39;#{task_name}&#39; &quot;</span>\
+            <span class="ruby-node">&quot;(See the list of available tasks with `#{Rake.application.name} --tasks`)&quot;</span>
+  <span class="ruby-identifier">message</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">generate_did_you_mean_suggestions</span>(<span class="ruby-identifier">task_name</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -305,15 +386,14 @@ rule was found.</p>
 
         <div class="method-description">
           
-          <p>Evaluate the block in a nested namespace named <code>name</code>.  Create
-an anonymous namespace if <code>name</code> is nil.</p>
+          <p>Evaluate the block in a nested namespace named <code>name</code>.  Create an anonymous namespace if <code>name</code> is nil.</p>
           
           
 
           
           <div class="method-source-code" id="in_namespace-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 201</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">in_namespace</span>(<span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 228</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">in_namespace</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">generate_name</span>
   <span class="ruby-ivar">@scope</span> = <span class="ruby-constant">Scope</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">name</span>, <span class="ruby-ivar">@scope</span>)
   <span class="ruby-identifier">ns</span> = <span class="ruby-constant">NameSpace</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-ivar">@scope</span>)
@@ -345,15 +425,14 @@ an anonymous namespace if <code>name</code> is nil.</p>
 
         <div class="method-description">
           
-          <p>Lookup a task.  Return an existing task if found, otherwise create a task
-of the current type.</p>
+          <p>Lookup a task.  Return an existing task if found, otherwise create a task of the current type.</p>
           
           
 
           
           <div class="method-source-code" id="intern-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 48</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">intern</span>(<span class="ruby-identifier">task_class</span>, <span class="ruby-identifier">task_name</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 49</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">intern</span>(<span class="ruby-identifier">task_class</span>, <span class="ruby-identifier">task_name</span>)
   <span class="ruby-ivar">@tasks</span>[<span class="ruby-identifier">task_name</span>.<span class="ruby-identifier">to_s</span>] <span class="ruby-operator">||=</span> <span class="ruby-identifier">task_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">task_name</span>, <span class="ruby-keyword">self</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -379,26 +458,22 @@ of the current type.</p>
 
         <div class="method-description">
           
-          <p>Lookup a task, using scope and the scope hints in the task name. This
-method performs straight lookups without trying to synthesize file tasks or
-rules.  Special scope names (e.g. &#39;^&#39;) are recognized.  If no scope
-argument is supplied, use the current scope.  Return nil if the task cannot
-be found.</p>
+          <p>Lookup a task, using scope and the scope hints in the task name. This method performs straight lookups without trying to synthesize file tasks or rules.  Special scope names (e.g. &#39;^&#39;) are recognized.  If no scope argument is supplied, use the current scope.  Return nil if the task cannot be found.</p>
           
           
 
           
           <div class="method-source-code" id="lookup-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 165</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">lookup</span>(<span class="ruby-identifier">task_name</span>, <span class="ruby-identifier">initial_scope</span>=<span class="ruby-keyword">nil</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 192</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">lookup</span>(<span class="ruby-identifier">task_name</span>, <span class="ruby-identifier">initial_scope</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">initial_scope</span> <span class="ruby-operator">||=</span> <span class="ruby-ivar">@scope</span>
   <span class="ruby-identifier">task_name</span> = <span class="ruby-identifier">task_name</span>.<span class="ruby-identifier">to_s</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">task_name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^rake:/</span>
     <span class="ruby-identifier">scopes</span> = <span class="ruby-constant">Scope</span>.<span class="ruby-identifier">make</span>
-    <span class="ruby-identifier">task_name</span> = <span class="ruby-identifier">task_name</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^rake:/</span>, <span class="ruby-string">&#39;&#39;</span>)
+    <span class="ruby-identifier">task_name</span> = <span class="ruby-identifier">task_name</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^rake:/</span>, <span class="ruby-string">&quot;&quot;</span>)
   <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">task_name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^(\^+)/</span>
     <span class="ruby-identifier">scopes</span> = <span class="ruby-identifier">initial_scope</span>.<span class="ruby-identifier">trim</span>(<span class="ruby-node">$1</span>.<span class="ruby-identifier">size</span>)
-    <span class="ruby-identifier">task_name</span> = <span class="ruby-identifier">task_name</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^(\^+)/</span>, <span class="ruby-string">&#39;&#39;</span>)
+    <span class="ruby-identifier">task_name</span> = <span class="ruby-identifier">task_name</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^(\^+)/</span>, <span class="ruby-string">&quot;&quot;</span>)
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">scopes</span> = <span class="ruby-identifier">initial_scope</span>
   <span class="ruby-keyword">end</span>
@@ -427,15 +502,14 @@ be found.</p>
 
         <div class="method-description">
           
-          <p>Resolve the arguments for a task/rule.  Returns a triplet of [task_name,
-arg_name_list, prerequisites].</p>
+          <p>Resolve the arguments for a task/rule.  Returns a tuple of [task_name, arg_name_list, prerequisites, order_only_prerequisites].</p>
           
           
 
           
           <div class="method-source-code" id="resolve_args-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 68</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">resolve_args</span>(<span class="ruby-identifier">args</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 88</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">resolve_args</span>(<span class="ruby-identifier">args</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)
     <span class="ruby-identifier">deps</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">pop</span>
     <span class="ruby-identifier">resolve_args_with_dependencies</span>(<span class="ruby-identifier">args</span>, <span class="ruby-identifier">deps</span>)
@@ -472,8 +546,8 @@ arg_name_list, prerequisites].</p>
 
           
           <div class="method-source-code" id="tasks-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 141</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">tasks</span>
+            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 168</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tasks</span>
   <span class="ruby-ivar">@tasks</span>.<span class="ruby-identifier">values</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">name</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -505,11 +579,11 @@ arg_name_list, prerequisites].</p>
 
           
           <div class="method-source-code" id="tasks_in_scope-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 147</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">tasks_in_scope</span>(<span class="ruby-identifier">scope</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_manager.rb, line 174</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tasks_in_scope</span>(<span class="ruby-identifier">scope</span>)
   <span class="ruby-identifier">prefix</span> = <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">path</span>
   <span class="ruby-identifier">tasks</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
-    <span class="ruby-node">/^#{prefix}:/</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">name</span>
+    <span class="ruby-regexp">/^#{prefix}:/</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">name</span>
   }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -525,12 +599,13 @@ arg_name_list, prerequisites].</p>
     </section>
   
   </section>
+
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.2.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -8,13 +8,18 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
+
 
 
 
@@ -110,14 +115,10 @@
 
   <section class="description">
     
-<p>Rake main application object.  When invoking <code>rake</code> from the
-command line, a <a href="Application.html">Rake::Application</a> object is
-created and run.</p>
+<p>Rake main application object.  When invoking <code>rake</code> from the command line, a <a href="Application.html"><code>Rake::Application</code></a> object is created and run.</p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -248,7 +249,7 @@ created and run.</p>
 
         <div class="method-description">
           
-          <p>Initialize a <a href="Application.html">Rake::Application</a> object.</p>
+          <p>Initialize a <a href="Application.html"><code>Rake::Application</code></a> object.</p>
           
           
             <div class="method-calls-super">
@@ -259,10 +260,10 @@ created and run.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 48</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 49</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>
   <span class="ruby-keyword">super</span>
-  <span class="ruby-ivar">@name</span> = <span class="ruby-string">&#39;rake&#39;</span>
+  <span class="ruby-ivar">@name</span> = <span class="ruby-string">&quot;rake&quot;</span>
   <span class="ruby-ivar">@rakefiles</span> = <span class="ruby-constant">DEFAULT_RAKEFILES</span>.<span class="ruby-identifier">dup</span>
   <span class="ruby-ivar">@rakefile</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@pending_imports</span> = []
@@ -271,11 +272,13 @@ created and run.</p>
   <span class="ruby-ivar">@default_loader</span> = <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">DefaultLoader</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@original_dir</span> = <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">pwd</span>
   <span class="ruby-ivar">@top_level_tasks</span> = []
-  <span class="ruby-identifier">add_loader</span>(<span class="ruby-string">&#39;rb&#39;</span>, <span class="ruby-constant">DefaultLoader</span>.<span class="ruby-identifier">new</span>)
-  <span class="ruby-identifier">add_loader</span>(<span class="ruby-string">&#39;rf&#39;</span>, <span class="ruby-constant">DefaultLoader</span>.<span class="ruby-identifier">new</span>)
-  <span class="ruby-identifier">add_loader</span>(<span class="ruby-string">&#39;rake&#39;</span>, <span class="ruby-constant">DefaultLoader</span>.<span class="ruby-identifier">new</span>)
+  <span class="ruby-identifier">add_loader</span>(<span class="ruby-string">&quot;rb&quot;</span>, <span class="ruby-constant">DefaultLoader</span>.<span class="ruby-identifier">new</span>)
+  <span class="ruby-identifier">add_loader</span>(<span class="ruby-string">&quot;rf&quot;</span>, <span class="ruby-constant">DefaultLoader</span>.<span class="ruby-identifier">new</span>)
+  <span class="ruby-identifier">add_loader</span>(<span class="ruby-string">&quot;rake&quot;</span>, <span class="ruby-constant">DefaultLoader</span>.<span class="ruby-identifier">new</span>)
   <span class="ruby-ivar">@tty_output</span> = <span class="ruby-constant">STDOUT</span>.<span class="ruby-identifier">tty?</span>
-  <span class="ruby-ivar">@terminal_columns</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;RAKE_COLUMNS&#39;</span>].<span class="ruby-identifier">to_i</span>
+  <span class="ruby-ivar">@terminal_columns</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">&quot;RAKE_COLUMNS&quot;</span>].<span class="ruby-identifier">to_i</span>
+
+  <span class="ruby-identifier">set_default_options</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -308,15 +311,14 @@ created and run.</p>
 
         <div class="method-description">
           
-          <p>Add a loader to handle imported files ending in the extension
-<code>ext</code>.</p>
+          <p>Add a loader to handle imported files ending in the extension <code>ext</code>.</p>
           
           
 
           
           <div class="method-source-code" id="add_loader-source">
-            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 131</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_loader</span>(<span class="ruby-identifier">ext</span>, <span class="ruby-identifier">loader</span>)
+            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 139</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_loader</span>(<span class="ruby-identifier">ext</span>, <span class="ruby-identifier">loader</span>)
   <span class="ruby-identifier">ext</span> = <span class="ruby-node">&quot;.#{ext}&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">ext</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\./</span>
   <span class="ruby-ivar">@loaders</span>[<span class="ruby-identifier">ext</span>] = <span class="ruby-identifier">loader</span>
 <span class="ruby-keyword">end</span></pre>
@@ -334,7 +336,7 @@ created and run.</p>
         
         <div class="method-heading">
           <span class="method-name">init</span><span
-            class="method-args">(app_name='rake')</span>
+            class="method-args">(app_name=&quot;rake&quot;, argv = ARGV)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -349,11 +351,16 @@ created and run.</p>
 
           
           <div class="method-source-code" id="init-source">
-            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 85</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">init</span>(<span class="ruby-identifier">app_name</span>=<span class="ruby-string">&#39;rake&#39;</span>)
+            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 88</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">init</span>(<span class="ruby-identifier">app_name</span>=<span class="ruby-string">&quot;rake&quot;</span>, <span class="ruby-identifier">argv</span> = <span class="ruby-constant">ARGV</span>)
   <span class="ruby-identifier">standard_exception_handling</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">app_name</span>
-    <span class="ruby-identifier">args</span> = <span class="ruby-identifier">handle_options</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">args</span> = <span class="ruby-identifier">handle_options</span> <span class="ruby-identifier">argv</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">ArgumentError</span>
+      <span class="ruby-comment"># Backward compatibility for capistrano</span>
+      <span class="ruby-identifier">args</span> = <span class="ruby-identifier">handle_options</span>
+    <span class="ruby-keyword">end</span>
     <span class="ruby-identifier">collect_command_line_tasks</span>(<span class="ruby-identifier">args</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
@@ -386,8 +393,8 @@ created and run.</p>
 
           
           <div class="method-source-code" id="load_rakefile-source">
-            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 94</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_rakefile</span>
+            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 102</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">load_rakefile</span>
   <span class="ruby-identifier">standard_exception_handling</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">raw_load_rakefile</span>
   <span class="ruby-keyword">end</span>
@@ -415,14 +422,14 @@ created and run.</p>
 
         <div class="method-description">
           
-          <p><a href="Application.html">Application</a> options from the command line</p>
+          <p><a href="Application.html"><code>Application</code></a> options from the command line</p>
           
           
 
           
           <div class="method-source-code" id="options-source">
-            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 137</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">options</span>
+            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 145</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">options</span>
   <span class="ruby-ivar">@options</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">OpenStruct</span>.<span class="ruby-identifier">new</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -439,7 +446,7 @@ created and run.</p>
         
         <div class="method-heading">
           <span class="method-name">run</span><span
-            class="method-args">()</span>
+            class="method-args">(argv = ARGV)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -448,8 +455,7 @@ created and run.</p>
 
         <div class="method-description">
           
-          <p>Run the Rake application.  The run method performs the following three
-steps:</p>
+          <p>Run the Rake application.  The run method performs the following three steps:</p>
 <ul><li>
 <p>Initialize the command line options (<code>init</code>).</p>
 </li><li>
@@ -458,18 +464,16 @@ steps:</p>
 <p>Run the top level tasks (<code>top_level</code>).</p>
 </li></ul>
 
-<p>If you wish to build a custom rake command, you should call
-<code>init</code> on your application.  Then define any tasks.  Finally,
-call <code>top_level</code> to run your top level tasks.</p>
+<p>If you wish to build a custom rake command, you should call <code>init</code> on your application.  Then define any tasks.  Finally, call <code>top_level</code> to run your top level tasks.</p>
           
           
 
           
           <div class="method-source-code" id="run-source">
-            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 76</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">run</span>
+            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 79</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">run</span>(<span class="ruby-identifier">argv</span> = <span class="ruby-constant">ARGV</span>)
   <span class="ruby-identifier">standard_exception_handling</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">init</span>
+    <span class="ruby-identifier">init</span> <span class="ruby-string">&quot;rake&quot;</span>, <span class="ruby-identifier">argv</span>
     <span class="ruby-identifier">load_rakefile</span>
     <span class="ruby-identifier">top_level</span>
   <span class="ruby-keyword">end</span>
@@ -503,8 +507,8 @@ call <code>top_level</code> to run your top level tasks.</p>
 
           
           <div class="method-source-code" id="run_with_threads-source">
-            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 114</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">run_with_threads</span>
+            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 122</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">run_with_threads</span>
   <span class="ruby-identifier">thread_pool</span>.<span class="ruby-identifier">gather_history</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">job_stats</span> <span class="ruby-operator">==</span> <span class="ruby-value">:history</span>
 
   <span class="ruby-keyword">yield</span>
@@ -547,8 +551,8 @@ call <code>top_level</code> to run your top level tasks.</p>
 
           
           <div class="method-source-code" id="top_level-source">
-            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 101</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">top_level</span>
+            <pre><span class="ruby-comment"># File lib/rake/application.rb, line 109</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">top_level</span>
   <span class="ruby-identifier">run_with_threads</span> <span class="ruby-keyword">do</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">show_tasks</span>
       <span class="ruby-identifier">display_tasks_and_comments</span>
@@ -572,12 +576,13 @@ call <code>top_level</code> to run your top level tasks.</p>
     </section>
   
   </section>
+
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.2.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

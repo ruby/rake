@@ -8,13 +8,18 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
+
 
 
 
@@ -86,7 +91,11 @@
     
     <li ><a href="#method-i-tar_xz_file">#tar_xz_file</a>
     
+    <li ><a href="#method-i-target_dir">#target_dir</a>
+    
     <li ><a href="#method-i-tgz_file">#tgz_file</a>
+    
+    <li ><a href="#method-i-working_dir">#working_dir</a>
     
     <li ><a href="#method-i-zip_file">#zip_file</a>
     
@@ -103,18 +112,15 @@
 
   <section class="description">
     
-<p>Create a packaging task that will package the project into distributable
-files (e.g zip archive or tar files).</p>
+<p>Create a packaging task that will package the project into distributable files (e.g zip archive or tar files).</p>
 
-<p>The <a href="PackageTask.html">PackageTask</a> will create the following
-targets:</p>
+<p>The <a href="PackageTask.html"><code>PackageTask</code></a> will create the following targets:</p>
 <dl class="rdoc-list note-list"><dt><code>:package</code> 
 <dd>
 <p>Create all the requested package files.</p>
 </dd><dt><code>:clobber_package</code> 
 <dd>
-<p>Delete all the package files.  This target is automatically added to the
-main clobber target.</p>
+<p>Delete all the package files.  This target is automatically added to the main clobber target.</p>
 </dd><dt><code>:repackage</code> 
 <dd>
 <p>Rebuild the package files from scratch, even if they are not out of date.</p>
@@ -136,14 +142,12 @@ main clobber target.</p>
 
 <pre class="ruby"><span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">PackageTask</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;rake&quot;</span>, <span class="ruby-string">&quot;1.2.3&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">p</span>.<span class="ruby-identifier">need_tar</span> = <span class="ruby-keyword">true</span>
-  <span class="ruby-identifier">p</span>.<span class="ruby-identifier">package_files</span>.<span class="ruby-identifier">include</span>(<span class="ruby-string">&quot;lib   /*.rb&quot;</span>)
+  <span class="ruby-identifier">p</span>.<span class="ruby-identifier">package_files</span>.<span class="ruby-identifier">include</span>(<span class="ruby-string">&quot;lib/**/*.rb&quot;</span>)
 <span class="ruby-keyword">end</span>
 </pre>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -193,8 +197,7 @@ main clobber target.</p>
 
         <div class="method-description">
         
-        <p>True if a bzip2&#39;d tar file (tar.bz2) should be produced (default is
-false).</p>
+        <p>True if a bzip2&#39;d tar file (tar.bz2) should be produced (default is false).</p>
         
         </div>
       </div>
@@ -290,6 +293,19 @@ false).</p>
         </div>
       </div>
       
+      <div id="attribute-i-without_parent_dir" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">without_parent_dir</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>True if parent directory should be omited (default is false)</p>
+        
+        </div>
+      </div>
+      
       <div id="attribute-i-zip_command" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">zip_command</span><span
@@ -326,16 +342,14 @@ false).</p>
 
         <div class="method-description">
           
-          <p>Create a Package <a href="Task.html">Task</a> with the given name and
-version.  Use <code>:noversion</code> as the version to build a package
-without a version or to provide a fully-versioned package name.</p>
+          <p>Create a Package <a href="Task.html"><code>Task</code></a> with the given name and version.  Use <code>:noversion</code> as the version to build a package without a version or to provide a fully-versioned package name.</p>
           
           
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 85</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">version</span>=<span class="ruby-keyword">nil</span>)
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 89</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">version</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">init</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">version</span>)
   <span class="ruby-keyword">yield</span> <span class="ruby-keyword">self</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
   <span class="ruby-identifier">define</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">name</span>.<span class="ruby-identifier">nil?</span>
@@ -377,8 +391,8 @@ without a version or to provide a fully-versioned package name.</p>
 
           
           <div class="method-source-code" id="define-source">
-            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 107</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">define</span>
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 112</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">define</span>
   <span class="ruby-identifier">fail</span> <span class="ruby-string">&quot;Version required (or :noversion)&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@version</span>.<span class="ruby-identifier">nil?</span>
   <span class="ruby-ivar">@version</span> = <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-value">:noversion</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@version</span>
 
@@ -386,14 +400,14 @@ without a version or to provide a fully-versioned package name.</p>
   <span class="ruby-identifier">task</span> <span class="ruby-value">:package</span>
 
   <span class="ruby-identifier">desc</span> <span class="ruby-string">&quot;Force a rebuild of the package files&quot;</span>
-  <span class="ruby-identifier">task</span> <span class="ruby-identifier">repackage</span><span class="ruby-operator">:</span> [<span class="ruby-value">:clobber_package</span>, <span class="ruby-value">:package</span>]
+  <span class="ruby-identifier">task</span> <span class="ruby-value">repackage:</span> [<span class="ruby-value">:clobber_package</span>, <span class="ruby-value">:package</span>]
 
   <span class="ruby-identifier">desc</span> <span class="ruby-string">&quot;Remove package products&quot;</span>
   <span class="ruby-identifier">task</span> <span class="ruby-value">:clobber_package</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">rm_r</span> <span class="ruby-identifier">package_dir</span> <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">task</span> <span class="ruby-identifier">clobber</span><span class="ruby-operator">:</span> [<span class="ruby-value">:clobber_package</span>]
+  <span class="ruby-identifier">task</span> <span class="ruby-value">clobber:</span> [<span class="ruby-value">:clobber_package</span>]
 
   [
     [<span class="ruby-identifier">need_tar</span>, <span class="ruby-identifier">tgz_file</span>, <span class="ruby-string">&quot;z&quot;</span>],
@@ -402,27 +416,25 @@ without a version or to provide a fully-versioned package name.</p>
     [<span class="ruby-identifier">need_tar_xz</span>, <span class="ruby-identifier">tar_xz_file</span>, <span class="ruby-string">&quot;J&quot;</span>]
   ].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">need</span>, <span class="ruby-identifier">file</span>, <span class="ruby-identifier">flag</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">need</span>
-      <span class="ruby-identifier">task</span> <span class="ruby-identifier">package</span><span class="ruby-operator">:</span> [<span class="ruby-node">&quot;#{package_dir}/#{file}&quot;</span>]
-      <span class="ruby-identifier">file</span> <span class="ruby-node">&quot;#{package_dir}/#{file}&quot;</span> =<span class="ruby-operator">&gt;</span>
+      <span class="ruby-identifier">task</span> <span class="ruby-value">package:</span> [<span class="ruby-node">&quot;#{package_dir}/#{file}&quot;</span>]
+      <span class="ruby-identifier">file</span> <span class="ruby-node">&quot;#{package_dir}/#{file}&quot;</span> <span class="ruby-operator">=&gt;</span>
         [<span class="ruby-identifier">package_dir_path</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">package_files</span> <span class="ruby-keyword">do</span>
-        <span class="ruby-identifier">chdir</span>(<span class="ruby-identifier">package_dir</span>) <span class="ruby-keyword">do</span>
-          <span class="ruby-identifier">sh</span> <span class="ruby-ivar">@tar_command</span>, <span class="ruby-node">&quot;#{flag}cvf&quot;</span>, <span class="ruby-identifier">file</span>, <span class="ruby-identifier">package_name</span>
-        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">chdir</span>(<span class="ruby-identifier">working_dir</span>) { <span class="ruby-identifier">sh</span> <span class="ruby-ivar">@tar_command</span>, <span class="ruby-node">&quot;#{flag}cvf&quot;</span>, <span class="ruby-identifier">file</span>, <span class="ruby-identifier">target_dir</span> }
+        <span class="ruby-identifier">mv</span> <span class="ruby-node">&quot;#{package_dir_path}/#{target_dir}&quot;</span>, <span class="ruby-identifier">package_dir</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">without_parent_dir</span>
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">need_zip</span>
-    <span class="ruby-identifier">task</span> <span class="ruby-identifier">package</span><span class="ruby-operator">:</span> [<span class="ruby-node">&quot;#{package_dir}/#{zip_file}&quot;</span>]
-    <span class="ruby-identifier">file</span> <span class="ruby-node">&quot;#{package_dir}/#{zip_file}&quot;</span> =<span class="ruby-operator">&gt;</span>
+    <span class="ruby-identifier">task</span> <span class="ruby-value">package:</span> [<span class="ruby-node">&quot;#{package_dir}/#{zip_file}&quot;</span>]
+    <span class="ruby-identifier">file</span> <span class="ruby-node">&quot;#{package_dir}/#{zip_file}&quot;</span> <span class="ruby-operator">=&gt;</span>
       [<span class="ruby-identifier">package_dir_path</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">package_files</span> <span class="ruby-keyword">do</span>
-      <span class="ruby-identifier">chdir</span>(<span class="ruby-identifier">package_dir</span>) <span class="ruby-keyword">do</span>
-        <span class="ruby-identifier">sh</span> <span class="ruby-ivar">@zip_command</span>, <span class="ruby-string">&quot;-r&quot;</span>, <span class="ruby-identifier">zip_file</span>, <span class="ruby-identifier">package_name</span>
-      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">chdir</span>(<span class="ruby-identifier">working_dir</span>) { <span class="ruby-identifier">sh</span> <span class="ruby-ivar">@zip_command</span>, <span class="ruby-string">&quot;-r&quot;</span>, <span class="ruby-identifier">zip_file</span>, <span class="ruby-identifier">target_dir</span> }
+      <span class="ruby-identifier">mv</span> <span class="ruby-node">&quot;#{package_dir_path}/#{zip_file}&quot;</span>, <span class="ruby-identifier">package_dir</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">without_parent_dir</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">directory</span> <span class="ruby-identifier">package_dir_path</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@package_files</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">directory</span> <span class="ruby-identifier">package_dir_path</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-ivar">@package_files</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@package_files</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span>
       <span class="ruby-identifier">f</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">package_dir_path</span>, <span class="ruby-identifier">fn</span>)
       <span class="ruby-identifier">fdir</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">f</span>)
@@ -466,19 +478,20 @@ without a version or to provide a fully-versioned package name.</p>
 
           
           <div class="method-source-code" id="init-source">
-            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 92</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">init</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">version</span>)
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 96</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">init</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">version</span>)
   <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
   <span class="ruby-ivar">@version</span> = <span class="ruby-identifier">version</span>
   <span class="ruby-ivar">@package_files</span> = <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">FileList</span>.<span class="ruby-identifier">new</span>
-  <span class="ruby-ivar">@package_dir</span> = <span class="ruby-string">&#39;pkg&#39;</span>
+  <span class="ruby-ivar">@package_dir</span> = <span class="ruby-string">&quot;pkg&quot;</span>
   <span class="ruby-ivar">@need_tar</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-ivar">@need_tar_gz</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-ivar">@need_tar_bz2</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-ivar">@need_tar_xz</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-ivar">@need_zip</span> = <span class="ruby-keyword">false</span>
-  <span class="ruby-ivar">@tar_command</span> = <span class="ruby-string">&#39;tar&#39;</span>
-  <span class="ruby-ivar">@zip_command</span> = <span class="ruby-string">&#39;zip&#39;</span>
+  <span class="ruby-ivar">@tar_command</span> = <span class="ruby-string">&quot;tar&quot;</span>
+  <span class="ruby-ivar">@zip_command</span> = <span class="ruby-string">&quot;zip&quot;</span>
+  <span class="ruby-ivar">@without_parent_dir</span> = <span class="ruby-keyword">false</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -509,8 +522,8 @@ without a version or to provide a fully-versioned package name.</p>
 
           
           <div class="method-source-code" id="package_dir_path-source">
-            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 175</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">package_dir_path</span>
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 178</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">package_dir_path</span>
   <span class="ruby-node">&quot;#{package_dir}/#{package_name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -542,8 +555,8 @@ without a version or to provide a fully-versioned package name.</p>
 
           
           <div class="method-source-code" id="package_name-source">
-            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 169</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">package_name</span>
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 172</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">package_name</span>
   <span class="ruby-ivar">@version</span> <span class="ruby-operator">?</span> <span class="ruby-node">&quot;#{@name}-#{@version}&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-ivar">@name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -575,8 +588,8 @@ without a version or to provide a fully-versioned package name.</p>
 
           
           <div class="method-source-code" id="tar_bz2_file-source">
-            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 193</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">tar_bz2_file</span>
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 196</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tar_bz2_file</span>
   <span class="ruby-node">&quot;#{package_name}.tar.bz2&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -608,8 +621,8 @@ without a version or to provide a fully-versioned package name.</p>
 
           
           <div class="method-source-code" id="tar_gz_file-source">
-            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 187</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">tar_gz_file</span>
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 190</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tar_gz_file</span>
   <span class="ruby-node">&quot;#{package_name}.tar.gz&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -641,9 +654,42 @@ without a version or to provide a fully-versioned package name.</p>
 
           
           <div class="method-source-code" id="tar_xz_file-source">
-            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 199</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">tar_xz_file</span>
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 202</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tar_xz_file</span>
   <span class="ruby-node">&quot;#{package_name}.tar.xz&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-target_dir" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">target_dir</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>target directory relative to <a href="PackageTask.html#method-i-working_dir"><code>working_dir</code></a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="target_dir-source">
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 217</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">target_dir</span>
+  <span class="ruby-identifier">without_parent_dir</span> <span class="ruby-operator">?</span> <span class="ruby-string">&quot;.&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">package_name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -674,9 +720,42 @@ without a version or to provide a fully-versioned package name.</p>
 
           
           <div class="method-source-code" id="tgz_file-source">
-            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 181</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">tgz_file</span>
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 184</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tgz_file</span>
   <span class="ruby-node">&quot;#{package_name}.tgz&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-working_dir" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">working_dir</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="working_dir-source">
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 212</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">working_dir</span>
+  <span class="ruby-identifier">without_parent_dir</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">package_dir_path</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">package_dir</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -707,8 +786,8 @@ without a version or to provide a fully-versioned package name.</p>
 
           
           <div class="method-source-code" id="zip_file-source">
-            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 205</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">zip_file</span>
+            <pre><span class="ruby-comment"># File lib/rake/packagetask.rb, line 208</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">zip_file</span>
   <span class="ruby-node">&quot;#{package_name}.zip&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -724,12 +803,13 @@ without a version or to provide a fully-versioned package name.</p>
     </section>
   
   </section>
+
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.2.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

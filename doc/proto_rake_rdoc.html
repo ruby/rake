@@ -8,13 +8,18 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
+
 
 
 
@@ -96,49 +101,49 @@
 <span class="ruby-keyword">class</span> <span class="ruby-constant">Task</span>
   <span class="ruby-constant">TASKS</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
 
-  <span class="ruby-identifier">attr_reader</span> :<span class="ruby-identifier">prerequisites</span>
+  <span class="ruby-identifier">attr_reader</span> <span class="ruby-value">:prerequisites</span>
 
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">task_name</span>)
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">task_name</span>)
     <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">task_name</span>
     <span class="ruby-ivar">@prerequisites</span> = []
     <span class="ruby-ivar">@actions</span> = []
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">enhance</span>(<span class="ruby-identifier">deps</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">enhance</span>(<span class="ruby-identifier">deps</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
     <span class="ruby-ivar">@prerequisites</span> <span class="ruby-operator">|=</span> <span class="ruby-identifier">deps</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">deps</span>
     <span class="ruby-ivar">@actions</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">block</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
     <span class="ruby-keyword">self</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">name</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">name</span>
     <span class="ruby-ivar">@name</span>.<span class="ruby-identifier">to_s</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">invoke</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">invoke</span>
     <span class="ruby-ivar">@prerequisites</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span> <span class="ruby-constant">Task</span>[<span class="ruby-identifier">n</span>].<span class="ruby-identifier">invoke</span> }
     <span class="ruby-identifier">execute</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">needed?</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">execute</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">execute</span>
     <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@triggered</span>
     <span class="ruby-ivar">@triggered</span> = <span class="ruby-keyword">true</span>
     <span class="ruby-ivar">@actions</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">act</span><span class="ruby-operator">|</span> <span class="ruby-identifier">result</span> = <span class="ruby-identifier">act</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword">self</span>) }.<span class="ruby-identifier">last</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">needed?</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">needed?</span>
     <span class="ruby-keyword">true</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">timestamp</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">timestamp</span>
     <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">class</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-keyword">self</span>
-    <span class="ruby-keyword">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">task_name</span>)
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">[]</span>(<span class="ruby-identifier">task_name</span>)
       <span class="ruby-constant">TASKS</span>[<span class="ruby-identifier">intern</span>(<span class="ruby-identifier">task_name</span>)] <span class="ruby-keyword">or</span> <span class="ruby-identifier">fail</span> <span class="ruby-node">&quot;Don&#39;t know how to rake #{task_name}&quot;</span>
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-keyword">def</span> <span class="ruby-identifier">define_task</span>(<span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">define_task</span>(<span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
       <span class="ruby-keyword">case</span> <span class="ruby-identifier">args</span>
       <span class="ruby-keyword">when</span> <span class="ruby-constant">Hash</span>
        <span class="ruby-identifier">fail</span> <span class="ruby-node">&quot;Too Many Target Names: #{args.keys.join(&#39; &#39;)}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
@@ -153,44 +158,44 @@
       <span class="ruby-identifier">get</span>(<span class="ruby-identifier">task_name</span>).<span class="ruby-identifier">enhance</span>(<span class="ruby-identifier">deps</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-keyword">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">task_name</span>)
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get</span>(<span class="ruby-identifier">task_name</span>)
       <span class="ruby-identifier">name</span> = <span class="ruby-identifier">intern</span>(<span class="ruby-identifier">task_name</span>)
       <span class="ruby-constant">TASKS</span>[<span class="ruby-identifier">name</span>] <span class="ruby-operator">||=</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">name</span>)
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-keyword">def</span> <span class="ruby-identifier">intern</span>(<span class="ruby-identifier">task_name</span>)
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">intern</span>(<span class="ruby-identifier">task_name</span>)
       (<span class="ruby-constant">Symbol</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">task_name</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">task_name</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">task_name</span>.<span class="ruby-identifier">intern</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">class</span> <span class="ruby-constant">FileTask</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Task</span>
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">needed?</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">needed?</span>
     <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">name</span>)
     <span class="ruby-identifier">latest_prereq</span> = <span class="ruby-ivar">@prerequisites</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span> <span class="ruby-constant">Task</span>[<span class="ruby-identifier">n</span>].<span class="ruby-identifier">timestamp</span>}.<span class="ruby-identifier">max</span>
     <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">latest_prereq</span>.<span class="ruby-identifier">nil?</span>
     <span class="ruby-identifier">timestamp</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">latest_prereq</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">timestamp</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">timestamp</span>
     <span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>).<span class="ruby-identifier">mtime</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">task</span>(<span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">task</span>(<span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-constant">Task</span>.<span class="ruby-identifier">define_task</span>(<span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span>
 
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">file</span>(<span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">file</span>(<span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-constant">FileTask</span>.<span class="ruby-identifier">define_task</span>(<span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span>
 
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">sys</span>(<span class="ruby-identifier">cmd</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">sys</span>(<span class="ruby-identifier">cmd</span>)
   <span class="ruby-identifier">puts</span> <span class="ruby-identifier">cmd</span>
   <span class="ruby-identifier">system</span>(<span class="ruby-identifier">cmd</span>) <span class="ruby-keyword">or</span> <span class="ruby-identifier">fail</span> <span class="ruby-node">&quot;Command Failed: [#{cmd}]&quot;</span>
 <span class="ruby-keyword">end</span>
 
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">rake</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rake</span>
   <span class="ruby-keyword">begin</span>
     <span class="ruby-identifier">here</span> = <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">pwd</span>
     <span class="ruby-keyword">while</span> <span class="ruby-operator">!</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-string">&quot;Rakefile&quot;</span>)
@@ -202,7 +207,7 @@
     <span class="ruby-identifier">load</span> <span class="ruby-string">&quot;./Rakefile&quot;</span>
     <span class="ruby-constant">ARGV</span>.<span class="ruby-identifier">push</span>(<span class="ruby-string">&quot;default&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-constant">ARGV</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
     <span class="ruby-constant">ARGV</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">task_name</span><span class="ruby-operator">|</span> <span class="ruby-constant">Task</span>[<span class="ruby-identifier">task_name</span>].<span class="ruby-identifier">invoke</span> }
-  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ex</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Exception</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">ex</span>
     <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;rake aborted ... #{ex.message}&quot;</span>
     <span class="ruby-identifier">puts</span> <span class="ruby-identifier">ex</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">find</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">str</span><span class="ruby-operator">|</span> <span class="ruby-identifier">str</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/Rakefile/</span> } <span class="ruby-operator">||</span> <span class="ruby-string">&quot;&quot;</span>
   <span class="ruby-keyword">end</span>
@@ -212,13 +217,14 @@
   <span class="ruby-identifier">rake</span>
 <span class="ruby-keyword">end</span>
 </pre>
+
 </main>
 
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.2.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

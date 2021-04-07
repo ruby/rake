@@ -8,13 +8,18 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
+
 
 
 
@@ -127,120 +132,88 @@
 
 <h1 id="label-Rakefile+Format">Rakefile Format<span><a href="#label-Rakefile+Format">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>First of all, there is no special format for a Rakefile.  A Rakefile
-contains executable Ruby code.  Anything legal in a ruby script is allowed
-in a Rakefile.</p>
+<p>First of all, there is no special format for a Rakefile.  A Rakefile contains executable Ruby code.  Anything legal in a ruby script is allowed in a Rakefile.</p>
 
-<p>Now that we understand there is no special syntax in a Rakefile, there are
-some conventions that are used in a Rakefile that are a little unusual in a
-typical Ruby program.  Since a Rakefile is tailored to specifying tasks and
-actions, the idioms used in a Rakefile are designed to support that.</p>
+<p>Now that we understand there is no special syntax in a Rakefile, there are some conventions that are used in a Rakefile that are a little unusual in a typical Ruby program.  Since a Rakefile is tailored to specifying tasks and actions, the idioms used in a Rakefile are designed to support that.</p>
 
 <p>So, what goes into a Rakefile?</p>
 
 <h2 id="label-Tasks">Tasks<span><a href="#label-Tasks">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Tasks are the main unit of work in a Rakefile.  Tasks have a name (usually
-given as a symbol or a string), a list of prerequisites (more symbols or
-strings) and a list of actions (given as a block).</p>
+<p>Tasks are the main unit of work in a Rakefile.  Tasks have a name (usually given as a symbol or a string), a list of prerequisites (more symbols or strings) and a list of actions (given as a block).</p>
 
 <h3 id="label-Simple+Tasks">Simple Tasks<span><a href="#label-Simple+Tasks">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>A task is declared by using the <code>task</code> method. 
-<code>task</code> takes a single parameter that is the name of the task.</p>
+<p>A task is declared by using the <code>task</code> method.  <code>task</code> takes a single parameter that is the name of the task.</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">name</span>
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">:name</span>
 </pre>
 
 <h3 id="label-Tasks+with+Prerequisites">Tasks with Prerequisites<span><a href="#label-Tasks+with+Prerequisites">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Any prerequisites are given as a list (enclosed in square brackets)
-following the name and an arrow (=&gt;).</p>
+<p>Any prerequisites are given as a list (enclosed in square brackets) following the name and an arrow (=&gt;).</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-identifier">name</span><span class="ruby-operator">:</span> [:<span class="ruby-identifier">prereq1</span>, :<span class="ruby-identifier">prereq2</span>]
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">name:</span> [<span class="ruby-value">:prereq1</span>, <span class="ruby-value">:prereq2</span>]
 </pre>
 
-<p><strong>NOTE:</strong> Although this syntax looks a little funky, it is
-legal Ruby.  We are constructing a hash where the key is :name and the
-value for that key is the list of prerequisites.  It is equivalent to the
-following …</p>
+<p><strong>NOTE:</strong> Although this syntax looks a little funky, it is legal Ruby.  We are constructing a hash where the key is :name and the value for that key is the list of prerequisites.  It is equivalent to the following …</p>
 
 <pre class="ruby"><span class="ruby-identifier">hash</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
-<span class="ruby-identifier">hash</span>[:<span class="ruby-identifier">name</span>] = [:<span class="ruby-identifier">prereq1</span>, :<span class="ruby-identifier">prereq2</span>]
+<span class="ruby-identifier">hash</span>[<span class="ruby-value">:name</span>] = [<span class="ruby-value">:prereq1</span>, <span class="ruby-value">:prereq2</span>]
 <span class="ruby-identifier">task</span>(<span class="ruby-identifier">hash</span>)
 </pre>
 
-<p>You can also use strings for task names and prerequisites, rake doesn&#39;t
-care. This is the same task definition:</p>
+<p>You can also use strings for task names and prerequisites, rake doesn&#39;t care. This is the same task definition:</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-string">&#39;name&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">%w[prereq1 prereq2]</span>
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-string">&#39;name&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-node">%w[prereq1 prereq2]</span>
 </pre>
 
 <p>As is this:</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-identifier">name</span><span class="ruby-operator">:</span> <span class="ruby-node">%w[prereq1 prereq2]</span>
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">name:</span> <span class="ruby-node">%w[prereq1 prereq2]</span>
 </pre>
 
-<p>We&#39;ll prefer this style for regular tasks with prerequisites throughout
-the rest of the document.  Using an array of strings for the prerequisites
-means you will need to make fewer changes if you need to move tasks into
-namespaces or perform other refactorings.</p>
+<p>We&#39;ll prefer this style for regular tasks with prerequisites throughout the rest of the document.  Using an array of strings for the prerequisites means you will need to make fewer changes if you need to move tasks into namespaces or perform other refactorings.</p>
 
 <h3 id="label-Tasks+with+Actions">Tasks with Actions<span><a href="#label-Tasks+with+Actions">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Actions are defined by passing a block to the <code>task</code> method. 
-Any Ruby code can be placed in the block.  The block may reference the task
-object via the block parameter.</p>
+<p>Actions are defined by passing a block to the <code>task</code> method.  Any Ruby code can be placed in the block.  The block may reference the task object via the block parameter.</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-identifier">name</span><span class="ruby-operator">:</span> [:<span class="ruby-identifier">prereq1</span>, :<span class="ruby-identifier">prereq2</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">name:</span> [<span class="ruby-value">:prereq1</span>, <span class="ruby-value">:prereq2</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
   <span class="ruby-comment"># actions (may reference t)</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
 <h3 id="label-Multiple+Definitions">Multiple Definitions<span><a href="#label-Multiple+Definitions">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>A task may be specified more than once.  Each specification adds its
-prerequisites and actions to the existing definition.  This allows one part
-of a rakefile to specify the actions and a different rakefile (perhaps
-separately generated) to specify the dependencies.</p>
+<p>A task may be specified more than once.  Each specification adds its prerequisites and actions to the existing definition.  This allows one part of a rakefile to specify the actions and a different rakefile (perhaps separately generated) to specify the dependencies.</p>
 
-<p>For example, the following is equivalent to the single task specification
-given above.</p>
+<p>For example, the following is equivalent to the single task specification given above.</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">name</span>
-<span class="ruby-identifier">task</span> <span class="ruby-identifier">name</span><span class="ruby-operator">:</span> :<span class="ruby-identifier">prereq1</span>
-<span class="ruby-identifier">task</span> <span class="ruby-identifier">name</span><span class="ruby-operator">:</span> <span class="ruby-node">%w[prereq2]</span>
-<span class="ruby-identifier">task</span> :<span class="ruby-identifier">name</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">:name</span>
+<span class="ruby-identifier">task</span> <span class="ruby-value">name:</span> <span class="ruby-value">:prereq1</span>
+<span class="ruby-identifier">task</span> <span class="ruby-value">name:</span> <span class="ruby-node">%w[prereq2]</span>
+<span class="ruby-identifier">task</span> <span class="ruby-value">:name</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
   <span class="ruby-comment"># actions</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
 <h2 id="label-File+Tasks">File Tasks<span><a href="#label-File+Tasks">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Some tasks are designed to create a file from one or more other files.
-Tasks that generate these files may be skipped if the file already exists. 
-File tasks are used to specify file creation tasks.</p>
+<p>Some tasks are designed to create a file from one or more other files. Tasks that generate these files may be skipped if the file already exists.  File tasks are used to specify file creation tasks.</p>
 
-<p>File tasks are declared using the <code>file</code> method (instead of the
-<code>task</code> method).  In addition, file tasks are usually named with
-a string rather than a symbol.</p>
+<p>File tasks are declared using the <code>file</code> method (instead of the <code>task</code> method).  In addition, file tasks are usually named with a string rather than a symbol.</p>
 
-<p>The following file task creates a executable program (named
-<code>prog</code>) given two object files named <code>a.o</code> and
-<code>b.o</code>.  The tasks for creating <code>a.o</code> and
-<code>b.o</code> are not shown.</p>
+<p>The following file task creates a executable program (named <code>prog</code>) given two object files named <code>a.o</code> and <code>b.o</code>.  The tasks for creating <code>a.o</code> and <code>b.o</code> are not shown.</p>
 
-<pre class="ruby"><span class="ruby-identifier">file</span> <span class="ruby-string">&quot;prog&quot;</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">&quot;a.o&quot;</span>, <span class="ruby-string">&quot;b.o&quot;</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
+<pre class="ruby"><span class="ruby-identifier">file</span> <span class="ruby-string">&quot;prog&quot;</span> <span class="ruby-operator">=&gt;</span> [<span class="ruby-string">&quot;a.o&quot;</span>, <span class="ruby-string">&quot;b.o&quot;</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">sh</span> <span class="ruby-node">&quot;cc -o #{t.name} #{t.prerequisites.join(&#39; &#39;)}&quot;</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
 <h2 id="label-Directory+Tasks">Directory Tasks<span><a href="#label-Directory+Tasks">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>It is common to need to create directories upon demand.  The
-<code>directory</code> convenience method is a short-hand for creating a
-FileTask that creates the directory.  For example, the following
-declaration …</p>
+<p>It is common to need to create directories upon demand.  The <code>directory</code> convenience method is a short-hand for creating a FileTask that creates the directory.  For example, the following declaration …</p>
 
 <pre class="ruby"><span class="ruby-identifier">directory</span> <span class="ruby-string">&quot;testdata/examples/doc&quot;</span>
 </pre>
@@ -248,15 +221,14 @@ declaration …</p>
 <p>is equivalent to …</p>
 
 <pre class="ruby"><span class="ruby-identifier">file</span> <span class="ruby-string">&quot;testdata&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">mkdir</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">name</span> <span class="ruby-keyword">end</span>
-<span class="ruby-identifier">file</span> <span class="ruby-string">&quot;testdata/examples&quot;</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">&quot;testdata&quot;</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">mkdir</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">name</span> <span class="ruby-keyword">end</span>
-<span class="ruby-identifier">file</span> <span class="ruby-string">&quot;testdata/examples/doc&quot;</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">&quot;testdata/examples&quot;</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">mkdir</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">name</span> <span class="ruby-keyword">end</span>
+<span class="ruby-identifier">file</span> <span class="ruby-string">&quot;testdata/examples&quot;</span> <span class="ruby-operator">=&gt;</span> [<span class="ruby-string">&quot;testdata&quot;</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">mkdir</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">name</span> <span class="ruby-keyword">end</span>
+<span class="ruby-identifier">file</span> <span class="ruby-string">&quot;testdata/examples/doc&quot;</span> <span class="ruby-operator">=&gt;</span> [<span class="ruby-string">&quot;testdata/examples&quot;</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">mkdir</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">name</span> <span class="ruby-keyword">end</span>
 </pre>
 
-<p>The <code>directory</code> method does not accept prerequisites or actions,
-but both prerequisites and actions can be added later.  For example …</p>
+<p>The <code>directory</code> method does not accept prerequisites or actions, but both prerequisites and actions can be added later.  For example …</p>
 
 <pre class="ruby"><span class="ruby-identifier">directory</span> <span class="ruby-string">&quot;testdata&quot;</span>
-<span class="ruby-identifier">file</span> <span class="ruby-string">&quot;testdata&quot;</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">&quot;otherdata&quot;</span>]
+<span class="ruby-identifier">file</span> <span class="ruby-string">&quot;testdata&quot;</span> <span class="ruby-operator">=&gt;</span> [<span class="ruby-string">&quot;otherdata&quot;</span>]
 <span class="ruby-identifier">file</span> <span class="ruby-string">&quot;testdata&quot;</span> <span class="ruby-keyword">do</span>
   <span class="ruby-identifier">cp</span> <span class="ruby-constant">Dir</span>[<span class="ruby-string">&quot;standard_data/*.data&quot;</span>], <span class="ruby-string">&quot;testdata&quot;</span>
 <span class="ruby-keyword">end</span>
@@ -266,117 +238,75 @@ but both prerequisites and actions can be added later.  For example …</p>
 
 <p>Rake allows parallel execution of prerequisites using the following syntax:</p>
 
-<pre class="ruby"><span class="ruby-identifier">multitask</span> <span class="ruby-identifier">copy_files</span><span class="ruby-operator">:</span> <span class="ruby-node">%w[copy_src copy_doc copy_bin]</span> <span class="ruby-keyword">do</span>
+<pre class="ruby"><span class="ruby-identifier">multitask</span> <span class="ruby-value">copy_files:</span> <span class="ruby-node">%w[copy_src copy_doc copy_bin]</span> <span class="ruby-keyword">do</span>
   <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;All Copies Complete&quot;</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>In this example, <code>copy_files</code> is a normal rake task.  Its
-actions are executed whenever all of its prerequisites are done.  The big
-difference is that the prerequisites (<code>copy_src</code>,
-<code>copy_bin</code> and <code>copy_doc</code>) are executed in parallel. 
-Each of the prerequisites are run in their own Ruby thread, possibly
-allowing faster overall runtime.</p>
+<p>In this example, <code>copy_files</code> is a normal rake task.  Its actions are executed whenever all of its prerequisites are done.  The big difference is that the prerequisites (<code>copy_src</code>, <code>copy_bin</code> and <code>copy_doc</code>) are executed in parallel.  Each of the prerequisites are run in their own Ruby thread, possibly allowing faster overall runtime.</p>
 
 <h3 id="label-Secondary+Prerequisites">Secondary Prerequisites<span><a href="#label-Secondary+Prerequisites">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>If any of the primary prerequisites of a multitask have common secondary
-prerequisites, all of the primary/parallel prerequisites will wait until
-the common prerequisites have been run.</p>
+<p>If any of the primary prerequisites of a multitask have common secondary prerequisites, all of the primary/parallel prerequisites will wait until the common prerequisites have been run.</p>
 
-<p>For example, if the <code>copy_<em>xxx</em></code> tasks have the following
-prerequisites:</p>
+<p>For example, if the <code>copy_<em>xxx</em></code> tasks have the following prerequisites:</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-identifier">copy_src</span><span class="ruby-operator">:</span> :<span class="ruby-identifier">prep_for_copy</span>
-<span class="ruby-identifier">task</span> <span class="ruby-identifier">copy_bin</span><span class="ruby-operator">:</span> :<span class="ruby-identifier">prep_for_copy</span>
-<span class="ruby-identifier">task</span> <span class="ruby-identifier">copy_doc</span><span class="ruby-operator">:</span> :<span class="ruby-identifier">prep_for_copy</span>
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">copy_src:</span> <span class="ruby-value">:prep_for_copy</span>
+<span class="ruby-identifier">task</span> <span class="ruby-value">copy_bin:</span> <span class="ruby-value">:prep_for_copy</span>
+<span class="ruby-identifier">task</span> <span class="ruby-value">copy_doc:</span> <span class="ruby-value">:prep_for_copy</span>
 </pre>
 
-<p>Then the <code>prep_for_copy</code> task is run before starting all the
-copies in parallel.  Once <code>prep_for_copy</code> is complete,
-<code>copy_src</code>, <code>copy_bin</code>, and <code>copy_doc</code> are
-all run in parallel.  Note that <code>prep_for_copy</code> is run only
-once, even though it is referenced in multiple threads.</p>
+<p>Then the <code>prep_for_copy</code> task is run before starting all the copies in parallel.  Once <code>prep_for_copy</code> is complete, <code>copy_src</code>, <code>copy_bin</code>, and <code>copy_doc</code> are all run in parallel.  Note that <code>prep_for_copy</code> is run only once, even though it is referenced in multiple threads.</p>
 
 <h3 id="label-Thread+Safety">Thread Safety<span><a href="#label-Thread+Safety">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>The Rake internal data structures are thread-safe with respect to the
-multitask parallel execution, so there is no need for the user to do extra
-synchronization for Rake&#39;s benefit.  However, if there are user data
-structures shared between the parallel prerequisites, the user must do
-whatever is necessary to prevent race conditions.</p>
+<p>The Rake internal data structures are thread-safe with respect to the multitask parallel execution, so there is no need for the user to do extra synchronization for Rake&#39;s benefit.  However, if there are user data structures shared between the parallel prerequisites, the user must do whatever is necessary to prevent race conditions.</p>
 
 <h2 id="label-Tasks+with+Arguments">Tasks with Arguments<span><a href="#label-Tasks+with+Arguments">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Prior to version 0.8.0, rake was only able to handle command line arguments
-of the form NAME=VALUE that were passed into Rake via the ENV hash.  Many
-folks had asked for some kind of simple command line arguments, perhaps
-using “–” to separate regular task names from argument values on the
-command line.  The problem is that there was no easy way to associate
-positional arguments on the command line with different tasks.  Suppose
-both tasks :a and :b expect a command line argument: does the first value
-go with :a?  What if :b is run first? Should it then get the first command
-line argument.</p>
+<p>Prior to version 0.8.0, rake was only able to handle command line arguments of the form NAME=VALUE that were passed into Rake via the ENV hash.  Many folks had asked for some kind of simple command line arguments, perhaps using “–” to separate regular task names from argument values on the command line.  The problem is that there was no easy way to associate positional arguments on the command line with different tasks.  Suppose both tasks :a and :b expect a command line argument: does the first value go with :a?  What if :b is run first? Should it then get the first command line argument.</p>
 
-<p>Rake 0.8.0 solves this problem by explicitly passing values directly to the
-tasks that need them.  For example, if I had a release task that required a
-version number, I could say:</p>
+<p>Rake 0.8.0 solves this problem by explicitly passing values directly to the tasks that need them.  For example, if I had a release task that required a version number, I could say:</p>
 
 <pre>rake release[0.8.2]</pre>
 
-<p>And the string “0.8.2” will be passed to the :release task.  Multiple
-arguments can be passed by separating them with a comma, for example:</p>
+<p>And the string “0.8.2” will be passed to the :release task.  Multiple arguments can be passed by separating them with a comma, for example:</p>
 
 <pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-identifier">name</span>[<span class="ruby-identifier">john</span>,<span class="ruby-identifier">doe</span>]
 </pre>
 
-<p>Just a few words of caution.  The rake task name and its arguments need to
-be a single command line argument to rake.  This generally means no spaces.
-If spaces are needed, then the entire name + argument string should be
-quoted.  Something like this:</p>
+<p>Just a few words of caution.  The rake task name and its arguments need to be a single command line argument to rake.  This generally means no spaces.  If spaces are needed, then the entire name + argument string should be quoted.  Something like this:</p>
 
 <pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-string">&quot;name[billy bob, smith]&quot;</span>
 </pre>
 
-<p>(Quoting rules vary between operating systems and shells, so make sure you
-consult the proper docs for your OS/shell).</p>
+<p>(Quoting rules vary between operating systems and shells, so make sure you consult the proper docs for your OS/shell).</p>
 
 <h3 id="label-Tasks+that+Expect+Parameters">Tasks that Expect Parameters<span><a href="#label-Tasks+that+Expect+Parameters">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Parameters are only given to tasks that are setup to expect them.  In order
-to handle named parameters, the task declaration syntax for tasks has been
-extended slightly.</p>
+<p>Parameters are only given to tasks that are setup to expect them.  In order to handle named parameters, the task declaration syntax for tasks has been extended slightly.</p>
 
-<p>For example, a task that needs a first name and last name might be declared
-as:</p>
+<p>For example, a task that needs a first name and last name might be declared as:</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">name</span>, [:<span class="ruby-identifier">first_name</span>, :<span class="ruby-identifier">last_name</span>]
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">:name</span>, [<span class="ruby-value">:first_name</span>, <span class="ruby-value">:last_name</span>]
 </pre>
 
-<p>The first argument is still the name of the task (:name in this case). The
-next two arguments are the names of the parameters expected by :name in an
-array (:first_name and :last_name in the example).</p>
+<p>The first argument is still the name of the task (:name in this case). The next two arguments are the names of the parameters expected by :name in an array (:first_name and :last_name in the example).</p>
 
-<p>To access the values of the parameters, the block defining the task
-behaviour can now accept a second parameter:</p>
+<p>To access the values of the parameters, the block defining the task behaviour can now accept a second parameter:</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">name</span>, [:<span class="ruby-identifier">first_name</span>, :<span class="ruby-identifier">last_name</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span>, <span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">:name</span>, [<span class="ruby-value">:first_name</span>, <span class="ruby-value">:last_name</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span>, <span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;First name is #{args.first_name}&quot;</span>
   <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Last  name is #{args.last_name}&quot;</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>The first argument of the block “t” is always bound to the current task
-object.  The second argument “args” is an open-struct like object that
-allows access to the task arguments.  Extra command line arguments to a
-task are ignored.</p>
+<p>The first argument of the block “t” is always bound to the current task object.  The second argument “args” is an open-struct like object that allows access to the task arguments.  Extra command line arguments to a task are ignored.</p>
 
-<p>If you wish to specify default values for the arguments, you can use the
-with_defaults method in the task body.  Here is the above example where we
-specify default values for the first and last names:</p>
+<p>If you wish to specify default values for the arguments, you can use the with_defaults method in the task body.  Here is the above example where we specify default values for the first and last names:</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">name</span>, [:<span class="ruby-identifier">first_name</span>, :<span class="ruby-identifier">last_name</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span>, <span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
-  <span class="ruby-identifier">args</span>.<span class="ruby-identifier">with_defaults</span>(:<span class="ruby-identifier">first_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;John&quot;</span>, :<span class="ruby-identifier">last_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;Dough&quot;</span>)
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">:name</span>, [<span class="ruby-value">:first_name</span>, <span class="ruby-value">:last_name</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span>, <span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">args</span>.<span class="ruby-identifier">with_defaults</span>(<span class="ruby-value">:first_name</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;John&quot;</span>, <span class="ruby-value">:last_name</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;Dough&quot;</span>)
   <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;First name is #{args.first_name}&quot;</span>
   <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Last  name is #{args.last_name}&quot;</span>
 <span class="ruby-keyword">end</span>
@@ -384,12 +314,10 @@ specify default values for the first and last names:</p>
 
 <h3 id="label-Tasks+that+Expect+Parameters+and+Have+Prerequisites">Tasks that Expect Parameters and Have Prerequisites<span><a href="#label-Tasks+that+Expect+Parameters+and+Have+Prerequisites">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Tasks that use parameters have a slightly different format for
-prerequisites.  Use the arrow notation to indicate the prerequisites for
-tasks with arguments.  For example:</p>
+<p>Tasks that use parameters have a slightly different format for prerequisites.  Use the arrow notation to indicate the prerequisites for tasks with arguments.  For example:</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">name</span>, [:<span class="ruby-identifier">first_name</span>, :<span class="ruby-identifier">last_name</span>] =<span class="ruby-operator">&gt;</span> [:<span class="ruby-identifier">pre_name</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span>, <span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
-  <span class="ruby-identifier">args</span>.<span class="ruby-identifier">with_defaults</span>(:<span class="ruby-identifier">first_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;John&quot;</span>, :<span class="ruby-identifier">last_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;Dough&quot;</span>)
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">:name</span>, [<span class="ruby-value">:first_name</span>, <span class="ruby-value">:last_name</span>] <span class="ruby-operator">=&gt;</span> [<span class="ruby-value">:pre_name</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span>, <span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">args</span>.<span class="ruby-identifier">with_defaults</span>(<span class="ruby-value">:first_name</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;John&quot;</span>, <span class="ruby-value">:last_name</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;Dough&quot;</span>)
   <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;First name is #{args.first_name}&quot;</span>
   <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Last  name is #{args.last_name}&quot;</span>
 <span class="ruby-keyword">end</span>
@@ -397,12 +325,9 @@ tasks with arguments.  For example:</p>
 
 <h3 id="label-Tasks+that+take+Variable-length+Parameters">Tasks that take Variable-length Parameters<span><a href="#label-Tasks+that+take+Variable-length+Parameters">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Tasks that need to handle a list of values as a parameter can use the
-extras method of the args variable.  This allows for tasks that can loop
-over a variable number of values, and its compatible with named parameters
-as well:</p>
+<p>Tasks that need to handle a list of values as a parameter can use the extras method of the args variable.  This allows for tasks that can loop over a variable number of values, and its compatible with named parameters as well:</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">email</span>, [:<span class="ruby-identifier">message</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span>, <span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">:email</span>, [<span class="ruby-value">:message</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span>, <span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">mail</span> = <span class="ruby-constant">Mail</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">args</span>.<span class="ruby-identifier">message</span>)
   <span class="ruby-identifier">recipients</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">extras</span>
   <span class="ruby-identifier">recipients</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">target</span><span class="ruby-operator">|</span>
@@ -411,36 +336,26 @@ as well:</p>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>There is also the convenience method to_a that returns all parameters in
-the sequential order they were given, including those associated with named
-parameters.</p>
+<p>There is also the convenience method to_a that returns all parameters in the sequential order they were given, including those associated with named parameters.</p>
 
 <h3 id="label-Deprecated+Task+Parameters+Format">Deprecated Task Parameters Format<span><a href="#label-Deprecated+Task+Parameters+Format">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>There is an older format for declaring task parameters that omitted the
-task argument array and used the :needs keyword to introduce the
-dependencies.  That format is still supported for compatibility, but is not
-recommended for use.  The older format may be dropped in future versions of
-rake.</p>
+<p>There is an older format for declaring task parameters that omitted the task argument array and used the :needs keyword to introduce the dependencies.  That format is still supported for compatibility, but is not recommended for use.  The older format may be dropped in future versions of rake.</p>
 
 <h2 id="label-Accessing+Task+Programmatically">Accessing Task Programmatically<span><a href="#label-Accessing+Task+Programmatically">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Sometimes it is useful to manipulate tasks programmatically in a Rakefile.
-To find a task object use <a
-href="../Rake/Task.html#method-c-5B-5D">Rake::Task.[]</a>.</p>
+<p>Sometimes it is useful to manipulate tasks programmatically in a Rakefile. To find a task object use <a href="../Rake/Task.html#method-c-5B-5D"><code>Rake::Task.[]</code></a>.</p>
 
 <h3 id="label-Programmatic+Task+Example">Programmatic Task Example<span><a href="#label-Programmatic+Task+Example">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>For example, the following Rakefile defines two tasks.  The :doit task
-simply prints a simple “DONE” message.  The :dont class will lookup the
-doit class and remove (clear) all of its prerequisites and actions.</p>
+<p>For example, the following Rakefile defines two tasks.  The :doit task simply prints a simple “DONE” message.  The :dont class will lookup the doit class and remove (clear) all of its prerequisites and actions.</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">doit</span> <span class="ruby-keyword">do</span>
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">:doit</span> <span class="ruby-keyword">do</span>
   <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;DONE&quot;</span>
 <span class="ruby-keyword">end</span>
 
-<span class="ruby-identifier">task</span> :<span class="ruby-identifier">dont</span> <span class="ruby-keyword">do</span>
-  <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">Task</span>[:<span class="ruby-identifier">doit</span>].<span class="ruby-identifier">clear</span>
+<span class="ruby-identifier">task</span> <span class="ruby-value">:dont</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">Task</span>[<span class="ruby-value">:doit</span>].<span class="ruby-identifier">clear</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
@@ -453,119 +368,84 @@ $ rake dont doit
 (in /Users/jim/working/git/rake/x)
 $</pre>
 
-<p>The ability to programmatically manipulate tasks gives rake very powerful
-meta-programming capabilities w.r.t. task execution, but should be used
-with caution.</p>
+<p>The ability to programmatically manipulate tasks gives rake very powerful meta-programming capabilities w.r.t. task execution, but should be used with caution.</p>
 
 <h2 id="label-Rules">Rules<span><a href="#label-Rules">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>When a file is named as a prerequisite, but does not have a file task
-defined for it, Rake will attempt to synthesize a task by looking at a list
-of rules supplied in the Rakefile.</p>
+<p>When a file is named as a prerequisite, but does not have a file task defined for it, Rake will attempt to synthesize a task by looking at a list of rules supplied in the Rakefile.</p>
 
-<p>Suppose we were trying to invoke task “mycode.o”, but no task is defined
-for it.  But the rakefile has a rule that look like this …</p>
+<p>Suppose we were trying to invoke task “mycode.o”, but no task is defined for it.  But the rakefile has a rule that look like this …</p>
 
-<pre class="ruby"><span class="ruby-identifier">rule</span> <span class="ruby-string">&#39;.o&#39;</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">&#39;.c&#39;</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
+<pre class="ruby"><span class="ruby-identifier">rule</span> <span class="ruby-string">&#39;.o&#39;</span> <span class="ruby-operator">=&gt;</span> [<span class="ruby-string">&#39;.c&#39;</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">sh</span> <span class="ruby-node">&quot;cc #{t.source} -c -o #{t.name}&quot;</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>This rule will synthesize any task that ends in “.o”.  It has a
-prerequisite a source file with an extension of “.c” must exist.  If Rake
-is able to find a file named “mycode.c”, it will automatically create a
-task that builds “mycode.o” from “mycode.c”.</p>
+<p>This rule will synthesize any task that ends in “.o”.  It has a prerequisite a source file with an extension of “.c” must exist.  If Rake is able to find a file named “mycode.c”, it will automatically create a task that builds “mycode.o” from “mycode.c”.</p>
 
-<p>If the file “mycode.c” does not exist, rake will attempt to recursively
-synthesize a rule for it.</p>
+<p>If the file “mycode.c” does not exist, rake will attempt to recursively synthesize a rule for it.</p>
 
-<p>When a task is synthesized from a rule, the <code>source</code> attribute
-of the task is set to the matching source file.  This allows us to write
-rules with actions that reference the source file.</p>
+<p>When a task is synthesized from a rule, the <code>source</code> attribute of the task is set to the matching source file.  This allows us to write rules with actions that reference the source file.</p>
 
 <h3 id="label-Advanced+Rules">Advanced Rules<span><a href="#label-Advanced+Rules">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Any regular expression may be used as the rule pattern.  Additionally, a
-proc may be used to calculate the name of the source file.  This allows for
-complex patterns and sources.</p>
+<p>Any regular expression may be used as the rule pattern.  Additionally, a proc may be used to calculate the name of the source file.  This allows for complex patterns and sources.</p>
 
 <p>The following rule is equivalent to the example above.</p>
 
-<pre class="ruby"><span class="ruby-identifier">rule</span>( <span class="ruby-regexp">/\.o$/</span> =<span class="ruby-operator">&gt;</span> [
+<pre class="ruby"><span class="ruby-identifier">rule</span>( <span class="ruby-regexp">/\.o$/</span> <span class="ruby-operator">=&gt;</span> [
   <span class="ruby-identifier">proc</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">task_name</span><span class="ruby-operator">|</span> <span class="ruby-identifier">task_name</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\.[^.]+$/</span>, <span class="ruby-string">&#39;.c&#39;</span>) }
 ]) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">sh</span> <span class="ruby-node">&quot;cc #{t.source} -c -o #{t.name}&quot;</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p><strong>NOTE:</strong> Because of a <em>quirk</em> in Ruby syntax,
-parenthesis are required on <strong>rule</strong> when the first argument
-is a regular expression.</p>
+<p><strong>NOTE:</strong> Because of a <em>quirk</em> in Ruby syntax, parenthesis are required on <strong>rule</strong> when the first argument is a regular expression.</p>
 
 <p>The following rule might be used for Java files …</p>
 
-<pre class="ruby"><span class="ruby-identifier">rule</span> <span class="ruby-string">&#39;.class&#39;</span> =<span class="ruby-operator">&gt;</span> [
+<pre class="ruby"><span class="ruby-identifier">rule</span> <span class="ruby-string">&#39;.class&#39;</span> <span class="ruby-operator">=&gt;</span> [
   <span class="ruby-identifier">proc</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">tn</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tn</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\.class$/</span>, <span class="ruby-string">&#39;.java&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^classes\//</span>, <span class="ruby-string">&#39;src/&#39;</span>) }
 ] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">java_compile</span>(<span class="ruby-identifier">t</span>.<span class="ruby-identifier">source</span>, <span class="ruby-identifier">t</span>.<span class="ruby-identifier">name</span>)
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p><strong>NOTE:</strong> <code>java_compile</code> is a hypothetical method
-that invokes the java compiler.</p>
+<p><strong>NOTE:</strong> <code>java_compile</code> is a hypothetical method that invokes the java compiler.</p>
 
 <h2 id="label-Importing+Dependencies">Importing Dependencies<span><a href="#label-Importing+Dependencies">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Any ruby file (including other rakefiles) can be included with a standard
-Ruby <code>require</code> command.  The rules and declarations in the
-required file are just added to the definitions already accumulated.</p>
+<p>Any ruby file (including other rakefiles) can be included with a standard Ruby <code>require</code> command.  The rules and declarations in the required file are just added to the definitions already accumulated.</p>
 
-<p>Because the files are loaded <em>before</em> the rake targets are
-evaluated, the loaded files must be “ready to go” when the rake command is
-invoked. This makes generated dependency files difficult to use. By the
-time rake gets around to updating the dependencies file, it is too late to
-load it.</p>
+<p>Because the files are loaded <em>before</em> the rake targets are evaluated, the loaded files must be “ready to go” when the rake command is invoked. This makes generated dependency files difficult to use. By the time rake gets around to updating the dependencies file, it is too late to load it.</p>
 
-<p>The <code>import</code> command addresses this by specifying a file to be
-loaded <em>after</em> the main rakefile is loaded, but <em>before</em> any
-targets on the command line are invoked. In addition, if the file name
-matches an explicit task, that task is invoked before loading the file.
-This allows dependency files to be generated and used in a single rake
-command invocation.</p>
+<p>The <code>import</code> command addresses this by specifying a file to be loaded <em>after</em> the main rakefile is loaded, but <em>before</em> any targets on the command line are invoked. In addition, if the file name matches an explicit task, that task is invoked before loading the file. This allows dependency files to be generated and used in a single rake command invocation.</p>
 
 <p>Example:</p>
 
 <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;rake/loaders/makefile&#39;</span>
 
-<span class="ruby-identifier">file</span> <span class="ruby-string">&quot;.depends.mf&quot;</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-constant">SRC_LIST</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
+<span class="ruby-identifier">file</span> <span class="ruby-string">&quot;.depends.mf&quot;</span> <span class="ruby-operator">=&gt;</span> [<span class="ruby-constant">SRC_LIST</span>] <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">sh</span> <span class="ruby-node">&quot;makedepend -f- -- #{CFLAGS} -- #{t.prerequisites} &gt; #{t.name}&quot;</span>
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-identifier">import</span> <span class="ruby-string">&quot;.depends.mf&quot;</span>
 </pre>
 
-<p>If “.depends” does not exist, or is out of date w.r.t. the source files, a
-new “.depends” file is generated using <code>makedepend</code> before
-loading.</p>
+<p>If “.depends” does not exist, or is out of date w.r.t. the source files, a new “.depends” file is generated using <code>makedepend</code> before loading.</p>
 
 <h2 id="label-Comments">Comments<span><a href="#label-Comments">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Standard Ruby comments (beginning with “#”) can be used anywhere it is
-legal in Ruby source code, including comments for tasks and rules. However,
-if you wish a task to be described using the “-T” switch, then you need to
-use the <code>desc</code> command to describe the task.</p>
+<p>Standard Ruby comments (beginning with “#”) can be used anywhere it is legal in Ruby source code, including comments for tasks and rules. However, if you wish a task to be described using the “-T” switch, then you need to use the <code>desc</code> command to describe the task.</p>
 
 <p>Example:</p>
 
 <pre>desc &quot;Create a distribution package&quot;
 task package: %w[ ... ] do ... end</pre>
 
-<p>The “-T” switch (or “–tasks” if you like to spell things out) will display
-a list of tasks that have a description.  If you use <code>desc</code> to
-describe your major tasks, you have a semi-automatic way of generating a
-summary of your Rake file.</p>
+<p>The “-T” switch (or “–tasks” if you like to spell things out) will display a list of tasks that have a description.  If you use <code>desc</code> to describe your major tasks, you have a semi-automatic way of generating a summary of your Rake file.</p>
 
-<pre>traken$ rake -T
+<pre>$ rake -T
 (in /home/.../rake)
 rake clean            # Remove any temporary products.
 rake clobber          # Remove any generated file.
@@ -579,75 +459,54 @@ rake rerdoc           # Force a rebuild of the RDOC files
 rake test             # Run tests
 rake testall          # Run all test targets</pre>
 
-<p>Only tasks with descriptions will be displayed with the “-T” switch. Use
-“-P” (or “–prereqs”) to get a list of all tasks and their prerequisites.</p>
+<p>Only tasks with descriptions will be displayed with the “-T” switch. Use “-P” (or “–prereqs”) to get a list of all tasks and their prerequisites.</p>
 
 <h2 id="label-Namespaces">Namespaces<span><a href="#label-Namespaces">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>As projects grow (and along with it, the number of tasks), it is common for
-task names to begin to clash.  For example, if you might have a main
-program and a set of sample programs built by a single Rakefile.  By
-placing the tasks related to the main program in one namespace, and the
-tasks for building the sample programs in a different namespace, the task
-names will not interfere with each other.</p>
+<p>As projects grow (and along with it, the number of tasks), it is common for task names to begin to clash.  For example, if you might have a main program and a set of sample programs built by a single Rakefile.  By placing the tasks related to the main program in one namespace, and the tasks for building the sample programs in a different namespace, the task names will not interfere with each other.</p>
 
 <p>For example:</p>
 
 <pre class="ruby"><span class="ruby-identifier">namespace</span> <span class="ruby-string">&quot;main&quot;</span> <span class="ruby-keyword">do</span>
-  <span class="ruby-identifier">task</span> :<span class="ruby-identifier">build</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">task</span> <span class="ruby-value">:build</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment"># Build the main program</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-identifier">namespace</span> <span class="ruby-string">&quot;samples&quot;</span> <span class="ruby-keyword">do</span>
-  <span class="ruby-identifier">task</span> :<span class="ruby-identifier">build</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">task</span> <span class="ruby-value">:build</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment"># Build the sample programs</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
-<span class="ruby-identifier">task</span> <span class="ruby-identifier">build</span><span class="ruby-operator">:</span> <span class="ruby-node">%w[main:build samples:build]</span>
+<span class="ruby-identifier">task</span> <span class="ruby-value">build:</span> <span class="ruby-node">%w[main:build samples:build]</span>
 </pre>
 
-<p>Referencing a task in a separate namespace can be achieved by prefixing the
-task name with the namespace and a colon (e.g. “main:build” refers to the
-:build task in the <code>main</code> namespace). Nested namespaces are
-supported.</p>
+<p>Referencing a task in a separate namespace can be achieved by prefixing the task name with the namespace and a colon (e.g. “main:build” refers to the :build task in the <code>main</code> namespace). Nested namespaces are supported.</p>
 
-<p>Note that the name given in the <code>task</code> command is always the
-unadorned task name without any namespace prefixes.  The <code>task</code>
-command always defines a task in the current namespace.</p>
+<p>Note that the name given in the <code>task</code> command is always the unadorned task name without any namespace prefixes.  The <code>task</code> command always defines a task in the current namespace.</p>
 
 <h3 id="label-FileTasks">FileTasks<span><a href="#label-FileTasks">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>File task names are not scoped by the namespace command.  Since the name of
-a file task is the name of an actual file in the file system, it makes
-little sense to include file task names in name space. Directory tasks
-(created by the <code>directory</code> command) are a type of file task and
-are also not affected by namespaces.</p>
+<p>File task names are not scoped by the namespace command.  Since the name of a file task is the name of an actual file in the file system, it makes little sense to include file task names in name space. Directory tasks (created by the <code>directory</code> command) are a type of file task and are also not affected by namespaces.</p>
 
 <h3 id="label-Name+Resolution">Name Resolution<span><a href="#label-Name+Resolution">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>When looking up a task name, rake will start with the current namespace and
-attempt to find the name there.  If it fails to find a name in the current
-namespace, it will search the parent namespaces until a match is found (or
-an error occurs if there is no match).</p>
+<p>When looking up a task name, rake will start with the current namespace and attempt to find the name there.  If it fails to find a name in the current namespace, it will search the parent namespaces until a match is found (or an error occurs if there is no match).</p>
 
-<p>The “rake” namespace is a special implicit namespace that refers to the
-toplevel names.</p>
+<p>The “rake” namespace is a special implicit namespace that refers to the toplevel names.</p>
 
-<p>If a task name begins with a “^” character, the name resolution will start
-in the parent namespace.  Multiple “^” characters are allowed.</p>
+<p>If a task name begins with a “^” character, the name resolution will start in the parent namespace.  Multiple “^” characters are allowed.</p>
 
-<p>Here is an example file with multiple :run tasks and how various names
-resolve in different locations.</p>
+<p>Here is an example file with multiple :run tasks and how various names resolve in different locations.</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">run</span>
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">:run</span>
 
 <span class="ruby-identifier">namespace</span> <span class="ruby-string">&quot;one&quot;</span> <span class="ruby-keyword">do</span>
-  <span class="ruby-identifier">task</span> :<span class="ruby-identifier">run</span>
+  <span class="ruby-identifier">task</span> <span class="ruby-value">:run</span>
 
   <span class="ruby-identifier">namespace</span> <span class="ruby-string">&quot;two&quot;</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">task</span> :<span class="ruby-identifier">run</span>
+    <span class="ruby-identifier">task</span> <span class="ruby-value">:run</span>
 
     <span class="ruby-comment"># :run            =&gt; &quot;one:two:run&quot;</span>
     <span class="ruby-comment"># &quot;two:run&quot;       =&gt; &quot;one:two:run&quot;</span>
@@ -670,9 +529,7 @@ resolve in different locations.</p>
 
 <h2 id="label-FileLists">FileLists<span><a href="#label-FileLists">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>FileLists are the way Rake manages lists of files.  You can treat a
-FileList as an array of strings for the most part, but FileLists support
-some additional operations.</p>
+<p>FileLists are the way Rake manages lists of files.  You can treat a FileList as an array of strings for the most part, but FileLists support some additional operations.</p>
 
 <h3 id="label-Creating+a+FileList">Creating a FileList<span><a href="#label-Creating+a+FileList">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
@@ -689,44 +546,31 @@ some additional operations.</p>
 
 <h3 id="label-do-2Fend+versus+-7B+-7D">do/end versus { }<span><a href="#label-do-2Fend+versus+-7B+-7D">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Blocks may be specified with either a <code>do</code>/<code>end</code>
-pair, or with curly braces in Ruby.  We <em>strongly</em> recommend using
-<code>do</code>/<code>end</code> to specify the actions for tasks and
-rules.  Because the rakefile idiom tends to leave off parentheses on the
-task/file/rule methods, unusual ambiguities can arise when using curly
-braces.</p>
+<p>Blocks may be specified with either a <code>do</code>/<code>end</code> pair, or with curly braces in Ruby.  We <em>strongly</em> recommend using <code>do</code>/<code>end</code> to specify the actions for tasks and rules.  Because the rakefile idiom tends to leave off parentheses on the task/file/rule methods, unusual ambiguities can arise when using curly braces.</p>
 
-<p>For example, suppose that the method <code>object_files</code> returns a
-list of object files in a project.  Now we use <code>object_files</code> as
-the prerequisites in a rule specified with actions in curly braces.</p>
+<p>For example, suppose that the method <code>object_files</code> returns a list of object files in a project.  Now we use <code>object_files</code> as the prerequisites in a rule specified with actions in curly braces.</p>
 
 <pre class="ruby"><span class="ruby-comment"># DON&#39;T DO THIS!</span>
-<span class="ruby-identifier">file</span> <span class="ruby-string">&quot;prog&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">object_files</span> {
+<span class="ruby-identifier">file</span> <span class="ruby-string">&quot;prog&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">object_files</span> {
   <span class="ruby-comment"># Actions are expected here (but it doesn&#39;t work)!</span>
 }
 </pre>
 
-<p>Because curly braces have a higher precedence than
-<code>do</code>/<code>end</code>, the block is associated with the
-<code>object_files</code> method rather than the <code>file</code> method.</p>
+<p>Because curly braces have a higher precedence than <code>do</code>/<code>end</code>, the block is associated with the <code>object_files</code> method rather than the <code>file</code> method.</p>
 
 <p>This is the proper way to specify the task …</p>
 
 <pre class="ruby"><span class="ruby-comment"># THIS IS FINE</span>
-<span class="ruby-identifier">file</span> <span class="ruby-string">&quot;prog&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">object_files</span> <span class="ruby-keyword">do</span>
+<span class="ruby-identifier">file</span> <span class="ruby-string">&quot;prog&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">object_files</span> <span class="ruby-keyword">do</span>
   <span class="ruby-comment"># Actions go here</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
 <h2 id="label-Rakefile+Path">Rakefile Path<span><a href="#label-Rakefile+Path">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>When issuing the <code>rake</code> command in a terminal, Rake will look
-for a Rakefile in the current directory. If a Rakefile  is not found, it
-will search parent directories until one is found.</p>
+<p>When issuing the <code>rake</code> command in a terminal, Rake will look for a Rakefile in the current directory. If a Rakefile  is not found, it will search parent directories until one is found.</p>
 
-<p>For example, if a Rakefile resides in the <code>project/</code> directory,
-moving deeper into the project&#39;s directory tree will not have an
-adverse effect on rake tasks:</p>
+<p>For example, if a Rakefile resides in the <code>project/</code> directory, moving deeper into the project&#39;s directory tree will not have an adverse effect on rake tasks:</p>
 
 <pre>$ pwd
 /home/user/project
@@ -738,59 +582,44 @@ $ pwd
 $ rake run_pwd
 /home/user/project</pre>
 
-<p>As far as rake is concerned, all tasks are run from the directory in which
-the Rakefile resides.</p>
+<p>As far as rake is concerned, all tasks are run from the directory in which the Rakefile resides.</p>
 
 <h3 id="label-Multiple+Rake+Files">Multiple Rake Files<span><a href="#label-Multiple+Rake+Files">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Not all tasks need to be included in a single Rakefile. Additional rake
-files (with the file extension “<code>.rake</code>”) may be placed in
-<code>rakelib</code> directory located at the top level of a project (i.e.
-the same directory that contains the main <code>Rakefile</code>).</p>
+<p>Not all tasks need to be included in a single Rakefile. Additional rake files (with the file extension “<code>.rake</code>”) may be placed in <code>rakelib</code> directory located at the top level of a project (i.e. the same directory that contains the main <code>Rakefile</code>).</p>
 
-<p>Also, rails projects may include additional rake files in the
-<code>lib/tasks</code> directory.</p>
+<p>Also, rails projects may include additional rake files in the <code>lib/tasks</code> directory.</p>
 
 <h3 id="label-Clean+and+Clobber+Tasks">Clean and Clobber Tasks<span><a href="#label-Clean+and+Clobber+Tasks">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Through <code>require &#39;rake/clean&#39;</code> Rake provides
-<code>clean</code> and <code>clobber</code> tasks:</p>
+<p>Through <code>require &#39;rake/clean&#39;</code> Rake provides <code>clean</code> and <code>clobber</code> tasks:</p>
 <dl class="rdoc-list note-list"><dt><code>clean</code> 
 <dd>
-<p>Clean up the project by deleting scratch files and backup files.  Add files
-to the <code>CLEAN</code> FileList to have the <code>clean</code> target
-handle them.</p>
+<p>Clean up the project by deleting scratch files and backup files.  Add files to the <code>CLEAN</code> FileList to have the <code>clean</code> target handle them.</p>
 </dd><dt><code>clobber</code> 
 <dd>
-<p>Clobber all generated and non-source files in a project.  The task depends
-on <code>clean</code>, so all the <code>CLEAN</code> files will be deleted
-as well as files in the <code>CLOBBER</code> FileList.  The intent of this
-task is to return a project to its pristine, just unpacked state.</p>
+<p>Clobber all generated and non-source files in a project.  The task depends on <code>clean</code>, so all the <code>CLEAN</code> files will be deleted as well as files in the <code>CLOBBER</code> FileList.  The intent of this task is to return a project to its pristine, just unpacked state.</p>
 </dd></dl>
 
-<p>You can add file names or glob patterns to both the <code>CLEAN</code> and
-<code>CLOBBER</code> lists.</p>
+<p>You can add file names or glob patterns to both the <code>CLEAN</code> and <code>CLOBBER</code> lists.</p>
 
 <h3 id="label-Phony+Task">Phony Task<span><a href="#label-Phony+Task">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>The phony task can be used as a dependency to allow file-based tasks to use
-non-file-based-tasks as prerequisites without forcing them to rebuild.  You
-can <code>require &#39;rake/phony&#39;</code> to add the <code>phony</code>
-task.</p>
+<p>The phony task can be used as a dependency to allow file-based tasks to use non-file-based-tasks as prerequisites without forcing them to rebuild.  You can <code>require &#39;rake/phony&#39;</code> to add the <code>phony</code> task.</p>
 <hr>
 
 <h2 id="label-See">See<span><a href="#label-See">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <ul><li>
-<p><a href="../README_rdoc.html">README.rdoc</a> – Main documentation for
-Rake.</p>
+<p><a href="../README_rdoc.html">README.rdoc</a> – Main documentation for Rake.</p>
 </li></ul>
+
 </main>
 
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.2.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

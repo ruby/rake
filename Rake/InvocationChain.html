@@ -8,13 +8,18 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
+
 
 
 
@@ -91,13 +96,10 @@
 
   <section class="description">
     
-<p><a href="InvocationChain.html">InvocationChain</a> tracks the chain of task
-invocations to detect circular dependencies.</p>
+<p><a href="InvocationChain.html"><code>InvocationChain</code></a> tracks the chain of task invocations to detect circular dependencies.</p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -148,8 +150,8 @@ invocations to detect circular dependencies.</p>
 
           
           <div class="method-source-code" id="append-source">
-            <pre><span class="ruby-comment"># File lib/rake/invocation_chain.rb, line 27</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">append</span>(<span class="ruby-identifier">invocation</span>, <span class="ruby-identifier">chain</span>)
+            <pre><span class="ruby-comment"># File lib/rake/invocation_chain.rb, line 28</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">append</span>(<span class="ruby-identifier">invocation</span>, <span class="ruby-identifier">chain</span>)
   <span class="ruby-identifier">chain</span>.<span class="ruby-identifier">append</span>(<span class="ruby-identifier">invocation</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -183,15 +185,14 @@ invocations to detect circular dependencies.</p>
 
         <div class="method-description">
           
-          <p>Append an invocation to the chain of invocations. It is an error if the
-invocation already listed.</p>
+          <p>Append an invocation to the chain of invocations. It is an error if the invocation already listed.</p>
           
           
 
           
           <div class="method-source-code" id="append-source">
-            <pre><span class="ruby-comment"># File lib/rake/invocation_chain.rb, line 14</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">append</span>(<span class="ruby-identifier">invocation</span>)
+            <pre><span class="ruby-comment"># File lib/rake/invocation_chain.rb, line 15</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">append</span>(<span class="ruby-identifier">invocation</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">member?</span>(<span class="ruby-identifier">invocation</span>)
     <span class="ruby-identifier">fail</span> <span class="ruby-constant">RuntimeError</span>, <span class="ruby-node">&quot;Circular dependency detected: #{to_s} =&gt; #{invocation}&quot;</span>
   <span class="ruby-keyword">end</span>
@@ -226,8 +227,8 @@ invocation already listed.</p>
 
           
           <div class="method-source-code" id="member-3F-source">
-            <pre><span class="ruby-comment"># File lib/rake/invocation_chain.rb, line 8</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">member?</span>(<span class="ruby-identifier">invocation</span>)
+            <pre><span class="ruby-comment"># File lib/rake/invocation_chain.rb, line 9</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">member?</span>(<span class="ruby-identifier">invocation</span>)
   <span class="ruby-identifier">head</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">invocation</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">member?</span>(<span class="ruby-identifier">invocation</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -259,8 +260,8 @@ invocation already listed.</p>
 
           
           <div class="method-source-code" id="to_s-source">
-            <pre><span class="ruby-comment"># File lib/rake/invocation_chain.rb, line 22</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
+            <pre><span class="ruby-comment"># File lib/rake/invocation_chain.rb, line 23</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_s</span>
   <span class="ruby-node">&quot;#{prefix}#{head}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -276,12 +277,13 @@ invocation already listed.</p>
     </section>
   
   </section>
+
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.2.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

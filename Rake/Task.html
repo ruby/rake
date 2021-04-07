@@ -8,13 +8,18 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
+
 
 
 
@@ -63,18 +68,7 @@
 </div>
 
     
-    <div id="extends-section" class="nav-section">
-  <h3>Extended With Modules</h3>
-
-  <ul class="link-list">
     
-  
-    <li><a class="extend" href="InvocationExceptionMixin.html">Rake::InvocationExceptionMixin</a>
-  
-  
-  </ul>
-</div>
-
     <!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
@@ -88,6 +82,8 @@
     <li ><a href="#method-c-create_rule">::create_rule</a>
     
     <li ><a href="#method-c-define_task">::define_task</a>
+    
+    <li ><a href="#method-c-format_deps">::format_deps</a>
     
     <li ><a href="#method-c-new">::new</a>
     
@@ -107,6 +103,8 @@
     
     <li ><a href="#method-i-clear_actions">#clear_actions</a>
     
+    <li ><a href="#method-i-clear_args">#clear_args</a>
+    
     <li ><a href="#method-i-clear_comments">#clear_comments</a>
     
     <li ><a href="#method-i-clear_prerequisites">#clear_prerequisites</a>
@@ -122,6 +120,8 @@
     <li ><a href="#method-i-investigation">#investigation</a>
     
     <li ><a href="#method-i-invoke">#invoke</a>
+    
+    <li ><a href="#method-i-invoke_with_call_chain">#invoke_with_call_chain</a>
     
     <li ><a href="#method-i-name">#name</a>
     
@@ -141,6 +141,8 @@
     
     <li ><a href="#method-i-to_s">#to_s</a>
     
+    <li ><a href="#method-i-7C">#|</a>
+    
   </ul>
 </div>
 
@@ -154,19 +156,12 @@
 
   <section class="description">
     
-<p>A <a href="Task.html">Task</a> is the basic unit of work in a Rakefile. 
-Tasks have associated actions (possibly more than one) and a list of
-prerequisites.  When invoked, a task will first ensure that all of its
-prerequisites have an opportunity to run and then it will execute its own
-actions.</p>
+<p>A <a href="Task.html"><code>Task</code></a> is the basic unit of work in a Rakefile.  Tasks have associated actions (possibly more than one) and a list of prerequisites.  When invoked, a task will first ensure that all of its prerequisites have an opportunity to run and then it will execute its own actions.</p>
 
-<p>Tasks are not usually created directly using the new method, but rather use
-the <code>file</code> and <code>task</code> convenience methods.</p>
+<p>Tasks are not usually created directly using the new method, but rather use the <code>file</code> and <code>task</code> convenience methods.</p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -203,8 +198,7 @@ the <code>file</code> and <code>task</code> convenience methods.</p>
 
         <div class="method-description">
         
-        <p>Has this task already been invoked?  Already invoked tasks will be skipped
-unless you reenable them.</p>
+        <p>Has this task already been invoked?  Already invoked tasks will be skipped unless you reenable them.</p>
         
         </div>
       </div>
@@ -217,7 +211,7 @@ unless you reenable them.</p>
 
         <div class="method-description">
         
-        <p><a href="Application.html">Application</a> owning this task.</p>
+        <p><a href="Application.html"><code>Application</code></a> owning this task.</p>
         
         </div>
       </div>
@@ -230,8 +224,33 @@ unless you reenable them.</p>
 
         <div class="method-description">
         
-        <p>File/Line locations of each of the task definitions for this task (only
-valid if the task was defined with the detect location option set).</p>
+        <p>File/Line locations of each of the task definitions for this task (only valid if the task was defined with the detect location option set).</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-order_only_prerequisites" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">order_only_prerequisites</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>List of order only prerequisites for a task.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-prereqs" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">prereqs</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>List of prerequisites for a task.</p>
         
         </div>
       </div>
@@ -298,17 +317,14 @@ valid if the task was defined with the detect location option set).</p>
 
         <div class="method-description">
           
-          <p>Return a task with the given name.  If the task is not currently known, try
-to synthesize one from the defined rules.  If no rules are found, but an
-existing file matches the task name, assume it is a file task with no
-dependencies or actions.</p>
+          <p>Return a task with the given name.  If the task is not currently known, try to synthesize one from the defined rules.  If no rules are found, but an existing file matches the task name, assume it is a file task with no dependencies or actions.</p>
           
           
 
           
           <div class="method-source-code" id="5B-5D-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 360</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">task_name</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 404</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">[]</span>(<span class="ruby-identifier">task_name</span>)
   <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>[<span class="ruby-identifier">task_name</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -334,15 +350,14 @@ dependencies or actions.</p>
 
         <div class="method-description">
           
-          <p>Clear the task list.  This cause rake to immediately forget all the tasks
-that have been assigned.  (Normally used in the unit tests.)</p>
+          <p>Clear the task list.  This cause rake to immediately forget all the tasks that have been assigned.  (Normally used in the unit tests.)</p>
           
           
 
           
           <div class="method-source-code" id="clear-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 347</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">clear</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 391</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clear</span>
   <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>.<span class="ruby-identifier">clear</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -359,7 +374,7 @@ that have been assigned.  (Normally used in the unit tests.)</p>
         
         <div class="method-heading">
           <span class="method-name">create_rule</span><span
-            class="method-args">(*args, &block)</span>
+            class="method-args">(*args, &amp;block)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -374,8 +389,8 @@ that have been assigned.  (Normally used in the unit tests.)</p>
 
           
           <div class="method-source-code" id="create_rule-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 377</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_rule</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 421</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_rule</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>.<span class="ruby-identifier">create_rule</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -392,7 +407,7 @@ that have been assigned.  (Normally used in the unit tests.)</p>
         
         <div class="method-heading">
           <span class="method-name">define_task</span><span
-            class="method-args">(*args, &block)</span>
+            class="method-args">(*args, &amp;block)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -401,17 +416,49 @@ that have been assigned.  (Normally used in the unit tests.)</p>
 
         <div class="method-description">
           
-          <p>Define a task given <code>args</code> and an option block.  If a rule with
-the given name already exists, the prerequisites and actions are added to
-the existing task.  Returns the defined task.</p>
+          <p>Define a task given <code>args</code> and an option block.  If a rule with the given name already exists, the prerequisites and actions are added to the existing task.  Returns the defined task.</p>
           
           
 
           
           <div class="method-source-code" id="define_task-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 372</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">define_task</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 416</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">define_task</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>.<span class="ruby-identifier">define_task</span>(<span class="ruby-keyword">self</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-format_deps" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_deps</span><span
+            class="method-args">(deps)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Format dependencies parameter to pass to task.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_deps-source">
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 373</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">format_deps</span>(<span class="ruby-identifier">deps</span>)
+  <span class="ruby-identifier">deps</span> = [<span class="ruby-identifier">deps</span>] <span class="ruby-keyword">unless</span> <span class="ruby-identifier">deps</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:to_ary</span>)
+  <span class="ruby-identifier">deps</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">from_pathname</span>(<span class="ruby-identifier">d</span>).<span class="ruby-identifier">to_s</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -436,15 +483,14 @@ the existing task.  Returns the defined task.</p>
 
         <div class="method-description">
           
-          <p>Create a task named <code>task_name</code> with no actions or
-prerequisites. Use <code>enhance</code> to add actions and prerequisites.</p>
+          <p>Create a task named <code>task_name</code> with no actions or prerequisites. Use <code>enhance</code> to add actions and prerequisites.</p>
           
           
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 94</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">task_name</span>, <span class="ruby-identifier">app</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 99</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">task_name</span>, <span class="ruby-identifier">app</span>)
   <span class="ruby-ivar">@name</span>            = <span class="ruby-identifier">task_name</span>.<span class="ruby-identifier">to_s</span>
   <span class="ruby-ivar">@prerequisites</span>   = []
   <span class="ruby-ivar">@actions</span>         = []
@@ -455,6 +501,8 @@ prerequisites. Use <code>enhance</code> to add actions and prerequisites.</p>
   <span class="ruby-ivar">@scope</span>           = <span class="ruby-identifier">app</span>.<span class="ruby-identifier">current_scope</span>
   <span class="ruby-ivar">@arg_names</span>       = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@locations</span>       = []
+  <span class="ruby-ivar">@invocation_exception</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@order_only_prerequisites</span> = []
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -479,15 +527,14 @@ prerequisites. Use <code>enhance</code> to add actions and prerequisites.</p>
 
         <div class="method-description">
           
-          <p>Apply the scope to the task name according to the rules for this kind of
-task.  Generic tasks will accept the scope as part of the name.</p>
+          <p>Apply the scope to the task name according to the rules for this kind of task.  Generic tasks will accept the scope as part of the name.</p>
           
           
 
           
           <div class="method-source-code" id="scope_name-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 384</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">scope_name</span>(<span class="ruby-identifier">scope</span>, <span class="ruby-identifier">task_name</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 428</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">scope_name</span>(<span class="ruby-identifier">scope</span>, <span class="ruby-identifier">task_name</span>)
   <span class="ruby-identifier">scope</span>.<span class="ruby-identifier">path_with_task_name</span>(<span class="ruby-identifier">task_name</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -519,8 +566,8 @@ task.  Generic tasks will accept the scope as part of the name.</p>
 
           
           <div class="method-source-code" id="task_defined-3F-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 365</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">task_defined?</span>(<span class="ruby-identifier">task_name</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 409</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">task_defined?</span>(<span class="ruby-identifier">task_name</span>)
   <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>.<span class="ruby-identifier">lookup</span>(<span class="ruby-identifier">task_name</span>) <span class="ruby-operator">!=</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -552,8 +599,8 @@ task.  Generic tasks will accept the scope as part of the name.</p>
 
           
           <div class="method-source-code" id="tasks-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 352</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">tasks</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 396</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tasks</span>
   <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>.<span class="ruby-identifier">tasks</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -587,18 +634,17 @@ task.  Generic tasks will accept the scope as part of the name.</p>
 
         <div class="method-description">
           
-          <p>Add a description to the task.  The description can consist of an option
-argument list (enclosed brackets) and an optional comment.</p>
+          <p>Add a description to the task.  The description can consist of an option argument list (enclosed brackets) and an optional comment.</p>
           
           
 
           
           <div class="method-source-code" id="add_description-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 266</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_description</span>(<span class="ruby-identifier">description</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 298</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_description</span>(<span class="ruby-identifier">description</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">description</span>
   <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">description</span>.<span class="ruby-identifier">strip</span>
-  <span class="ruby-identifier">add_comment</span>(<span class="ruby-identifier">comment</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-identifier">add_comment</span>(<span class="ruby-identifier">comment</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">comment</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -623,15 +669,14 @@ argument list (enclosed brackets) and an optional comment.</p>
 
         <div class="method-description">
           
-          <p>List of all unique prerequisite tasks including prerequisite tasks&#39;
-prerequisites. Includes self when cyclic dependencies are found.</p>
+          <p>List of all unique prerequisite tasks including prerequisite tasks&#39; prerequisites. Includes self when cyclic dependencies are found.</p>
           
           
 
           
           <div class="method-source-code" id="all_prerequisite_tasks-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 72</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">all_prerequisite_tasks</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 77</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">all_prerequisite_tasks</span>
   <span class="ruby-identifier">seen</span> = {}
   <span class="ruby-identifier">collect_prerequisites</span>(<span class="ruby-identifier">seen</span>)
   <span class="ruby-identifier">seen</span>.<span class="ruby-identifier">values</span>
@@ -665,8 +710,8 @@ prerequisites. Includes self when cyclic dependencies are found.</p>
 
           
           <div class="method-source-code" id="arg_names-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 134</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">arg_names</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 141</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">arg_names</span>
   <span class="ruby-ivar">@arg_names</span> <span class="ruby-operator">||</span> []
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -692,17 +737,18 @@ prerequisites. Includes self when cyclic dependencies are found.</p>
 
         <div class="method-description">
           
-          <p>Clear the existing prerequisites and actions of a rake task.</p>
+          <p>Clear the existing prerequisites, actions, comments, and arguments of a rake task.</p>
           
           
 
           
           <div class="method-source-code" id="clear-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 145</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">clear</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 153</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clear</span>
   <span class="ruby-identifier">clear_prerequisites</span>
   <span class="ruby-identifier">clear_actions</span>
   <span class="ruby-identifier">clear_comments</span>
+  <span class="ruby-identifier">clear_args</span>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -734,9 +780,43 @@ prerequisites. Includes self when cyclic dependencies are found.</p>
 
           
           <div class="method-source-code" id="clear_actions-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 159</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">clear_actions</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 168</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clear_actions</span>
   <span class="ruby-identifier">actions</span>.<span class="ruby-identifier">clear</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-clear_args" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">clear_args</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Clear the existing arguments on a rake task.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="clear_args-source">
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 180</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clear_args</span>
+  <span class="ruby-ivar">@arg_names</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -768,8 +848,8 @@ prerequisites. Includes self when cyclic dependencies are found.</p>
 
           
           <div class="method-source-code" id="clear_comments-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 165</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">clear_comments</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 174</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clear_comments</span>
   <span class="ruby-ivar">@comments</span> = []
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
@@ -802,8 +882,8 @@ prerequisites. Includes self when cyclic dependencies are found.</p>
 
           
           <div class="method-source-code" id="clear_prerequisites-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 153</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">clear_prerequisites</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 162</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clear_prerequisites</span>
   <span class="ruby-identifier">prerequisites</span>.<span class="ruby-identifier">clear</span>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
@@ -830,15 +910,14 @@ prerequisites. Includes self when cyclic dependencies are found.</p>
 
         <div class="method-description">
           
-          <p>First line (or sentence) of all comments. Multiple comments are separated
-by a “/”.</p>
+          <p>First line (or sentence) of all comments. Multiple comments are separated by a “/”.</p>
           
           
 
           
           <div class="method-source-code" id="comment-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 290</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">comment</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 322</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">comment</span>
   <span class="ruby-identifier">transform_comments</span>(<span class="ruby-string">&quot; / &quot;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">first_sentence</span>(<span class="ruby-identifier">c</span>) }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -855,7 +934,7 @@ by a “/”.</p>
         
         <div class="method-heading">
           <span class="method-name">enhance</span><span
-            class="method-args">(deps=nil, &block)</span>
+            class="method-args">(deps=nil, &amp;block)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -870,8 +949,8 @@ by a “/”.</p>
 
           
           <div class="method-source-code" id="enhance-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 108</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">enhance</span>(<span class="ruby-identifier">deps</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 115</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">enhance</span>(<span class="ruby-identifier">deps</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-ivar">@prerequisites</span> <span class="ruby-operator">|=</span> <span class="ruby-identifier">deps</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">deps</span>
   <span class="ruby-ivar">@actions</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">block</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
   <span class="ruby-keyword">self</span>
@@ -905,8 +984,8 @@ by a “/”.</p>
 
           
           <div class="method-source-code" id="execute-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 235</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">execute</span>(<span class="ruby-identifier">args</span>=<span class="ruby-keyword">nil</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 270</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">execute</span>(<span class="ruby-identifier">args</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">args</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">EMPTY_TASK_ARGS</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">application</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">dryrun</span>
     <span class="ruby-identifier">application</span>.<span class="ruby-identifier">trace</span> <span class="ruby-node">&quot;** Execute (dry run) #{name}&quot;</span>
@@ -914,13 +993,10 @@ by a “/”.</p>
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">application</span>.<span class="ruby-identifier">trace</span> <span class="ruby-node">&quot;** Execute #{name}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">application</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">trace</span>
   <span class="ruby-identifier">application</span>.<span class="ruby-identifier">enhance_with_matching_rule</span>(<span class="ruby-identifier">name</span>) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@actions</span>.<span class="ruby-identifier">empty?</span>
-  <span class="ruby-ivar">@actions</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">act</span><span class="ruby-operator">|</span>
-    <span class="ruby-keyword">case</span> <span class="ruby-identifier">act</span>.<span class="ruby-identifier">arity</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-value">1</span>
-      <span class="ruby-identifier">act</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword">self</span>)
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">act</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">args</span>)
-    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">try_convert</span>(<span class="ruby-identifier">args</span>) <span class="ruby-keyword">and</span> <span class="ruby-operator">!</span><span class="ruby-identifier">opts</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-ivar">@actions</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">act</span><span class="ruby-operator">|</span> <span class="ruby-identifier">act</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">args</span>, <span class="ruby-operator">**</span><span class="ruby-identifier">opts</span>)}
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@actions</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">act</span><span class="ruby-operator">|</span> <span class="ruby-identifier">act</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">args</span>)}
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -952,8 +1028,8 @@ by a “/”.</p>
 
           
           <div class="method-source-code" id="full_comment-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 284</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">full_comment</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 316</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">full_comment</span>
   <span class="ruby-identifier">transform_comments</span>(<span class="ruby-string">&quot;\n&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -979,16 +1055,15 @@ by a “/”.</p>
 
         <div class="method-description">
           
-          <p>Return a string describing the internal state of a task.  Useful for
-debugging.</p>
+          <p>Return a string describing the internal state of a task.  Useful for debugging.</p>
           
           
 
           
           <div class="method-source-code" id="investigation-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 322</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">investigation</span>
-  <span class="ruby-identifier">result</span> = <span class="ruby-string">&quot;------------------------------\n&quot;</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 354</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">investigation</span>
+  <span class="ruby-identifier">result</span> = <span class="ruby-string">&quot;------------------------------\n&quot;</span>.<span class="ruby-identifier">dup</span>
   <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;Investigating #{name}\n&quot;</span>
   <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;class: #{self.class}\n&quot;</span>
   <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span>  <span class="ruby-node">&quot;task needed: #{needed?}\n&quot;</span>
@@ -1033,8 +1108,8 @@ debugging.</p>
 
           
           <div class="method-source-code" id="invoke-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 171</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">invoke</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 186</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">invoke</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
   <span class="ruby-identifier">task_args</span> = <span class="ruby-constant">TaskArguments</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">arg_names</span>, <span class="ruby-identifier">args</span>)
   <span class="ruby-identifier">invoke_with_call_chain</span>(<span class="ruby-identifier">task_args</span>, <span class="ruby-constant">InvocationChain</span><span class="ruby-operator">::</span><span class="ruby-constant">EMPTY</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -1067,8 +1142,8 @@ debugging.</p>
 
           
           <div class="method-source-code" id="name-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 115</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">name</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 122</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">name</span>
   <span class="ruby-ivar">@name</span>.<span class="ruby-identifier">to_s</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1100,8 +1175,8 @@ debugging.</p>
 
           
           <div class="method-source-code" id="needed-3F-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 254</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">needed?</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 286</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">needed?</span>
   <span class="ruby-keyword">true</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1133,9 +1208,9 @@ debugging.</p>
 
           
           <div class="method-source-code" id="prerequisite_tasks-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 56</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">prerequisite_tasks</span>
-  <span class="ruby-identifier">prerequisites</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pre</span><span class="ruby-operator">|</span> <span class="ruby-identifier">lookup_prerequisite</span>(<span class="ruby-identifier">pre</span>) }
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 61</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">prerequisite_tasks</span>
+  (<span class="ruby-identifier">prerequisites</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">order_only_prerequisites</span>).<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pre</span><span class="ruby-operator">|</span> <span class="ruby-identifier">lookup_prerequisite</span>(<span class="ruby-identifier">pre</span>) }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -1160,16 +1235,16 @@ debugging.</p>
 
         <div class="method-description">
           
-          <p>Reenable the task, allowing its tasks to be executed if the task is invoked
-again.</p>
+          <p>Reenable the task, allowing its tasks to be executed if the task is invoked again.</p>
           
           
 
           
           <div class="method-source-code" id="reenable-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 140</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">reenable</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 147</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reenable</span>
   <span class="ruby-ivar">@already_invoked</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@invocation_exception</span> = <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -1194,15 +1269,14 @@ again.</p>
 
         <div class="method-description">
           
-          <p>Set the names of the arguments for this task. <code>args</code> should be
-an array of symbols, one for each argument name.</p>
+          <p>Set the names of the arguments for this task. <code>args</code> should be an array of symbols, one for each argument name.</p>
           
           
 
           
           <div class="method-source-code" id="set_arg_names-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 316</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_arg_names</span>(<span class="ruby-identifier">args</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 348</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_arg_names</span>(<span class="ruby-identifier">args</span>)
   <span class="ruby-ivar">@arg_names</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_sym</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1234,8 +1308,8 @@ an array of symbols, one for each argument name.</p>
 
           
           <div class="method-source-code" id="source-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 88</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">source</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 93</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">source</span>
   <span class="ruby-identifier">sources</span>.<span class="ruby-identifier">first</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1267,8 +1341,8 @@ an array of symbols, one for each argument name.</p>
 
           
           <div class="method-source-code" id="sources-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 47</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">sources</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 52</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">sources</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@sources</span>)
     <span class="ruby-ivar">@sources</span>
   <span class="ruby-keyword">else</span>
@@ -1298,15 +1372,14 @@ an array of symbols, one for each argument name.</p>
 
         <div class="method-description">
           
-          <p>Timestamp for this task.  Basic tasks return the current time for their
-time stamp.  Other tasks can be more sophisticated.</p>
+          <p>Timestamp for this task.  Basic tasks return the current time for their time stamp.  Other tasks can be more sophisticated.</p>
           
           
 
           
           <div class="method-source-code" id="timestamp-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 260</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">timestamp</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 292</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">timestamp</span>
   <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1338,9 +1411,113 @@ time stamp.  Other tasks can be more sophisticated.</p>
 
           
           <div class="method-source-code" id="to_s-source">
-            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 37</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 42</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_s</span>
   <span class="ruby-identifier">name</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-7C" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">|</span><span
+            class="method-args">(deps)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Add order only dependencies.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="7C-source">
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 379</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">|</span>(<span class="ruby-identifier">deps</span>)
+  <span class="ruby-ivar">@order_only_prerequisites</span> <span class="ruby-operator">|=</span> <span class="ruby-constant">Task</span>.<span class="ruby-identifier">format_deps</span>(<span class="ruby-identifier">deps</span>) <span class="ruby-operator">-</span> <span class="ruby-ivar">@prerequisites</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="protected-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Protected Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-invoke_with_call_chain" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">invoke_with_call_chain</span><span
+            class="method-args">(task_args, invocation_chain)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Same as invoke, but explicitly pass a call chain to detect circular dependencies.</p>
+
+<p>If multiple tasks depend on this one in parallel, they will all fail if the first execution of this task fails.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="invoke_with_call_chain-source">
+            <pre><span class="ruby-comment"># File lib/rake/task.rb, line 197</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">invoke_with_call_chain</span>(<span class="ruby-identifier">task_args</span>, <span class="ruby-identifier">invocation_chain</span>)
+  <span class="ruby-identifier">new_chain</span> = <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">InvocationChain</span>.<span class="ruby-identifier">append</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">invocation_chain</span>)
+  <span class="ruby-ivar">@lock</span>.<span class="ruby-identifier">synchronize</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">application</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">trace</span>
+        <span class="ruby-identifier">application</span>.<span class="ruby-identifier">trace</span> <span class="ruby-node">&quot;** Invoke #{name} #{format_trace_flags}&quot;</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-keyword">if</span> <span class="ruby-ivar">@already_invoked</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-ivar">@invocation_exception</span>
+          <span class="ruby-keyword">if</span> <span class="ruby-identifier">application</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">trace</span>
+            <span class="ruby-identifier">application</span>.<span class="ruby-identifier">trace</span> <span class="ruby-node">&quot;** Previous invocation of #{name} failed #{format_trace_flags}&quot;</span>
+          <span class="ruby-keyword">end</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-ivar">@invocation_exception</span>
+        <span class="ruby-keyword">else</span>
+          <span class="ruby-keyword">return</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-ivar">@already_invoked</span> = <span class="ruby-keyword">true</span>
+
+      <span class="ruby-identifier">invoke_prerequisites</span>(<span class="ruby-identifier">task_args</span>, <span class="ruby-identifier">new_chain</span>)
+      <span class="ruby-identifier">execute</span>(<span class="ruby-identifier">task_args</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">needed?</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Exception</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">ex</span>
+      <span class="ruby-identifier">add_chain_to</span>(<span class="ruby-identifier">ex</span>, <span class="ruby-identifier">new_chain</span>)
+      <span class="ruby-ivar">@invocation_exception</span> = <span class="ruby-identifier">ex</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-identifier">ex</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -1355,12 +1532,13 @@ time stamp.  Other tasks can be more sophisticated.</p>
     </section>
   
   </section>
+
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.2.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

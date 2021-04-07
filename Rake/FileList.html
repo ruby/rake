@@ -8,13 +8,18 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
+
 
 
 
@@ -64,7 +69,67 @@
 
     
     
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
     
+    <li ><a href="#method-c-5B-5D">::[]</a>
+    
+    <li ><a href="#method-c-glob">::glob</a>
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-2A">#*</a>
+    
+    <li ><a href="#method-i-3C-3C">#&lt;&lt;</a>
+    
+    <li ><a href="#method-i-3D-3D">#==</a>
+    
+    <li ><a href="#method-i-add">#add</a>
+    
+    <li ><a href="#method-i-clear_exclude">#clear_exclude</a>
+    
+    <li ><a href="#method-i-egrep">#egrep</a>
+    
+    <li ><a href="#method-i-exclude">#exclude</a>
+    
+    <li ><a href="#method-i-excluded_from_list-3F">#excluded_from_list?</a>
+    
+    <li ><a href="#method-i-existing">#existing</a>
+    
+    <li ><a href="#method-i-existing-21">#existing!</a>
+    
+    <li ><a href="#method-i-ext">#ext</a>
+    
+    <li ><a href="#method-i-gsub">#gsub</a>
+    
+    <li ><a href="#method-i-gsub-21">#gsub!</a>
+    
+    <li ><a href="#method-i-include">#include</a>
+    
+    <li class="calls-super" ><a href="#method-i-is_a-3F">#is_a?</a>
+    
+    <li ><a href="#method-i-kind_of-3F">#kind_of?</a>
+    
+    <li ><a href="#method-i-pathmap">#pathmap</a>
+    
+    <li ><a href="#method-i-resolve">#resolve</a>
+    
+    <li ><a href="#method-i-sub">#sub</a>
+    
+    <li ><a href="#method-i-sub-21">#sub!</a>
+    
+    <li ><a href="#method-i-to_a">#to_a</a>
+    
+    <li ><a href="#method-i-to_ary">#to_ary</a>
+    
+    <li ><a href="#method-i-to_s">#to_s</a>
+    
+  </ul>
+</div>
+
   </div>
 </nav>
 
@@ -75,24 +140,14 @@
 
   <section class="description">
     
-<p>A <a href="FileList.html">FileList</a> is essentially an array with a few
-helper methods defined to make file manipulation a bit easier.</p>
+<p>A <a href="FileList.html"><code>FileList</code></a> is essentially an array with a few helper methods defined to make file manipulation a bit easier.</p>
 
-<p>FileLists are lazy.  When given a list of glob patterns for possible files
-to be included in the file list, instead of searching the file structures
-to find the files, a <a href="FileList.html">FileList</a> holds the pattern
-for latter use.</p>
+<p>FileLists are lazy.  When given a list of glob patterns for possible files to be included in the file list, instead of searching the file structures to find the files, a <a href="FileList.html"><code>FileList</code></a> holds the pattern for latter use.</p>
 
-<p>This allows us to define a number of <a href="FileList.html">FileList</a>
-to match any number of files, but only search out the actual files when
-then <a href="FileList.html">FileList</a> itself is actually used.  The key
-is that the first time an element of the FileList/Array is requested, the
-pending patterns are resolved into a real list of file names.</p>
+<p>This allows us to define a number of <a href="FileList.html"><code>FileList</code></a> to match any number of files, but only search out the actual files when then <a href="FileList.html"><code>FileList</code></a> itself is actually used.  The key is that the first time an element of the FileList/Array is requested, the pending patterns are resolved into a real list of file names.</p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -108,8 +163,17 @@ pending patterns are resolved into a real list of file names.</p>
       
         <dt id="ARRAY_METHODS">ARRAY_METHODS
         
-        <dd><p>List of array methods (that are not in <code>Object</code>) that need to be
-delegated.</p>
+        <dd><p>List of array methods (that are not in <code>Object</code>) that need to be delegated.</p>
+        
+      
+        <dt id="DEFAULT_IGNORE_PATTERNS">DEFAULT_IGNORE_PATTERNS
+        
+        <dd>
+        
+      
+        <dt id="DEFAULT_IGNORE_PROCS">DEFAULT_IGNORE_PROCS
+        
+        <dd>
         
       
         <dt id="DELEGATING_METHODS">DELEGATING_METHODS
@@ -129,8 +193,7 @@ delegated.</p>
       
         <dt id="MUST_NOT_DEFINE">MUST_NOT_DEFINE
         
-        <dd><p>List of methods that should not be delegated here (we define special
-versions of them explicitly below).</p>
+        <dd><p>List of methods that should not be delegated here (we define special versions of them explicitly below).</p>
         
       
         <dt id="SPECIAL_RETURN">SPECIAL_RETURN
@@ -145,13 +208,1022 @@ versions of them explicitly below).</p>
     
 
     
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-5B-5D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">[]</span><span
+            class="method-args">(*args)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a new file list including the files listed. Similar to:</p>
+
+<pre class="ruby"><span class="ruby-constant">FileList</span>.<span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="5B-5D-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 400</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">[]</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-glob" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">glob</span><span
+            class="method-args">(pattern, *args)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Get a sorted list of files matching the pattern. This method should be preferred to <a href="pattern">Dir</a> and Dir.glob(pattern) because the files returned are guaranteed to be sorted.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="glob-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 407</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">glob</span>(<span class="ruby-identifier">pattern</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-identifier">pattern</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>).<span class="ruby-identifier">sort</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(*patterns) { |self| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a file list from the globbable patterns given.  If you wish to perform multiple includes or excludes at object build time, use the “yield self” pattern.</p>
+
+<p>Example:</p>
+
+<pre class="ruby"><span class="ruby-identifier">file_list</span> = <span class="ruby-constant">FileList</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;lib/**/*.rb&#39;</span>, <span class="ruby-string">&#39;test/test*.rb&#39;</span>)
+
+<span class="ruby-identifier">pkg_files</span> = <span class="ruby-constant">FileList</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;lib/**/*&#39;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">fl</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">fl</span>.<span class="ruby-identifier">exclude</span>(<span class="ruby-regexp">/\bCVS\b/</span>)
+<span class="ruby-keyword">end</span>
+</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 99</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">patterns</span>)
+  <span class="ruby-ivar">@pending_add</span> = []
+  <span class="ruby-ivar">@pending</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@exclude_patterns</span> = <span class="ruby-constant">DEFAULT_IGNORE_PATTERNS</span>.<span class="ruby-identifier">dup</span>
+  <span class="ruby-ivar">@exclude_procs</span> = <span class="ruby-constant">DEFAULT_IGNORE_PROCS</span>.<span class="ruby-identifier">dup</span>
+  <span class="ruby-ivar">@items</span> = []
+  <span class="ruby-identifier">patterns</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pattern</span><span class="ruby-operator">|</span> <span class="ruby-identifier">include</span>(<span class="ruby-identifier">pattern</span>) }
+  <span class="ruby-keyword">yield</span> <span class="ruby-keyword">self</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-2A" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">*</span><span
+            class="method-args">(other)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Redefine * to return either a string or a new file list.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="2A-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 193</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">*</span>(<span class="ruby-identifier">other</span>)
+  <span class="ruby-identifier">result</span> = <span class="ruby-ivar">@items</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">other</span>
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">result</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">Array</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">import</span>(<span class="ruby-identifier">result</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">result</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-3C-3C" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">&lt;&lt;</span><span
+            class="method-args">(obj)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="3C-3C-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 203</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">&lt;&lt;</span>(<span class="ruby-identifier">obj</span>)
+  <span class="ruby-identifier">resolve</span>
+  <span class="ruby-ivar">@items</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">from_pathname</span>(<span class="ruby-identifier">obj</span>)
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-3D-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">==</span><span
+            class="method-args">(array)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>A <a href="FileList.html"><code>FileList</code></a> is equal through array equality.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="3D-3D-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 171</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">==</span>(<span class="ruby-identifier">array</span>)
+  <span class="ruby-identifier">to_ary</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">array</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-add" class="method-detail method-alias">
+        
+        <div class="method-heading">
+          <span class="method-name">add</span><span
+            class="method-args">(*filenames)</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+        </div>
+
+        
+
+        
+        <div class="aliases">
+          Alias for: <a href="FileList.html#method-i-include">include</a>
+        </div>
+        
+      </div>
+
+    
+      <div id="method-i-clear_exclude" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">clear_exclude</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Clear all the exclude patterns so that we exclude nothing.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="clear_exclude-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 164</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clear_exclude</span>
+  <span class="ruby-ivar">@exclude_patterns</span> = []
+  <span class="ruby-ivar">@exclude_procs</span> = []
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-egrep" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">egrep</span><span
+            class="method-args">(pattern, *options) { |fn, count, line| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Grep each of the files in the filelist using the given pattern. If a block is given, call the block on each matching line, passing the file name, line number, and the matching line of text.  If no block is given, a standard emacs style file:linenumber:line message will be printed to standard out.  Returns the number of matched items.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="egrep-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 293</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">egrep</span>(<span class="ruby-identifier">pattern</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">matched</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">fn</span>, <span class="ruby-string">&quot;r&quot;</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">options</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">inf</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">count</span> = <span class="ruby-value">0</span>
+        <span class="ruby-identifier">inf</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+          <span class="ruby-keyword">if</span> <span class="ruby-identifier">pattern</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">line</span>)
+            <span class="ruby-identifier">matched</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+            <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
+              <span class="ruby-keyword">yield</span> <span class="ruby-identifier">fn</span>, <span class="ruby-identifier">count</span>, <span class="ruby-identifier">line</span>
+            <span class="ruby-keyword">else</span>
+              <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#{fn}:#{count}:#{line}&quot;</span>
+            <span class="ruby-keyword">end</span>
+          <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">StandardError</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">ex</span>
+      <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Error while processing &#39;#{fn}&#39;: #{ex}&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">matched</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-exclude" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">exclude</span><span
+            class="method-args">(*patterns, &amp;block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Register a list of file name patterns that should be excluded from the list.  Patterns may be regular expressions, glob patterns or regular strings.  In addition, a block given to exclude will remove entries that return true when given to the block.</p>
+
+<p>Note that glob patterns are expanded against the file system. If a file is explicitly added to a file list, but does not exist in the file system, then an glob pattern in the exclude list will not exclude the file.</p>
+
+<p>Examples:</p>
+
+<pre>FileList[&#39;a.c&#39;, &#39;b.c&#39;].exclude(&quot;a.c&quot;) =&gt; [&#39;b.c&#39;]
+FileList[&#39;a.c&#39;, &#39;b.c&#39;].exclude(/^a/)  =&gt; [&#39;b.c&#39;]</pre>
+
+<p>If “a.c” is a file, then …</p>
+
+<pre>FileList[&#39;a.c&#39;, &#39;b.c&#39;].exclude(&quot;a.*&quot;) =&gt; [&#39;b.c&#39;]</pre>
+
+<p>If “a.c” is not a file, then …</p>
+
+<pre>FileList[&#39;a.c&#39;, &#39;b.c&#39;].exclude(&quot;a.*&quot;) =&gt; [&#39;a.c&#39;, &#39;b.c&#39;]</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="exclude-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 150</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">exclude</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">patterns</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">patterns</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pat</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">pat</span>.<span class="ruby-identifier">respond_to?</span> <span class="ruby-value">:to_ary</span>
+      <span class="ruby-identifier">exclude</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">pat</span>.<span class="ruby-identifier">to_ary</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-ivar">@exclude_patterns</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">from_pathname</span>(<span class="ruby-identifier">pat</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@exclude_procs</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">block</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
+  <span class="ruby-identifier">resolve_exclude</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@pending</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-excluded_from_list-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">excluded_from_list?</span><span
+            class="method-args">(fn)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Should the given file name be excluded from the list?</p>
+
+<p>NOTE: This method was formerly named “exclude?”, but Rails introduced an exclude? method as an array method and setup a conflict with file list. We renamed the method to avoid confusion. If you were using “FileList#exclude?” in your user code, you will need to update.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="excluded_from_list-3F-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 364</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">excluded_from_list?</span>(<span class="ruby-identifier">fn</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@exclude_patterns</span>.<span class="ruby-identifier">any?</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pat</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">case</span> <span class="ruby-identifier">pat</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-constant">Regexp</span>
+      <span class="ruby-identifier">fn</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">pat</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-constant">GLOB_PATTERN</span>
+      <span class="ruby-identifier">flags</span> = <span class="ruby-constant">File</span><span class="ruby-operator">::</span><span class="ruby-constant">FNM_PATHNAME</span>
+      <span class="ruby-comment"># Ruby &lt;= 1.9.3 does not support File::FNM_EXTGLOB</span>
+      <span class="ruby-identifier">flags</span> <span class="ruby-operator">|=</span> <span class="ruby-constant">File</span><span class="ruby-operator">::</span><span class="ruby-constant">FNM_EXTGLOB</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span> <span class="ruby-constant">File</span><span class="ruby-operator">::</span><span class="ruby-constant">FNM_EXTGLOB</span>
+      <span class="ruby-constant">File</span>.<span class="ruby-identifier">fnmatch?</span>(<span class="ruby-identifier">pat</span>, <span class="ruby-identifier">fn</span>, <span class="ruby-identifier">flags</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">fn</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">pat</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@exclude_procs</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">fn</span>) }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-existing" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">existing</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return a new file list that only contains file names from the current file list that exist on the file system.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="existing-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 320</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">existing</span>
+  <span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">fn</span>) }.<span class="ruby-identifier">uniq</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-existing-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">existing!</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Modify the current file list so that it contains only file name that exist on the file system.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="existing-21-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 326</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">existing!</span>
+  <span class="ruby-identifier">resolve</span>
+  <span class="ruby-ivar">@items</span> = <span class="ruby-ivar">@items</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">fn</span>) }.<span class="ruby-identifier">uniq</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-ext" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">ext</span><span
+            class="method-args">(newext=&quot;&quot;)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return a new <a href="FileList.html"><code>FileList</code></a> with <code>String#ext</code> method applied to each member of the array.</p>
+
+<p>This method is a shortcut for:</p>
+
+<pre class="ruby"><span class="ruby-identifier">array</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span> <span class="ruby-identifier">item</span>.<span class="ruby-identifier">ext</span>(<span class="ruby-identifier">newext</span>) }
+</pre>
+
+<p><code>ext</code> is a user added method for the Array class.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="ext-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 284</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ext</span>(<span class="ruby-identifier">newext</span>=<span class="ruby-string">&quot;&quot;</span>)
+  <span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span> <span class="ruby-identifier">fn</span>.<span class="ruby-identifier">ext</span>(<span class="ruby-identifier">newext</span>) }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-gsub" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">gsub</span><span
+            class="method-args">(pat, rep)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return a new <a href="FileList.html"><code>FileList</code></a> with the results of running <code>gsub</code> against each element of the original list.</p>
+
+<p>Example:</p>
+
+<pre>FileList[&#39;lib/test/file&#39;, &#39;x/y&#39;].gsub(/\//, &quot;\\&quot;)
+   =&gt; [&#39;lib\\test\\file&#39;, &#39;x\\y&#39;]</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="gsub-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 253</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">gsub</span>(<span class="ruby-identifier">pat</span>, <span class="ruby-identifier">rep</span>)
+  <span class="ruby-identifier">inject</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">new</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">res</span>, <span class="ruby-identifier">fn</span><span class="ruby-operator">|</span> <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">fn</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-identifier">pat</span>, <span class="ruby-identifier">rep</span>) }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-gsub-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">gsub!</span><span
+            class="method-args">(pat, rep)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Same as <code>gsub</code> except that the original file list is modified.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="gsub-21-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 264</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">gsub!</span>(<span class="ruby-identifier">pat</span>, <span class="ruby-identifier">rep</span>)
+  <span class="ruby-identifier">each_with_index</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-keyword">self</span>[<span class="ruby-identifier">i</span>] = <span class="ruby-identifier">fn</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-identifier">pat</span>, <span class="ruby-identifier">rep</span>) }
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-include" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">include</span><span
+            class="method-args">(*filenames)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Add file names defined by glob patterns to the file list.  If an array is given, add each element of the array.</p>
+
+<p>Example:</p>
+
+<pre class="ruby"><span class="ruby-identifier">file_list</span>.<span class="ruby-identifier">include</span>(<span class="ruby-string">&quot;*.java&quot;</span>, <span class="ruby-string">&quot;*.cfg&quot;</span>)
+<span class="ruby-identifier">file_list</span>.<span class="ruby-identifier">include</span> <span class="ruby-node">%w( math.c lib.h *.o )</span>
+</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="include-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 116</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">include</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">filenames</span>)
+  <span class="ruby-comment"># TODO: check for pending</span>
+  <span class="ruby-identifier">filenames</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">fn</span>.<span class="ruby-identifier">respond_to?</span> <span class="ruby-value">:to_ary</span>
+      <span class="ruby-identifier">include</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">fn</span>.<span class="ruby-identifier">to_ary</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-ivar">@pending_add</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">from_pathname</span>(<span class="ruby-identifier">fn</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@pending</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+        <div class="aliases">
+          Also aliased as: <a href="FileList.html#method-i-add">add</a>
+        </div>
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-is_a-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_a?</span><span
+            class="method-args">(klass)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Lie about our class.</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              
+            </div>
+          
+
+          
+          <div class="method-source-code" id="is_a-3F-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 187</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">is_a?</span>(<span class="ruby-identifier">klass</span>)
+  <span class="ruby-identifier">klass</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Array</span> <span class="ruby-operator">||</span> <span class="ruby-keyword">super</span>(<span class="ruby-identifier">klass</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+        <div class="aliases">
+          Also aliased as: <a href="FileList.html#method-i-kind_of-3F">kind_of?</a>
+        </div>
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-kind_of-3F" class="method-detail method-alias">
+        
+        <div class="method-heading">
+          <span class="method-name">kind_of?</span><span
+            class="method-args">(klass)</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+        </div>
+
+        
+
+        
+        <div class="aliases">
+          Alias for: <a href="FileList.html#method-i-is_a-3F">is_a?</a>
+        </div>
+        
+      </div>
+
+    
+      <div id="method-i-pathmap" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">pathmap</span><span
+            class="method-args">(spec=nil, &amp;block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Apply the pathmap spec to each of the included file names, returning a new file list with the modified paths.  (See <a href="../String.html#method-i-pathmap"><code>String#pathmap</code></a> for details.)</p>
+          
+          
+
+          
+          <div class="method-source-code" id="pathmap-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 272</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pathmap</span>(<span class="ruby-identifier">spec</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span> <span class="ruby-identifier">fn</span>.<span class="ruby-identifier">pathmap</span>(<span class="ruby-identifier">spec</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>) }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-resolve" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">resolve</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Resolve all the pending adds now.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="resolve-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 210</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">resolve</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@pending</span>
+    <span class="ruby-ivar">@pending</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-ivar">@pending_add</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span> <span class="ruby-identifier">resolve_add</span>(<span class="ruby-identifier">fn</span>) <span class="ruby-keyword">end</span>
+    <span class="ruby-ivar">@pending_add</span> = []
+    <span class="ruby-identifier">resolve_exclude</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-sub" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">sub</span><span
+            class="method-args">(pat, rep)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return a new <a href="FileList.html"><code>FileList</code></a> with the results of running <code>sub</code> against each element of the original list.</p>
+
+<p>Example:</p>
+
+<pre>FileList[&#39;a.c&#39;, &#39;b.c&#39;].sub(/\.c$/, &#39;.o&#39;)  =&gt; [&#39;a.o&#39;, &#39;b.o&#39;]</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="sub-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 242</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">sub</span>(<span class="ruby-identifier">pat</span>, <span class="ruby-identifier">rep</span>)
+  <span class="ruby-identifier">inject</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">new</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">res</span>, <span class="ruby-identifier">fn</span><span class="ruby-operator">|</span> <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">fn</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-identifier">pat</span>, <span class="ruby-identifier">rep</span>) }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-sub-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">sub!</span><span
+            class="method-args">(pat, rep)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Same as <code>sub</code> except that the original file list is modified.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="sub-21-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 258</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">sub!</span>(<span class="ruby-identifier">pat</span>, <span class="ruby-identifier">rep</span>)
+  <span class="ruby-identifier">each_with_index</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-keyword">self</span>[<span class="ruby-identifier">i</span>] = <span class="ruby-identifier">fn</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-identifier">pat</span>, <span class="ruby-identifier">rep</span>) }
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-to_a" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">to_a</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return the internal array object.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="to_a-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 176</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_a</span>
+  <span class="ruby-identifier">resolve</span>
+  <span class="ruby-ivar">@items</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-to_ary" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">to_ary</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return the internal array object.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="to_ary-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 182</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_ary</span>
+  <span class="ruby-identifier">to_a</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-to_s" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">to_s</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Convert a <a href="FileList.html"><code>FileList</code></a> to a string by joining all elements with a space.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="to_s-source">
+            <pre><span class="ruby-comment"># File lib/rake/file_list.rb, line 344</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_s</span>
+  <span class="ruby-identifier">resolve</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot; &quot;</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
   </section>
+
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.2.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
