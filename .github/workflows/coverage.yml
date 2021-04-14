@@ -1,19 +1,18 @@
-name: windows
+name: coverage
 
 on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: windows-latest
-    strategy:
-      matrix:
-        ruby: [ '3.0', 2.7, 2.6, ruby-head ]
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: ${{ matrix.ruby }}
+        ruby-version: '3.0'
     - name: Install dependencies
       run: gem install minitest
     - name: Run test
+      env:
+        COVERALLS: "yes"
       run: ruby -Ilib exe/rake
