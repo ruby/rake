@@ -409,4 +409,93 @@ class TestRakeRules < Rake::TestCase # :nodoc:
     assert_equal [MINFILE], @runs
   end
 
+  def test_regex_rule_with_proc_dependent_with_capture
+    mkdir_p("src/jw")
+    create_file("src/jw/X.java")
+    rule %r(classes/(.*)\.class) => [
+      proc { "src/#{$1}.java" }
+    ] do |task|
+      assert_equal task.name, "classes/jw/X.class"
+      assert_equal task.source, "src/jw/X.java"
+      assert_equal $1, "jw/X"
+      @runs << :RULE
+    end
+    Task["classes/jw/X.class"].invoke
+    assert_equal [:RULE], @runs
+  end
+
+  def test_regex_rule_with_capture_in_action
+    create_file("icon.svg")
+    rule %r(-(\d+)x(\d+)\.png$) => [
+      ".svg"
+    ] do |task|
+      assert_equal task.name, "icon-160x120.png"
+      assert_equal task.source, "icon.svg"
+      assert_equal $`, "icon"
+      assert_equal $1, "160"
+      assert_equal $2, "120"
+      @runs << :RULE
+    end
+    Task["icon-160x120.png"].invoke
+    assert_equal [:RULE], @runs
+  end
+
+  def test_regex_rule_with_named_capture
+    create_file("icon.png")
+    rule %r(-(?<width>\d+)x(?<height>\d+)\.(?<ext>\w+)$) => [
+      '.\k<ext>'
+    ] do |task|
+      assert_equal task.name, "icon-160x120.png"
+      assert_equal task.source, "icon.png"
+      assert_equal $`, "icon"
+      assert_equal $~[:width], "160"
+      assert_equal $~[:height], "120"
+      assert_equal $~[:ext], "png"
+      @runs << :RULE
+    end
+    Task["icon-160x120.png"].invoke
+    assert_equal [:RULE], @runs
+  end
+
+  def test_regex_rule_with_proc_dependent_with_named_capture
+    mkdir_p("src/jw")
+    create_file("src/jw/X.java")
+    rule %r(classes/(?<basename>.*)\.class$) => [
+      proc { "src/#{$~[:basename]}.java" }
+    ] do |task|
+      assert_equal task.name, "classes/jw/X.class"
+      assert_equal task.source, "src/jw/X.java"
+      assert_equal $1, "jw/X"
+      assert_equal $~[:basename], "jw/X"
+      @runs << :RULE
+    end
+    Task["classes/jw/X.class"].invoke
+    assert_equal [:RULE], @runs
+  end
+
+  def test_regex_rule_with_string_dependent_with_named_capture
+    mkdir_p("src/jw")
+    create_file("src/jw/X.java")
+    rule %r(classes/(?<basename>.*)\.class) => [
+      'src/\k<basename>.java'
+    ] do |task|
+      assert_equal task.name, "classes/jw/X.class"
+      assert_equal task.source, "src/jw/X.java"
+      assert_equal $1, "jw/X"
+      assert_equal $~[:basename], "jw/X"
+      @runs << :RULE
+    end
+    Task["classes/jw/X.class"].invoke
+    assert_equal [:RULE], @runs
+  end
+
+  def test_regex_rule_with_backreference_prematch
+    create_file(SRCFILE)
+    rule ".o" => '\`.c' do |t|
+      @runs << t.name
+    end
+    Task[OBJFILE].invoke
+    assert_equal [OBJFILE], @runs
+  end
+
 end
