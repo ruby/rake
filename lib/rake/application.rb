@@ -433,6 +433,13 @@ module Rake
               select_tasks_to_show(options, :describe, value)
             }
           ],
+          ["--directory", "-C [DIRECTORY]",
+            "Change to DIRECTORY before doing anything.",
+            lambda { |value|
+              Dir.chdir value
+              @original_dir = Dir.pwd
+            }
+          ],
           ["--dry-run", "-n",
             "Do a dry run without executing actions.",
             lambda { |value|
