@@ -300,8 +300,8 @@ module Rake
         when /^\./
           source = task_name.sub(task_pattern, ext)
           source == ext ? task_name.ext(ext) : source
-        when String
-          ext
+        when String, Symbol
+          ext.to_s
         when Proc, Method
           if ext.arity == 1
             ext.call(task_name)
