@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require "set"
 
 require "rake/promise"
 
@@ -10,6 +9,7 @@ module Rake
     # Creates a ThreadPool object.  The +thread_count+ parameter is the size
     # of the pool.
     def initialize(thread_count)
+      require "set"
       @max_active_threads = [thread_count, 0].max
       @threads = Set.new
       @threads_mon = Monitor.new
