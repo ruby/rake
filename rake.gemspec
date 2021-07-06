@@ -97,7 +97,5 @@ Rake has the following features:
   s.require_paths = ["lib".freeze]
 
   s.required_ruby_version = Gem::Requirement.new(">= 2.2".freeze)
-  s.rubygems_version = "2.6.1".freeze
-  s.required_rubygems_version = Gem::Requirement.new(">= 1.3.2".freeze)
   s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
 end
