@@ -8,14 +8,17 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
 </script>
 
-<script src="./js/jquery.js"></script>
-<script src="./js/darkfish.js"></script>
+<script src="./js/navigation.js" defer></script>
+<script src="./js/search.js" defer></script>
+<script src="./js/search_index.js" defer></script>
+<script src="./js/searcher.js" defer></script>
+<script src="./js/darkfish.js" defer></script>
 
 <link href="./css/fonts.css" rel="stylesheet">
 <link href="./css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" class="table-of-contents">
@@ -30,33 +33,90 @@
     <ul>
       <li><a href="CONTRIBUTING_rdoc.html#label-Source+Repository">Source Repository</a>
       <li><a href="CONTRIBUTING_rdoc.html#label-Running+the+Rake+Test+Suite">Running the Rake Test Suite</a>
+      <li><a href="CONTRIBUTING_rdoc.html#label-Rubocop">Rubocop</a>
       <li><a href="CONTRIBUTING_rdoc.html#label-Issues+and+Bug+Reports">Issues and Bug Reports</a>
     </ul>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="History_rdoc.html">History</a>
 
     <ul>
-      <li><a href="History_rdoc.html#label-12.0.0-28dev-29">12.0.0(dev)</a>
+      <li><a href="History_rdoc.html#label-13.0.3">13.0.3</a>
+      <li><a href="History_rdoc.html#label-13.0.2">13.0.2</a>
+      <li><a href="History_rdoc.html#label-Enhancements">Enhancements</a>
+      <li><a href="History_rdoc.html#label-13.0.1">13.0.1</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
+      <li><a href="History_rdoc.html#label-13.0.0">13.0.0</a>
+      <li><a href="History_rdoc.html#label-Enhancements">Enhancements</a>
+      <li><a href="History_rdoc.html#label-Compatibility+changes">Compatibility changes</a>
+      <li><a href="History_rdoc.html#label-12.3.3">12.3.3</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
+      <li><a href="History_rdoc.html#label-Enhancements-3A">Enhancements:</a>
+      <li><a href="History_rdoc.html#label-12.3.2">12.3.2</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
+      <li><a href="History_rdoc.html#label-Enhancements-3A">Enhancements:</a>
+      <li><a href="History_rdoc.html#label-12.3.1">12.3.1</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
+      <li><a href="History_rdoc.html#label-Enhancements-3A">Enhancements:</a>
+      <li><a href="History_rdoc.html#label-12.3.0">12.3.0</a>
+      <li><a href="History_rdoc.html#label-Compatibility+Changes">Compatibility Changes</a>
+      <li><a href="History_rdoc.html#label-Enhancements-3A">Enhancements:</a>
+      <li><a href="History_rdoc.html#label-12.2.1">12.2.1</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
+      <li><a href="History_rdoc.html#label-12.2.0">12.2.0</a>
+      <li><a href="History_rdoc.html#label-Enhancements-3A">Enhancements:</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
+      <li><a href="History_rdoc.html#label-12.1.0">12.1.0</a>
+      <li><a href="History_rdoc.html#label-Enhancements-3A">Enhancements:</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
+      <li><a href="History_rdoc.html#label-12.0.0">12.0.0</a>
+      <li><a href="History_rdoc.html#label-Compatibility+Changes">Compatibility Changes</a>
+      <li><a href="History_rdoc.html#label-Enhancements-3A">Enhancements:</a>
+      <li><a href="History_rdoc.html#label-11.3.0+-2F+2016-09-20">11.3.0 / 2016-09-20</a>
+      <li><a href="History_rdoc.html#label-Enhancements-3A">Enhancements:</a>
       <li><a href="History_rdoc.html#label-11.2.2+-2F+2016-06-12">11.2.2 / 2016-06-12</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
       <li><a href="History_rdoc.html#label-11.2.1+-2F+2016-06-12">11.2.1 / 2016-06-12</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
       <li><a href="History_rdoc.html#label-11.2.0+-2F+2016-06-11">11.2.0 / 2016-06-11</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
+      <li><a href="History_rdoc.html#label-Enhancements">Enhancements</a>
       <li><a href="History_rdoc.html#label-11.1.2+-2F+2016-03-28">11.1.2 / 2016-03-28</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
       <li><a href="History_rdoc.html#label-11.1.1+-2F+2016-03-14">11.1.1 / 2016-03-14</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
       <li><a href="History_rdoc.html#label-11.1.0+-2F+2016-03-11">11.1.0 / 2016-03-11</a>
+      <li><a href="History_rdoc.html#label-Compatibility+Changes">Compatibility Changes</a>
       <li><a href="History_rdoc.html#label-11.0.1+-2F+2016-03-09">11.0.1 / 2016-03-09</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
       <li><a href="History_rdoc.html#label-11.0.0+-2F+2016-03-09">11.0.0 / 2016-03-09</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
+      <li><a href="History_rdoc.html#label-Enhancements">Enhancements</a>
+      <li><a href="History_rdoc.html#label-Compatibility+Changes">Compatibility Changes</a>
       <li><a href="History_rdoc.html#label-10.5.0+-2F+2016-01-13">10.5.0 / 2016-01-13</a>
+      <li><a href="History_rdoc.html#label-Enhancements">Enhancements</a>
       <li><a href="History_rdoc.html#label-10.4.2+-2F+2014-12-02">10.4.2 / 2014-12-02</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
       <li><a href="History_rdoc.html#label-10.4.1+-2F+2014-12-01">10.4.1 / 2014-12-01</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
       <li><a href="History_rdoc.html#label-10.4.0+-2F+2014-11-22">10.4.0 / 2014-11-22</a>
+      <li><a href="History_rdoc.html#label-Enhancements">Enhancements</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
       <li><a href="History_rdoc.html#label-10.3.2+-2F+2014-05-15">10.3.2 / 2014-05-15</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
       <li><a href="History_rdoc.html#label-10.3.1+-2F+2014-04-17">10.3.1 / 2014-04-17</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
       <li><a href="History_rdoc.html#label-10.3+-2F+2014-04-15">10.3 / 2014-04-15</a>
+      <li><a href="History_rdoc.html#label-Enhancements">Enhancements</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
       <li><a href="History_rdoc.html#label-10.2.2+-2F+2014-03-27">10.2.2 / 2014-03-27</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
       <li><a href="History_rdoc.html#label-10.2.1+-2F+2014-03-25">10.2.1 / 2014-03-25</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
       <li><a href="History_rdoc.html#label-10.2.0+-2F+2014-03-24">10.2.0 / 2014-03-24</a>
-      <li><a href="History_rdoc.html#label-10.1.1+and+earlier">10.1.1 and earlier</a>
+      <li><a href="History_rdoc.html#label-Enhancements">Enhancements</a>
+      <li><a href="History_rdoc.html#label-Bug+fixes">Bug fixes</a>
+      <li><a href="History_rdoc.html#label-10.1.1">10.1.1</a>
       <li><a href="History_rdoc.html#label-10.1.0">10.1.0</a>
       <li><a href="History_rdoc.html#label-Changes">Changes</a>
       <li><a href="History_rdoc.html#label-New+Features">New Features</a>
@@ -221,10 +281,10 @@
       <li><a href="History_rdoc.html#label-0.2.3">0.2.3</a>
     </ul>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="MIT-LICENSE.html">MIT-LICENSE</a>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="README_rdoc.html">README</a>
 
     <ul>
@@ -245,28 +305,28 @@
       <li><a href="README_rdoc.html#label-Historical">Historical</a>
     </ul>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="doc/command_line_usage_rdoc.html">command_line_usage</a>
 
     <ul>
       <li><a href="doc/command_line_usage_rdoc.html#label-Rake+Command+Line+Usage">Rake Command Line Usage</a>
     </ul>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="doc/glossary_rdoc.html">glossary</a>
 
     <ul>
       <li><a href="doc/glossary_rdoc.html#label-Glossary">Glossary</a>
     </ul>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="doc/proto_rake_rdoc.html">proto_rake</a>
 
     <ul>
       <li><a href="doc/proto_rake_rdoc.html#label-Original+Prototype+Rake">Original Prototype Rake</a>
     </ul>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="doc/rakefile_rdoc.html">rakefile</a>
 
     <ul>
@@ -306,14 +366,13 @@
       <li><a href="doc/rakefile_rdoc.html#label-See">See</a>
     </ul>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="doc/rational_rdoc.html">rational</a>
 
     <ul>
       <li><a href="doc/rational_rdoc.html#label-Why+rake-3F">Why rake?</a>
     </ul>
   </li>
-  
 </ul>
 
 <h2 id="classes">Classes and Modules</h2>
@@ -322,16 +381,10 @@
     <a href="FileUtils.html">FileUtils</a>
   </li>
   <li class="class">
-    <a href="Fixnum.html">Fixnum</a>
-  </li>
-  <li class="class">
     <a href="Module.html">Module</a>
   </li>
   <li class="class">
     <a href="Object.html">Object</a>
-  </li>
-  <li class="class">
-    <a href="Pathname.html">Pathname</a>
   </li>
   <li class="class">
     <a href="Rake/Application.html">Rake::Application</a>
@@ -390,6 +443,9 @@
   <li class="module">
     <a href="Rake/PrivateReader.html">Rake::PrivateReader</a>
   </li>
+  <li class="module">
+    <a href="Rake/FileUtilsExt.html">Rake::RakeFileUtils</a>
+  </li>
   <li class="class">
     <a href="Rake/RuleRecursionOverflowError.html">Rake::RuleRecursionOverflowError</a>
   </li>
@@ -431,6 +487,11 @@
     <span class="container">Rake::Task</span>
 
   <li class="method">
+    <a href="Rake/FileList.html#method-c-5B-5D">::[]</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
     <a href="Rake.html#method-c-add_rakelib">::add_rakelib</a>
     &mdash;
     <span class="container">Rake</span>
@@ -456,14 +517,14 @@
     <span class="container">Rake::Task</span>
 
   <li class="method">
-    <a href="Rake/LinkedList/EmptyLinkedList.html#method-c-cons">::cons</a>
-    &mdash;
-    <span class="container">Rake::LinkedList::EmptyLinkedList</span>
-
-  <li class="method">
     <a href="Rake/LinkedList.html#method-c-cons">::cons</a>
     &mdash;
     <span class="container">Rake::LinkedList</span>
+
+  <li class="method">
+    <a href="Rake/LinkedList/EmptyLinkedList.html#method-c-cons">::cons</a>
+    &mdash;
+    <span class="container">Rake::LinkedList::EmptyLinkedList</span>
 
   <li class="method">
     <a href="Rake/Task.html#method-c-create_rule">::create_rule</a>
@@ -481,6 +542,16 @@
     <span class="container">Rake::LinkedList</span>
 
   <li class="method">
+    <a href="Rake/Task.html#method-c-format_deps">::format_deps</a>
+    &mdash;
+    <span class="container">Rake::Task</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-c-glob">::glob</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
     <a href="Rake.html#method-c-load_rakefile">::load_rakefile</a>
     &mdash;
     <span class="container">Rake</span>
@@ -491,9 +562,24 @@
     <span class="container">Rake::LinkedList</span>
 
   <li class="method">
+    <a href="Rake/TestTask.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Rake::TestTask</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
     <a href="Rake/LinkedList/EmptyLinkedList.html#method-c-new">::new</a>
     &mdash;
     <span class="container">Rake::LinkedList::EmptyLinkedList</span>
+
+  <li class="method">
+    <a href="Rake/LinkedList.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Rake::LinkedList</span>
 
   <li class="method">
     <a href="Rake/Task.html#method-c-new">::new</a>
@@ -506,19 +592,9 @@
     <span class="container">Rake::RuleRecursionOverflowError</span>
 
   <li class="method">
-    <a href="Rake/TestTask.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Rake::TestTask</span>
-
-  <li class="method">
     <a href="Rake/PackageTask.html#method-c-new">::new</a>
     &mdash;
     <span class="container">Rake::PackageTask</span>
-
-  <li class="method">
-    <a href="Rake/TaskArguments.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Rake::TaskArguments</span>
 
   <li class="method">
     <a href="Rake/Application.html#method-c-new">::new</a>
@@ -531,9 +607,9 @@
     <span class="container">Rake::NameSpace</span>
 
   <li class="method">
-    <a href="Rake/LinkedList.html#method-c-new">::new</a>
+    <a href="Rake/TaskArguments.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">Rake::LinkedList</span>
+    <span class="container">Rake::TaskArguments</span>
 
   <li class="method">
     <a href="Rake.html#method-c-original_dir">::original_dir</a>
@@ -556,6 +632,21 @@
     <span class="container">Rake::Task</span>
 
   <li class="method">
+    <a href="Rake.html#method-c-with_application">::with_application</a>
+    &mdash;
+    <span class="container">Rake</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-i-2A">#*</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-i-3C-3C">#&lt;&lt;</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
     <a href="Rake/EarlyTime.html#method-i-3C-3D-3E">#&lt;=&gt;</a>
     &mdash;
     <span class="container">Rake::EarlyTime</span>
@@ -566,14 +657,14 @@
     <span class="container">Rake::LateTime</span>
 
   <li class="method">
+    <a href="Rake/FileList.html#method-i-3D-3D">#==</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
     <a href="Rake/LinkedList.html#method-i-3D-3D">#==</a>
     &mdash;
     <span class="container">Rake::LinkedList</span>
-
-  <li class="method">
-    <a href="Rake/TaskArguments.html#method-i-5B-5D">#[]</a>
-    &mdash;
-    <span class="container">Rake::TaskArguments</span>
 
   <li class="method">
     <a href="Rake/TaskManager.html#method-i-5B-5D">#[]</a>
@@ -581,9 +672,19 @@
     <span class="container">Rake::TaskManager</span>
 
   <li class="method">
+    <a href="Rake/TaskArguments.html#method-i-5B-5D">#[]</a>
+    &mdash;
+    <span class="container">Rake::TaskArguments</span>
+
+  <li class="method">
     <a href="Rake/NameSpace.html#method-i-5B-5D">#[]</a>
     &mdash;
     <span class="container">Rake::NameSpace</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-i-add">#add</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
 
   <li class="method">
     <a href="Rake/Task.html#method-i-add_description">#add_description</a>
@@ -646,9 +747,19 @@
     <span class="container">Rake::Task</span>
 
   <li class="method">
+    <a href="Rake/Task.html#method-i-clear_args">#clear_args</a>
+    &mdash;
+    <span class="container">Rake::Task</span>
+
+  <li class="method">
     <a href="Rake/Task.html#method-i-clear_comments">#clear_comments</a>
     &mdash;
     <span class="container">Rake::Task</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-i-clear_exclude">#clear_exclude</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
 
   <li class="method">
     <a href="Rake/Task.html#method-i-clear_prerequisites">#clear_prerequisites</a>
@@ -671,14 +782,14 @@
     <span class="container">Rake::TaskManager</span>
 
   <li class="method">
-    <a href="Rake/TestTask.html#method-i-define">#define</a>
-    &mdash;
-    <span class="container">Rake::TestTask</span>
-
-  <li class="method">
     <a href="Rake/PackageTask.html#method-i-define">#define</a>
     &mdash;
     <span class="container">Rake::PackageTask</span>
+
+  <li class="method">
+    <a href="Rake/TestTask.html#method-i-define">#define</a>
+    &mdash;
+    <span class="container">Rake::TestTask</span>
 
   <li class="method">
     <a href="Rake/DSL.html#method-i-desc">#desc</a>
@@ -701,6 +812,11 @@
     <span class="container">Rake::LinkedList</span>
 
   <li class="method">
+    <a href="Rake/FileList.html#method-i-egrep">#egrep</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
     <a href="Rake/LinkedList/EmptyLinkedList.html#method-i-empty-3F">#empty?</a>
     &mdash;
     <span class="container">Rake::LinkedList::EmptyLinkedList</span>
@@ -721,19 +837,39 @@
     <span class="container">Rake::TaskManager</span>
 
   <li class="method">
+    <a href="Rake/FileList.html#method-i-exclude">#exclude</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-i-excluded_from_list-3F">#excluded_from_list?</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
     <a href="Rake/Task.html#method-i-execute">#execute</a>
     &mdash;
     <span class="container">Rake::Task</span>
 
   <li class="method">
+    <a href="Rake/FileList.html#method-i-existing">#existing</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-i-existing-21">#existing!</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-i-ext">#ext</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
     <a href="String.html#method-i-ext">#ext</a>
     &mdash;
     <span class="container">String</span>
-
-  <li class="method">
-    <a href="Pathname.html#method-i-ext">#ext</a>
-    &mdash;
-    <span class="container">Pathname</span>
 
   <li class="method">
     <a href="Rake/TaskArguments.html#method-i-extras">#extras</a>
@@ -756,6 +892,26 @@
     <span class="container">Rake::Task</span>
 
   <li class="method">
+    <a href="Rake/TaskManager.html#method-i-generate_did_you_mean_suggestions">#generate_did_you_mean_suggestions</a>
+    &mdash;
+    <span class="container">Rake::TaskManager</span>
+
+  <li class="method">
+    <a href="Rake/TaskManager.html#method-i-generate_message_for_undefined_task">#generate_message_for_undefined_task</a>
+    &mdash;
+    <span class="container">Rake::TaskManager</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-i-gsub">#gsub</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-i-gsub-21">#gsub!</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
     <a href="Rake/TaskArguments.html#method-i-has_key-3F">#has_key?</a>
     &mdash;
     <span class="container">Rake::TaskArguments</span>
@@ -771,14 +927,19 @@
     <span class="container">Rake::TaskManager</span>
 
   <li class="method">
-    <a href="Rake/Application.html#method-i-init">#init</a>
+    <a href="Rake/FileList.html#method-i-include">#include</a>
     &mdash;
-    <span class="container">Rake::Application</span>
+    <span class="container">Rake::FileList</span>
 
   <li class="method">
     <a href="Rake/PackageTask.html#method-i-init">#init</a>
     &mdash;
     <span class="container">Rake::PackageTask</span>
+
+  <li class="method">
+    <a href="Rake/Application.html#method-i-init">#init</a>
+    &mdash;
+    <span class="container">Rake::Application</span>
 
   <li class="method">
     <a href="Rake/LinkedList.html#method-i-inspect">#inspect</a>
@@ -801,9 +962,24 @@
     <span class="container">Rake::Task</span>
 
   <li class="method">
-    <a href="Rake/MultiTask.html#method-i-invoke_with_call_chain">#invoke_with_call_chain</a>
+    <a href="Rake/Task.html#method-i-invoke_with_call_chain">#invoke_with_call_chain</a>
     &mdash;
-    <span class="container">Rake::MultiTask</span>
+    <span class="container">Rake::Task</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-i-is_a-3F">#is_a?</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
+    <a href="Rake/TaskArguments.html#method-i-key-3F">#key?</a>
+    &mdash;
+    <span class="container">Rake::TaskArguments</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-i-kind_of-3F">#kind_of?</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
 
   <li class="method">
     <a href="Rake/DefaultLoader.html#method-i-load">#load</a>
@@ -881,6 +1057,11 @@
     <span class="container">Rake::FileUtilsExt</span>
 
   <li class="method">
+    <a href="Rake/FileUtilsExt.html#method-i-nowrite">#nowrite</a>
+    &mdash;
+    <span class="container">Rake::FileUtilsExt</span>
+
+  <li class="method">
     <a href="Rake/Application.html#method-i-options">#options</a>
     &mdash;
     <span class="container">Rake::Application</span>
@@ -896,14 +1077,14 @@
     <span class="container">Rake::PackageTask</span>
 
   <li class="method">
+    <a href="Rake/FileList.html#method-i-pathmap">#pathmap</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
     <a href="String.html#method-i-pathmap">#pathmap</a>
     &mdash;
     <span class="container">String</span>
-
-  <li class="method">
-    <a href="Pathname.html#method-i-pathmap">#pathmap</a>
-    &mdash;
-    <span class="container">Pathname</span>
 
   <li class="method">
     <a href="String.html#method-i-pathmap_explode">#pathmap_explode</a>
@@ -931,7 +1112,12 @@
     <span class="container">Rake::FileUtilsExt</span>
 
   <li class="method">
-    <a href="Rake/FileUtilsExt.html#method-i-rake_merge_option">#rake_merge_option</a>
+    <a href="Rake/FileUtilsExt.html#method-i-rake_check_options">#rake_check_options</a>
+    &mdash;
+    <span class="container">Rake::FileUtilsExt</span>
+
+  <li class="method">
+    <a href="Rake/FileUtilsExt.html#method-i-rake_output_message">#rake_output_message</a>
     &mdash;
     <span class="container">Rake::FileUtilsExt</span>
 
@@ -944,6 +1130,11 @@
     <a href="Rake/Task.html#method-i-reenable">#reenable</a>
     &mdash;
     <span class="container">Rake::Task</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-i-resolve">#resolve</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
 
   <li class="method">
     <a href="Rake/TaskManager.html#method-i-resolve_args">#resolve_args</a>
@@ -1006,6 +1197,16 @@
     <span class="container">FileUtils</span>
 
   <li class="method">
+    <a href="Rake/FileList.html#method-i-sub">#sub</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-i-sub-21">#sub!</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
     <a href="Rake/PackageTask.html#method-i-tar_bz2_file">#tar_bz2_file</a>
     &mdash;
     <span class="container">Rake::PackageTask</span>
@@ -1021,19 +1222,24 @@
     <span class="container">Rake::PackageTask</span>
 
   <li class="method">
+    <a href="Rake/PackageTask.html#method-i-target_dir">#target_dir</a>
+    &mdash;
+    <span class="container">Rake::PackageTask</span>
+
+  <li class="method">
     <a href="Rake/DSL.html#method-i-task">#task</a>
     &mdash;
     <span class="container">Rake::DSL</span>
 
   <li class="method">
-    <a href="Rake/NameSpace.html#method-i-tasks">#tasks</a>
-    &mdash;
-    <span class="container">Rake::NameSpace</span>
-
-  <li class="method">
     <a href="Rake/TaskManager.html#method-i-tasks">#tasks</a>
     &mdash;
     <span class="container">Rake::TaskManager</span>
+
+  <li class="method">
+    <a href="Rake/NameSpace.html#method-i-tasks">#tasks</a>
+    &mdash;
+    <span class="container">Rake::NameSpace</span>
 
   <li class="method">
     <a href="Rake/TaskManager.html#method-i-tasks_in_scope">#tasks_in_scope</a>
@@ -1066,14 +1272,34 @@
     <span class="container">Rake::FileTask</span>
 
   <li class="method">
+    <a href="Rake/FileList.html#method-i-to_a">#to_a</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
     <a href="Rake/TaskArguments.html#method-i-to_a">#to_a</a>
     &mdash;
     <span class="container">Rake::TaskArguments</span>
 
   <li class="method">
+    <a href="Rake/FileList.html#method-i-to_ary">#to_ary</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
+
+  <li class="method">
     <a href="Rake/TaskArguments.html#method-i-to_hash">#to_hash</a>
     &mdash;
     <span class="container">Rake::TaskArguments</span>
+
+  <li class="method">
+    <a href="Rake/InvocationChain.html#method-i-to_s">#to_s</a>
+    &mdash;
+    <span class="container">Rake::InvocationChain</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-i-to_s">#to_s</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
 
   <li class="method">
     <a href="Rake/InvocationChain/EmptyInvocationChain.html#method-i-to_s">#to_s</a>
@@ -1084,11 +1310,6 @@
     <a href="Rake/LateTime.html#method-i-to_s">#to_s</a>
     &mdash;
     <span class="container">Rake::LateTime</span>
-
-  <li class="method">
-    <a href="Rake/InvocationChain.html#method-i-to_s">#to_s</a>
-    &mdash;
-    <span class="container">Rake::InvocationChain</span>
 
   <li class="method">
     <a href="Rake/LinkedList.html#method-i-to_s">#to_s</a>
@@ -1116,6 +1337,16 @@
     <span class="container">Rake::FileUtilsExt</span>
 
   <li class="method">
+    <a href="Rake/FileUtilsExt.html#method-i-verbose">#verbose</a>
+    &mdash;
+    <span class="container">Rake::FileUtilsExt</span>
+
+  <li class="method">
+    <a href="Rake/FileUtilsExt.html#method-i-when_writing">#when_writing</a>
+    &mdash;
+    <span class="container">Rake::FileUtilsExt</span>
+
+  <li class="method">
     <a href="Rake/FileUtilsExt.html#method-i-when_writing">#when_writing</a>
     &mdash;
     <span class="container">Rake::FileUtilsExt</span>
@@ -1126,16 +1357,26 @@
     <span class="container">Rake::TaskArguments</span>
 
   <li class="method">
+    <a href="Rake/PackageTask.html#method-i-working_dir">#working_dir</a>
+    &mdash;
+    <span class="container">Rake::PackageTask</span>
+
+  <li class="method">
     <a href="Rake/PackageTask.html#method-i-zip_file">#zip_file</a>
     &mdash;
     <span class="container">Rake::PackageTask</span>
+
+  <li class="method">
+    <a href="Rake/Task.html#method-i-7C">#|</a>
+    &mdash;
+    <span class="container">Rake::Task</span>
 </ul>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -8,14 +8,17 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
 </script>
 
-<script src="./js/jquery.js"></script>
-<script src="./js/darkfish.js"></script>
+<script src="./js/navigation.js" defer></script>
+<script src="./js/search.js" defer></script>
+<script src="./js/search_index.js" defer></script>
+<script src="./js/searcher.js" defer></script>
+<script src="./js/darkfish.js" defer></script>
 
 <link href="./css/fonts.css" rel="stylesheet">
 <link href="./css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="module">
@@ -56,34 +59,27 @@
     
     
     
-    <div id="extends-section" class="nav-section">
+    
+<div id="extends-section" class="nav-section">
   <h3>Extended With Modules</h3>
 
   <ul class="link-list">
-    
-  
     <li><a class="extend" href="Rake/FileUtilsExt.html">Rake::FileUtilsExt</a>
-  
-  
   </ul>
 </div>
 
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-c-add_rakelib">::add_rakelib</a>
-    
     <li ><a href="#method-c-application">::application</a>
-    
     <li ><a href="#method-c-application-3D">::application=</a>
-    
     <li ><a href="#method-c-load_rakefile">::load_rakefile</a>
-    
     <li ><a href="#method-c-original_dir">::original_dir</a>
-    
+    <li ><a href="#method-c-with_application">::with_application</a>
   </ul>
 </div>
 
@@ -99,229 +95,191 @@
     
   </section>
 
-  
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
     <section class="constants-list">
       <header>
         <h3>Constants</h3>
       </header>
       <dl>
-      
         <dt id="CommandLineOptionError">CommandLineOptionError
-        
         <dd>
-        
-      
         <dt id="EARLY">EARLY
-        
         <dd>
-        
-      
         <dt id="LATE">LATE
-        
         <dd>
-        
-      
+        <dt id="RakeFileUtils">RakeFileUtils
+        <dd>
         <dt id="VERSION">VERSION
-        
         <dd>
-        
-      
       </dl>
     </section>
-    
 
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-add_rakelib" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">add_rakelib</span><span
             class="method-args">(*files)</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
           <p>Add files to the rakelib list</p>
-          
-          
 
-          
           <div class="method-source-code" id="add_rakelib-source">
-            <pre><span class="ruby-comment"># File lib/rake/rake_module.rb, line 32</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_rakelib</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">files</span>)
+            <pre><span class="ruby-comment"># File lib/rake/rake_module.rb, line 33</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_rakelib</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">files</span>)
   <span class="ruby-identifier">application</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">rakelib</span> <span class="ruby-operator">||=</span> []
   <span class="ruby-identifier">application</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">rakelib</span>.<span class="ruby-identifier">concat</span>(<span class="ruby-identifier">files</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-c-application" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">application</span><span
             class="method-args">()</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Current Rake <a href="Rake/Application.html">Application</a></p>
-          
-          
+          <p>Current Rake <a href="Rake/Application.html"><code>Application</code></a></p>
 
-          
           <div class="method-source-code" id="application-source">
-            <pre><span class="ruby-comment"># File lib/rake/rake_module.rb, line 7</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">application</span>
+            <pre><span class="ruby-comment"># File lib/rake/rake_module.rb, line 8</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">application</span>
   <span class="ruby-ivar">@application</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">Application</span>.<span class="ruby-identifier">new</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-c-application-3D" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">application=</span><span
             class="method-args">(app)</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
           <p>Set the current Rake application object.</p>
-          
-          
 
-          
           <div class="method-source-code" id="application-3D-source">
-            <pre><span class="ruby-comment"># File lib/rake/rake_module.rb, line 12</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">application=</span>(<span class="ruby-identifier">app</span>)
+            <pre><span class="ruby-comment"># File lib/rake/rake_module.rb, line 13</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">application=</span>(<span class="ruby-identifier">app</span>)
   <span class="ruby-ivar">@application</span> = <span class="ruby-identifier">app</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-c-load_rakefile" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">load_rakefile</span><span
             class="method-args">(path)</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
           <p>Load a rakefile.</p>
-          
-          
 
-          
           <div class="method-source-code" id="load_rakefile-source">
-            <pre><span class="ruby-comment"># File lib/rake/rake_module.rb, line 27</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_rakefile</span>(<span class="ruby-identifier">path</span>)
+            <pre><span class="ruby-comment"># File lib/rake/rake_module.rb, line 28</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">load_rakefile</span>(<span class="ruby-identifier">path</span>)
   <span class="ruby-identifier">load</span>(<span class="ruby-identifier">path</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-c-original_dir" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">original_dir</span><span
             class="method-args">()</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
           <p>Return the original directory where the Rake application was started.</p>
-          
-          
 
-          
           <div class="method-source-code" id="original_dir-source">
-            <pre><span class="ruby-comment"># File lib/rake/rake_module.rb, line 22</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">original_dir</span>
+            <pre><span class="ruby-comment"># File lib/rake/rake_module.rb, line 23</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">original_dir</span>
   <span class="ruby-identifier">application</span>.<span class="ruby-identifier">original_dir</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
+      <div id="method-c-with_application" class="method-detail ">
+        <div class="method-heading">
+          <span class="method-name">with_application</span><span
+            class="method-args">(block_application = Rake::Application.new) { |block_application| ... }</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+
+        <div class="method-description">
+          <p>Make <code>block_application</code> the default rake application inside a block so you can load rakefiles into a different application.</p>
+
+<p>This is useful when you want to run rake tasks inside a library without running rake in a sub-shell.</p>
+
+<p>Example:</p>
+
+<pre class="ruby"><span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span> <span class="ruby-string">&#39;other/directory&#39;</span>
+
+<span class="ruby-identifier">other_rake</span> = <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">with_application</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">rake</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">rake</span>.<span class="ruby-identifier">load_rakefile</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-identifier">puts</span> <span class="ruby-identifier">other_rake</span>.<span class="ruby-identifier">tasks</span>
+</pre>
+
+          <div class="method-source-code" id="with_application-source">
+            <pre><span class="ruby-comment"># File lib/rake/rake_module.rb, line 54</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">with_application</span>(<span class="ruby-identifier">block_application</span> = <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">Application</span>.<span class="ruby-identifier">new</span>)
+  <span class="ruby-identifier">orig_application</span> = <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>
+
+  <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span> = <span class="ruby-identifier">block_application</span>
+
+  <span class="ruby-keyword">yield</span> <span class="ruby-identifier">block_application</span>
+
+  <span class="ruby-identifier">block_application</span>
+<span class="ruby-keyword">ensure</span>
+  <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span> = <span class="ruby-identifier">orig_application</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

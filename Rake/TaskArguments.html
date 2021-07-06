@@ -8,14 +8,17 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -54,57 +57,42 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link"><a href="../Object.html">Object</a>
-  
 </div>
 
-    <div id="includes-section" class="nav-section">
+    
+<div id="includes-section" class="nav-section">
   <h3>Included Modules</h3>
 
   <ul class="link-list">
-  
-  
     <li><span class="include">Enumerable</span>
-  
-  
   </ul>
 </div>
 
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-5B-5D">#[]</a>
-    
     <li ><a href="#method-i-each">#each</a>
-    
     <li ><a href="#method-i-extras">#extras</a>
-    
     <li ><a href="#method-i-fetch">#fetch</a>
-    
     <li ><a href="#method-i-has_key-3F">#has_key?</a>
-    
+    <li ><a href="#method-i-key-3F">#key?</a>
     <li ><a href="#method-i-method_missing">#method_missing</a>
-    
     <li ><a href="#method-i-new_scope">#new_scope</a>
-    
     <li ><a href="#method-i-to_a">#to_a</a>
-    
     <li ><a href="#method-i-to_hash">#to_hash</a>
-    
     <li ><a href="#method-i-values_at">#values_at</a>
-    
     <li ><a href="#method-i-with_defaults">#with_defaults</a>
-    
   </ul>
 </div>
 
@@ -118,28 +106,19 @@
 
   <section class="description">
     
-<p><a href="TaskArguments.html">TaskArguments</a> manage the arguments passed
-to a task.</p>
+<p><a href="TaskArguments.html"><code>TaskArguments</code></a> manage the arguments passed to a task.</p>
 
   </section>
 
-  
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-names" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">names</span><span
@@ -147,447 +126,313 @@ to a task.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Argument names</p>
-        
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">new</span><span
             class="method-args">(names, values, parent=nil)</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Create a TaskArgument object with a list of argument <code>names</code> and
-a set of associated <code>values</code>.  <code>parent</code> is the parent
-argument object.</p>
-          
-          
+          <p>Create a TaskArgument object with a list of argument <code>names</code> and a set of associated <code>values</code>.  <code>parent</code> is the parent argument object.</p>
 
-          
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 14</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">names</span>, <span class="ruby-identifier">values</span>, <span class="ruby-identifier">parent</span>=<span class="ruby-keyword">nil</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 15</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">names</span>, <span class="ruby-identifier">values</span>, <span class="ruby-identifier">parent</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-ivar">@names</span> = <span class="ruby-identifier">names</span>
   <span class="ruby-ivar">@parent</span> = <span class="ruby-identifier">parent</span>
   <span class="ruby-ivar">@hash</span> = {}
   <span class="ruby-ivar">@values</span> = <span class="ruby-identifier">values</span>
   <span class="ruby-identifier">names</span>.<span class="ruby-identifier">each_with_index</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">name</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
-    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">values</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">values</span>[<span class="ruby-identifier">i</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&#39;&#39;</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">values</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">values</span>[<span class="ruby-identifier">i</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;&quot;</span>
     <span class="ruby-ivar">@hash</span>[<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_sym</span>] = <span class="ruby-identifier">values</span>[<span class="ruby-identifier">i</span>]
   }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-5B-5D" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">[]</span><span
             class="method-args">(index)</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
           <p>Find an argument value by name or index.</p>
-          
-          
 
-          
           <div class="method-source-code" id="5B-5D-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 43</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">index</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 44</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">[]</span>(<span class="ruby-identifier">index</span>)
   <span class="ruby-identifier">lookup</span>(<span class="ruby-identifier">index</span>.<span class="ruby-identifier">to_sym</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-each" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">each</span><span
-            class="method-args">(&block)</span>
-          
+            class="method-args">(&amp;block)</span>
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
           <p>Enumerates the arguments and their values</p>
-          
-          
 
-          
           <div class="method-source-code" id="each-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 55</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 56</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-ivar">@hash</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-extras" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">extras</span><span
             class="method-args">()</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
           <p>Retrieve the list of values not associated with named arguments</p>
-          
-          
 
-          
           <div class="method-source-code" id="extras-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 31</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">extras</span>
+            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 32</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extras</span>
   <span class="ruby-ivar">@values</span>[<span class="ruby-ivar">@names</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>] <span class="ruby-operator">||</span> []
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-fetch" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">fetch</span><span
-            class="method-args">(*args, &block)</span>
-          
+            class="method-args">(*args, &amp;block)</span>
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
           
-          
-          
-          
 
-          
           <div class="method-source-code" id="fetch-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 87</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">fetch</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 93</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">fetch</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-ivar">@hash</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-has_key-3F" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">has_key?</span><span
             class="method-args">(key)</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns true if <code>key</code> is one of the arguments</p>
-          
-          
 
-          
           <div class="method-source-code" id="has_key-3F-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 83</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">key</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 88</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">has_key?</span>(<span class="ruby-identifier">key</span>)
   <span class="ruby-ivar">@hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">key</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
+        <div class="aliases">
+          Also aliased as: <a href="TaskArguments.html#method-i-key-3F">key?</a>
+        </div>
 
-        
       </div>
 
-    
+      <div id="method-i-key-3F" class="method-detail method-alias">
+        <div class="method-heading">
+          <span class="method-name">key?</span><span
+            class="method-args">(key)</span>
+        </div>
+
+        <div class="method-description">
+          
+
+        </div>
+
+
+        <div class="aliases">
+          Alias for: <a href="TaskArguments.html#method-i-has_key-3F">has_key?</a>
+        </div>
+      </div>
+
       <div id="method-i-method_missing" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">method_missing</span><span
             class="method-args">(sym, *args)</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Returns the value of the given argument via <a
-href="TaskArguments.html#method-i-method_missing">#method_missing</a></p>
-          
-          
+          <p>Returns the value of the given argument via <a href="TaskArguments.html#method-i-method_missing"><code>method_missing</code></a></p>
 
-          
           <div class="method-source-code" id="method_missing-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 65</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">method_missing</span>(<span class="ruby-identifier">sym</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 66</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">method_missing</span>(<span class="ruby-identifier">sym</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
   <span class="ruby-identifier">lookup</span>(<span class="ruby-identifier">sym</span>.<span class="ruby-identifier">to_sym</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-new_scope" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">new_scope</span><span
             class="method-args">(names)</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
           <p>Create a new argument scope using the prerequisite argument names.</p>
-          
-          
 
-          
           <div class="method-source-code" id="new_scope-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 37</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">new_scope</span>(<span class="ruby-identifier">names</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 38</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">new_scope</span>(<span class="ruby-identifier">names</span>)
   <span class="ruby-identifier">values</span> = <span class="ruby-identifier">names</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span> <span class="ruby-keyword">self</span>[<span class="ruby-identifier">n</span>] }
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">names</span>, <span class="ruby-identifier">values</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">extras</span>, <span class="ruby-keyword">self</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-to_a" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">to_a</span><span
             class="method-args">()</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
           <p>Retrieve the complete array of sequential values</p>
-          
-          
 
-          
           <div class="method-source-code" id="to_a-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 26</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_a</span>
+            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 27</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_a</span>
   <span class="ruby-ivar">@values</span>.<span class="ruby-identifier">dup</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-to_hash" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">to_hash</span><span
             class="method-args">()</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns a Hash of arguments and their values</p>
-          
-          
 
-          
           <div class="method-source-code" id="to_hash-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 70</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_hash</span>
-  <span class="ruby-ivar">@hash</span>
+            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 71</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_hash</span>
+  <span class="ruby-ivar">@hash</span>.<span class="ruby-identifier">dup</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-values_at" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">values_at</span><span
             class="method-args">(*keys)</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
           <p>Extracts the argument values at <code>keys</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="values_at-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 60</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">values_at</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">keys</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 61</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">values_at</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">keys</span>)
   <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span> <span class="ruby-identifier">lookup</span>(<span class="ruby-identifier">k</span>) }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-with_defaults" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">with_defaults</span><span
             class="method-args">(defaults)</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Specify a hash of default values for task arguments. Use the defaults only
-if there is no specific value for the given argument.</p>
-          
-          
+          <p>Specify a hash of default values for task arguments. Use the defaults only if there is no specific value for the given argument.</p>
 
-          
           <div class="method-source-code" id="with_defaults-source">
-            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 50</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">with_defaults</span>(<span class="ruby-identifier">defaults</span>)
+            <pre><span class="ruby-comment"># File lib/rake/task_arguments.rb, line 51</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">with_defaults</span>(<span class="ruby-identifier">defaults</span>)
   <span class="ruby-ivar">@hash</span> = <span class="ruby-identifier">defaults</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-ivar">@hash</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

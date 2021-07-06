@@ -8,14 +8,17 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -54,26 +57,23 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link">Task
-  
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-i-needed-3F">#needed?</a>
-    
     <li ><a href="#method-i-timestamp">#timestamp</a>
-    
   </ul>
 </div>
 
@@ -87,87 +87,55 @@
 
   <section class="description">
     
-<p>A <a href="FileTask.html">FileTask</a> is a task that includes time based
-dependencies.  If any of a FileTask&#39;s prerequisites have a timestamp
-that is later than the file represented by this task, then the file must be
-rebuilt (using the supplied actions).</p>
+<p>A <a href="FileTask.html"><code>FileTask</code></a> is a task that includes time based dependencies.  If any of a FileTask&#39;s prerequisites have a timestamp that is later than the file represented by this task, then the file must be rebuilt (using the supplied actions).</p>
 
   </section>
 
-  
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
 
-    
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-needed-3F" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">needed?</span><span
             class="method-args">()</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Is this file task needed?  Yes if it doesn&#39;t exist, or if its time
-stamp is out of date.</p>
-          
-          
+          <p>Is this file task needed?  Yes if it doesn&#39;t exist, or if its time stamp is out of date.</p>
 
-          
           <div class="method-source-code" id="needed-3F-source">
-            <pre><span class="ruby-comment"># File lib/rake/file_task.rb, line 15</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">needed?</span>
-  <span class="ruby-operator">!</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">name</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">out_of_date?</span>(<span class="ruby-identifier">timestamp</span>) <span class="ruby-operator">||</span> <span class="ruby-ivar">@application</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">build_all</span>
+            <pre><span class="ruby-comment"># File lib/rake/file_task.rb, line 16</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">needed?</span>
+  <span class="ruby-operator">!</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">name</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">out_of_date?</span>(<span class="ruby-identifier">timestamp</span>) <span class="ruby-operator">||</span> <span class="ruby-ivar">@application</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">build_all</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-timestamp" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">timestamp</span><span
             class="method-args">()</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
           <p>Time stamp for file task.</p>
-          
-          
 
-          
           <div class="method-source-code" id="timestamp-source">
-            <pre><span class="ruby-comment"># File lib/rake/file_task.rb, line 20</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">timestamp</span>
+            <pre><span class="ruby-comment"># File lib/rake/file_task.rb, line 21</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">timestamp</span>
   <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">name</span>)
     <span class="ruby-constant">File</span>.<span class="ruby-identifier">mtime</span>(<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>)
   <span class="ruby-keyword">else</span>
@@ -175,24 +143,20 @@ stamp is out of date.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

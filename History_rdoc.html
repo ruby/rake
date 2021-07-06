@@ -8,14 +8,17 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
 </script>
 
-<script src="./js/jquery.js"></script>
-<script src="./js/darkfish.js"></script>
+<script src="./js/navigation.js" defer></script>
+<script src="./js/search.js" defer></script>
+<script src="./js/search_index.js" defer></script>
+<script src="./js/searcher.js" defer></script>
+<script src="./js/darkfish.js" defer></script>
 
 <link href="./css/fonts.css" rel="stylesheet">
 <link href="./css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="file">
@@ -55,26 +58,82 @@
   <h3>Table of Contents</h3>
 
   <ul class="link-list" role="directory">
-    <li><a href="#label-12.0.0-28dev-29">12.0.0(dev)</a>
+    <li><a href="#label-13.0.3">13.0.3</a>
+    <li><a href="#label-13.0.2">13.0.2</a>
+    <li><a href="#label-Enhancements">Enhancements</a>
+    <li><a href="#label-13.0.1">13.0.1</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
+    <li><a href="#label-13.0.0">13.0.0</a>
+    <li><a href="#label-Enhancements">Enhancements</a>
+    <li><a href="#label-Compatibility+changes">Compatibility changes</a>
+    <li><a href="#label-12.3.3">12.3.3</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
+    <li><a href="#label-Enhancements-3A">Enhancements:</a>
+    <li><a href="#label-12.3.2">12.3.2</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
+    <li><a href="#label-Enhancements-3A">Enhancements:</a>
+    <li><a href="#label-12.3.1">12.3.1</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
+    <li><a href="#label-Enhancements-3A">Enhancements:</a>
+    <li><a href="#label-12.3.0">12.3.0</a>
+    <li><a href="#label-Compatibility+Changes">Compatibility Changes</a>
+    <li><a href="#label-Enhancements-3A">Enhancements:</a>
+    <li><a href="#label-12.2.1">12.2.1</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
+    <li><a href="#label-12.2.0">12.2.0</a>
+    <li><a href="#label-Enhancements-3A">Enhancements:</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
+    <li><a href="#label-12.1.0">12.1.0</a>
+    <li><a href="#label-Enhancements-3A">Enhancements:</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
+    <li><a href="#label-12.0.0">12.0.0</a>
+    <li><a href="#label-Compatibility+Changes">Compatibility Changes</a>
+    <li><a href="#label-Enhancements-3A">Enhancements:</a>
+    <li><a href="#label-11.3.0+-2F+2016-09-20">11.3.0 / 2016-09-20</a>
+    <li><a href="#label-Enhancements-3A">Enhancements:</a>
     <li><a href="#label-11.2.2+-2F+2016-06-12">11.2.2 / 2016-06-12</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
     <li><a href="#label-11.2.1+-2F+2016-06-12">11.2.1 / 2016-06-12</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
     <li><a href="#label-11.2.0+-2F+2016-06-11">11.2.0 / 2016-06-11</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
+    <li><a href="#label-Enhancements">Enhancements</a>
     <li><a href="#label-11.1.2+-2F+2016-03-28">11.1.2 / 2016-03-28</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
     <li><a href="#label-11.1.1+-2F+2016-03-14">11.1.1 / 2016-03-14</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
     <li><a href="#label-11.1.0+-2F+2016-03-11">11.1.0 / 2016-03-11</a>
+    <li><a href="#label-Compatibility+Changes">Compatibility Changes</a>
     <li><a href="#label-11.0.1+-2F+2016-03-09">11.0.1 / 2016-03-09</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
     <li><a href="#label-11.0.0+-2F+2016-03-09">11.0.0 / 2016-03-09</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
+    <li><a href="#label-Enhancements">Enhancements</a>
+    <li><a href="#label-Compatibility+Changes">Compatibility Changes</a>
     <li><a href="#label-10.5.0+-2F+2016-01-13">10.5.0 / 2016-01-13</a>
+    <li><a href="#label-Enhancements">Enhancements</a>
     <li><a href="#label-10.4.2+-2F+2014-12-02">10.4.2 / 2014-12-02</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
     <li><a href="#label-10.4.1+-2F+2014-12-01">10.4.1 / 2014-12-01</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
     <li><a href="#label-10.4.0+-2F+2014-11-22">10.4.0 / 2014-11-22</a>
+    <li><a href="#label-Enhancements">Enhancements</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
     <li><a href="#label-10.3.2+-2F+2014-05-15">10.3.2 / 2014-05-15</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
     <li><a href="#label-10.3.1+-2F+2014-04-17">10.3.1 / 2014-04-17</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
     <li><a href="#label-10.3+-2F+2014-04-15">10.3 / 2014-04-15</a>
+    <li><a href="#label-Enhancements">Enhancements</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
     <li><a href="#label-10.2.2+-2F+2014-03-27">10.2.2 / 2014-03-27</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
     <li><a href="#label-10.2.1+-2F+2014-03-25">10.2.1 / 2014-03-25</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
     <li><a href="#label-10.2.0+-2F+2014-03-24">10.2.0 / 2014-03-24</a>
-    <li><a href="#label-10.1.1+and+earlier">10.1.1 and earlier</a>
+    <li><a href="#label-Enhancements">Enhancements</a>
+    <li><a href="#label-Bug+fixes">Bug fixes</a>
+    <li><a href="#label-10.1.1">10.1.1</a>
     <li><a href="#label-10.1.0">10.1.0</a>
     <li><a href="#label-Changes">Changes</a>
     <li><a href="#label-New+Features">New Features</a>
@@ -242,29 +301,20 @@
 
 
   <div id="project-metadata">
-    <div id="fileindex-section" class="nav-section">
+    
+<div id="fileindex-section" class="nav-section">
   <h3>Pages</h3>
 
   <ul class="link-list">
-  
     <li><a href="./CONTRIBUTING_rdoc.html">CONTRIBUTING</a>
-  
     <li><a href="./History_rdoc.html">History</a>
-  
     <li><a href="./MIT-LICENSE.html">MIT-LICENSE</a>
-  
     <li><a href="./README_rdoc.html">README</a>
-  
     <li><a href="./doc/command_line_usage_rdoc.html">command_line_usage</a>
-  
     <li><a href="./doc/glossary_rdoc.html">glossary</a>
-  
     <li><a href="./doc/proto_rake_rdoc.html">proto_rake</a>
-  
     <li><a href="./doc/rakefile_rdoc.html">rakefile</a>
-  
     <li><a href="./doc/rational_rdoc.html">rational</a>
-  
   </ul>
 </div>
 
@@ -273,51 +323,209 @@
 
 <main role="main" aria-label="Page History.rdoc">
 
-<h3 id="label-12.0.0-28dev-29">12.0.0(dev)<span><a href="#label-12.0.0-28dev-29">&para;</a> <a href="#top">&uarr;</a></span></h3>
-
-<p>Compatibility Changes:</p>
+<h3 id="label-13.0.3">13.0.3<span><a href="#label-13.0.3">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
+<p>Fix breaking change of execution order on TestTask. Pull request #368 by ysakasin</p>
+</li></ul>
+
+<h3 id="label-13.0.2">13.0.2<span><a href="#label-13.0.2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h4 id="label-Enhancements">Enhancements<span><a href="#label-Enhancements">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Fix tests to work with current <a href="FileUtils.html"><code>FileUtils</code></a> Pull Request #358 by jeremyevans</p>
+</li><li>
+<p>Simplify default rake test loader Pull Request #357 by deivid-rodriguez</p>
+</li><li>
+<p>Update rdoc Pull Request #366 by bahasalien</p>
+</li><li>
+<p>Update broken links to rake articles from Avdi in <a href="README_rdoc.html">README</a> Pull Request #360 by svl7</p>
+</li></ul>
+
+<h3 id="label-13.0.1">13.0.1<span><a href="#label-13.0.1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Fixed bug: Reenabled task raises previous exception on second invokation  Pull Request #271 by thorsteneckel</p>
+</li><li>
+<p>Fix an incorrectly resolved arg pattern Pull Request #327 by mjbellantoni</p>
+</li></ul>
+
+<h3 id="label-13.0.0">13.0.0<span><a href="#label-13.0.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h4 id="label-Enhancements">Enhancements<span><a href="#label-Enhancements">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Follows recent changes on keyword arguments in ruby 2.7. Pull Request #326 by nobu</p>
+</li><li>
+<p>Make `PackageTask` be able to omit parent directory while packing files  Pull Request #310 by tonytonyjan</p>
+</li><li>
+<p>Add order only dependency Pull Request #269 by take-cheeze</p>
+</li></ul>
+
+<h4 id="label-Compatibility+changes">Compatibility changes<span><a href="#label-Compatibility+changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Drop old ruby versions(&lt; 2.2)</p>
+</li></ul>
+
+<h3 id="label-12.3.3">12.3.3<span><a href="#label-12.3.3">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Use the application&#39;s name in error message if a task is not found. Pull Request #303 by tmatilai</p>
+</li></ul>
+
+<h4 id="label-Enhancements-3A">Enhancements:<span><a href="#label-Enhancements-3A">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Use File.open explicitly.</p>
+</li></ul>
+
+<h3 id="label-12.3.2">12.3.2<span><a href="#label-12.3.2">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Fixed test fails caused by 2.6 warnings. Pull Request #297 by hsbt</p>
+</li></ul>
+
+<h4 id="label-Enhancements-3A">Enhancements:<span><a href="#label-Enhancements-3A">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Rdoc improvements. Pull Request #293 by colby-swandale</p>
+</li><li>
+<p>Improve multitask performance. Pull Request #273 by jsm</p>
+</li><li>
+<p>Add alias `prereqs`. Pull Request #268 by take-cheeze</p>
+</li></ul>
+
+<h3 id="label-12.3.1">12.3.1<span><a href="#label-12.3.1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Support did_you_mean &gt;= v1.2.0 which has a breaking change on formatters. Pull request #262 by FUJI Goro.</p>
+</li></ul>
+
+<h4 id="label-Enhancements-3A">Enhancements:<span><a href="#label-Enhancements-3A">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Don&#39;t run task if it depends on already invoked but failed task. Pull request #252 by Gonzalo Rodriguez.</p>
+</li><li>
+<p>Make space trimming consistent for all task arguments. Pull request #259 by Gonzalo Rodriguez.</p>
+</li><li>
+<p>Removes duplicated inclusion of <a href="Rake/DSL.html"><code>Rake::DSL</code></a> in tests. Pull request #254 by Gonzalo Rodriguez.</p>
+</li><li>
+<p>Re-raise a LoadError that didn&#39;t come from require in the test loader. Pull request #250 by Dylan Thacker-Smith.</p>
+</li></ul>
+
+<h3 id="label-12.3.0">12.3.0<span><a href="#label-12.3.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h4 id="label-Compatibility+Changes">Compatibility Changes<span><a href="#label-Compatibility+Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Bump `required_ruby_version` to Ruby 2.0.0. Rake has already removed support for Ruby 1.9.x.</p>
+</li></ul>
+
+<h4 id="label-Enhancements-3A">Enhancements:<span><a href="#label-Enhancements-3A">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Support `test-bundled-gems` task on ruby core.</p>
+</li></ul>
+
+<h3 id="label-12.2.1">12.2.1<span><a href="#label-12.2.1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Fixed to break Capistrano::Application on capistrano3.</p>
+</li></ul>
+
+<h3 id="label-12.2.0">12.2.0<span><a href="#label-12.2.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h4 id="label-Enhancements-3A">Enhancements:<span><a href="#label-Enhancements-3A">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Make rake easier to use as a library Pull request #211 by @drbrain</p>
+</li><li>
+<p>Fix quadratic performance in FileTask#out_of_date? Pull request #224 by @doudou</p>
+</li><li>
+<p>Clarify output when printing nested exception traces Pull request #232 by @urbanautomaton</p>
+</li></ul>
+
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Account for a file that match 2 or more patterns. Pull request #231 by @styd</p>
+</li></ul>
+
+<h3 id="label-12.1.0">12.1.0<span><a href="#label-12.1.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h4 id="label-Enhancements-3A">Enhancements:<span><a href="#label-Enhancements-3A">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Added did_you_mean feature for invalid rake task. Pull request #221 by @xtina-starr</p>
+</li><li>
+<p>Enabled to dependency chained by extensions. Pull request #39 by Petr Skocik.</p>
+</li><li>
+<p>Make all of string literals to frozen objects on Ruby 2.4 or later.</p>
+</li></ul>
+
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Typo fixes in rakefile.rdoc. Pull request #180 by Yuta Kurotaki.</p>
+</li><li>
+<p>Fix unexpected behavior of file task with dryrun option. Pull request #183 by @aycabta.</p>
+</li><li>
+<p>Make LoadError from running tests more obvious. Pull request #195 by Eric Hodel.</p>
+</li><li>
+<p>Fix unexpected TypeError with hash style option. Pull request #202 by Kuniaki IGARASHI.</p>
+</li></ul>
+
+<h3 id="label-12.0.0">12.0.0<span><a href="#label-12.0.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h4 id="label-Compatibility+Changes">Compatibility Changes<span><a href="#label-Compatibility+Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Removed arguments on clear #157 by Jesse Bowes</p>
+</li><li>
 <p>Removed `rake/contrib` packages. These are extracted to `rake-contrib` gem.</p>
 </li><li>
-<p>Removed to deprecated warnings for `last_comment`.</p>
+<p>Removed deprecated method named `last_comment`.</p>
+</li></ul>
+
+<h4 id="label-Enhancements-3A">Enhancements:<span><a href="#label-Enhancements-3A">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Re-use trace option on `cleanup` task. #164 by Brian Henderson</p>
+</li><li>
+<p>Actions adore keyword arguments #174 by Josh Cheek</p>
+</li><li>
+<p><a href="Rake/TaskArguments.html#method-i-key-3F"><code>Rake::TaskArguments#key?</code></a> alias of has_key? #175 by Paul Annesley</p>
+</li></ul>
+
+<h3 id="label-11.3.0+-2F+2016-09-20">11.3.0 / 2016-09-20<span><a href="#label-11.3.0+-2F+2016-09-20">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h4 id="label-Enhancements-3A">Enhancements:<span><a href="#label-Enhancements-3A">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p>Remove to reference `Fixnum` constant. Pull request #160 by nobu</p>
 </li></ul>
 
 <h3 id="label-11.2.2+-2F+2016-06-12">11.2.2 / 2016-06-12<span><a href="#label-11.2.2+-2F+2016-06-12">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Fix unexpected behavior with multiple dependencies on <a
-href="Rake/TestTask.html">Rake::TestTask</a></p>
+<p>Fix unexpected behavior with multiple dependencies on <a href="Rake/TestTask.html"><code>Rake::TestTask</code></a></p>
 </li></ul>
 
 <h3 id="label-11.2.1+-2F+2016-06-12">11.2.1 / 2016-06-12<span><a href="#label-11.2.1+-2F+2016-06-12">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Fix regression of dependencies handling on <a
-href="Rake/TestTask.html">Rake::TestTask</a>. Report #139</p>
+<p>Fix regression of dependencies handling on <a href="Rake/TestTask.html"><code>Rake::TestTask</code></a>. Report #139</p>
 </li></ul>
 
 <h3 id="label-11.2.0+-2F+2016-06-11">11.2.0 / 2016-06-11<span><a href="#label-11.2.0+-2F+2016-06-11">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Fix unexpected cut-out behavior on task description using triple dots and
-exclamation. Report #106 from Stephan Kämper and Pull request #134 by Lee</p>
+<p>Fix unexpected cut-out behavior on task description using triple dots and exclamation. Report #106 from Stephan Kämper and Pull request #134 by Lee</p>
 </li><li>
-<p>Fix empty argument assignment with `with_defaults` option. Pull request
-#135 by bakunyo</p>
+<p>Fix empty argument assignment with `with_defaults` option. Pull request #135 by bakunyo</p>
 </li><li>
 <p>Ignore to use `hwprefs` on Darwin platform. Use sysctl now. Report #128</p>
 </li></ul>
 
-<p>Enhancements:</p>
+<h4 id="label-Enhancements">Enhancements<span><a href="#label-Enhancements">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
 <p>Spawn options for sh Pull equest #138 by Eric Hodel.</p>
 </li><li>
-<p>Allow to specify dependencies(prerequisites) for <a
-href="Rake/TestTask.html">Rake::TestTask</a> Pull request #117 by Tim
-Maslyuchenko</p>
+<p>Allow to specify dependencies(prerequisites) for <a href="Rake/TestTask.html"><code>Rake::TestTask</code></a> Pull request #117 by Tim Maslyuchenko</p>
 </li><li>
 <p>Use Bundler task instead of hoe for gem release.</p>
 </li><li>
@@ -330,70 +538,59 @@ Maslyuchenko</p>
 
 <h3 id="label-11.1.2+-2F+2016-03-28">11.1.2 / 2016-03-28<span><a href="#label-11.1.2+-2F+2016-03-28">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Remove `-W` option when <a
-href="Rake/TestTask.html#attribute-i-verbose">Rake::TestTask#verbose</a>
-enabled. It&#39;s misunderstanding specification change with Rake 11.
-Partly revert #67</p>
+<p>Remove `-W` option when <a href="Rake/TestTask.html#attribute-i-verbose"><code>Rake::TestTask#verbose</code></a> enabled. It&#39;s misunderstanding specification change with Rake 11. Partly revert #67</p>
 </li></ul>
 
 <h3 id="label-11.1.1+-2F+2016-03-14">11.1.1 / 2016-03-14<span><a href="#label-11.1.1+-2F+2016-03-14">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Use `-W` instead of `–verbose` when <a
-href="Rake/TestTask.html#attribute-i-verbose">Rake::TestTask#verbose</a>
-enabled. JRuby doesn&#39;t have `–verbose` option.</p>
+<p>Use `-W` instead of `–verbose` when <a href="Rake/TestTask.html#attribute-i-verbose"><code>Rake::TestTask#verbose</code></a> enabled. JRuby doesn&#39;t have `–verbose` option.</p>
 </li></ul>
 
 <h3 id="label-11.1.0+-2F+2016-03-11">11.1.0 / 2016-03-11<span><a href="#label-11.1.0+-2F+2016-03-11">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Compatibility Changes:</p>
+<h4 id="label-Compatibility+Changes">Compatibility Changes<span><a href="#label-Compatibility+Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
 <p>Revert to remove `last_comment`. It will remove Rake 12.</p>
 </li></ul>
 
 <h3 id="label-11.0.1+-2F+2016-03-09">11.0.1 / 2016-03-09<span><a href="#label-11.0.1+-2F+2016-03-09">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
 <p>Fixed packaging manifest.</p>
 </li></ul>
 
 <h3 id="label-11.0.0+-2F+2016-03-09">11.0.0 / 2016-03-09<span><a href="#label-11.0.0+-2F+2016-03-09">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Correctly handle bad encoding in exception messages. Pull request #113 by
-Tomer Brisker</p>
+<p>Correctly handle bad encoding in exception messages. Pull request #113 by Tomer Brisker</p>
 </li><li>
 <p>Fix verbose option at TestTask. Pull request #67 by Mike Blumtritt</p>
 </li></ul>
 
-<p>Enhancements:</p>
+<h4 id="label-Enhancements">Enhancements<span><a href="#label-Enhancements">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
 <p>Make FileList#exclude more analogous to FileList#include.</p>
 </li><li>
 <p>Use IO.open instead of Open3.popen3 for CPU counter.</p>
 </li><li>
-<p>Make <a
-href="Rake/Task.html#attribute-i-already_invoked">Rake::Task#already_invoked</a>
-publicly accessible. Pull request #93 by Joe Rafaniello</p>
+<p>Make <a href="Rake/Task.html#attribute-i-already_invoked"><code>Rake::Task#already_invoked</code></a> publicly accessible. Pull request #93 by Joe Rafaniello</p>
 </li><li>
-<p>Lookup prerequisites with same name outside of scope instead of matching
-self. Pull request #96 by Sandy Vanderbleek</p>
+<p>Lookup prerequisites with same name outside of scope instead of matching self. Pull request #96 by Sandy Vanderbleek</p>
 </li><li>
-<p>Make FileList#pathmap behave like <a
-href="String.html#method-i-pathmap">String#pathmap</a>. Pull request #61 by
-Daniel Tamai</p>
+<p>Make FileList#pathmap behave like <a href="String.html#method-i-pathmap"><code>String#pathmap</code></a>. Pull request #61 by Daniel Tamai</p>
 </li><li>
 <p>Add fetch method to task arguments. Pull request #12 by Chris Keathley</p>
 </li><li>
 <p>Use ruby warnings by default. Pull request #97 by Harold Giménez</p>
 </li></ul>
 
-<p>Compatibility Changes:</p>
+<h4 id="label-Compatibility+Changes">Compatibility Changes<span><a href="#label-Compatibility+Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
 <p>Removed to support Ruby 1.8.x</p>
 </li><li>
@@ -407,139 +604,118 @@ Daniel Tamai</p>
 </li><li>
 <p>Removed Rake::TaskLib#paste</p>
 </li><li>
-<p>Removed Top-level SshDirPublisher, SshFreshDirPublisher, SshFilePublisher
-and CompositePublisher from lib/rake/contrib/publisher.rb</p>
+<p>Removed Top-level SshDirPublisher, SshFreshDirPublisher, SshFilePublisher and CompositePublisher from lib/rake/contrib/publisher.rb</p>
 </li><li>
 <p>Removed “rake/runtest.rb”</p>
 </li></ul>
 
 <h3 id="label-10.5.0+-2F+2016-01-13">10.5.0 / 2016-01-13<span><a href="#label-10.5.0+-2F+2016-01-13">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Enhancements:</p>
+<h4 id="label-Enhancements">Enhancements<span><a href="#label-Enhancements">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
 <p>Removed monkey patching for Ruby 1.8. Pull request #46 by Pablo Herrero.</p>
 </li><li>
-<p>Inheritance class of <a href="Rake/FileList.html">Rake::FileList</a>
-returns always self class. Pull request #74 by Thomas Scholz</p>
+<p>Inheritance class of <a href="Rake/FileList.html"><code>Rake::FileList</code></a> returns always self class. Pull request #74 by Thomas Scholz</p>
 </li></ul>
 
 <h3 id="label-10.4.2+-2F+2014-12-02">10.4.2 / 2014-12-02<span><a href="#label-10.4.2+-2F+2014-12-02">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Rake no longer edits ARGV.  This allows you to re-exec rake from a rake
-task.  Pull requset #9 by Matt Palmer.</p>
+<p>Rake no longer edits ARGV.  This allows you to re-exec rake from a rake task.  Pull requset #9 by Matt Palmer.</p>
 </li><li>
-<p>Documented how <a href="Rake/DSL.html#method-i-desc">Rake::DSL#desc</a>
-handles sentences in task descriptions. Issue #7 by Raza Sayed.</p>
+<p>Documented how <a href="Rake/DSL.html#method-i-desc"><code>Rake::DSL#desc</code></a> handles sentences in task descriptions. Issue #7 by Raza Sayed.</p>
 </li><li>
 <p>Fixed test error on 1.9.3 with legacy RubyGems.  Issue #8 by Matt Palmer.</p>
 </li><li>
-<p>Deleted duplicated <a href="History_rdoc.html">History</a> entry.  Pull
-request #10 by Yuji Yamamoto.</p>
+<p>Deleted duplicated <a href="History_rdoc.html">History</a> entry.  Pull request #10 by Yuji Yamamoto.</p>
 </li></ul>
 
 <h3 id="label-10.4.1+-2F+2014-12-01">10.4.1 / 2014-12-01<span><a href="#label-10.4.1+-2F+2014-12-01">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Reverted fix for #277 as it caused numerous issues for rake users.
-rails/spring issue #366 by Gustavo Dutra.</p>
+<p>Reverted fix for #277 as it caused numerous issues for rake users. rails/spring issue #366 by Gustavo Dutra.</p>
 </li></ul>
 
 <h3 id="label-10.4.0+-2F+2014-11-22">10.4.0 / 2014-11-22<span><a href="#label-10.4.0+-2F+2014-11-22">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Enhancements:</p>
+<h4 id="label-Enhancements">Enhancements<span><a href="#label-Enhancements">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
 <p>Upgraded to minitest 5.  Pull request #292 by Teo Ljungberg.</p>
 </li><li>
-<p>Added support for <a href="Pathname.html">Pathname</a> in rake tasks.  Pull
-request #271 by Randy Coulman.</p>
+<p>Added support for Pathname in rake tasks.  Pull request #271 by Randy Coulman.</p>
 </li><li>
-<p>Rake now ignores falsy dependencies which allows for easier programmatic
-creation of tasks.  Pull request #273 by Manav.</p>
+<p>Rake now ignores falsy dependencies which allows for easier programmatic creation of tasks.  Pull request #273 by Manav.</p>
 </li><li>
-<p>Rake no longer edits ARGV.  This allows you to re-exec rake from a rake
-task.  Issue #277 by Matt Palmer.</p>
+<p>Rake no longer edits ARGV.  This allows you to re-exec rake from a rake task.  Issue #277 by Matt Palmer.</p>
 </li><li>
 <p>Etc.nprocessors is used for counting the number of CPUs.</p>
 </li></ul>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Updated rake manpage.  Issue #283 by Nathan Long, pull request #291 by
-skittleys.</p>
+<p>Updated rake manpage.  Issue #283 by Nathan Long, pull request #291 by skittleys.</p>
 </li><li>
-<p>Add Rake::LATE to allow rebuilding of files that depend on deleted files.
-Bug #286, pull request #287 by David Grayson.</p>
+<p>Add Rake::LATE to allow rebuilding of files that depend on deleted files. Bug #286, pull request #287 by David Grayson.</p>
 </li><li>
 <p>Fix relinking of files when repackaging.  Bug #276 by Muenze.</p>
 </li><li>
 <p>Fixed some typos.  Pull request #280 by Jed Northridge.</p>
 </li><li>
-<p>Try counting CPUs via cpuinfo if host_os was not matched.  Pull request
-#282 by Edouard B.</p>
+<p>Try counting CPUs via cpuinfo if host_os was not matched.  Pull request #282 by Edouard B.</p>
 </li></ul>
 
 <h3 id="label-10.3.2+-2F+2014-05-15">10.3.2 / 2014-05-15<span><a href="#label-10.3.2+-2F+2014-05-15">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Rake no longer infinitely loops when showing exception causes that refer to
-each other.  Bug #272 by Chris Bandy.</p>
+<p>Rake no longer infinitely loops when showing exception causes that refer to each other.  Bug #272 by Chris Bandy.</p>
 </li><li>
 <p>Fixed documentation typos.  Bug #275 by Jake Worth.</p>
 </li></ul>
 
 <h3 id="label-10.3.1+-2F+2014-04-17">10.3.1 / 2014-04-17<span><a href="#label-10.3.1+-2F+2014-04-17">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Really stop reporting an error when cleaning already-deleted files.  Pull
-request #269 by Randy Coulman</p>
+<p>Really stop reporting an error when cleaning already-deleted files.  Pull request #269 by Randy Coulman</p>
 </li><li>
 <p>Fixed infinite loop when cleaning already-deleted files on windows.</p>
 </li></ul>
 
 <h3 id="label-10.3+-2F+2014-04-15">10.3 / 2014-04-15<span><a href="#label-10.3+-2F+2014-04-15">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Enhancements:</p>
+<h4 id="label-Enhancements">Enhancements<span><a href="#label-Enhancements">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Added –build-all option to rake which treats all file prerequisites as
-out-of-date.  Pull request #254 by Andrew Gilbert.</p>
+<p>Added –build-all option to rake which treats all file prerequisites as out-of-date.  Pull request #254 by Andrew Gilbert.</p>
 </li><li>
-<p>Added <a
-href="Rake/NameSpace.html#method-i-scope">Rake::NameSpace#scope</a>.  Issue
-#263 by Jon San Miguel.</p>
+<p>Added <a href="Rake/NameSpace.html#method-i-scope"><code>Rake::NameSpace#scope</code></a>.  Issue #263 by Jon San Miguel.</p>
 </li></ul>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Suppress org.jruby package files in rake error messages for JRuby users.
-Issue #213 by Charles Nutter.</p>
+<p>Suppress org.jruby package files in rake error messages for JRuby users. Issue #213 by Charles Nutter.</p>
 </li><li>
 <p>Fixed typo, removed extra “h”.  Pull request #267 by Hsing-Hui Hsu.</p>
 </li><li>
-<p>Rake no longer reports an error when cleaning already-deleted files.  Pull
-request #266 by Randy Coulman.</p>
+<p>Rake no longer reports an error when cleaning already-deleted files.  Pull request #266 by Randy Coulman.</p>
 </li><li>
-<p>Consume stderr while determining CPU count to avoid hang.  Issue #268 by
-Albert Sun.</p>
+<p>Consume stderr while determining CPU count to avoid hang.  Issue #268 by Albert Sun.</p>
 </li></ul>
 
 <h3 id="label-10.2.2+-2F+2014-03-27">10.2.2 / 2014-03-27<span><a href="#label-10.2.2+-2F+2014-03-27">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
 <p>Restored Ruby 1.8.7 compatibility</p>
 </li></ul>
 
 <h3 id="label-10.2.1+-2F+2014-03-25">10.2.1 / 2014-03-25<span><a href="#label-10.2.1+-2F+2014-03-25">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>File tasks including a &#39;:&#39; are now top-level tasks again.  Issue
-#262 by Josh Holtrop.</p>
+<p>File tasks including a &#39;:&#39; are now top-level tasks again.  Issue #262 by Josh Holtrop.</p>
 </li><li>
 <p>Use sysctl for CPU count for all BSDs.  Pull request #261 by Joshua Stein.</p>
 </li><li>
@@ -548,11 +724,9 @@ Albert Sun.</p>
 
 <h3 id="label-10.2.0+-2F+2014-03-24">10.2.0 / 2014-03-24<span><a href="#label-10.2.0+-2F+2014-03-24">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Enhancements:</p>
+<h4 id="label-Enhancements">Enhancements<span><a href="#label-Enhancements">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Rake now requires Ruby 1.9 or newer.  For me, this is a breaking change,
-but it seems that Jim planned to release it with Rake 10.2.  See also pull
-request #247 by Philip Arndt.</p>
+<p>Rake now requires Ruby 1.9 or newer.  For me, this is a breaking change, but it seems that Jim planned to release it with Rake 10.2.  See also pull request #247 by Philip Arndt.</p>
 </li><li>
 <p>Rake now allows you to declare tasks under a namespace like:</p>
 
@@ -560,42 +734,34 @@ request #247 by Philip Arndt.</p>
 
 <p>Pull request #232 by Judson Lester.</p>
 </li><li>
-<p>Task#source defaults to the first prerequisite in non-rule tasks.  Pull
-request #215 by Avdi Grimm.</p>
+<p>Task#source defaults to the first prerequisite in non-rule tasks.  Pull request #215 by Avdi Grimm.</p>
 </li><li>
-<p>Rake now automatically rebuilds and reloads imported files.  Pull request
-#209 by Randy Coulman.</p>
+<p>Rake now automatically rebuilds and reloads imported files.  Pull request #209 by Randy Coulman.</p>
 </li><li>
-<p>The rake task arguments can contain escaped commas.  Pull request #214 by
-Filip Hrbek.</p>
+<p>The rake task arguments can contain escaped commas.  Pull request #214 by Filip Hrbek.</p>
 </li><li>
 <p>Rake now prints the exception class on errors.  Patch #251 by David Cornu.</p>
 </li></ul>
 
-<p>Bug fixes:</p>
+<h4 id="label-Bug+fixes">Bug fixes<span><a href="#label-Bug+fixes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Fixed typos.  Pull request #256 by Valera Rozuvan, #250 via Jake Worth,
-#260 by Zachary Scott.</p>
+<p>Fixed typos.  Pull request #256 by Valera Rozuvan, #250 via Jake Worth, #260 by Zachary Scott.</p>
 </li><li>
-<p>Fixed documentation for calling tasks with arguments.  Pull request #235 by
-John Varghese.</p>
+<p>Fixed documentation for calling tasks with arguments.  Pull request #235 by John Varghese.</p>
 </li><li>
-<p>Clarified `rake -f` usage message.  Pull request #252 by Marco
-Pfatschbacher.</p>
+<p>Clarified `rake -f` usage message.  Pull request #252 by Marco Pfatschbacher.</p>
 </li><li>
 <p>Fixed a test failure on windows.  Pull request #231 by Hiroshi Shirosaki.</p>
 </li><li>
 <p>Fixed corrupted rake.1.gz.  Pull request #225 by Michel Boaventura.</p>
 </li><li>
-<p>Fixed bug in can_detect_signals? in test.  Patch from #243 by Alexey
-Borzenkov.</p>
+<p>Fixed bug in can_detect_signals? in test.  Patch from #243 by Alexey Borzenkov.</p>
 </li></ul>
 
-<h3 id="label-10.1.1+and+earlier">10.1.1 and earlier<span><a href="#label-10.1.1+and+earlier">&para;</a> <a href="#top">&uarr;</a></span></h3>
-
-<p>Additions to the old CHANGES file were not made consistently so some
-versions are missing from this file.  These changes are usually described
-in the individual release notes files.</p>
+<h3 id="label-10.1.1">10.1.1<span><a href="#label-10.1.1">&para;</a> <a href="#top">&uarr;</a></span></h3>
+<ul><li>
+<p>Use <a href="http://github.com/jimweirich/rake">github.com/jimweirich/rake</a> instead of <a href="http://rake.rubyforge.org">rake.rubyforge.org</a> for canonical project url.</p>
+</li></ul>
 
 <h3 id="label-10.1.0">10.1.0<span><a href="#label-10.1.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
@@ -603,12 +769,9 @@ in the individual release notes files.</p>
 
 <h5 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Add support for variable length task argument lists. If more actual
-arguments are supplied than named arguments, then the extra arguments
-values will be in args.extras.</p>
+<p>Add support for variable length task argument lists. If more actual arguments are supplied than named arguments, then the extra arguments values will be in args.extras.</p>
 </li><li>
-<p>Application name is not displayed in the help banner. (Previously “rake”
-was hardcoded, now rake-based applications can display their own names).</p>
+<p>Application name is not displayed in the help banner. (Previously “rake” was hardcoded, now rake-based applications can display their own names).</p>
 </li></ul>
 
 <h5 id="label-Bug+Fixes">Bug Fixes<span><a href="#label-Bug+Fixes">&para;</a> <a href="#top">&uarr;</a></span></h5>
@@ -619,8 +782,7 @@ was hardcoded, now rake-based applications can display their own names).</p>
 </li><li>
 <p>Rules now explicit get task arguments passed to them.</p>
 </li><li>
-<p>Rename FileList#exclude? to FileList#exclude_from_list? to avoid conflict
-with new Rails method.</p>
+<p>Rename FileList#exclude? to FileList#exclude_from_list? to avoid conflict with new Rails method.</p>
 </li><li>
 <p>Clean / Clobber tasks now report failure to remove files.</p>
 </li><li>
@@ -629,9 +791,7 @@ with new Rails method.</p>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a lot of these changes. The
-following people contributed patches, made suggestions or made otherwise
-helpful comments. Thanks to …</p>
+<p>As usual, it was input from users that drove a lot of these changes. The following people contributed patches, made suggestions or made otherwise helpful comments. Thanks to …</p>
 <ul><li>
 <p>Michael Nikitochkin (general code cleanup)</p>
 </li><li>
@@ -655,113 +815,69 @@ helpful comments. Thanks to …</p>
 <pre class="ruby"><span class="ruby-string">&quot;Jim, when will Rake reach version 1.0?&quot;</span>
 </pre>
 
-<p>Over the past several years I&#39;ve been asked that question at
-conferences, panels and over twitter. Due to historical reasons (or maybe
-just plain laziness) Rake has (incorrectly) been treating the second digit
-of the version as the major release number. So in my head Rake was already
-at version 9.</p>
+<p>Over the past several years I&#39;ve been asked that question at conferences, panels and over twitter. Due to historical reasons (or maybe just plain laziness) Rake has (incorrectly) been treating the second digit of the version as the major release number. So in my head Rake was already at version 9.</p>
 
-<p>Well, it&#39;s time to fix things. This next version of Rake drops old,
-crufty, backwards compatibility hacks such as top level constants, DSL
-methods defined in <a href="Object.html">Object</a> and numerous other
-features that are just no longer desired. It&#39;s also time to drop the
-leading zero from the version number as well and call this new version of
-rake what it really is: Version 10.</p>
+<p>Well, it&#39;s time to fix things. This next version of Rake drops old, crufty, backwards compatibility hacks such as top level constants, DSL methods defined in <a href="Object.html"><code>Object</code></a> and numerous other features that are just no longer desired. It&#39;s also time to drop the leading zero from the version number as well and call this new version of rake what it really is: Version 10.</p>
 
 <p>So, welcome to Rake 10.0!</p>
 
-<p>Rake 10 is actually feature identical to the latest version of Rake 9 (that
-would be the version spelled 0.9.3), <strong>except</strong> that Rake 10
-drops all the sundry deprecated features that have accumulated over the
-years.</p>
+<p>Rake 10 is actually feature identical to the latest version of Rake 9 (that would be the version spelled 0.9.3), <strong>except</strong> that Rake 10 drops all the sundry deprecated features that have accumulated over the years.</p>
 
-<p>If your Rakefile is up to date and current with all the new features of
-Rake 10, you are ready to go. If your Rakefile still uses a few deprecated
-feeatures, feel free to use Rake 9 (0.9.3) with the same feature set. Just
-be aware that future features will be in Rake 10 family line.</p>
+<p>If your Rakefile is up to date and current with all the new features of Rake 10, you are ready to go. If your Rakefile still uses a few deprecated feeatures, feel free to use Rake 9 (0.9.3) with the same feature set. Just be aware that future features will be in Rake 10 family line.</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As mentioned above, there are no new features in Rake 10. However, there
-are a number of features missing:</p>
+<p>As mentioned above, there are no new features in Rake 10. However, there are a number of features missing:</p>
 <ul><li>
-<p>Classic namespaces are now gone. Rake is no longer able to reflect the
-options settings in the global variables ($rakefile, $show_tasks,
-$show_prereqs, $trace, $dryrun and $silent). The
-<code>--classic-namespace</code> option is no longer supported.</p>
+<p>Classic namespaces are now gone. Rake is no longer able to reflect the options settings in the global variables ($rakefile, $show_tasks, $show_prereqs, $trace, $dryrun and $silent). The <code>--classic-namespace</code> option is no longer supported.</p>
 </li><li>
-<p>Global constants are no longer supported. This includes <code>Task</code>,
-<code>FileTask</code>, <code>FileCreationTask</code> and
-<code>RakeApp</code>). The constant missing hook to warn about using global
-rake constants has been removed.</p>
+<p>Global constants are no longer supported. This includes <code>Task</code>, <code>FileTask</code>, <code>FileCreationTask</code> and <code>RakeApp</code>). The constant missing hook to warn about using global rake constants has been removed.</p>
 </li><li>
-<p>The Rake DSL methods (task, file, directory, etc) are in their own module
-(Rake::DSL). The stub versions of these methods (that printed warnings) in
-<a href="Object.html">Object</a> have been removed. However, the DSL
-methods are added to the top-level <code>main</code> object. Since
-<code>main</code> is not in the inheritance tree, the presence of the DSL
-methods in main should be low impact on other libraries.</p>
+<p>The Rake DSL methods (task, file, directory, etc) are in their own module (<a href="Rake/DSL.html"><code>Rake::DSL</code></a>). The stub versions of these methods (that printed warnings) in <a href="Object.html"><code>Object</code></a> have been removed. However, the DSL methods are added to the top-level <code>main</code> object. Since <code>main</code> is not in the inheritance tree, the presence of the DSL methods in main should be low impact on other libraries.</p>
 
-<p>If you want to use the Rake DSL commands from your own code, just include
-<code>Rake::DSL</code> into your own classes and modules.</p>
+<p>If you want to use the Rake DSL commands from your own code, just include <code>Rake::DSL</code> into your own classes and modules.</p>
 </li><li>
-<p>The deprecated syntax for task arguments (the one using
-<code>:needs</code>) has been removed.</p>
+<p>The deprecated syntax for task arguments (the one using <code>:needs</code>) has been removed.</p>
 </li><li>
-<p>The <code>--reduce-compat</code> flag has been removed (it&#39;s not needed
-anymore).</p>
+<p>The <code>--reduce-compat</code> flag has been removed (it&#39;s not needed anymore).</p>
 </li><li>
 <p>The deprecated <code>rake/sys.rb</code> library has been removed.</p>
 </li><li>
-<p>The deprecated <code>rake/rdoctask.rb</code> library has been removed. RDoc
-supplies its own rake task now.</p>
+<p>The deprecated <code>rake/rdoctask.rb</code> library has been removed. RDoc supplies its own rake task now.</p>
 </li><li>
-<p>The deprecated <code>rake/gempackagetask.rb</code> library has been
-removed. Gem supplies its own package task now.</p>
+<p>The deprecated <code>rake/gempackagetask.rb</code> library has been removed. Gem supplies its own package task now.</p>
 </li></ul>
 
 <p>There is one small behavioral change:</p>
 <ul><li>
-<p>Non-file tasks now always report the current time as their time stamp. This
-is different from the previous behavior where non-file tasks reported
-current time only if there were no prerequisites, and the max prerequisite
-timestamp otherwise. This lead to inconsistent and surprising behavior when
-adding prerequisites to tasks that in turn were prequisites to file tasks.
-The new behavior is more consistent and predictable.</p>
+<p>Non-file tasks now always report the current time as their time stamp. This is different from the previous behavior where non-file tasks reported current time only if there were no prerequisites, and the max prerequisite timestamp otherwise. This lead to inconsistent and surprising behavior when adding prerequisites to tasks that in turn were prequisites to file tasks. The new behavior is more consistent and predictable.</p>
 </li></ul>
 
 <h4 id="label-Changes+-28from+0.9.3-2C+0.9.4-2C+0.9.5-29">Changes (from 0.9.3, 0.9.4, 0.9.5)<span><a href="#label-Changes+-28from+0.9.3-2C+0.9.4-2C+0.9.5-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>Since Rake 10 includes the changes from the last version of Rake 9,
-we&#39;ll repeat the changes for versions 0.9.3 through 0.9.5 here.</p>
+<p>Since Rake 10 includes the changes from the last version of Rake 9, we&#39;ll repeat the changes for versions 0.9.3 through 0.9.5 here.</p>
 
 <h5 id="label-New+Features+-28in+0.9.3-29">New Features (in 0.9.3)<span><a href="#label-New+Features+-28in+0.9.3-29">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Multitask tasks now use a thread pool. Use -j to limit the number of
-available threads.</p>
+<p>Multitask tasks now use a thread pool. Use -j to limit the number of available threads.</p>
 </li><li>
 <p>Use -m to turn regular tasks into multitasks (use at your own risk).</p>
 </li><li>
-<p>You can now do “Rake.add_rakelib &#39;dir&#39;” in your Rakefile to
-programatically add rake task libraries.</p>
+<p>You can now do “Rake.add_rakelib &#39;dir&#39;” in your Rakefile to programatically add rake task libraries.</p>
 </li><li>
-<p>You can specific backtrace suppression patterns (see –supress-backtrace)</p>
+<p>You can specific backtrace suppression patterns (see –suppress-backtrace)</p>
 </li><li>
 <p>Directory tasks can now take prerequisites and actions</p>
 </li><li>
 <p>Use –backtrace to request a full backtrace without the task trace.</p>
 </li><li>
-<p>You can say “–backtrace=stdout” and “–trace=stdout” to route trace output
-to standard output rather than standard error.</p>
+<p>You can say “–backtrace=stdout” and “–trace=stdout” to route trace output to standard output rather than standard error.</p>
 </li><li>
-<p>Optional &#39;phony&#39; target (enable with &#39;require
-&#39;rake/phony&#39;“) for special purpose builds.</p>
+<p>Optional &#39;phony&#39; target (enable with &#39;require &#39;rake/phony&#39;“) for special purpose builds.</p>
 </li><li>
-<p>Task#clear now clears task comments as well as actions and prerequisites.
-Task#clear_comment will specifically target comments.</p>
+<p>Task#clear now clears task comments as well as actions and prerequisites. Task#clear_comment will specifically target comments.</p>
 </li><li>
-<p>The –all option will force -T and -D to consider all the tasks, with and
-without descriptions.</p>
+<p>The –all option will force -T and -D to consider all the tasks, with and without descriptions.</p>
 </li></ul>
 
 <h5 id="label-Bug+Fixes+-28in+0.9.3-29">Bug Fixes (in 0.9.3)<span><a href="#label-Bug+Fixes+-28in+0.9.3-29">&para;</a> <a href="#top">&uarr;</a></span></h5>
@@ -774,11 +890,9 @@ without descriptions.</p>
 </li><li>
 <p>Better deprecation line number reporting.</p>
 </li><li>
-<p>The -W option now works with all tasks, whether they have a description or
-not.</p>
+<p>The -W option now works with all tasks, whether they have a description or not.</p>
 </li><li>
-<p>File globs in rake should not be sorted alphabetically, independent of file
-system and platform.</p>
+<p>File globs in rake should not be sorted alphabetically, independent of file system and platform.</p>
 </li><li>
 <p>Numerous internal improvements.</p>
 </li><li>
@@ -791,8 +905,7 @@ system and platform.</p>
 </li><li>
 <p>Simplified syntax for phony task (for older versions of RDoc).</p>
 </li><li>
-<p>Stand alone FileList usage gets glob function (without loading in extra
-dependencies)</p>
+<p>Stand alone FileList usage gets glob function (without loading in extra dependencies)</p>
 </li></ul>
 
 <h5 id="label-Bug+Fixes+-28in+0.9.5-29">Bug Fixes (in 0.9.5)<span><a href="#label-Bug+Fixes+-28in+0.9.5-29">&para;</a> <a href="#top">&uarr;</a></span></h5>
@@ -802,9 +915,7 @@ dependencies)</p>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a lot of these changes. The
-following people contributed patches, made suggestions or made otherwise
-helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a lot of these changes. The following people contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>Aaron Patterson</p>
 </li><li>
@@ -837,8 +948,7 @@ helpful comments.  Thanks to …</p>
 <p>quix</p>
 </li></ul>
 
-<p>Also, many thanks to Eric Hodel for assisting with getting this release out
-the door.</p>
+<p>Also, many thanks to Eric Hodel for assisting with getting this release out the door.</p>
 
 <p>– Jim Weirich</p>
 
@@ -853,9 +963,7 @@ the door.</p>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a lot of these changes. The
-following people contributed patches, made suggestions or made otherwise
-helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a lot of these changes. The following people contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>Aaron Patterson</p>
 </li><li>
@@ -888,8 +996,7 @@ helpful comments.  Thanks to …</p>
 <p>quix</p>
 </li></ul>
 
-<p>Also, many thanks to Eric Hodel for assisting with getting this release out
-the door.</p>
+<p>Also, many thanks to Eric Hodel for assisting with getting this release out the door.</p>
 
 <p>– Jim Weirich</p>
 
@@ -903,15 +1010,12 @@ the door.</p>
 </li><li>
 <p>Simplified syntax for phony task (for older versions of RDoc).</p>
 </li><li>
-<p>Stand alone FileList usage gets glob function (without loading in extra
-dependencies)</p>
+<p>Stand alone FileList usage gets glob function (without loading in extra dependencies)</p>
 </li></ul>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a lot of these changes. The
-following people contributed patches, made suggestions or made otherwise
-helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a lot of these changes. The following people contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>Aaron Patterson</p>
 </li><li>
@@ -944,8 +1048,7 @@ helpful comments.  Thanks to …</p>
 <p>quix</p>
 </li></ul>
 
-<p>Also, many thanks to Eric Hodel for assisting with getting this release out
-the door.</p>
+<p>Also, many thanks to Eric Hodel for assisting with getting this release out the door.</p>
 
 <p>– Jim Weirich</p>
 
@@ -954,113 +1057,69 @@ the door.</p>
 <pre class="ruby"><span class="ruby-string">&quot;Jim, when will Rake reach version 1.0?&quot;</span>
 </pre>
 
-<p>Over the past several years I&#39;ve been asked that question at
-conferences, panels and over twitter. Due to historical reasons (or maybe
-just plain laziness) Rake has (incorrectly) been treating the second digit
-of the version as the major release number. So in my head Rake was already
-at version 9.</p>
+<p>Over the past several years I&#39;ve been asked that question at conferences, panels and over twitter. Due to historical reasons (or maybe just plain laziness) Rake has (incorrectly) been treating the second digit of the version as the major release number. So in my head Rake was already at version 9.</p>
 
-<p>Well, it&#39;s time to fix things. This next version of Rake drops old,
-crufty, backwards compatibility hacks such as top level constants, DSL
-methods defined in <a href="Object.html">Object</a> and numerous other
-features that are just no longer desired. It&#39;s also time to drop the
-leading zero from the version number as well and call this new version of
-rake what it really is: Version 10.</p>
+<p>Well, it&#39;s time to fix things. This next version of Rake drops old, crufty, backwards compatibility hacks such as top level constants, DSL methods defined in <a href="Object.html"><code>Object</code></a> and numerous other features that are just no longer desired. It&#39;s also time to drop the leading zero from the version number as well and call this new version of rake what it really is: Version 10.</p>
 
 <p>So, welcome to Rake 10.0!</p>
 
-<p>Rake 10 is actually feature identical to the latest version of Rake 9 (that
-would be the version spelled 0.9.3), <strong>except</strong> that Rake 10
-drops all the sundry deprecated features that have accumulated over the
-years.</p>
+<p>Rake 10 is actually feature identical to the latest version of Rake 9 (that would be the version spelled 0.9.3), <strong>except</strong> that Rake 10 drops all the sundry deprecated features that have accumulated over the years.</p>
 
-<p>If your Rakefile is up to date and current with all the new features of
-Rake 10, you are ready to go. If your Rakefile still uses a few deprecated
-feeatures, feel free to use Rake 9 (0.9.3) with the same feature set. Just
-be aware that future features will be in Rake 10 family line.</p>
+<p>If your Rakefile is up to date and current with all the new features of Rake 10, you are ready to go. If your Rakefile still uses a few deprecated feeatures, feel free to use Rake 9 (0.9.3) with the same feature set. Just be aware that future features will be in Rake 10 family line.</p>
 
 <h4 id="label-Changes+in+10.0">Changes in 10.0<span><a href="#label-Changes+in+10.0">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As mentioned above, there are no new features in Rake 10. However, there
-are a number of features missing:</p>
+<p>As mentioned above, there are no new features in Rake 10. However, there are a number of features missing:</p>
 <ul><li>
-<p>Classic namespaces are now gone. Rake is no longer able to reflect the
-options settings in the global variables ($rakefile, $show_tasks,
-$show_prereqs, $trace, $dryrun and $silent). The
-<code>--classic-namespace</code> option is no longer supported.</p>
+<p>Classic namespaces are now gone. Rake is no longer able to reflect the options settings in the global variables ($rakefile, $show_tasks, $show_prereqs, $trace, $dryrun and $silent). The <code>--classic-namespace</code> option is no longer supported.</p>
 </li><li>
-<p>Global constants are no longer supported. This includes <code>Task</code>,
-<code>FileTask</code>, <code>FileCreationTask</code> and
-<code>RakeApp</code>). The constant missing hook to warn about using global
-rake constants has been removed.</p>
+<p>Global constants are no longer supported. This includes <code>Task</code>, <code>FileTask</code>, <code>FileCreationTask</code> and <code>RakeApp</code>). The constant missing hook to warn about using global rake constants has been removed.</p>
 </li><li>
-<p>The Rake DSL methods (task, file, directory, etc) are in their own module
-(Rake::DSL). The stub versions of these methods (that printed warnings) in
-<a href="Object.html">Object</a> have been removed. However, the DSL
-methods are added to the top-level <code>main</code> object. Since
-<code>main</code> is not in the inheritance tree, the presence of the DSL
-methods in main should be low impact on other libraries.</p>
+<p>The Rake DSL methods (task, file, directory, etc) are in their own module (<a href="Rake/DSL.html"><code>Rake::DSL</code></a>). The stub versions of these methods (that printed warnings) in <a href="Object.html"><code>Object</code></a> have been removed. However, the DSL methods are added to the top-level <code>main</code> object. Since <code>main</code> is not in the inheritance tree, the presence of the DSL methods in main should be low impact on other libraries.</p>
 
-<p>If you want to use the Rake DSL commands from your own code, just include
-<code>Rake::DSL</code> into your own classes and modules.</p>
+<p>If you want to use the Rake DSL commands from your own code, just include <code>Rake::DSL</code> into your own classes and modules.</p>
 </li><li>
-<p>The deprecated syntax for task arguments (the one using
-<code>:needs</code>) has been removed.</p>
+<p>The deprecated syntax for task arguments (the one using <code>:needs</code>) has been removed.</p>
 </li><li>
-<p>The <code>--reduce-compat</code> flag has been removed (it&#39;s not needed
-anymore).</p>
+<p>The <code>--reduce-compat</code> flag has been removed (it&#39;s not needed anymore).</p>
 </li><li>
 <p>The deprecated <code>rake/sys.rb</code> library has been removed.</p>
 </li><li>
-<p>The deprecated <code>rake/rdoctask.rb</code> library has been removed. RDoc
-supplies its own rake task now.</p>
+<p>The deprecated <code>rake/rdoctask.rb</code> library has been removed. RDoc supplies its own rake task now.</p>
 </li><li>
-<p>The deprecated <code>rake/gempackagetask.rb</code> library has been
-removed. Gem supplies its own package task now.</p>
+<p>The deprecated <code>rake/gempackagetask.rb</code> library has been removed. Gem supplies its own package task now.</p>
 </li></ul>
 
 <p>There is one small behavioral change:</p>
 <ul><li>
-<p>Non-file tasks now always report the current time as their time stamp. This
-is different from the previous behavior where non-file tasks reported
-current time only if there were no prerequisites, and the max prerequisite
-timestamp otherwise. This lead to inconsistent and surprising behavior when
-adding prerequisites to tasks that in turn were prequisites to file tasks.
-The new behavior is more consistent and predictable.</p>
+<p>Non-file tasks now always report the current time as their time stamp. This is different from the previous behavior where non-file tasks reported current time only if there were no prerequisites, and the max prerequisite timestamp otherwise. This lead to inconsistent and surprising behavior when adding prerequisites to tasks that in turn were prequisites to file tasks. The new behavior is more consistent and predictable.</p>
 </li></ul>
 
 <h4 id="label-Changes+-28from+0.9.3-29">Changes (from 0.9.3)<span><a href="#label-Changes+-28from+0.9.3-29">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>Since Rake 10 includes the changes from the last version of Rake 9,
-we&#39;ll repeat the changes for version 0.9.3 here.</p>
+<p>Since Rake 10 includes the changes from the last version of Rake 9, we&#39;ll repeat the changes for version 0.9.3 here.</p>
 
 <h5 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Multitask tasks now use a thread pool. Use -j to limit the number of
-available threads.</p>
+<p>Multitask tasks now use a thread pool. Use -j to limit the number of available threads.</p>
 </li><li>
 <p>Use -m to turn regular tasks into multitasks (use at your own risk).</p>
 </li><li>
-<p>You can now do “Rake.add_rakelib &#39;dir&#39;” in your Rakefile to
-programatically add rake task libraries.</p>
+<p>You can now do “Rake.add_rakelib &#39;dir&#39;” in your Rakefile to programatically add rake task libraries.</p>
 </li><li>
-<p>You can specific backtrace suppression patterns (see –supress-backtrace)</p>
+<p>You can specific backtrace suppression patterns (see –suppress-backtrace)</p>
 </li><li>
 <p>Directory tasks can now take prerequisites and actions</p>
 </li><li>
 <p>Use –backtrace to request a full backtrace without the task trace.</p>
 </li><li>
-<p>You can say “–backtrace=stdout” and “–trace=stdout” to route trace output
-to standard output rather than standard error.</p>
+<p>You can say “–backtrace=stdout” and “–trace=stdout” to route trace output to standard output rather than standard error.</p>
 </li><li>
-<p>Optional &#39;phony&#39; target (enable with &#39;require
-&#39;rake/phony&#39;“) for special purpose builds.</p>
+<p>Optional &#39;phony&#39; target (enable with &#39;require &#39;rake/phony&#39;“) for special purpose builds.</p>
 </li><li>
-<p>Task#clear now clears task comments as well as actions and prerequisites.
-Task#clear_comment will specifically target comments.</p>
+<p>Task#clear now clears task comments as well as actions and prerequisites. Task#clear_comment will specifically target comments.</p>
 </li><li>
-<p>The –all option will force -T and -D to consider all the tasks, with and
-without descriptions.</p>
+<p>The –all option will force -T and -D to consider all the tasks, with and without descriptions.</p>
 </li></ul>
 
 <h5 id="label-Bug+Fixes">Bug Fixes<span><a href="#label-Bug+Fixes">&para;</a> <a href="#top">&uarr;</a></span></h5>
@@ -1073,11 +1132,9 @@ without descriptions.</p>
 </li><li>
 <p>Better deprecation line number reporting.</p>
 </li><li>
-<p>The -W option now works with all tasks, whether they have a description or
-not.</p>
+<p>The -W option now works with all tasks, whether they have a description or not.</p>
 </li><li>
-<p>File globs in rake should not be sorted alphabetically, independent of file
-system and platform.</p>
+<p>File globs in rake should not be sorted alphabetically, independent of file system and platform.</p>
 </li><li>
 <p>Numerous internal improvements.</p>
 </li><li>
@@ -1086,9 +1143,7 @@ system and platform.</p>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a lot of these changes. The
-following people contributed patches, made suggestions or made otherwise
-helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a lot of these changes. The following people contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>Aaron Patterson</p>
 </li><li>
@@ -1121,15 +1176,13 @@ helpful comments.  Thanks to …</p>
 <p>quix</p>
 </li></ul>
 
-<p>Also, many thanks to Eric Hodel for assisting with getting this release out
-the door.</p>
+<p>Also, many thanks to Eric Hodel for assisting with getting this release out the door.</p>
 
 <p>– Jim Weirich</p>
 
 <h3 id="label-0.9.6">0.9.6<span><a href="#label-0.9.6">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Rake version 0.9.6 contains a number of fixes mainly for merging Rake into
-the Ruby source tree and fixing tests.</p>
+<p>Rake version 0.9.6 contains a number of fixes mainly for merging Rake into the Ruby source tree and fixing tests.</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
@@ -1153,9 +1206,7 @@ the Ruby source tree and fixing tests.</p>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>Aaron Patterson</p>
 </li><li>
@@ -1188,8 +1239,7 @@ otherwise helpful comments.  Thanks to …</p>
 <p>quix</p>
 </li></ul>
 
-<p>Also, many thanks to Eric Hodel for assisting with getting this release out
-the door.</p>
+<p>Also, many thanks to Eric Hodel for assisting with getting this release out the door.</p>
 
 <p>– Jim Weirich</p>
 
@@ -1206,9 +1256,7 @@ the door.</p>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>Aaron Patterson</p>
 </li><li>
@@ -1241,8 +1289,7 @@ otherwise helpful comments.  Thanks to …</p>
 <p>quix</p>
 </li></ul>
 
-<p>Also, many thanks to Eric Hodel for assisting with getting this release out
-the door.</p>
+<p>Also, many thanks to Eric Hodel for assisting with getting this release out the door.</p>
 
 <p>– Jim Weirich</p>
 
@@ -1258,15 +1305,12 @@ the door.</p>
 </li><li>
 <p>Simplified syntax for phony task (for older versions of RDoc).</p>
 </li><li>
-<p>Stand alone FileList usage gets glob function (without loading in extra
-dependencies)</p>
+<p>Stand alone FileList usage gets glob function (without loading in extra dependencies)</p>
 </li></ul>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>Aaron Patterson</p>
 </li><li>
@@ -1299,45 +1343,37 @@ otherwise helpful comments.  Thanks to …</p>
 <p>quix</p>
 </li></ul>
 
-<p>Also, many thanks to Eric Hodel for assisting with getting this release out
-the door.</p>
+<p>Also, many thanks to Eric Hodel for assisting with getting this release out the door.</p>
 
 <p>– Jim Weirich</p>
 
 <h3 id="label-0.9.3">0.9.3<span><a href="#label-0.9.3">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Rake version 0.9.3 contains some new, backwards compatible features and a
-number of bug fixes.</p>
+<p>Rake version 0.9.3 contains some new, backwards compatible features and a number of bug fixes.</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
 <h5 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Multitask tasks now use a thread pool. Use -j to limit the number of
-available threads.</p>
+<p>Multitask tasks now use a thread pool. Use -j to limit the number of available threads.</p>
 </li><li>
 <p>Use -m to turn regular tasks into multitasks (use at your own risk).</p>
 </li><li>
-<p>You can now do “Rake.add_rakelib &#39;dir&#39;” in your Rakefile to
-programatically add rake task libraries.</p>
+<p>You can now do “Rake.add_rakelib &#39;dir&#39;” in your Rakefile to programatically add rake task libraries.</p>
 </li><li>
-<p>You can specific backtrace suppression patterns (see –supress-backtrace)</p>
+<p>You can specific backtrace suppression patterns (see –suppress-backtrace)</p>
 </li><li>
 <p>Directory tasks can now take prerequisites and actions</p>
 </li><li>
 <p>Use –backtrace to request a full backtrace without the task trace.</p>
 </li><li>
-<p>You can say “–backtrace=stdout” and “–trace=stdout” to route trace output
-to standard output rather than standard error.</p>
+<p>You can say “–backtrace=stdout” and “–trace=stdout” to route trace output to standard output rather than standard error.</p>
 </li><li>
-<p>Optional &#39;phony&#39; target (enable with &#39;require
-&#39;rake/phony&#39;“) for special purpose builds.</p>
+<p>Optional &#39;phony&#39; target (enable with &#39;require &#39;rake/phony&#39;“) for special purpose builds.</p>
 </li><li>
-<p>Task#clear now clears task comments as well as actions and prerequisites.
-Task#clear_comment will specifically target comments.</p>
+<p>Task#clear now clears task comments as well as actions and prerequisites. Task#clear_comment will specifically target comments.</p>
 </li><li>
-<p>The –all option will force -T and -D to consider all the tasks, with and
-without descriptions.</p>
+<p>The –all option will force -T and -D to consider all the tasks, with and without descriptions.</p>
 </li></ul>
 
 <h5 id="label-Bug+Fixes">Bug Fixes<span><a href="#label-Bug+Fixes">&para;</a> <a href="#top">&uarr;</a></span></h5>
@@ -1350,11 +1386,9 @@ without descriptions.</p>
 </li><li>
 <p>Better deprecation line number reporting.</p>
 </li><li>
-<p>The -W option now works with all tasks, whether they have a description or
-not.</p>
+<p>The -W option now works with all tasks, whether they have a description or not.</p>
 </li><li>
-<p>File globs in rake should not be sorted alphabetically, independent of file
-system and platform.</p>
+<p>File globs in rake should not be sorted alphabetically, independent of file system and platform.</p>
 </li><li>
 <p>Numerous internal improvements.</p>
 </li><li>
@@ -1363,9 +1397,7 @@ system and platform.</p>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>Aaron Patterson</p>
 </li><li>
@@ -1398,8 +1430,7 @@ otherwise helpful comments.  Thanks to …</p>
 <p>quix</p>
 </li></ul>
 
-<p>Also, many thanks to Eric Hodel for assisting with getting this release out
-the door.</p>
+<p>Also, many thanks to Eric Hodel for assisting with getting this release out the door.</p>
 
 <p>– Jim Weirich</p>
 
@@ -1411,8 +1442,7 @@ the door.</p>
 <ul><li>
 <p>The rake test loader now removes arguments it has processed.  Issue #51</p>
 </li><li>
-<p><a href="Rake/TaskArguments.html">Rake::TaskArguments</a> now responds to
-values_at</p>
+<p><a href="Rake/TaskArguments.html"><code>Rake::TaskArguments</code></a> now responds to values_at</p>
 </li><li>
 <p>RakeFileUtils.verbose_flag = nil silences output the same as 0.8.7</p>
 </li><li>
@@ -1422,18 +1452,14 @@ values_at</p>
 </li><li>
 <p>Commands constant is no longer polluting top level namespace.</p>
 </li><li>
-<p>Show only the interesting portion of the backtrace by default (James M.
-Lawrence).</p>
+<p>Show only the interesting portion of the backtrace by default (James M. Lawrence).</p>
 </li><li>
-<p>Added –reduce-compat option to remove backward compatible DSL hacks (James
-M. Lawrence).</p>
+<p>Added –reduce-compat option to remove backward compatible DSL hacks (James M. Lawrence).</p>
 </li></ul>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>James M. Lawrence (quix)</p>
 </li><li>
@@ -1454,9 +1480,7 @@ otherwise helpful comments.  Thanks to …</p>
 <p>Santiago Pastorino</p>
 </li></ul>
 
-<p>Also, bit thanks to Eric Hodel for assisting with getting this release out
-the door (where “assisting” includes, but is not by any means limited to,
-“pushing” me to get it done).</p>
+<p>Also, bit thanks to Eric Hodel for assisting with getting this release out the door (where “assisting” includes, but is not by any means limited to, “pushing” me to get it done).</p>
 
 <p>– Jim Weirich</p>
 
@@ -1473,9 +1497,7 @@ the door (where “assisting” includes, but is not by any means limited to,
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>James M. Lawrence (quix)</p>
 </li><li>
@@ -1496,29 +1518,21 @@ otherwise helpful comments.  Thanks to …</p>
 <p>Santiago Pastorino</p>
 </li></ul>
 
-<p>Also, bit thanks to Eric Hodel for assisting with getting this release out
-the door (where “assisting” includes, but is not by any means limited to,
-“pushing” me to get it done).</p>
+<p>Also, bit thanks to Eric Hodel for assisting with getting this release out the door (where “assisting” includes, but is not by any means limited to, “pushing” me to get it done).</p>
 
 <p>– Jim Weirich</p>
 
 <h3 id="label-0.9.1">0.9.1<span><a href="#label-0.9.1">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Rake version 0.9.1 has a number of bug fixes and enhancments (see below for
-more details).  Additionally, the internals have be slightly restructured
-and improved.</p>
+<p>Rake version 0.9.1 has a number of bug fixes and enhancments (see below for more details).  Additionally, the internals have be slightly restructured and improved.</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>Rake 0.9.1 adds back the global DSL methods, but with deprecation messages.
-This allows Rake 0.9.1 to be used with older rakefiles with warning
-messages.</p>
+<p>Rake 0.9.1 adds back the global DSL methods, but with deprecation messages.  This allows Rake 0.9.1 to be used with older rakefiles with warning messages.</p>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>James M. Lawrence (quix)</p>
 </li><li>
@@ -1539,92 +1553,66 @@ otherwise helpful comments.  Thanks to …</p>
 <p>Santiago Pastorino</p>
 </li></ul>
 
-<p>Also, bit thanks to Eric Hodel for assisting with getting this release out
-the door (where “assisting” includes, but is not by any means limited to,
-“pushing” me to get it done).</p>
+<p>Also, bit thanks to Eric Hodel for assisting with getting this release out the door (where “assisting” includes, but is not by any means limited to, “pushing” me to get it done).</p>
 
 <p>– Jim Weirich</p>
 
 <h3 id="label-0.9.0">0.9.0<span><a href="#label-0.9.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Rake version 0.9.0 has a number of bug fixes and enhancments (see below for
-more details).  Additionally, the internals have be slightly restructured
-and improved.</p>
+<p>Rake version 0.9.0 has a number of bug fixes and enhancments (see below for more details).  Additionally, the internals have be slightly restructured and improved.</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
 <h5 id="label-New+Features+-2F+Enhancements+-2F+Bug+Fixes+in+Version+0.9.0">New Features / Enhancements / Bug Fixes in Version 0.9.0<span><a href="#label-New+Features+-2F+Enhancements+-2F+Bug+Fixes+in+Version+0.9.0">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Rake now warns when the deprecated :needs syntax used (and suggests the
-proper syntax in the warning).</p>
+<p>Rake now warns when the deprecated :needs syntax used (and suggests the proper syntax in the warning).</p>
 </li><li>
-<p>Moved Rake DSL commands to top level ruby object &#39;main&#39;.  Rake DSL
-commands are no longer private methods in <a href="Object.html">Object</a>.
-(Suggested by James M. Lawrence/quix)</p>
+<p>Moved Rake DSL commands to top level ruby object &#39;main&#39;.  Rake DSL commands are no longer private methods in <a href="Object.html"><code>Object</code></a>. (Suggested by James M. Lawrence/quix)</p>
 </li><li>
-<p>Rake now uses case-insensitive comparisons to find the Rakefile on Windows.
-Based on patch by Roger Pack.</p>
+<p>Rake now uses case-insensitive comparisons to find the Rakefile on Windows. Based on patch by Roger Pack.</p>
 </li><li>
-<p>Rake now requires (instead of loads) files in the test task.  Patch by
-Cezary Baginski.</p>
+<p>Rake now requires (instead of loads) files in the test task.  Patch by Cezary Baginski.</p>
 </li><li>
 <p>Fixed typos.  Patches by Sean Scot August Moon and R.T. Lechow.</p>
 </li><li>
-<p>Rake now prints the Rakefile directory only when it&#39;s different from
-the current directory.  Patch by Alex Chaffee.</p>
+<p>Rake now prints the Rakefile directory only when it&#39;s different from the current directory.  Patch by Alex Chaffee.</p>
 </li><li>
 <p>Improved rakefile_location discovery on Windows.  Patch by James Tucker.</p>
 </li><li>
-<p>Rake now recognizes “Windows Server” as a windows system.  Patch by
-Matthias Lüdtke</p>
+<p>Rake now recognizes “Windows Server” as a windows system.  Patch by Matthias Lüdtke</p>
 </li><li>
-<p>Rake::RDocTask is deprecated.  Use RDoc::Task from RDoc 2.4.2+ (require
-&#39;rdoc/task&#39;)</p>
+<p>Rake::RDocTask is deprecated.  Use RDoc::Task from RDoc 2.4.2+ (require &#39;rdoc/task&#39;)</p>
 </li><li>
-<p>Rake::GemPackageTask is deprecated.  Use Gem::PackageTask (require
-&#39;rubygems/package_task&#39;)</p>
+<p>Rake::GemPackageTask is deprecated.  Use Gem::PackageTask (require &#39;rubygems/package_task&#39;)</p>
 </li><li>
 <p>Rake now outputs various messages to $stderr instead of $stdout.</p>
 </li><li>
 <p>Rake no longer emits warnings for Config.  Patch by Santiago Pastorino.</p>
 </li><li>
-<p>Removed Rake&#39;s DSL methods from the top level scope.  If you need to
-call &#39;task :xzy&#39; in your code, include <a
-href="Rake/DSL.html">Rake::DSL</a> into your class, or put the code in a
-Rake::DSL.environment do … end block.</p>
+<p>Removed Rake&#39;s DSL methods from the top level scope.  If you need to call &#39;task :xzy&#39; in your code, include <a href="Rake/DSL.html"><code>Rake::DSL</code></a> into your class, or put the code in a Rake::DSL.environment do … end block.</p>
 </li><li>
 <p>Split rake.rb into individual files.</p>
 </li><li>
 <p>Support for the –where (-W) flag for showing where a task is defined.</p>
 </li><li>
-<p>Fixed quoting in test task. (<a
-href="http://onestepback.org/redmine/issues/show/44">onestepback.org/redmine/issues/show/44</a>,
-<a
-href="http://www.pivotaltracker.com/story/show/1223138">www.pivotaltracker.com/story/show/1223138</a>)</p>
+<p>Fixed quoting in test task. (<a href="http://onestepback.org/redmine/issues/show/44">onestepback.org/redmine/issues/show/44</a>, <a href="http://www.pivotaltracker.com/story/show/1223138">www.pivotaltracker.com/story/show/1223138</a>)</p>
 </li><li>
-<p>Fixed the silent option parsing problem. (<a
-href="http://onestepback.org/redmine/issues/show/47">onestepback.org/redmine/issues/show/47</a>)</p>
+<p>Fixed the silent option parsing problem. (<a href="http://onestepback.org/redmine/issues/show/47">onestepback.org/redmine/issues/show/47</a>)</p>
 </li><li>
 <p>Fixed :verbose=&gt;false flag on sh and ruby commands.</p>
 </li><li>
-<p>Rake command line options may be given by default in a RAKEOPT environment
-variable.</p>
+<p>Rake command line options may be given by default in a RAKEOPT environment variable.</p>
 </li><li>
-<p>Errors in Rake will now display the task invocation chain in effect at the
-time of the error.</p>
+<p>Errors in Rake will now display the task invocation chain in effect at the time of the error.</p>
 </li><li>
-<p>Accepted change by warnickr to not expand test patterns in shell (allowing
-more files in the test suite).</p>
+<p>Accepted change by warnickr to not expand test patterns in shell (allowing more files in the test suite).</p>
 </li><li>
-<p>Fixed that file tasks did not perform prereq lookups in scope (Redmine
-#57).</p>
+<p>Fixed that file tasks did not perform prereq lookups in scope (Redmine #57).</p>
 </li></ul>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>James M. Lawrence (quix)</p>
 </li><li>
@@ -1645,48 +1633,38 @@ otherwise helpful comments.  Thanks to …</p>
 <p>Santiago Pastorino</p>
 </li></ul>
 
-<p>Also, bit thanks to Eric Hodel for assisting with getting this release out
-the door (where “assisting” includes, but is not by any means limited to,
-“pushing” me to get it done).</p>
+<p>Also, bit thanks to Eric Hodel for assisting with getting this release out the door (where “assisting” includes, but is not by any means limited to, “pushing” me to get it done).</p>
 
 <p>– Jim Weirich</p>
 
 <h3 id="label-0.8.7">0.8.7<span><a href="#label-0.8.7">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Rake version 0.8.5 introduced greatly improved support for executing
-commands on Windows.  The “sh” command now has the same semantics on
-Windows that it has on Unix based platforms.</p>
+<p>Rake version 0.8.5 introduced greatly improved support for executing commands on Windows.  The “sh” command now has the same semantics on Windows that it has on Unix based platforms.</p>
 
-<p>Rake version 0.8.6 includes minor fixes the the RDoc generation. Rake
-version 0.8.7 includes a minor fix for JRuby running on windows.</p>
+<p>Rake version 0.8.6 includes minor fixes the the RDoc generation. Rake version 0.8.7 includes a minor fix for JRuby running on windows.</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
 <h5 id="label-New+Features+-2F+Enhancements+in+Version+0.8.5">New Features / Enhancements in Version 0.8.5<span><a href="#label-New+Features+-2F+Enhancements+in+Version+0.8.5">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Improved implementation of the Rake system command for Windows. (patch from
-James M. Lawrence/quix)</p>
+<p>Improved implementation of the Rake system command for Windows. (patch from James M. Lawrence/quix)</p>
 </li><li>
 <p>Support for Ruby 1.9&#39;s improved system command.  (patch from James</p>
 <ol style="list-style-type: upper-alpha"><li>
 <p>Lawrence/quix)</p>
 </li></ol>
 </li><li>
-<p>Rake now includes the configured extension when invoking an executable (<a
-href="'EXEEXT">Config::CONFIG</a>)</p>
+<p>Rake now includes the configured extension when invoking an executable (<a href="'EXEEXT">Config::CONFIG</a>)</p>
 </li></ul>
 
 <h5 id="label-Bug+Fixes+in+Version+0.8.5">Bug Fixes in Version 0.8.5<span><a href="#label-Bug+Fixes+in+Version+0.8.5">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Environment variable keys are now correctly cased (it matters in some
-implementations).</p>
+<p>Environment variable keys are now correctly cased (it matters in some implementations).</p>
 </li></ul>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>Charles Nutter</p>
 </li></ul>
@@ -1695,17 +1673,13 @@ otherwise helpful comments.  Thanks to …</p>
 
 <h3 id="label-0.8.6">0.8.6<span><a href="#label-0.8.6">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Rake version 0.8.5 introduced greatly improved support for executing
-commands on Windows.  The “sh” command now has the same semantics on
-Windows that it has on Unix based platforms.</p>
+<p>Rake version 0.8.5 introduced greatly improved support for executing commands on Windows.  The “sh” command now has the same semantics on Windows that it has on Unix based platforms.</p>
 
 <p>Rake version 0.8.5 includes minor fixes the the RDoc generation.</p>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>James M. Lawrence/quix</p>
 </li><li>
@@ -1716,37 +1690,30 @@ otherwise helpful comments.  Thanks to …</p>
 
 <h3 id="label-0.8.5">0.8.5<span><a href="#label-0.8.5">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Rake version 0.8.5 is a new release of Rake with greatly improved support
-for executing commands on Windows.  The “sh” command now has the same
-semantics on Windows that it has on Unix based platforms.</p>
+<p>Rake version 0.8.5 is a new release of Rake with greatly improved support for executing commands on Windows.  The “sh” command now has the same semantics on Windows that it has on Unix based platforms.</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
 <h5 id="label-New+Features+-2F+Enhancements+in+Version+0.8.5">New Features / Enhancements in Version 0.8.5<span><a href="#label-New+Features+-2F+Enhancements+in+Version+0.8.5">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Improved implementation of the Rake system command for Windows. (patch from
-James M. Lawrence/quix)</p>
+<p>Improved implementation of the Rake system command for Windows. (patch from James M. Lawrence/quix)</p>
 </li><li>
 <p>Support for Ruby 1.9&#39;s improved system command.  (patch from James</p>
 <ol style="list-style-type: upper-alpha"><li>
 <p>Lawrence/quix)</p>
 </li></ol>
 </li><li>
-<p>Rake now includes the configured extension when invoking an executable (<a
-href="'EXEEXT">Config::CONFIG</a>)</p>
+<p>Rake now includes the configured extension when invoking an executable (<a href="'EXEEXT">Config::CONFIG</a>)</p>
 </li></ul>
 
 <h5 id="label-Bug+Fixes+in+Version+0.8.5">Bug Fixes in Version 0.8.5<span><a href="#label-Bug+Fixes+in+Version+0.8.5">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Environment variable keys are now correctly cased (it matters in some
-implementations).</p>
+<p>Environment variable keys are now correctly cased (it matters in some implementations).</p>
 </li></ul>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>James M. Lawrence/quix</p>
 </li><li>
@@ -1768,13 +1735,7 @@ those two codebases.</pre>
 
 <h4 id="label-Letter+Writing+Campaign">Letter Writing Campaign<span><a href="#label-Letter+Writing+Campaign">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>Thanks to Aaron Patterson (@tenderlove) and Eric Hodel (@drbrain) for their
-encouraging support in organizing a letter writing campaign to lobby for
-the “Warning Free” release of rake 0.8.4.  A special callout goes to
-Jonathan D. Lord, Sr (Dr. Wingnut) whose postcard was the first to actually
-reach me. (see <a
-href="http://tenderlovemaking.com/2009/02/26/we-need-a-new-version-of-rake">tenderlovemaking.com/2009/02/26/we-need-a-new-version-of-rake</a>/
-for details)</p>
+<p>Thanks to Aaron Patterson (@tenderlove) and Eric Hodel (@drbrain) for their encouraging support in organizing a letter writing campaign to lobby for the “Warning Free” release of rake 0.8.4.  A special callout goes to Jonathan D. Lord, Sr (Dr. Wingnut) whose postcard was the first to actually reach me. (see <a href="http://tenderlovemaking.com/2009/02/26/we-need-a-new-version-of-rake">tenderlovemaking.com/2009/02/26/we-need-a-new-version-of-rake</a>/ for details)</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
@@ -1787,19 +1748,16 @@ for details)</p>
 </li><li>
 <p>Improved Rakefile case insensitivity testing (patch from Luis Lavena).</p>
 </li><li>
-<p>Windows system dir search order is now: HOME, HOMEDRIVE + HOMEPATH,
-APPDATA, USERPROFILE (patch from Luis Lavena)</p>
+<p>Windows system dir search order is now: HOME, HOMEDRIVE + HOMEPATH, APPDATA, USERPROFILE (patch from Luis Lavena)</p>
 </li><li>
 <p>MingGW is now recognized as a windows platform.  (patch from Luis Lavena)</p>
 </li></ul>
 
 <h5 id="label-Bug+Fixes+in+Version+0.8.4">Bug Fixes in Version 0.8.4<span><a href="#label-Bug+Fixes+in+Version+0.8.4">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Removed reference to manage_gem to fix the warning produced by the gem
-package task.</p>
+<p>Removed reference to manage_gem to fix the warning produced by the gem package task.</p>
 </li><li>
-<p>Fixed stray ARGV option problem that was interfering with
-Test::Unit::Runner. (patch from Pivotal Labs)</p>
+<p>Fixed stray ARGV option problem that was interfering with Test::Unit::Runner. (patch from Pivotal Labs)</p>
 </li></ul>
 
 <h5 id="label-Infrastructure+Improvements+in+Version+0.8.4">Infrastructure Improvements in Version 0.8.4<span><a href="#label-Infrastructure+Improvements+in+Version+0.8.4">&para;</a> <a href="#top">&uarr;</a></span></h5>
@@ -1808,15 +1766,12 @@ Test::Unit::Runner. (patch from Pivotal Labs)</p>
 </li><li>
 <p>Improved Rakefile case insensitivity testing (patch from Luis Lavena).</p>
 </li><li>
-<p>Better support for windows paths in the test task (patch from Simon
-Chiang/bahuvrihi)</p>
+<p>Better support for windows paths in the test task (patch from Simon Chiang/bahuvrihi)</p>
 </li></ul>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>James M. Lawrence/quix</p>
 </li><li>
@@ -1837,20 +1792,14 @@ otherwise helpful comments.  Thanks to …</p>
 
 <h5 id="label-Bug+Fixes+in+Version+0.8.3">Bug Fixes in Version 0.8.3<span><a href="#label-Bug+Fixes+in+Version+0.8.3">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Enhanced the system directory detection in windows. We now check
-HOMEDRIVE/HOMEPATH and USERPROFILE if APPDATA isn&#39;t found. (Patch
-supplied by James Tucker). Rake no long aborts if it can&#39;t find the
-directory.</p>
+<p>Enhanced the system directory detection in windows. We now check HOMEDRIVE/HOMEPATH and USERPROFILE if APPDATA isn&#39;t found. (Patch supplied by James Tucker). Rake no long aborts if it can&#39;t find the directory.</p>
 </li><li>
-<p>Added fix to handle ruby installations in directories with spaces in their
-name.</p>
+<p>Added fix to handle ruby installations in directories with spaces in their name.</p>
 </li></ul>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>Edwin Pratomo</p>
 </li><li>
@@ -1864,16 +1813,14 @@ otherwise helpful comments.  Thanks to …</p>
 </li><li>
 <p>Ittay Dror</p>
 </li><li>
-<p>Bheeshmar Redheendran (for spending an afternoon with me debugging windows
-issues)</p>
+<p>Bheeshmar Redheendran (for spending an afternoon with me debugging windows issues)</p>
 </li></ul>
 
 <p>– Jim Weirich</p>
 
 <h3 id="label-0.8.2">0.8.2<span><a href="#label-0.8.2">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Rake version 0.8.2 is a new release of rake that includes a number of new
-features and numerous bug fixes.</p>
+<p>Rake version 0.8.2 is a new release of rake that includes a number of new features and numerous bug fixes.</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
@@ -1881,139 +1828,92 @@ features and numerous bug fixes.</p>
 <ul><li>
 <p>Switched from getoptlong to optparse (patches supplied by Edwin Pratomo).</p>
 </li><li>
-<p>The -T option will now attempt to dynamically sense the size of the
-terminal. The -T output will only self-truncate if the output is a tty.
-However, if RAKE_COLUMNS is explicitly set, it will be honored in any case.
-(Patch provided by Gavin Stark).</p>
+<p>The -T option will now attempt to dynamically sense the size of the terminal. The -T output will only self-truncate if the output is a tty. However, if RAKE_COLUMNS is explicitly set, it will be honored in any case. (Patch provided by Gavin Stark).</p>
 </li><li>
 <p>The following public methods have been added to rake task objects:</p>
 <ul><li>
-<p>task.clear – Clear both the prerequisites and actions of the target rake
-task.</p>
+<p>task.clear – Clear both the prerequisites and actions of the target rake task.</p>
 </li><li>
-<p>task.clear_prerequisites – Clear all the existing prerequisites from the
-target rake task.</p>
+<p>task.clear_prerequisites – Clear all the existing prerequisites from the target rake task.</p>
 </li><li>
-<p>task.clear_actions – Clear all the existing actions from the target rake
-task.</p>
+<p>task.clear_actions – Clear all the existing actions from the target rake task.</p>
 </li><li>
-<p>task.reenable – Re-enable a task, allowing its actions to be executed again
-if the task is invoked.</p>
+<p>task.reenable – Re-enable a task, allowing its actions to be executed again if the task is invoked.</p>
 </li></ul>
 </li><li>
-<p>Changed RDoc test task to have no default template. This makes it easier
-for the tempate to pick up the template from the environment.</p>
+<p>Changed RDoc test task to have no default template. This makes it easier for the tempate to pick up the template from the environment.</p>
 </li><li>
-<p>Default values for task arguments can easily be specified with the
-:with_defaults method. (Idea for default argument merging supplied by (Adam
-Q. Salter)</p>
+<p>Default values for task arguments can easily be specified with the :with_defaults method. (Idea for default argument merging supplied by (Adam Q. Salter)</p>
 </li></ul>
 
 <h5 id="label-Bug+Fixes+in+Version+0.8.2">Bug Fixes in Version 0.8.2<span><a href="#label-Bug+Fixes+in+Version+0.8.2">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Fixed bug in package task so that it will include the subdir directory in
-the package for testing. (Bug found by Adam Majer)</p>
+<p>Fixed bug in package task so that it will include the subdir directory in the package for testing. (Bug found by Adam Majer)</p>
 </li><li>
-<p>Fixed filename dependency order bug in test_inspect_pending and
-test_to_s_pending. (Bug found by Adam Majer)</p>
+<p>Fixed filename dependency order bug in test_inspect_pending and test_to_s_pending. (Bug found by Adam Majer)</p>
 </li><li>
-<p>Fixed check for file utils options to make them immune to the symbol/string
-differences. (Patch supplied by Edwin Pratomo)</p>
+<p>Fixed check for file utils options to make them immune to the symbol/string differences. (Patch supplied by Edwin Pratomo)</p>
 </li><li>
-<p>Fixed bug with rules involving multiple source, where only the first
-dependency of a rule has any effect (Patch supplied by Emanuel Indermühle)</p>
+<p>Fixed bug with rules involving multiple source, where only the first dependency of a rule has any effect (Patch supplied by Emanuel Indermühle)</p>
 </li><li>
-<p>FileList#clone and FileList#dup have better sematics w.r.t. taint and
-freeze.</p>
+<p>FileList#clone and FileList#dup have better sematics w.r.t. taint and freeze.</p>
 </li><li>
-<p>Changed from using Mutex to Monitor. Evidently Mutex causes thread join
-errors when Ruby is compiled with -disable-pthreads. (Patch supplied by
-Ittay Dror)</p>
+<p>Changed from using Mutex to Monitor. Evidently Mutex causes thread join errors when Ruby is compiled with -disable-pthreads. (Patch supplied by Ittay Dror)</p>
 </li><li>
-<p>Fixed bug in makefile parser that had problems with extra spaces in file
-task names. (Patch supplied by Ittay Dror)</p>
+<p>Fixed bug in makefile parser that had problems with extra spaces in file task names. (Patch supplied by Ittay Dror)</p>
 </li></ul>
 
 <h4 id="label-Other+changes+in+Version+0.8.2">Other changes in Version 0.8.2<span><a href="#label-Other+changes+in+Version+0.8.2">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Added ENV var to rake&#39;s own Rakefile to prevent OS X from including
-extended attribute junk in the rake package tar file. (Bug found by Adam
-Majer)</p>
+<p>Added ENV var to rake&#39;s own Rakefile to prevent OS X from including extended attribute junk in the rake package tar file. (Bug found by Adam Majer)</p>
 </li><li>
-<p>Added a performance patch for reading large makefile dependency files.
-(Patch supplied by Ittay Dror)</p>
+<p>Added a performance patch for reading large makefile dependency files. (Patch supplied by Ittay Dror)</p>
 </li></ul>
 
 <h4 id="label-Task+Argument+Examples">Task Argument Examples<span><a href="#label-Task+Argument+Examples">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>Prior to version 0.8.0, rake was only able to handle command line arguments
-of the form NAME=VALUE that were passed into Rake via the ENV hash.  Many
-folks had asked for some kind of simple command line arguments, perhaps
-using “–” to separate regular task names from argument values on the
-command line.  The problem is that there was no easy way to associate
-positional arguments on the command line with different tasks.  Suppose
-both tasks :a and :b expect a command line argument: does the first value
-go with :a?  What if :b is run first? Should it then get the first command
-line argument.</p>
+<p>Prior to version 0.8.0, rake was only able to handle command line arguments of the form NAME=VALUE that were passed into Rake via the ENV hash.  Many folks had asked for some kind of simple command line arguments, perhaps using “–” to separate regular task names from argument values on the command line.  The problem is that there was no easy way to associate positional arguments on the command line with different tasks.  Suppose both tasks :a and :b expect a command line argument: does the first value go with :a?  What if :b is run first? Should it then get the first command line argument.</p>
 
-<p>Rake 0.8.0 solves this problem by explicitly passing values directly to the
-tasks that need them.  For example, if I had a release task that required a
-version number, I could say:</p>
+<p>Rake 0.8.0 solves this problem by explicitly passing values directly to the tasks that need them.  For example, if I had a release task that required a version number, I could say:</p>
 
 <pre>rake release[0.8.2]</pre>
 
-<p>And the string “0.8.2” will be passed to the :release task.  Multiple
-arguments can be passed by separating them with a comma, for example:</p>
+<p>And the string “0.8.2” will be passed to the :release task.  Multiple arguments can be passed by separating them with a comma, for example:</p>
 
 <pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-identifier">name</span>[<span class="ruby-identifier">john</span>,<span class="ruby-identifier">doe</span>]
 </pre>
 
-<p>Just a few words of caution.  The rake task name and its arguments need to
-be a single command line argument to rake.  This generally means no spaces.
-If spaces are needed, then the entire rake + argument string should be
-quoted.  Something like this:</p>
+<p>Just a few words of caution.  The rake task name and its arguments need to be a single command line argument to rake.  This generally means no spaces.  If spaces are needed, then the entire rake + argument string should be quoted.  Something like this:</p>
 
 <pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-string">&quot;name[billy bob, smith]&quot;</span>
 </pre>
 
-<p>(Quoting rules vary between operating systems and shells, so make sure you
-consult the proper docs for your OS/shell).</p>
+<p>(Quoting rules vary between operating systems and shells, so make sure you consult the proper docs for your OS/shell).</p>
 
 <h5 id="label-Tasks+that+Expect+Parameters">Tasks that Expect Parameters<span><a href="#label-Tasks+that+Expect+Parameters">&para;</a> <a href="#top">&uarr;</a></span></h5>
 
-<p>Parameters are only given to tasks that are setup to expect them.  In order
-to handle named parameters, the task declaration syntax for tasks has been
-extended slightly.</p>
+<p>Parameters are only given to tasks that are setup to expect them.  In order to handle named parameters, the task declaration syntax for tasks has been extended slightly.</p>
 
-<p>For example, a task that needs a first name and last name might be declared
-as:</p>
+<p>For example, a task that needs a first name and last name might be declared as:</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">name</span>, :<span class="ruby-identifier">first_name</span>, :<span class="ruby-identifier">last_name</span>
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">:name</span>, <span class="ruby-value">:first_name</span>, <span class="ruby-value">:last_name</span>
 </pre>
 
-<p>The first argument is still the name of the task (:name in this case). The
-next to argumements are the names of the parameters expected by :name
-(:first_name and :last_name in the example).</p>
+<p>The first argument is still the name of the task (:name in this case). The next to argumements are the names of the parameters expected by :name (:first_name and :last_name in the example).</p>
 
-<p>To access the values of the paramters, the block defining the task
-behaviour can now accept a second parameter:</p>
+<p>To access the values of the parameters, the block defining the task behaviour can now accept a second parameter:</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">name</span>, :<span class="ruby-identifier">first_name</span>, :<span class="ruby-identifier">last_name</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span>, <span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">:name</span>, <span class="ruby-value">:first_name</span>, <span class="ruby-value">:last_name</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span>, <span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;First name is #{args.first_name}&quot;</span>
   <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Last  name is #{args.last_name}&quot;</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>The first argument of the block “t” is always bound to the current task
-object.  The second argument “args” is an open-struct like object that
-allows access to the task arguments.  Extra command line arguments to a
-task are ignored.  Missing command line arguments are given the nil value.</p>
+<p>The first argument of the block “t” is always bound to the current task object.  The second argument “args” is an open-struct like object that allows access to the task arguments.  Extra command line arguments to a task are ignored.  Missing command line arguments are given the nil value.</p>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>Edwin Pratomo</p>
 </li><li>
@@ -2027,106 +1927,74 @@ otherwise helpful comments.  Thanks to …</p>
 </li><li>
 <p>Ittay Dror</p>
 </li><li>
-<p>Bheeshmar Redheendran (for spending an afternoon with me debugging windows
-issues)</p>
+<p>Bheeshmar Redheendran (for spending an afternoon with me debugging windows issues)</p>
 </li></ul>
 
 <p>– Jim Weirich</p>
 
 <h3 id="label-0.8.0-2F0.8.1">0.8.0/0.8.1<span><a href="#label-0.8.0-2F0.8.1">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Rake version 0.8.0 is a new release of rake that includes serveral new
-features.</p>
+<p>Rake version 0.8.0 is a new release of rake that includes serveral new features.</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
 <h5 id="label-New+Features+in+Version+0.8.0">New Features in Version 0.8.0<span><a href="#label-New+Features+in+Version+0.8.0">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Tasks can now receive command line parameters.  See the examples below for
-more details.</p>
+<p>Tasks can now receive command line parameters.  See the examples below for more details.</p>
 </li><li>
-<p>Comments are limited to 80 columns on output, but full comments can be seen
-by using the -D parameter. (feature suggested by Jamis Buck).</p>
+<p>Comments are limited to 80 columns on output, but full comments can be seen by using the -D parameter. (feature suggested by Jamis Buck).</p>
 </li><li>
-<p>Explicit exit(n) calls will now set the exit status to n. (patch provided
-by Stephen Touset).</p>
+<p>Explicit exit(n) calls will now set the exit status to n. (patch provided by Stephen Touset).</p>
 </li><li>
 <p>Rake is now compatible with Ruby 1.9.</p>
 </li></ul>
 
-<p>Version 0.8.1 is a minor update that includes additional Ruby 1.9
-compatibility fixes.</p>
+<p>Version 0.8.1 is a minor update that includes additional Ruby 1.9 compatibility fixes.</p>
 
 <h4 id="label-Task+Argument+Examples">Task Argument Examples<span><a href="#label-Task+Argument+Examples">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>Prior to version 0.8.0, rake was only able to handle command line arguments
-of the form NAME=VALUE that were passed into Rake via the ENV hash.  Many
-folks had asked for some kind of simple command line arguments, perhaps
-using “–” to separate regular task names from argument values on the
-command line.  The problem is that there was no easy way to associate
-positional arguments on the command line with different tasks.  Suppose
-both tasks :a and :b expect a command line argument: does the first value
-go with :a?  What if :b is run first? Should it then get the first command
-line argument.</p>
+<p>Prior to version 0.8.0, rake was only able to handle command line arguments of the form NAME=VALUE that were passed into Rake via the ENV hash.  Many folks had asked for some kind of simple command line arguments, perhaps using “–” to separate regular task names from argument values on the command line.  The problem is that there was no easy way to associate positional arguments on the command line with different tasks.  Suppose both tasks :a and :b expect a command line argument: does the first value go with :a?  What if :b is run first? Should it then get the first command line argument.</p>
 
-<p>Rake 0.8.0 solves this problem by explicitly passing values directly to the
-tasks that need them.  For example, if I had a release task that required a
-version number, I could say:</p>
+<p>Rake 0.8.0 solves this problem by explicitly passing values directly to the tasks that need them.  For example, if I had a release task that required a version number, I could say:</p>
 
 <pre>rake release[0.8.0]</pre>
 
-<p>And the string “0.8.0” will be passed to the :release task.  Multiple
-arguments can be passed by separating them with a comma, for example:</p>
+<p>And the string “0.8.0” will be passed to the :release task.  Multiple arguments can be passed by separating them with a comma, for example:</p>
 
 <pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-identifier">name</span>[<span class="ruby-identifier">john</span>,<span class="ruby-identifier">doe</span>]
 </pre>
 
-<p>Just a few words of caution.  The rake task name and its arguments need to
-be a single command line argument to rake.  This generally means no spaces.
-If spaces are needed, then the entire rake + argument string should be
-quoted.  Something like this:</p>
+<p>Just a few words of caution.  The rake task name and its arguments need to be a single command line argument to rake.  This generally means no spaces.  If spaces are needed, then the entire rake + argument string should be quoted.  Something like this:</p>
 
 <pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-string">&quot;name[billy bob, smith]&quot;</span>
 </pre>
 
-<p>(Quoting rules vary between operating systems and shells, so make sure you
-consult the proper docs for your OS/shell).</p>
+<p>(Quoting rules vary between operating systems and shells, so make sure you consult the proper docs for your OS/shell).</p>
 
 <h5 id="label-Tasks+that+Expect+Parameters">Tasks that Expect Parameters<span><a href="#label-Tasks+that+Expect+Parameters">&para;</a> <a href="#top">&uarr;</a></span></h5>
 
-<p>Parameters are only given to tasks that are setup to expect them.  In order
-to handle named parameters, the task declaration syntax for tasks has been
-extended slightly.</p>
+<p>Parameters are only given to tasks that are setup to expect them.  In order to handle named parameters, the task declaration syntax for tasks has been extended slightly.</p>
 
-<p>For example, a task that needs a first name and last name might be declared
-as:</p>
+<p>For example, a task that needs a first name and last name might be declared as:</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">name</span>, :<span class="ruby-identifier">first_name</span>, :<span class="ruby-identifier">last_name</span>
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">:name</span>, <span class="ruby-value">:first_name</span>, <span class="ruby-value">:last_name</span>
 </pre>
 
-<p>The first argument is still the name of the task (:name in this case). The
-next to argumements are the names of the parameters expected by :name
-(:first_name and :last_name in the example).</p>
+<p>The first argument is still the name of the task (:name in this case). The next to argumements are the names of the parameters expected by :name (:first_name and :last_name in the example).</p>
 
-<p>To access the values of the paramters, the block defining the task
-behaviour can now accept a second parameter:</p>
+<p>To access the values of the parameters, the block defining the task behaviour can now accept a second parameter:</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">name</span>, :<span class="ruby-identifier">first_name</span>, :<span class="ruby-identifier">last_name</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span>, <span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">:name</span>, <span class="ruby-value">:first_name</span>, <span class="ruby-value">:last_name</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span>, <span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;First name is #{args.first_name}&quot;</span>
   <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Last  name is #{args.last_name}&quot;</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>The first argument of the block “t” is always bound to the current task
-object.  The second argument “args” is an open-struct like object that
-allows access to the task arguments.  Extra command line arguments to a
-task are ignored.  Missing command line arguments are given the nil value.</p>
+<p>The first argument of the block “t” is always bound to the current task object.  The second argument “args” is an open-struct like object that allows access to the task arguments.  Extra command line arguments to a task are ignored.  Missing command line arguments are given the nil value.</p>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>Jamis Buck (for comment formatting suggestions)</p>
 </li><li>
@@ -2137,22 +2005,20 @@ otherwise helpful comments.  Thanks to …</p>
 
 <h3 id="label-0.7.3">0.7.3<span><a href="#label-0.7.3">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Rake version 0.7.3 is a minor release that includes some refactoring to
-better support custom Rake applications.</p>
+<p>Rake version 0.7.3 is a minor release that includes some refactoring to better support custom Rake applications.</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
 <h5 id="label-New+Features+in+Version+0.7.3">New Features in Version 0.7.3<span><a href="#label-New+Features+in+Version+0.7.3">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Added the <code>init</code> and <code>top_level</code> methods to make the
-creation of custom Rake applications a bit easier.  E.g.</p>
+<p>Added the <code>init</code> and <code>top_level</code> methods to make the creation of custom Rake applications a bit easier.  E.g.</p>
 
 <pre class="ruby"><span class="ruby-identifier">gem</span> <span class="ruby-string">&#39;rake&#39;</span>, <span class="ruby-string">&quot;&gt;= 0.7.3&quot;</span>
 <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;rake&#39;</span>
 
 <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>.<span class="ruby-identifier">init</span>(<span class="ruby-string">&#39;myrake&#39;</span>)
 
-<span class="ruby-identifier">task</span> :<span class="ruby-identifier">default</span> <span class="ruby-keyword">do</span>
+<span class="ruby-identifier">task</span> <span class="ruby-value">:default</span> <span class="ruby-keyword">do</span>
   <span class="ruby-identifier">something_interesting</span>
 <span class="ruby-keyword">end</span>
 
@@ -2162,18 +2028,13 @@ creation of custom Rake applications a bit easier.  E.g.</p>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments. Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments. Thanks to …</p>
 
 <p>– Jim Weirich</p>
 
 <h3 id="label-0.7.2">0.7.2<span><a href="#label-0.7.2">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Version 0.7.2 supplies a bug fix and a few minor enhancements. In
-particular, the new version fixes an incompatibility with the soon to be
-released Ruby 1.8.6.  We strongly recommend upgrading to Rake 0.7.2 in
-order to be compatible with the new version of Ruby.</p>
+<p>Version 0.7.2 supplies a bug fix and a few minor enhancements. In particular, the new version fixes an incompatibility with the soon to be released Ruby 1.8.6.  We strongly recommend upgrading to Rake 0.7.2 in order to be compatible with the new version of Ruby.</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
@@ -2181,27 +2042,21 @@ order to be compatible with the new version of Ruby.</p>
 
 <p>There are quite a number of bug fixes in the new 0.7.2 version of Rake:</p>
 <ul><li>
-<p>Removed dependency on internal fu_xxx functions from <a
-href="FileUtils.html">FileUtils</a>.</p>
+<p>Removed dependency on internal fu_xxx functions from <a href="FileUtils.html"><code>FileUtils</code></a>.</p>
 </li><li>
-<p>Error messages are now send to stderr rather than stdout (from Payton
-Quackenbush).</p>
+<p>Error messages are now send to stderr rather than stdout (from Payton Quackenbush).</p>
 </li><li>
-<p>Better error handling on invalid command line arguments (from Payton
-Quackenbush).</p>
+<p>Better error handling on invalid command line arguments (from Payton Quackenbush).</p>
 </li><li>
-<p>Fixed some bugs where the application object was going to the global
-appliation instead of using its own data.</p>
+<p>Fixed some bugs where the application object was going to the global appliation instead of using its own data.</p>
 </li><li>
-<p>Fixed the method name leak from <a href="FileUtils.html">FileUtils</a> (bug
-found by Glenn Vanderburg).</p>
+<p>Fixed the method name leak from <a href="FileUtils.html"><code>FileUtils</code></a> (bug found by Glenn Vanderburg).</p>
 </li><li>
 <p>Added test for noop, bad_option and verbose flags to sh command.</p>
 </li><li>
 <p>Added a description to the gem task in GemPackageTask.</p>
 </li><li>
-<p>Fixed a bug when rules have multiple prerequisites (patch by Joel
-VanderWerf)</p>
+<p>Fixed a bug when rules have multiple prerequisites (patch by Joel VanderWerf)</p>
 </li><li>
 <p>Added the handful of RakeFileUtils to the private method as well.</p>
 </li></ul>
@@ -2210,21 +2065,15 @@ VanderWerf)</p>
 
 <p>The following new features are available in Rake version 0.7.2:</p>
 <ul><li>
-<p>Added square and curly bracket patterns to FileList#include (Tilman
-Sauerbeck).</p>
+<p>Added square and curly bracket patterns to FileList#include (Tilman Sauerbeck).</p>
 </li><li>
-<p>FileLists can now pass a block to FileList#exclude to exclude files based
-on calculated values.</p>
+<p>FileLists can now pass a block to FileList#exclude to exclude files based on calculated values.</p>
 </li><li>
 <p>Added plain filename support to rule dependents (suggested by Nobu Nakada).</p>
 </li><li>
-<p>Added pathmap support to rule dependents.  In other words, if a pathmap
-format (beginning with a &#39;%&#39;) is given as a Rake rule dependent,
-then the name of the depend will be the name of the target with the pathmap
-format applied.</p>
+<p>Added pathmap support to rule dependents.  In other words, if a pathmap format (beginning with a &#39;%&#39;) is given as a Rake rule dependent, then the name of the depend will be the name of the target with the pathmap format applied.</p>
 </li><li>
-<p>Added a &#39;tasks&#39; method to a namespace to get a list of tasks
-associated with the namespace.</p>
+<p>Added a &#39;tasks&#39; method to a namespace to get a list of tasks associated with the namespace.</p>
 </li><li>
 <p>Added tar_command and zip_command options to the Package task.</p>
 </li><li>
@@ -2233,9 +2082,7 @@ associated with the namespace.</p>
 
 <h5 id="label-Internal+Rake+Improvements">Internal Rake Improvements<span><a href="#label-Internal+Rake+Improvements">&para;</a> <a href="#top">&uarr;</a></span></h5>
 
-<p>The following changes will are mainly internal improvements and
-refactorings and have little effect on the end user.  But they may be of
-interest to the general public.</p>
+<p>The following changes will are mainly internal improvements and refactorings and have little effect on the end user.  But they may be of interest to the general public.</p>
 <ul><li>
 <p>Added rcov task and updated unit testing for better code coverage.</p>
 </li><li>
@@ -2243,8 +2090,7 @@ interest to the general public.</p>
 </li><li>
 <p>Added rake_extension to handle detection of extension collisions.</p>
 </li><li>
-<p>Added a protected &#39;require “rubygems”&#39; to test/test_application to
-unbreak cruisecontrol.rb.</p>
+<p>Added a protected &#39;require “rubygems”&#39; to test/test_application to unbreak cruisecontrol.rb.</p>
 </li><li>
 <p>Removed rake_dup.  Now we just simply rescue a bad dup.</p>
 </li><li>
@@ -2255,20 +2101,15 @@ unbreak cruisecontrol.rb.</p>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>Payton Quackenbush – For several error handling improvements.</p>
 </li><li>
-<p>Glenn Vanderburg – For finding and fixing the method name leak from <a
-href="FileUtils.html">FileUtils</a>.</p>
+<p>Glenn Vanderburg – For finding and fixing the method name leak from <a href="FileUtils.html"><code>FileUtils</code></a>.</p>
 </li><li>
-<p>Joel VanderWerf – for finding and fixing a bug in the handling of multiple
-prerequisites.</p>
+<p>Joel VanderWerf – for finding and fixing a bug in the handling of multiple prerequisites.</p>
 </li><li>
-<p>Tilman Sauerbeck – For some enhancing FileList to support more advanced
-file globbing.</p>
+<p>Tilman Sauerbeck – For some enhancing FileList to support more advanced file globbing.</p>
 </li><li>
 <p>Nobu Nakada – For suggesting plain file name support to rule dependents.</p>
 </li></ul>
@@ -2283,46 +2124,32 @@ file globbing.</p>
 
 <h5 id="label-Bug+Fixes+in+0.7.1">Bug Fixes in 0.7.1<span><a href="#label-Bug+Fixes+in+0.7.1">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Changes in the exception reported for the FileUtils.ln caused safe_ln to
-fail with a NotImplementedError.  Rake 0.7.1 will now catch that error or
-any StandardError and properly fall back to using <code>cp</code>.</p>
+<p>Changes in the exception reported for the FileUtils.ln caused safe_ln to fail with a NotImplementedError.  Rake 0.7.1 will now catch that error or any StandardError and properly fall back to using <code>cp</code>.</p>
 </li></ul>
 
 <h5 id="label-New+Features+in+0.7.1">New Features in 0.7.1<span><a href="#label-New+Features+in+0.7.1">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>You can filter the results of the –task option by supplying an optional
-regular expression.  This allows the user to easily find a particular task
-name in a long list of possible names.</p>
+<p>You can filter the results of the –task option by supplying an optional regular expression.  This allows the user to easily find a particular task name in a long list of possible names.</p>
 </li><li>
-<p>Transforming procs in a rule may now return a list of prerequisites. This
-allows more flexible rule formation.</p>
+<p>Transforming procs in a rule may now return a list of prerequisites. This allows more flexible rule formation.</p>
 </li><li>
-<p>FileList and <a href="String.html">String</a> now support a
-<code>pathmap</code> melthod that makes the transforming paths a bit
-easier.  See the API docs for <code>pathmap</code> for details.</p>
+<p>FileList and <a href="String.html"><code>String</code></a> now support a <code>pathmap</code> melthod that makes the transforming paths a bit easier.  See the API docs for <code>pathmap</code> for details.</p>
 </li><li>
-<p>The -f option without a value will disable the search for a Rakefile.  This
-allows the Rakefile to be defined entirely in a library (and loaded with
-the -r option).  The current working directory is not changed when this is
-done.</p>
+<p>The -f option without a value will disable the search for a Rakefile.  This allows the Rakefile to be defined entirely in a library (and loaded with the -r option).  The current working directory is not changed when this is done.</p>
 </li></ul>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
-<p>James Britt and Assaph Mehr for reporting and helping to debug the safe_ln
-issue.</p>
+<p>James Britt and Assaph Mehr for reporting and helping to debug the safe_ln issue.</p>
 </li></ul>
 
 <p>– Jim Weirich</p>
 
 <h3 id="label-0.7.0">0.7.0<span><a href="#label-0.7.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>These changes for Rake have been brewing for a long time.  Here they are, I
-hope you enjoy them.</p>
+<p>These changes for Rake have been brewing for a long time.  Here they are, I hope you enjoy them.</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
@@ -2334,58 +2161,49 @@ hope you enjoy them.</p>
 </li><li>
 <p>Added safe_ln support for openAFS (via Ludvig Omholt).</p>
 </li><li>
-<p>RDoc defaults to internal (in-process) invocation.  The old behavior is
-still available by setting the <code>external</code> flag to true.</p>
+<p>RDoc defaults to internal (in-process) invocation.  The old behavior is still available by setting the <code>external</code> flag to true.</p>
 </li><li>
-<p>Rakefiles are now loaded with the expanded path to prevent accidental
-polution from the Ruby load path.</p>
+<p>Rakefiles are now loaded with the expanded path to prevent accidental pollution from the Ruby load path.</p>
 </li><li>
 <p>Task objects my now be used in prerequisite lists directly.</p>
 </li><li>
-<p>Task objects (in addition to task names) may now be included in the
-prerequisite list of a task.</p>
+<p>Task objects (in addition to task names) may now be included in the prerequisite list of a task.</p>
 </li><li>
 <p>Internals cleanup and refactoring.</p>
 </li></ul>
 
 <h5 id="label-Bug+Fixes">Bug Fixes<span><a href="#label-Bug+Fixes">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Compatibility fixes for Ruby 1.8.4 <a href="FileUtils.html">FileUtils</a>
-changes.</p>
+<p>Compatibility fixes for Ruby 1.8.4 <a href="FileUtils.html"><code>FileUtils</code></a> changes.</p>
 </li></ul>
 
 <h5 id="label-Namespaces">Namespaces<span><a href="#label-Namespaces">&para;</a> <a href="#top">&uarr;</a></span></h5>
 
-<p>Tasks can now be nested inside their own namespaces.  Tasks within one
-namespace will not accidently interfer with tasks named in a different
-namespace.</p>
+<p>Tasks can now be nested inside their own namespaces.  Tasks within one namespace will not accidentally interfer with tasks named in a different namespace.</p>
 
 <p>For example:</p>
 
 <pre class="ruby"><span class="ruby-identifier">namespace</span> <span class="ruby-string">&quot;main&quot;</span> <span class="ruby-keyword">do</span>
-  <span class="ruby-identifier">task</span> :<span class="ruby-identifier">build</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">task</span> <span class="ruby-value">:build</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment"># Build the main program</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-identifier">namespace</span> <span class="ruby-string">&quot;samples&quot;</span> <span class="ruby-keyword">do</span>
-  <span class="ruby-identifier">task</span> :<span class="ruby-identifier">build</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">task</span> <span class="ruby-value">:build</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment"># Build the sample programs</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
-<span class="ruby-identifier">task</span> :<span class="ruby-identifier">build_all</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">&quot;main:build&quot;</span>, <span class="ruby-string">&quot;samples:build&quot;</span>]
+<span class="ruby-identifier">task</span> <span class="ruby-value">:build_all</span> <span class="ruby-operator">=&gt;</span> [<span class="ruby-string">&quot;main:build&quot;</span>, <span class="ruby-string">&quot;samples:build&quot;</span>]
 </pre>
 
-<p>Even though both tasks are named :build, they are separate tasks in their
-own namespaces.  The :build_all task (defined in the toplevel namespace)
-references both build tasks in its prerequisites.</p>
+<p>Even though both tasks are named :build, they are separate tasks in their own namespaces.  The :build_all task (defined in the toplevel namespace) references both build tasks in its prerequisites.</p>
 
-<p>You may invoke each of the individual build tasks with the following
-commands:</p>
+<p>You may invoke each of the individual build tasks with the following commands:</p>
 
-<pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-identifier">main</span>:<span class="ruby-identifier">build</span>
-<span class="ruby-identifier">rake</span> <span class="ruby-identifier">samples</span>:<span class="ruby-identifier">build</span>
+<pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-value">main:</span><span class="ruby-identifier">build</span>
+<span class="ruby-identifier">rake</span> <span class="ruby-value">samples:</span><span class="ruby-identifier">build</span>
 </pre>
 
 <p>Or invoke both via the :build_all command:</p>
@@ -2393,36 +2211,28 @@ commands:</p>
 <pre class="ruby"><span class="ruby-identifier">rake</span> <span class="ruby-identifier">build_all</span>
 </pre>
 
-<p>Namespaces may be nested arbitrarily.  Since the name of file tasks
-correspond to the name of a file in the external file system, FileTasks are
-not affected by the namespaces.</p>
+<p>Namespaces may be nested arbitrarily.  Since the name of file tasks correspond to the name of a file in the external file system, FileTasks are not affected by the namespaces.</p>
 
-<p>See the Rakefile format documentation (in the Rake API documents) for more
-information.</p>
+<p>See the Rakefile format documentation (in the Rake API documents) for more information.</p>
 
 <h5 id="label-Parallel+Tasks">Parallel Tasks<span><a href="#label-Parallel+Tasks">&para;</a> <a href="#top">&uarr;</a></span></h5>
 
-<p>Sometimes you have several tasks that can be executed in parallel.  By
-specifying these tasks as prerequisites to a <code>multitask</code> task.</p>
+<p>Sometimes you have several tasks that can be executed in parallel.  By specifying these tasks as prerequisites to a <code>multitask</code> task.</p>
 
-<p>In the following example the tasks copy_src, copy_doc and copy_bin will all
-execute in parallel in their own thread.</p>
+<p>In the following example the tasks copy_src, copy_doc and copy_bin will all execute in parallel in their own thread.</p>
 
-<pre class="ruby"><span class="ruby-identifier">multitask</span> :<span class="ruby-identifier">copy_files</span> =<span class="ruby-operator">&gt;</span> [:<span class="ruby-identifier">copy_src</span>, :<span class="ruby-identifier">copy_doc</span>, :<span class="ruby-identifier">copy_bin</span>] <span class="ruby-keyword">do</span>
+<pre class="ruby"><span class="ruby-identifier">multitask</span> <span class="ruby-value">:copy_files</span> <span class="ruby-operator">=&gt;</span> [<span class="ruby-value">:copy_src</span>, <span class="ruby-value">:copy_doc</span>, <span class="ruby-value">:copy_bin</span>] <span class="ruby-keyword">do</span>
   <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;All Copies Complete&quot;</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
-<p>Doug Young (inspriation for the parallel task)</p>
+<p>Doug Young (inspiration for the parallel task)</p>
 </li><li>
-<p>David Heinemeier Hansson (for –trace message enhancement and for pushing
-for namespace support).</p>
+<p>David Heinemeier Hansson (for –trace message enhancement and for pushing for namespace support).</p>
 </li><li>
 <p>Ludvig Omholt (for the openAFS fix)</p>
 </li></ul>
@@ -2436,127 +2246,83 @@ for namespace support).</p>
 
 <h3 id="label-0.6.0">0.6.0<span><a href="#label-0.6.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Its time for some long requested enhancements and lots of bug fixes … And a
-whole new web page.</p>
+<p>Its time for some long requested enhancements and lots of bug fixes … And a whole new web page.</p>
 
 <h4 id="label-New+Web+Page">New Web Page<span><a href="#label-New+Web+Page">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>The primary documentation for rake has moved from the RubyForge based wiki
-to its own Hieraki based web site.  Constant spam on the wiki made it a
-difficult to keep clean.  The new site will be easier to update and
-organize.</p>
+<p>The primary documentation for rake has moved from the RubyForge based wiki to its own Hieraki based web site.  Constant spam on the wiki made it a difficult to keep clean.  The new site will be easier to update and organize.</p>
 
-<p>Check out the new documentation at: <a
-href="http://docs.rubyrake.org">docs.rubyrake.org</a></p>
+<p>Check out the new documentation at: <a href="http://docs.rubyrake.org">docs.rubyrake.org</a></p>
 
 <p>We will be adding new documentation to the site as time goes on.</p>
 
-<p>In addition to the new docs page, make sure you check out Martin Fowlers
-article on rake at <a
-href="http://martinfowler.com/articles/rake.html">martinfowler.com/articles/rake.html</a></p>
+<p>In addition to the new docs page, make sure you check out Martin Fowlers article on rake at <a href="http://martinfowler.com/articles/rake.html">martinfowler.com/articles/rake.html</a></p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
 <h5 id="label-New+Features">New Features<span><a href="#label-New+Features">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Multiple prerequisites on Rake rules now allowed.  However, keep the
-following in mind:</p>
+<p>Multiple prerequisites on Rake rules now allowed.  However, keep the following in mind:</p>
 <ol><li>
-<p>All the prerequisites of a rule must be available before a rule is
-triggered, where “enabled” means (a) an existing file, (b) a defined rule,
-or © another rule which also must be trigger-able.</p>
+<p>All the prerequisites of a rule must be available before a rule is triggered, where “enabled” means (a) an existing file, (b) a defined rule, or © another rule which also must be trigger-able.</p>
 </li><li>
-<p>Rules are checked in order of definition, so it is important to order your
-rules properly.  If a file can be created by two different rules, put the
-more specific rule first (otherwise the more general rule will trigger
-first and the specific one will never be triggered).</p>
+<p>Rules are checked in order of definition, so it is important to order your rules properly.  If a file can be created by two different rules, put the more specific rule first (otherwise the more general rule will trigger first and the specific one will never be triggered).</p>
 </li><li>
-<p>The <code>source</code> method now returns the name of the first
-prerequisite listed in the rule.  <code>sources</code> returns the names of
-all the rule prerequisites, ordered as they are defined in the rule.  If
-the task has other prerequisites not defined in the rule (but defined in an
-explicit task definition), then they will <em>not</em> be included in the
-sources list.</p>
+<p>The <code>source</code> method now returns the name of the first prerequisite listed in the rule.  <code>sources</code> returns the names of all the rule prerequisites, ordered as they are defined in the rule.  If the task has other prerequisites not defined in the rule (but defined in an explicit task definition), then they will <em>not</em> be included in the sources list.</p>
 </li></ol>
 </li><li>
-<p>FileLists may now use the egrep command.  This popular enhancement is now a
-core part of the FileList object.  If you want to get a list of all your
-to-dos, fixmes and TBD comments, add the following to your Rakefile.</p>
+<p>FileLists may now use the egrep command.  This popular enhancement is now a core part of the FileList object.  If you want to get a list of all your to-dos, fixmes and TBD comments, add the following to your Rakefile.</p>
 
 <pre class="ruby"><span class="ruby-identifier">desc</span> <span class="ruby-string">&quot;Look for TODO and FIXME tags in the code&quot;</span>
-<span class="ruby-identifier">task</span> :<span class="ruby-identifier">todo</span> <span class="ruby-keyword">do</span>
-  <span class="ruby-constant">FileList</span>[<span class="ruby-string">&#39;**/*.rb&#39;</span>].<span class="ruby-identifier">egrep</span> <span class="ruby-node">/#.*(FIXME|TODO|TBD)/</span>
+<span class="ruby-identifier">task</span> <span class="ruby-value">:todo</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-constant">FileList</span>[<span class="ruby-string">&#39;**/*.rb&#39;</span>].<span class="ruby-identifier">egrep</span> <span class="ruby-regexp">/#.*(FIXME|TODO|TBD)/</span>
 <span class="ruby-keyword">end</span>
 </pre>
 </li><li>
-<p>The <code>investigation</code> method was added to task object to dump out
-some important values.  This makes it a bit easier to debug Rake tasks.</p>
+<p>The <code>investigation</code> method was added to task object to dump out some important values.  This makes it a bit easier to debug Rake tasks.</p>
 
-<p>For example, if you are having problems with a particular task, just print
-it out:</p>
+<p>For example, if you are having problems with a particular task, just print it out:</p>
 
-<pre class="ruby"><span class="ruby-identifier">task</span> :<span class="ruby-identifier">huh</span> <span class="ruby-keyword">do</span>
+<pre class="ruby"><span class="ruby-identifier">task</span> <span class="ruby-value">:huh</span> <span class="ruby-keyword">do</span>
   <span class="ruby-identifier">puts</span> <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">Task</span>[<span class="ruby-string">&#39;huh&#39;</span>].<span class="ruby-identifier">investigation</span>
 <span class="ruby-keyword">end</span>
 </pre>
 </li><li>
-<p>The <a href="Rake/TestTask.html">Rake::TestTask</a> class now supports a
-“ruby_opts” option to pass arbitrary ruby options to a test subprocess.</p>
+<p>The <a href="Rake/TestTask.html"><code>Rake::TestTask</code></a> class now supports a “ruby_opts” option to pass arbitrary ruby options to a test subprocess.</p>
 </li></ul>
 
 <h5 id="label-Some+Incompatibilities">Some Incompatibilities<span><a href="#label-Some+Incompatibilities">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>When using the <code>ruby</code> command to start a Ruby subprocess, the
-Ruby interpreter that is currently running rake is used by default. This
-makes it easier to use rake in an environment with multiple ruby
-installation.  (Previously, the first ruby command found in the PATH was
-used).</p>
+<p>When using the <code>ruby</code> command to start a Ruby subprocess, the Ruby interpreter that is currently running rake is used by default. This makes it easier to use rake in an environment with multiple ruby installation.  (Previously, the first ruby command found in the PATH was used).</p>
 
-<p>If you wish to chose a different Ruby interpreter, you can explicitly
-choose the interpreter via the <code>sh</code> command.</p>
+<p>If you wish to chose a different Ruby interpreter, you can explicitly choose the interpreter via the <code>sh</code> command.</p>
 </li><li>
-<p>The major rake classes (Task, FileTask, FileCreationTask, RakeApp) have
-been moved out of the toplevel scope and are now accessible as <a
-href="Rake/Task.html">Rake::Task</a>, <a
-href="Rake/FileTask.html">Rake::FileTask</a>, <a
-href="Rake/FileCreationTask.html">Rake::FileCreationTask</a> and <a
-href="Rake/Application.html">Rake::Application</a>.  If your Rakefile
-directly references any one of these tasks, you may:</p>
+<p>The major rake classes (Task, FileTask, FileCreationTask, RakeApp) have been moved out of the toplevel scope and are now accessible as <a href="Rake/Task.html"><code>Rake::Task</code></a>, <a href="Rake/FileTask.html"><code>Rake::FileTask</code></a>, <a href="Rake/FileCreationTask.html"><code>Rake::FileCreationTask</code></a> and <a href="Rake/Application.html"><code>Rake::Application</code></a>.  If your Rakefile directly references any one of these tasks, you may:</p>
 <ol><li>
 <p>Update your Rakefile to use the new classnames</p>
 </li><li>
-<p>Use the –classic-namespace option on the rake command to get the old
-behavior,</p>
+<p>Use the –classic-namespace option on the rake command to get the old behavior,</p>
 </li><li>
-<p>Add <code>require &#39;rake/classic_namespace&#39;</code> to the Rakefile
-to get the old behavior.</p>
+<p>Add <code>require &#39;rake/classic_namespace&#39;</code> to the Rakefile to get the old behavior.</p>
 </li></ol>
 
-<p><code>rake</code> will print a rather annoying warning whenever a
-deprecated class name is referenced without enabling classic namespace.</p>
+<p><code>rake</code> will print a rather annoying warning whenever a deprecated class name is referenced without enabling classic namespace.</p>
 </li></ul>
 
 <h5 id="label-Bug+Fixes">Bug Fixes<span><a href="#label-Bug+Fixes">&para;</a> <a href="#top">&uarr;</a></span></h5>
 <ul><li>
-<p>Several unit tests and functional tests were fixed to run better under
-windows.</p>
+<p>Several unit tests and functional tests were fixed to run better under windows.</p>
 </li><li>
-<p>Directory tasks are now a specialized version of a File task.  A directory
-task will only be triggered if it doesn&#39;t exist.  It will not be
-triggered if it is out of date w.r.t. any of its prerequisites.</p>
+<p>Directory tasks are now a specialized version of a File task.  A directory task will only be triggered if it doesn&#39;t exist.  It will not be triggered if it is out of date w.r.t. any of its prerequisites.</p>
 </li><li>
-<p>Fixed a bug in the Rake::GemPackageTask class so that the gem now properly
-contains the platform name.</p>
+<p>Fixed a bug in the Rake::GemPackageTask class so that the gem now properly contains the platform name.</p>
 </li><li>
-<p>Fixed a bug where a prerequisite on a <code>file</code> task would cause an
-exception if the prerequisite did not exist.</p>
+<p>Fixed a bug where a prerequisite on a <code>file</code> task would cause an exception if the prerequisite did not exist.</p>
 </li></ul>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes. The
-following people either contributed patches, made suggestions or made
-otherwise helpful comments.  Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. The following people either contributed patches, made suggestions or made otherwise helpful comments.  Thanks to …</p>
 <ul><li>
 <p>Greg Fast (better ruby_opt test options)</p>
 </li><li>
@@ -2581,22 +2347,16 @@ otherwise helpful comments.  Thanks to …</p>
 
 <p>Here are the changes for version 0.5.4 …</p>
 <ul><li>
-<p>Added double quotes to the test runner.  This allows the location of the
-tests (and runner) to be in a directory path that contains spaces (e.g.
-“C:/Program Files/ruby/bin”).</p>
+<p>Added double quotes to the test runner.  This allows the location of the tests (and runner) to be in a directory path that contains spaces (e.g. “C:/Program Files/ruby/bin”).</p>
 </li><li>
-<p>Added .svn to default ignore list.  Now subversion project metadata is
-automatically ignored by Rake&#39;s FileList.</p>
+<p>Added .svn to default ignore list.  Now subversion project metadata is automatically ignored by Rake&#39;s FileList.</p>
 </li><li>
-<p>Updated FileList#include to support nested arrays and filelists. FileLists
-are flat lists of file names.  Using a FileList in an include will flatten
-out the nested file names.</p>
+<p>Updated FileList#include to support nested arrays and filelists. FileLists are flat lists of file names.  Using a FileList in an include will flatten out the nested file names.</p>
 </li></ul>
 
 <h2 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>As usual, it was input from users that drove a alot of these changes.
-Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. Thanks to …</p>
 <ul><li>
 <p>Tilman Sauerbeck for the nested FileList suggestion.</p>
 </li><li>
@@ -2607,60 +2367,36 @@ Thanks to …</p>
 
 <h3 id="label-0.5.3">0.5.3<span><a href="#label-0.5.3">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Although it has only been two weeks since the last release, we have enough
-updates to the Rake program to make it time for another release.</p>
+<p>Although it has only been two weeks since the last release, we have enough updates to the Rake program to make it time for another release.</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
 <p>Here are the changes for version 0.5.3 …</p>
 <ul><li>
-<p>FileLists have been extensively changed so that they mimic the behavior of
-real arrays even more closely.  In particular, operations on FileLists that
-return a new collection (e.g. collect, reject) will now return a FileList
-rather than an array.  In addition, several places where FileLists were not
-properly expanded before use have been fixed.</p>
+<p>FileLists have been extensively changed so that they mimic the behavior of real arrays even more closely.  In particular, operations on FileLists that return a new collection (e.g. collect, reject) will now return a FileList rather than an array.  In addition, several places where FileLists were not properly expanded before use have been fixed.</p>
 </li><li>
-<p>A method (<code>ext</code>) to simplify the handling of file extensions was
-added to <a href="String.html">String</a> and to Array.</p>
+<p>A method (<code>ext</code>) to simplify the handling of file extensions was added to <a href="String.html"><code>String</code></a> and to Array.</p>
 </li><li>
-<p>The &#39;testrb&#39; script in test/unit tends to silently swallow syntax
-errors in test suites.  Because of that, the default test loader is now a
-rake-provided script.  You can still use &#39;testrb&#39; by setting the
-loader flag in the test task to :testrb.  (See the API documents for
-TestTask for all the loader flag values).</p>
+<p>The &#39;testrb&#39; script in test/unit tends to silently swallow syntax errors in test suites.  Because of that, the default test loader is now a rake-provided script.  You can still use &#39;testrb&#39; by setting the loader flag in the test task to :testrb.  (See the API documents for TestTask for all the loader flag values).</p>
 </li><li>
-<p>FileUtil methods (e.g. cp, mv, install) are now declared to be private. 
-This will cut down on the interference with user defined methods of the
-same name.</p>
+<p>FileUtil methods (e.g. cp, mv, install) are now declared to be private.  This will cut down on the interference with user defined methods of the same name.</p>
 </li><li>
-<p>Fixed the verbose flag in the TestTask so that the test code is controlled
-by the flag.  Also shortened up some failure messages. (Thanks to Tobias
-Luetke for the suggestion).</p>
+<p>Fixed the verbose flag in the TestTask so that the test code is controlled by the flag.  Also shortened up some failure messages. (Thanks to Tobias Luetke for the suggestion).</p>
 </li><li>
-<p>Rules will now properly detect a task that can generate a source file. 
-Previously rules would only consider source files that were already
-present.</p>
+<p>Rules will now properly detect a task that can generate a source file.  Previously rules would only consider source files that were already present.</p>
 </li><li>
-<p>Added an <code>import</code> command that allows Rake to dynamically import
-dependendencies into a running Rake session.  The <code>import</code>
-command can run tasks to update the dependency file before loading them.
-Dependency files can be in rake or make format, allowing rake to work with
-tools designed to generate dependencies for make.</p>
+<p>Added an <code>import</code> command that allows Rake to dynamically import dependendencies into a running Rake session.  The <code>import</code> command can run tasks to update the dependency file before loading them. Dependency files can be in rake or make format, allowing rake to work with tools designed to generate dependencies for make.</p>
 </li></ul>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>As usual, it was input from users that drove a alot of these changes.
-Thanks to …</p>
+<p>As usual, it was input from users that drove a alot of these changes. Thanks to …</p>
 <ul><li>
-<p>Brian Gernhardt for the rules fix (especially for the patience to explain
-the problem to me until I got what he was talking about).</p>
+<p>Brian Gernhardt for the rules fix (especially for the patience to explain the problem to me until I got what he was talking about).</p>
 </li><li>
-<p>Stefan Lang for pointing out problems in the dark corners of the FileList
-implementation.</p>
+<p>Stefan Lang for pointing out problems in the dark corners of the FileList implementation.</p>
 </li><li>
-<p>Alexey Verkhovsky pointing out the silently swallows syntax errors in
-tests.</p>
+<p>Alexey Verkhovsky pointing out the silently swallows syntax errors in tests.</p>
 </li><li>
 <p>Tobias Luetke for beautifying the test task output.</p>
 </li><li>
@@ -2671,13 +2407,11 @@ tests.</p>
 
 <h3 id="label-0.5.0">0.5.0<span><a href="#label-0.5.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>It has been a long time in coming, but we finally have a new version of
-Rake available.</p>
+<p>It has been a long time in coming, but we finally have a new version of Rake available.</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Fixed documentation that was lacking the Rake module name (Tilman
-Sauerbeck).</p>
+<p>Fixed documentation that was lacking the Rake module name (Tilman Sauerbeck).</p>
 </li><li>
 <p>Added tar.gz and tar.bz2 support to package task (Tilman Sauerbeck).</p>
 </li><li>
@@ -2696,11 +2430,7 @@ Sauerbeck).</p>
 
 <h4 id="label-Thanks">Thanks<span><a href="#label-Thanks">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>Lots of people provided input to this release.  Thanks to Tilman Sauerbeck
-for numerous patches, documentation fixes and suggestions. And for also
-pushing me to get this release out.  Also, thanks to Brian Candler for the
-finding and fixing –trace/dry-run fix.  That was an obscure bug.  Also to
-Eric Hodel for some good suggestions.</p>
+<p>Lots of people provided input to this release.  Thanks to Tilman Sauerbeck for numerous patches, documentation fixes and suggestions. And for also pushing me to get this release out.  Also, thanks to Brian Candler for the finding and fixing –trace/dry-run fix.  That was an obscure bug.  Also to Eric Hodel for some good suggestions.</p>
 
 <p>– Jim Weirich</p>
 
@@ -2708,31 +2438,22 @@ Eric Hodel for some good suggestions.</p>
 
 <h4 id="label-Changes">Changes<span><a href="#label-Changes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>Version 0.4.15 is a bug fix update for the Ruby 1.8.2 compatibility
-changes.  This release includes:</p>
+<p>Version 0.4.15 is a bug fix update for the Ruby 1.8.2 compatibility changes.  This release includes:</p>
 <ul><li>
-<p>Fixed a bug that prevented the TESTOPTS flag from working with the revised
-for 1.8.2 test task.</p>
+<p>Fixed a bug that prevented the TESTOPTS flag from working with the revised for 1.8.2 test task.</p>
 </li><li>
-<p>Updated the docs on –trace to indicate that it also enables a full
-backtrace on errors.</p>
+<p>Updated the docs on –trace to indicate that it also enables a full backtrace on errors.</p>
 </li><li>
 <p>Several fixes for new warnings generated.</p>
 </li></ul>
 
 <h4 id="label-Mini-Roadmap">Mini-Roadmap<span><a href="#label-Mini-Roadmap">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>I will continue to issue Rake updates in the 0.4.xx series as new
-Ruby-1.8.2 issues become manifest.  Once the codebase stabilizes, I will
-release a 0.5.0 version incorporating all the changes.  If you are not
-using Ruby-1.8.2 and wish to avoid version churn, I recommend staying with
-a release prior to Rake-0.4.14.</p>
+<p>I will continue to issue Rake updates in the 0.4.xx series as new Ruby-1.8.2 issues become manifest.  Once the codebase stabilizes, I will release a 0.5.0 version incorporating all the changes.  If you are not using Ruby-1.8.2 and wish to avoid version churn, I recommend staying with a release prior to Rake-0.4.14.</p>
 
 <h3 id="label-0.4.14">0.4.14<span><a href="#label-0.4.14">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Version 0.4.14 is a compatibility fix to allow Rake&#39;s test task to work
-under Ruby 1.8.2.  A change in the Test::Unit autorun feature prevented
-Rake from running any tests.  This release fixes the problem.</p>
+<p>Version 0.4.14 is a compatibility fix to allow Rake&#39;s test task to work under Ruby 1.8.2.  A change in the Test::Unit autorun feature prevented Rake from running any tests.  This release fixes the problem.</p>
 
 <p>Rake 0.4.14 is the recommended release for anyone using Ruby 1.8.2.</p>
 
@@ -2740,8 +2461,7 @@ Rake from running any tests.  This release fixes the problem.</p>
 <ul><li>
 <p>Fixed the dry-run flag so it is operating again.</p>
 </li><li>
-<p>Multiple arguments to sh and ruby commands will not be interpreted by the
-shell (patch provided by Jonathan Paisley).</p>
+<p>Multiple arguments to sh and ruby commands will not be interpreted by the shell (patch provided by Jonathan Paisley).</p>
 </li></ul>
 
 <h3 id="label-0.4.12">0.4.12<span><a href="#label-0.4.12">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -2753,14 +2473,12 @@ shell (patch provided by Jonathan Paisley).</p>
 <ul><li>
 <p>Changed the “don&#39;t know how to rake” message (finally)</p>
 </li><li>
-<p>Changes references to a literal “Rakefile” to reference the global variable
-$rakefile (which contains the actual name of the rakefile).</p>
+<p>Changes references to a literal “Rakefile” to reference the global variable $rakefile (which contains the actual name of the rakefile).</p>
 </li></ul>
 
 <h3 id="label-0.4.10">0.4.10<span><a href="#label-0.4.10">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
-<p>Added block support to the “sh” command, allowing users to take special
-actions on the result of the system call.  E.g.</p>
+<p>Added block support to the “sh” command, allowing users to take special actions on the result of the system call.  E.g.</p>
 
 <pre class="ruby"><span class="ruby-identifier">sh</span> <span class="ruby-string">&quot;shell_command&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ok</span>, <span class="ruby-identifier">res</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Program returned #{res.exitstatus}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span> <span class="ruby-identifier">ok</span>
@@ -2772,8 +2490,7 @@ actions on the result of the system call.  E.g.</p>
 <ul><li>
 <p>Switched to Jamis Buck&#39;s RDoc template.</p>
 </li><li>
-<p>Removed autorequire from Rake&#39;s gem spec.  This prevents the Rake
-libraries from loading while using rails.</p>
+<p>Removed autorequire from Rake&#39;s gem spec.  This prevents the Rake libraries from loading while using rails.</p>
 </li></ul>
 
 <h3 id="label-0.4.8">0.4.8<span><a href="#label-0.4.8">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -2787,16 +2504,12 @@ libraries from loading while using rails.</p>
 
 <h3 id="label-0.4.7">0.4.7<span><a href="#label-0.4.7">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
-<p>Fixed problem in FileList that caused Ruby 1.9 to go into infinite
-recursion.  Since to_a was removed from <a href="Object.html">Object</a>,
-it does not need to added back into the list of methods to rewrite in
-FileList.  (Thanks to Kent Sibilev for pointing this out).</p>
+<p>Fixed problem in FileList that caused Ruby 1.9 to go into infinite recursion.  Since to_a was removed from <a href="Object.html"><code>Object</code></a>, it does not need to added back into the list of methods to rewrite in FileList.  (Thanks to Kent Sibilev for pointing this out).</p>
 </li></ul>
 
 <h3 id="label-0.4.6">0.4.6<span><a href="#label-0.4.6">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
-<p>Removed test version of ln in <a href="FileUtils.html">FileUtils</a> that
-prevented safe_ln from using ln.</p>
+<p>Removed test version of ln in <a href="FileUtils.html"><code>FileUtils</code></a> that prevented safe_ln from using ln.</p>
 </li></ul>
 
 <h3 id="label-0.4.5">0.4.5<span><a href="#label-0.4.5">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -2812,14 +2525,11 @@ prevented safe_ln from using ln.</p>
 <ul><li>
 <p>Fixed initialization problem with @comment.</p>
 </li><li>
-<p>Now using multi -r technique in TestTask.  Switch Rakefile back to using
-the built-in test task macros because the rake runtime is no longer needed.</p>
+<p>Now using multi -r technique in TestTask.  Switch Rakefile back to using the built-in test task macros because the rake runtime is no longer needed.</p>
 </li><li>
-<p>Added &#39;TEST=filename&#39; and &#39;TESTOPTS=options&#39; to the Test
-Task macros.</p>
+<p>Added &#39;TEST=filename&#39; and &#39;TESTOPTS=options&#39; to the Test Task macros.</p>
 </li><li>
-<p>Allow a <code>test_files</code> attribute in test tasks.  This allows more
-flexibility in specifying test files.</p>
+<p>Allow a <code>test_files</code> attribute in test tasks.  This allows more flexibility in specifying test files.</p>
 </li></ul>
 
 <h3 id="label-0.4.3">0.4.3<span><a href="#label-0.4.3">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -2843,23 +2553,18 @@ flexibility in specifying test files.</p>
 
 <h3 id="label-0.4.0">0.4.0<span><a href="#label-0.4.0">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
-<p>FileList now uses deferred loading.  The file system is not searched until
-the first call that needs the file names.</p>
+<p>FileList now uses deferred loading.  The file system is not searched until the first call that needs the file names.</p>
 </li><li>
-<p>VAR=VALUE options are now accepted on the command line and are treated like
-environment variables.  The values may be tested in a Rakefile by
-referencing <a href="'VAR'">ENV</a>.</p>
+<p>VAR=VALUE options are now accepted on the command line and are treated like environment variables.  The values may be tested in a Rakefile by referencing <a href="'VAR'">ENV</a>.</p>
 </li><li>
 <p>File.mtime is now used (instead of File.new().mtime).</p>
 </li></ul>
 
 <h3 id="label-0.3.2.x">0.3.2.x<span><a href="#label-0.3.2.x">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
-<p>Removed some hidden dependencies on rubygems.  Tests now will test gems
-only if they are installed.</p>
+<p>Removed some hidden dependencies on rubygems.  Tests now will test gems only if they are installed.</p>
 </li><li>
-<p>Removed Sys from some example files.  I believe that is that last reference
-to Sys outside of the contrib area.</p>
+<p>Removed Sys from some example files.  I believe that is that last reference to Sys outside of the contrib area.</p>
 </li><li>
 <p>Updated all copyright notices to include 2004.</p>
 </li></ul>
@@ -2909,19 +2614,16 @@ to Sys outside of the contrib area.</p>
 
 <p>FileList Issues</p>
 <ul><li>
-<p>Dropped bang version of exclude.  Now using ant-like include/exclude
-semantics.</p>
+<p>Dropped bang version of exclude.  Now using ant-like include/exclude semantics.</p>
 </li><li>
 <p>Enabled the “yield self” idiom in FileList#initialize.</p>
 </li></ul>
 
 <h3 id="label-0.2.9">0.2.9<span><a href="#label-0.2.9">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>This version contains numerous changes as the RubyConf.new(2003)
-presentation was being prepared.  The changes include:</p>
+<p>This version contains numerous changes as the RubyConf.new(2003) presentation was being prepared.  The changes include:</p>
 <ul><li>
-<p>The monolithic rubyapp task library is in the process of being dropped in
-favor of lighter weight task libraries.</p>
+<p>The monolithic rubyapp task library is in the process of being dropped in favor of lighter weight task libraries.</p>
 </li></ul>
 
 <h3 id="label-0.2.7">0.2.7<span><a href="#label-0.2.7">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -2932,9 +2634,7 @@ favor of lighter weight task libraries.</p>
 </li><li>
 <p>-P will display tasks and prerequisites.</p>
 </li><li>
-<p>Dropped the Sys module in favor of the 1.8.x <a
-href="FileUtils.html">FileUtils</a> module.  Sys is still supported in the
-contrib area.</p>
+<p>Dropped the Sys module in favor of the 1.8.x <a href="FileUtils.html"><code>FileUtils</code></a> module.  Sys is still supported in the contrib area.</p>
 </li></ul>
 
 <h3 id="label-0.2.6">0.2.6<span><a href="#label-0.2.6">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -2964,13 +2664,14 @@ contrib area.</p>
 </li><li>
 <p>Added test for selecting proper rule with multiple targets.</p>
 </li></ul>
+
 </main>
 
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

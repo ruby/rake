@@ -8,14 +8,17 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
 </script>
 
-<script src="./js/jquery.js"></script>
-<script src="./js/darkfish.js"></script>
+<script src="./js/navigation.js" defer></script>
+<script src="./js/search.js" defer></script>
+<script src="./js/search_index.js" defer></script>
+<script src="./js/searcher.js" defer></script>
+<script src="./js/darkfish.js" defer></script>
 
 <link href="./css/fonts.css" rel="stylesheet">
 <link href="./css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="file">
@@ -57,35 +60,27 @@
   <ul class="link-list" role="directory">
     <li><a href="#label-Source+Repository">Source Repository</a>
     <li><a href="#label-Running+the+Rake+Test+Suite">Running the Rake Test Suite</a>
+    <li><a href="#label-Rubocop">Rubocop</a>
     <li><a href="#label-Issues+and+Bug+Reports">Issues and Bug Reports</a>
   </ul>
 </div>
 
 
   <div id="project-metadata">
-    <div id="fileindex-section" class="nav-section">
+    
+<div id="fileindex-section" class="nav-section">
   <h3>Pages</h3>
 
   <ul class="link-list">
-  
     <li><a href="./CONTRIBUTING_rdoc.html">CONTRIBUTING</a>
-  
     <li><a href="./History_rdoc.html">History</a>
-  
     <li><a href="./MIT-LICENSE.html">MIT-LICENSE</a>
-  
     <li><a href="./README_rdoc.html">README</a>
-  
     <li><a href="./doc/command_line_usage_rdoc.html">command_line_usage</a>
-  
     <li><a href="./doc/glossary_rdoc.html">glossary</a>
-  
     <li><a href="./doc/proto_rake_rdoc.html">proto_rake</a>
-  
     <li><a href="./doc/rakefile_rdoc.html">rakefile</a>
-  
     <li><a href="./doc/rational_rdoc.html">rational</a>
-  
   </ul>
 </div>
 
@@ -96,11 +91,9 @@
 
 <h1 id="label-Source+Repository">Source Repository<span><a href="#label-Source+Repository">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>Rake is currently hosted at github. The github web page is <a
-href="https://github.com/ruby/rake">github.com/ruby/rake</a> . The public
-git clone URL is</p>
+<p>Rake is currently hosted at github. The github web page is <a href="https://github.com/ruby/rake">github.com/ruby/rake</a> . The public git clone URL is</p>
 
-<pre class="ruby"><span class="ruby-identifier">git</span>:<span class="ruby-operator">/</span><span class="ruby-regexp">/github.com/</span><span class="ruby-identifier">ruby</span><span class="ruby-operator">/</span><span class="ruby-identifier">rake</span>.<span class="ruby-identifier">git</span>
+<pre class="ruby"><span class="ruby-identifier">https</span><span class="ruby-value">:/</span><span class="ruby-operator">/</span><span class="ruby-identifier">github</span>.<span class="ruby-identifier">com</span><span class="ruby-operator">/</span><span class="ruby-identifier">ruby</span><span class="ruby-operator">/</span><span class="ruby-identifier">rake</span>.<span class="ruby-identifier">git</span>
 </pre>
 
 <h1 id="label-Running+the+Rake+Test+Suite">Running the Rake Test Suite<span><a href="#label-Running+the+Rake+Test+Suite">&para;</a> <a href="#top">&uarr;</a></span></h1>
@@ -111,40 +104,39 @@ git clone URL is</p>
 </li><li>
 <p>Install gem dependency using bundler:</p>
 
-<pre class="ruby"><span class="ruby-identifier">bundle</span> <span class="ruby-identifier">install</span>  <span class="ruby-comment"># Install bundler, minitest and rdoc</span>
-</pre>
+<pre>$ bundle install  # Install bundler, minitest and rdoc</pre>
 </li><li>
-<p>Type one of the following:</p>
+<p>Run the test suite</p>
 
-<pre class="ruby"><span class="ruby-identifier">rake</span>            <span class="ruby-comment"># If you have run rake&#39;s tests</span>
-</pre>
+<pre>$ rake</pre>
 </li></ul>
+
+<h1 id="label-Rubocop">Rubocop<span><a href="#label-Rubocop">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>Rake uses Rubocop to enforce a consistent style on new changes being proposed. You can check your code with Rubocop using:</p>
+
+<pre>$ ./bin/rubocop</pre>
 
 <h1 id="label-Issues+and+Bug+Reports">Issues and Bug Reports<span><a href="#label-Issues+and+Bug+Reports">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>Feel free to submit commits or feature requests.  If you send a patch,
-remember to update the corresponding unit tests.  In fact, I prefer new
-feature to be submitted in the form of new unit tests.</p>
+<p>Feel free to submit commits or feature requests.  If you send a patch, remember to update the corresponding unit tests.  In fact, I prefer new feature to be submitted in the form of new unit tests.</p>
 
 <p>For other information, feel free to ask on the ruby-talk mailing list.</p>
 
-<p>If you have found a bug in rake please try with the latest version of rake
-before filing an issue.  Also check <a
-href="History_rdoc.html">History.rdoc</a> for bug fixes that may have
-addressed your issue.</p>
+<p>If you have found a bug in rake please try with the latest version of rake before filing an issue.  Also check <a href="History_rdoc.html">History.rdoc</a> for bug fixes that may have addressed your issue.</p>
 
-<p>When submitting pull requests please check the rake Travis-CI page for test
-failures:</p>
+<p>When submitting pull requests please check the rake Travis-CI page for test failures:</p>
 
-<pre class="ruby"><span class="ruby-identifier">https</span>:<span class="ruby-operator">/</span><span class="ruby-regexp">/travis-ci.org/</span><span class="ruby-identifier">ruby</span><span class="ruby-operator">/</span><span class="ruby-identifier">rake</span>
+<pre class="ruby"><span class="ruby-identifier">https</span><span class="ruby-value">:/</span><span class="ruby-operator">/</span><span class="ruby-identifier">travis</span><span class="ruby-operator">-</span><span class="ruby-identifier">ci</span>.<span class="ruby-identifier">org</span><span class="ruby-operator">/</span><span class="ruby-identifier">ruby</span><span class="ruby-operator">/</span><span class="ruby-identifier">rake</span>
 </pre>
+
 </main>
 
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

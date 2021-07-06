@@ -8,14 +8,17 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="file">
@@ -53,29 +56,20 @@
   
 
   <div id="project-metadata">
-    <div id="fileindex-section" class="nav-section">
+    
+<div id="fileindex-section" class="nav-section">
   <h3>Pages</h3>
 
   <ul class="link-list">
-  
     <li><a href="../CONTRIBUTING_rdoc.html">CONTRIBUTING</a>
-  
     <li><a href="../History_rdoc.html">History</a>
-  
     <li><a href="../MIT-LICENSE.html">MIT-LICENSE</a>
-  
     <li><a href="../README_rdoc.html">README</a>
-  
     <li><a href="../doc/command_line_usage_rdoc.html">command_line_usage</a>
-  
     <li><a href="../doc/glossary_rdoc.html">glossary</a>
-  
     <li><a href="../doc/proto_rake_rdoc.html">proto_rake</a>
-  
     <li><a href="../doc/rakefile_rdoc.html">rakefile</a>
-  
     <li><a href="../doc/rational_rdoc.html">rational</a>
-  
   </ul>
 </div>
 
@@ -88,37 +82,28 @@
 
 <p>Rake is invoked from the command line using:</p>
 
-<pre>% rake [options ...]  [VAR=VALUE ...]  [targets ...]</pre>
+<pre class="ruby"><span class="ruby-string">% rake </span>[<span class="ruby-identifier">options</span> <span class="ruby-operator">...</span>]  [<span class="ruby-constant">VAR</span>=<span class="ruby-constant">VALUE</span> <span class="ruby-operator">...</span>]  [<span class="ruby-identifier">targets</span> <span class="ruby-operator">...</span>]
+</pre>
 
 <p>Options are:</p>
 <dl class="rdoc-list label-list"><dt><code><em>name</em>=<em>value</em></code>
 <dd>
-<p>Set the environment variable <em>name</em> to <em>value</em> during the
-execution of the <strong>rake</strong> command.  You can access the value
-by using <a href="'name'">ENV</a>.</p>
+<p>Set the environment variable <em>name</em> to <em>value</em> during the execution of the <strong>rake</strong> command.  You can access the value by using ENV[‘<em>name</em>’].</p>
 </dd><dt><code>--all</code> (-A)
 <dd>
-<p>Used in combination with the -T and -D options, will force those options to
-show all the tasks, even the ones without comments.</p>
+<p>Used in combination with the -T and -D options, will force those options to show all the tasks, even the ones without comments.</p>
 </dd><dt><code>--backtrace</code>{=<em>output</em>} (-n)
 <dd>
-<p>Enable a full backtrace (i.e. like –trace, but without the task tracing
-details). The <em>output</em> parameter is optional, but if specified it
-controls where the backtrace output is sent. If <em>output</em> is
-<code>stdout</code>, then backtrace output is directed to standard output.
-If <em>output</em> is <code>stderr</code>, or if it is missing, then the
-backtrace output is sent to standard error.</p>
+<p>Enable a full backtrace (i.e. like –trace, but without the task tracing details). The <em>output</em> parameter is optional, but if specified it controls where the backtrace output is sent. If <em>output</em> is <code>stdout</code>, then backtrace output is directed to standard output. If <em>output</em> is <code>stderr</code>, or if it is missing, then the backtrace output is sent to standard error.</p>
 </dd><dt><code>--comments</code>
 <dd>
-<p>Used in combination with the -W options to force the output to contain
-commented options only. This is the reverse of <code>--all</code>.</p>
+<p>Used in combination with the -W options to force the output to contain commented options only. This is the reverse of <code>--all</code>.</p>
 </dd><dt><code>--describe</code> <em>pattern</em> (-D)
 <dd>
 <p>Describe the tasks (matching optional PATTERN), then exit.</p>
 </dd><dt><code>--dry-run</code> (-n)
 <dd>
-<p>Do a dry run.  Print the tasks invoked and executed, but do not actually
-execute any of the actions.</p>
+<p>Do a dry run.  Print the tasks invoked and executed, but do not actually execute any of the actions.</p>
 </dd><dt><code>--execute</code> <em>code</em> (-e)
 <dd>
 <p>Execute some Ruby code and exit.</p>
@@ -133,15 +118,11 @@ execute any of the actions.</p>
 <p>Display some help text and exit.</p>
 </dd><dt><code>--jobs</code> <em>number</em>  (-j)
 <dd>
-<p>Specifies the maximum number of concurrent threads allowed. Rake will
-allocate threads as needed up to this maximum number.</p>
+<p>Specifies the maximum number of concurrent threads allowed. Rake will allocate threads as needed up to this maximum number.</p>
 
-<p>If omitted, Rake will attempt to estimate the number of CPUs on the system
-and add 4 to that number.</p>
+<p>If omitted, Rake will attempt to estimate the number of CPUs on the system and add 4 to that number.</p>
 
-<p>The concurrent threads are used to execute the <code>multitask</code>
-prerequisites. Also see the <code>-m</code> option which turns all tasks
-into multitasks.</p>
+<p>The concurrent threads are used to execute the <code>multitask</code> prerequisites. Also see the <code>-m</code> option which turns all tasks into multitasks.</p>
 
 <p>Sample values:</p>
 
@@ -151,12 +132,9 @@ into multitasks.</p>
 --jobs=16 : Allow up to 16 concurrent threads</pre>
 </dd><dt><code>--job-stats</code> <em>level</em>
 <dd>
-<p>Display job statistics at the completion of the run. By default, this will
-display the requested number of active threads (from the -j options) and
-the maximum number of threads in play at any given time.</p>
+<p>Display job statistics at the completion of the run. By default, this will display the requested number of active threads (from the -j options) and the maximum number of threads in play at any given time.</p>
 
-<p>If the optional <em>level</em> is <code>history</code>, then a complete
-trace of task history will be displayed on standard output.</p>
+<p>If the optional <em>level</em> is <code>history</code>, then a complete trace of task history will be displayed on standard output.</p>
 </dd><dt><code>--libdir</code> <em>directory</em>  (-I)
 <dd>
 <p>Add <em>directory</em> to the list of directories searched for require.</p>
@@ -171,15 +149,10 @@ trace of task history will be displayed on standard output.</p>
 <p>Display a list of all tasks and their immediate prerequisites.</p>
 </dd><dt><code>--quiet</code> (-q)
 <dd>
-<p>Do not echo commands from <a href="../FileUtils.html">FileUtils</a>.</p>
+<p>Do not echo commands from <a href="../FileUtils.html"><code>FileUtils</code></a>.</p>
 </dd><dt><code>--rakefile</code> <em>filename</em> (-f)
 <dd>
-<p>Use <em>filename</em> as the name of the rakefile. The default rakefile
-names are <code>rakefile</code> and <code>Rakefile</code> (with
-<code>rakefile</code> taking precedence). If the rakefile is not found in
-the current directory, <code>rake</code> will search parent directories for
-a match. The directory where the Rakefile is found will become the current
-directory for the actions executed in the Rakefile.</p>
+<p>Use <em>filename</em> as the name of the rakefile. The default rakefile names are <code>rakefile</code> and <code>Rakefile</code> (with <code>rakefile</code> taking precedence). If the rakefile is not found in the current directory, <code>rake</code> will search parent directories for a match. The directory where the Rakefile is found will become the current directory for the actions executed in the Rakefile.</p>
 </dd><dt><code>--rakelibdir</code> <em>rakelibdir</em> (-R)
 <dd>
 <p>Auto-import any .rake files in RAKELIBDIR. (default is &#39;rakelib&#39;)</p>
@@ -194,32 +167,19 @@ directory for the actions executed in the Rakefile.</p>
 <p>Like –quiet, but also suppresses the &#39;in directory&#39; announcement.</p>
 </dd><dt><code>--suppress-backtrace <em>pattern</em> </code>
 <dd>
-<p>Line matching the regular expression <em>pattern</em> will be removed from
-the backtrace output. Note that the –backtrace option is the full backtrace
-without these lines suppressed.</p>
+<p>Line matching the regular expression <em>pattern</em> will be removed from the backtrace output. Note that the –backtrace option is the full backtrace without these lines suppressed.</p>
 </dd><dt><code>--system</code> (-g)
 <dd>
-<p>Use the system wide (global) rakefiles. The project Rakefile is ignored. By
-default, the system wide rakefiles are used only if no project Rakefile is
-found. On Unix-like system, the system wide rake files are located in
-$HOME/.rake. On a windows system they are stored in $APPDATA/Rake.</p>
+<p>Use the system wide (global) rakefiles. The project Rakefile is ignored. By default, the system wide rakefiles are used only if no project Rakefile is found. On Unix-like system, the system wide rake files are located in $HOME/.rake. On a windows system they are stored in $APPDATA/Rake.</p>
 </dd><dt><code>--no-system</code> (-G)
 <dd>
-<p>Use the project level Rakefile, ignoring the system-wide (global)
-rakefiles.</p>
+<p>Use the project level Rakefile, ignoring the system-wide (global) rakefiles.</p>
 </dd><dt><code>--tasks</code> <em>pattern</em> (-T)
 <dd>
-<p>Display a list of the major tasks and their comments.  Comments are defined
-using the “desc” command.  If a pattern is given, then only tasks matching
-the pattern are displayed.</p>
+<p>Display a list of the major tasks and their comments.  Comments are defined using the “desc” command.  If a pattern is given, then only tasks matching the pattern are displayed.</p>
 </dd><dt><code>--trace</code>{=<em>output</em>} (-t)
 <dd>
-<p>Turn on invoke/execute tracing. Also enable full backtrace on errors. The
-<em>output</em> parameter is optional, but if specified it controls where
-the trace output is sent. If <em>output</em> is <code>stdout</code>, then
-trace output is directed to standard output. If <em>output</em> is
-<code>stderr</code>, or if it is missing, then trace output is sent to
-standard error.</p>
+<p>Turn on invoke/execute tracing. Also enable full backtrace on errors. The <em>output</em> parameter is optional, but if specified it controls where the trace output is sent. If <em>output</em> is <code>stdout</code>, then trace output is directed to standard output. If <em>output</em> is <code>stderr</code>, or if it is missing, then trace output is sent to standard error.</p>
 </dd><dt><code>--verbose</code> (-v)
 <dd>
 <p>Echo the Sys commands to standard output.</p>
@@ -228,24 +188,21 @@ standard error.</p>
 <p>Display the program version and exit.</p>
 </dd><dt><code>--where</code> <em>pattern</em> (-W)
 <dd>
-<p>Display tasks that match <em>pattern</em> and the file and line number
-where the task is defined. By default this option will display all tasks,
-not just the tasks that have descriptions.</p>
+<p>Display tasks that match <em>pattern</em> and the file and line number where the task is defined. By default this option will display all tasks, not just the tasks that have descriptions.</p>
 </dd><dt><code>--no-deprecation-warnings</code> (-X)
 <dd>
 <p>Do not display the deprecation warnings.</p>
 </dd></dl>
 
-<p>In addition, any command line option of the form
-<em>VAR</em>=<em>VALUE</em> will be added to the environment hash
-<code>ENV</code> and may be tested in the Rakefile.</p>
+<p>In addition, any command line option of the form <em>VAR</em>=<em>VALUE</em> will be added to the environment hash <code>ENV</code> and may be tested in the Rakefile.</p>
+
 </main>
 
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

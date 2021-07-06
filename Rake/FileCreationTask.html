@@ -8,14 +8,17 @@
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -54,26 +57,23 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link">FileTask
-  
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-i-needed-3F">#needed?</a>
-    
     <li ><a href="#method-i-timestamp">#timestamp</a>
-    
   </ul>
 </div>
 
@@ -87,109 +87,72 @@
 
   <section class="description">
     
-<p>A <a href="FileCreationTask.html">FileCreationTask</a> is a file task that
-when used as a dependency will be needed if and only if the file has not
-been created.  Once created, it is not re-triggered if any of its
-dependencies are newer, nor does trigger any rebuilds of tasks that depend
-on it whenever it is updated.</p>
+<p>A <a href="FileCreationTask.html"><code>FileCreationTask</code></a> is a file task that when used as a dependency will be needed if and only if the file has not been created.  Once created, it is not re-triggered if any of its dependencies are newer, nor does trigger any rebuilds of tasks that depend on it whenever it is updated.</p>
 
   </section>
 
-  
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
 
-    
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-needed-3F" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">needed?</span><span
             class="method-args">()</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
           <p>Is this file task needed?  Yes if it doesn&#39;t exist.</p>
-          
-          
 
-          
           <div class="method-source-code" id="needed-3F-source">
-            <pre><span class="ruby-comment"># File lib/rake/file_creation_task.rb, line 13</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">needed?</span>
-  <span class="ruby-operator">!</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rake/file_creation_task.rb, line 14</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">needed?</span>
+  <span class="ruby-operator">!</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">name</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-timestamp" class="method-detail ">
-        
         <div class="method-heading">
           <span class="method-name">timestamp</span><span
             class="method-args">()</span>
-          
           <span class="method-click-advice">click to toggle source</span>
-          
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Time stamp for file creation task.  This time stamp is earlier than any
-other time stamp.</p>
-          
-          
+          <p>Time stamp for file creation task.  This time stamp is earlier than any other time stamp.</p>
 
-          
           <div class="method-source-code" id="timestamp-source">
-            <pre><span class="ruby-comment"># File lib/rake/file_creation_task.rb, line 19</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">timestamp</span>
+            <pre><span class="ruby-comment"># File lib/rake/file_creation_task.rb, line 20</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">timestamp</span>
   <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">EARLY</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
