@@ -1,3 +1,10 @@
+=== 13.0.4
+
+* Fix rake test loader swallowing useful error information.
+  Pull request #367 by deivid-rodriguez
+* Add -C/--directory option the same as GNU make.
+  Pull request #376 by nobu
+
 === 13.0.3
 
 * Fix breaking change of execution order on TestTask.
