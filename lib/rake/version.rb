@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Rake
-  VERSION = "13.0.4"
+  VERSION = "13.0.5"
 
   module Version # :nodoc: all
     MAJOR, MINOR, BUILD, *OTHER = Rake::VERSION.split "."
