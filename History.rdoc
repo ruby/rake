@@ -1,3 +1,8 @@
+=== 13.0.6
+
+* Additional fix for #389
+  Pull request #390 by hsbt
+
 === 13.0.5
 
 * Fixed the regression of #388
