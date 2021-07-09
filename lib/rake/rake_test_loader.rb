@@ -8,7 +8,7 @@ argv = ARGV.select do |argument|
   when /^-/ then
     argument
   when /\*/ then
-    FileList[argument].to_a.each do |file|
+    Rake::FileList[argument].to_a.each do |file|
       require File.expand_path file
     end
 
