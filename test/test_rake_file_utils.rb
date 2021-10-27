@@ -12,6 +12,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
     FileUtils::LN_SUPPORTED[0] = true
     RakeFileUtils.verbose_flag = Rake::FileUtilsExt::DEFAULT
     ENV["RAKE_TEST_SH"] = @rake_test_sh
+    ENV["TESTOPTS"] = nil
 
     super
   end
@@ -106,8 +107,13 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   def test_verbose
     verbose true
     assert_equal true, verbose
+    assert_equal '-v', ENV['TESTOPTS']
+
+    ENV['TESTOPTS'] = nil
     verbose false
     assert_equal false, verbose
+    assert_equal nil, ENV['TESTOPTS']
+
     verbose(true) {
       assert_equal true, verbose
     }
