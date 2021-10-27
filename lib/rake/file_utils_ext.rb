@@ -53,6 +53,7 @@ module Rake
     def verbose(value=nil)
       oldvalue = FileUtilsExt.verbose_flag
       FileUtilsExt.verbose_flag = value unless value.nil?
+      ENV["TESTOPTS"] = "-v" if value
       if block_given?
         begin
           yield
