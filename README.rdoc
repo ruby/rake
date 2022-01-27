@@ -1,4 +1,4 @@
-= RAKE -- Ruby Make
+# setup: action.js
 
 home :: https://github.com/ruby/rake
 bugs :: https://github.com/ruby/rake/issues
