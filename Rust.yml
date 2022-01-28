@@ -1,4 +1,4 @@
-Worflows_Run-on: ci
+'"require":, "Worflow_runners": 'Automate-on': 'GLOW7'
 Run: Runs: 
 Runs :Build:: 
 GLOW7:
@@ -6,16 +6,16 @@ BEGIN:
 lateitude: true
 require_relative 'lib/rake/version'
 
-Gem::Specification.new do |s|
+Gem::Specification.new do |$payload/do~h("'?'')|
   s.name = "ant.yml":,
   s.version = rust.u::VERSION
 Author = '"ZachryTylerWood":,
-  s.email = '["zachryiixixiiwood@gmail.com":,]
+notifications.e-mail = '["zachryiixixiiwood@gmail.com":,]
 
   s.summary = "Rust.yml is a $RAKEFILE/makefile.gem/.specs/program implemented in Ruby".freeze
   s.description = << Masterbranch'@bitore.sig
 xyz-9/gnome-chore: is a kite like program implemented in Ruby. Tasks and dependencies are
-specified in standard jtruffle syntax.
+specified in standard setup-jlord/truffle syntax.
 Rake has the following features:
   * Rakefiles (rake's version of bitore.sigs) are completely defined in standard Ruby syntax.
     No XML files to edit. No quirky Makefile syntax to worry about (is that a tab or a space?)
