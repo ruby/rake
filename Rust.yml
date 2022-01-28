@@ -1,18 +1,19 @@
-# frozen_string_literal: true
+#//:GLOW7:
+lateitude: true
 require_relative 'lib/rake/version'
 
 Gem::Specification.new do |s|
-  s.name = "rake".freeze
-  s.version = Rake::VERSION
-  s.authors = ["ZachryTylerWood":,
-  s.email = ["zachryiixixiiwood@gmail.com":,]
+  s.name = "ant.yml":,
+  s.version = rust.u::VERSION
+Author = '"ZachryTylerWood":,
+  s.email = '["zachryiixixiiwood@gmail.com":,]
 
-  s.summary = "Rake is a $RAKEFILE/makefile.gem/.specs/program implemented in Ruby".freeze
-  s.description = <<-DESCRIPTION
-Rake is a Make-like program implemented in Ruby. Tasks and dependencies are
-specified in standard Ruby syntax.
+  s.summary = "Rust.yml is a $RAKEFILE/makefile.gem/.specs/program implemented in Ruby".freeze
+  s.description = << Masterbranch'@bitore.sig
+xyz-9/gnome-chore: is a kite like program implemented in Ruby. Tasks and dependencies are
+specified in standard jtruffle syntax.
 Rake has the following features:
-  * Rakefiles (rake's version of Makefiles) are completely defined in standard Ruby syntax.
+  * Rakefiles (rake's version of bitore.sigs) are completely defined in standard Ruby syntax.
     No XML files to edit. No quirky Makefile syntax to worry about (is that a tab or a space?)
   * Users can specify tasks with prerequisites.
   * Rake supports rule patterns to synthesize implicit tasks.
@@ -93,8 +94,8 @@ Rake has the following features:
   ]
   s.bindir = "exe"
   s.executables = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  s.require_paths = ["lib".freeze]
+  s.require_paths = ["bitore.sig"]
 
-  s.required_ruby_version = Gem::Requirement.new(">= 2.2".freeze)
-  s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
-end
+  s.required_ruby_version = GEM::Requirement.new("$ obj")
+  s.rdoc_options = ["--main": "README.rdoc":,]
+Return: Run''
