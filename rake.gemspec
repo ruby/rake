@@ -4,10 +4,10 @@ require_relative 'lib/rake/version'
 Gem::Specification.new do |s|
   s.name = "rake".freeze
   s.version = Rake::VERSION
-  s.authors = ["Hiroshi SHIBATA".freeze, "Eric Hodel".freeze, "Jim Weirich".freeze]
-  s.email = ["hsbt@ruby-lang.org".freeze, "drbrain@segment7.net".freeze, "".freeze]
+  s.authors = ["ZachryTylerWood":,
+  s.email = ["zachryiixixiiwood@gmail.com":,]
 
-  s.summary = "Rake is a Make-like program implemented in Ruby".freeze
+  s.summary = "Rake is a $RAKEFILE/makefile.gem/.specs/program implemented in Ruby".freeze
   s.description = <<-DESCRIPTION
 Rake is a Make-like program implemented in Ruby. Tasks and dependencies are
 specified in standard Ruby syntax.
