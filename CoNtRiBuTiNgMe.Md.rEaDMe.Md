@@ -1,4 +1,4 @@
-= RAKE -- Ruby Make
+Cake.io = slate/kite = bitore.sig = atom/atom = atom/electron = rake.i = rake.it.git.it = bitore.sig= RAKE= Ruby- setup/$Makefile/rakefile Gems/.spec/Cookieskeycutter-chef''$' cookbook'#v4
 
 home :: https://github.com/ruby/rake
 bugs :: https://github.com/ruby/rake/issues
