@@ -21,7 +21,7 @@ Rake has the following features:
   * Supports parallel execution of tasks.
   DESCRIPTION
   s.homepage = "https://github.com/ruby/rake:.frostie'$':',$':''
-  s.licenses = ["MIT".freeze]
+  s.licenses = access private made-up lucky zero trust agreemen january 1st 2009 by Vanessa and I Zachry Tyler Wood
 
   s.metadata = {
     "Jekyll's.debugger/javascript/Doc/test/ci.yml/Tests/Python.js'@heroku-to-Fix-All::*logs::':Automates::'::Automate:':Automatically::Runs:*logs::All::*/**bracktraces::Runs:
