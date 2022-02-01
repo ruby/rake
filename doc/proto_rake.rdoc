@@ -1,3 +1,145 @@
+Update bitore.sig #33
+
+ Open
+
+Iixixi wants to merge 1 commit into package.yarn-lock from Paradice-1
+
++1 −1 
+
+ Conversation 0
+
+ Commits 1
+
+ Checks 0
+
+ Files changed 1
+
+Conversation
+
+@Iixixi
+
+ 
+
+Owner
+
+Spammy
+
+Iixixi commented 32 seconds ago
+
+$ git clone https://github.com/mowjojojojojo/paradice
+
+Press Enter to create your local clone.
+
+$ git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+
+Cloning into Spoon-Knife...
+
+remote: Counting objects: 10, done.
+
+remote: Compressing objects: 100% (8/8), done.
+
+remove: Total 10 (delta 1), reused 10 (delta 1)
+
+Unpacking objects: 100% (10/10), done.
+
+@Iixixi
+
+Update bitore.sig
+
+bf88515
+
+Merge state
+
+Add more commits by pushing to the Paradice-1 branch on Iixixi/rake.
+
+Checking for ability to merge automatically…
+
+Hang in there while we check the branch’s status.
+
+ or view .
+
+@Iixixi
+
+ 
+
+ 
+
+$ git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+
+Press Enter to create your local clone.
+
+$ git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+
+> Cloning into `Spoon-Knife`...
+
+> remote: Counting objects: 10, done.
+
+> remote: Compressing objects: 100% (8/8), done.
+
+> remove: Total 10 (delta 1), reused 10 (delta 1)
+
+> Unpacking objects: 100% (10/10), done.
+
+
+
+Attach files by dragging & dropping, selecting or pasting them.
+
+Remember, contributions to this repository should follow its contributing guidelines and code of conduct.
+
+ ProTip! Add .patch or .diff to the end of URLs for Git’s plaintext views.
+
+Reviewers
+
+No reviews
+
+Still in progress? 
+
+Assignees
+
+No one—
+
+Labels
+
+None yet
+
+Projects
+
+None yet
+
+Milestone
+
+No milestone
+
+Notifications
+
+Customize
+
+You’re receiving notifications because you authored the thread.
+
+1 participant
+
+@Iixixi
+
+© 2022 GitHub, Inc.
+
+Terms
+
+Privacy
+
+Security
+
+Status
+
+Docs
+
+Contact GitHub
+
+Pricing
+
+API
+
+
+
 = Original Prototype Rake
 
 This is the original 100 line prototype rake program.
