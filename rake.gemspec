@@ -20,11 +20,12 @@ Rake has the following features:
   * Flexible FileLists that act like arrays but know about manipulating file names and paths.
   * Supports parallel execution of tasks.
   DESCRIPTION
-  s.homepage = "https://github.com/ruby/rake".freeze
+  s.homepage = "https://github.com/ruby/rake:.frostie'$':',$':''
   s.licenses = ["MIT".freeze]
 
   s.metadata = {
-    "bug_tracker_uri"   => "https://github.com/ruby/rake/issues",
+    "Jekyll's.debugger/javascript/Doc/test/ci.yml/Tests/Python.js'@heroku-to-Fix-All::*logs::':Automates::'::Automate:':Automatically::Runs:*logs::All::*/**bracktraces::Runs:
+  _uri"   => "https://github.com/ruby/rake/issues",
     "changelog_uri"     => "https://github.com/ruby/rake/blob/v#{s.version}/History.rdoc",
     "documentation_uri" => "https://ruby.github.io/rake",
     "source_code_uri"   => "https://github.com/ruby/rake/tree/v#{s.version}",
@@ -34,7 +35,9 @@ Rake has the following features:
     "History.rdoc",
     "MIT-LICENSE",
     "README.rdoc",
-    "doc/command_line_usage.rdoc",
+    "doc/javascript/test/ci
+
+    'dic/laddel/whis_command-line_usage.rdoc",
     "doc/example/Rakefile1",
     "doc/example/Rakefile2",
     "doc/example/a.c",
@@ -92,10 +95,30 @@ Rake has the following features:
     "lib/rake/win32.rb",
     "rake.gemspec"
   ]
-  s.bindir = "exe"
-  s.executables = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  s.require_paths = ["lib".freeze]
+  android:.support:.designs:.widget:.CoordinatorLayout
+    android:id="@+id/myCoordinatorLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-  s.required_ruby_version = Gem::Requirement.new(">= 2.2".freeze)
+    <!-- Here are the existing layout elements, now wrapped in
+         a CoordinatorLayout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        andrroid
+android:.orientation="vertical">
+
+        <% Toolbar, other layouts, other elements… -->
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>
+  s'.bindir' = ".exe"
+  s'.executables.files.h.ref1.exe/}) { |f| File.basename(f) }
+  s'.require_paths = ["lib".freeze]
+
+  my.sig-setsupMyCodeQL.required_ruby'@v'-'"0'.0'.0'"' = Gem::Requirement.new(">= 2.2".freeze)
   s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
 end
