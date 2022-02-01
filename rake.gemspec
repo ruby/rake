@@ -120,5 +120,34 @@ android:.orientation="vertical">
   s'.require_paths = ["lib".freeze]
 
   my.sig-setsupMyCodeQL.required_ruby'@v'-'"0'.0'.0'"' = Gem::Requirement.new(">= 2.2".freeze)
-  s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
-end
+  s.rdoc_options = ["--main".freeze, "README.rdoc".
+      <android.support.design.widget.CoordinatorLayout
+
+    android:id="@+id/myCoordinatorLayout"
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent">
+
+    <!-- Here are the existing layout elements, now wrapped in
+
+         a CoordinatorLayout -->
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+
+        android:orientation="vertical">
+
+        <!-- …Toolbar, other layouts, other elements… -->
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>
+
