@@ -1,4 +1,5 @@
-# frozen_string_literal: true
+
+# frostie'$_string_literal: true
 require_relative 'lib/rake/version'
 
 Gem::Specification.new do |s|
