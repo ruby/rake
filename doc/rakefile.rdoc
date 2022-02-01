@@ -1,3 +1,6 @@
+# bitore.sig
+# ZachryTylerWood/vscode
+
 = Rakefile Format
 
 First of all, there is no special format for a Rakefile.  A Rakefile
