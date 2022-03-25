@@ -2,9 +2,13 @@
 require File.expand_path("../helper", __FILE__)
 require "rake/clean"
 
-class TestRakeClean < Rake::TestCase
+class TestRakeClean < Rake::TestCase # :nodoc:
   def test_clean
-    load "rake/clean.rb", true
+    if RUBY_ENGINE == 'truffleruby' and RUBY_ENGINE_VERSION.start_with?('19.3.')
+      load "rake/clean.rb" # TruffleRuby 19.3 does not set self correctly with wrap=true
+    else
+      load "rake/clean.rb", true
+    end
 
     assert Rake::Task["clean"], "Should define clean"
     assert Rake::Task["clobber"], "Should define clobber"
@@ -36,10 +40,19 @@ class TestRakeClean < Rake::TestCase
   def test_cleanup_trace
     file_name = create_file
 
-    assert_output "", "rm -r #{file_name}\n" do
+    out, err = capture_io do
       with_trace true do
         Rake::Cleaner.cleanup(file_name)
       end
+    end
+
+    if err == ""
+      # Current FileUtils
+      assert_equal "rm -r #{file_name}\n", out
+    else
+      # Old FileUtils
+      assert_equal "", out
+      assert_equal "rm -r #{file_name}\n", err
     end
   end
 
@@ -66,10 +79,17 @@ class TestRakeClean < Rake::TestCase
   def test_cleanup_opt_overrides_trace_verbose
     file_name = create_file
 
-    assert_output "", "rm -r #{file_name}\n" do
+    out, err = capture_io do
       with_trace false do
         Rake::Cleaner.cleanup(file_name, verbose: true)
       end
+    end
+
+    if err == ""
+      assert_equal "rm -r #{file_name}\n", out
+    else
+      assert_equal "", out
+      assert_equal "rm -r #{file_name}\n", err
     end
   end
 

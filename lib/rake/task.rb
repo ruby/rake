@@ -15,6 +15,10 @@ module Rake
   class Task
     # List of prerequisites for a task.
     attr_reader :prerequisites
+    alias prereqs prerequisites
+
+    # List of order only prerequisites for a task.
+    attr_reader :order_only_prerequisites
 
     # List of actions attached to a task.
     attr_reader :actions
@@ -55,7 +59,7 @@ module Rake
 
     # List of prerequisite tasks
     def prerequisite_tasks
-      prerequisites.map { |pre| lookup_prerequisite(pre) }
+      (prerequisites + order_only_prerequisites).map { |pre| lookup_prerequisite(pre) }
     end
 
     def lookup_prerequisite(prerequisite_name) # :nodoc:
@@ -104,6 +108,7 @@ module Rake
       @arg_names       = nil
       @locations       = []
       @invocation_exception = nil
+      @order_only_prerequisites = []
     end
 
     # Enhance a task with prerequisites or actions.  Returns self.
@@ -141,6 +146,7 @@ module Rake
     # is invoked again.
     def reenable
       @already_invoked = false
+      @invocation_exception = nil
     end
 
     # Clear the existing prerequisites, actions, comments, and arguments of a rake task.
@@ -252,7 +258,8 @@ module Rake
           r.invoke_with_call_chain(prereq_args, invocation_chain)
         end
       end
-      futures.each(&:value)
+      # Iterate in reverse to improve performance related to thread waiting and switching
+      futures.reverse_each(&:value)
     end
 
     # Format the trace flags for display.
@@ -273,7 +280,11 @@ module Rake
       end
       application.trace "** Execute #{name}" if application.options.trace
       application.enhance_with_matching_rule(name) if @actions.empty?
-      @actions.each { |act| act.call(self, args) }
+      if opts = Hash.try_convert(args) and !opts.empty?
+        @actions.each { |act| act.call(self, args, **opts)}
+      else
+        @actions.each { |act| act.call(self, args)}
+      end
     end
 
     # Is this task needed?
@@ -292,7 +303,7 @@ module Rake
     def add_description(description)
       return unless description
       comment = description.strip
-      add_comment(comment) if comment && ! comment.empty?
+      add_comment(comment) if comment && !comment.empty?
     end
 
     def comment=(comment) # :nodoc:
@@ -361,6 +372,18 @@ module Rake
       result <<  "latest-prerequisite time: #{latest_prereq}\n"
       result << "................................\n\n"
       return result
+    end
+
+    # Format dependencies parameter to pass to task.
+    def self.format_deps(deps)
+      deps = [deps] unless deps.respond_to?(:to_ary)
+      deps.map { |d| Rake.from_pathname(d).to_s }
+    end
+
+    # Add order only dependencies.
+    def |(deps)
+      @order_only_prerequisites |= Task.format_deps(deps) - @prerequisites
+      self
     end
 
     # ----------------------------------------------------------------

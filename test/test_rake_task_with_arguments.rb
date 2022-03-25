@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 
-class TestRakeTaskWithArguments < Rake::TestCase
+class TestRakeTaskWithArguments < Rake::TestCase # :nodoc:
   include Rake
 
   def setup
@@ -82,9 +82,6 @@ class TestRakeTaskWithArguments < Rake::TestCase
   end
 
   def test_actions_adore_keywords
-    # A brutish trick to avoid parsing. Remove it once support for 1.9 and 2.0 is dropped
-    # https://ci.appveyor.com/project/ruby/rake/build/1.0.301
-    skip "Keywords aren't a feature in this version" if RUBY_VERSION =~ /^1|^2\.0/
     # https://github.com/ruby/rake/pull/174#issuecomment-263460761
     skip if jruby9?
     eval <<-RUBY, binding, __FILE__, __LINE__+1

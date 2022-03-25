@@ -2,10 +2,10 @@
 require File.expand_path("../helper", __FILE__)
 require "stringio"
 
-class TestTraceOutput < Rake::TestCase
+class TestTraceOutput < Rake::TestCase # :nodoc:
   include Rake::TraceOutput
 
-  class PrintSpy
+  class PrintSpy # :nodoc:
     attr_reader :result, :calls
 
     def initialize
@@ -41,13 +41,17 @@ class TestTraceOutput < Rake::TestCase
   end
 
   def test_trace_issues_single_io_for_args_multiple_strings_and_alternate_sep
+    verbose, $VERBOSE = $VERBOSE, nil
     old_sep = $\
     $\ = "\r"
+    $VERBOSE = verbose
     spy = PrintSpy.new
     trace_on(spy, "HI\r", "LO")
     assert_equal "HI\rLO\r", spy.result
     assert_equal 1, spy.calls
   ensure
+    $VERBOSE = nil
     $\ = old_sep
+    $VERBOSE = verbose
   end
 end

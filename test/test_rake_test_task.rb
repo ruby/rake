@@ -2,7 +2,7 @@
 require File.expand_path("../helper", __FILE__)
 require "rake/testtask"
 
-class TestRakeTestTask < Rake::TestCase
+class TestRakeTestTask < Rake::TestCase # :nodoc:
   include Rake
 
   def test_initialize
@@ -128,7 +128,7 @@ class TestRakeTestTask < Rake::TestCase
       t.loader = :rake
     end
 
-    assert_match(/\A-I".*?" ".*?"\Z/, test_task.run_code)
+    assert_includes test_task.run_code, "lib/rake/rake_test_loader.rb"
   ensure
     Gem.loaded_specs["rake"] = rake
   end
@@ -168,5 +168,23 @@ class TestRakeTestTask < Rake::TestCase
 
     task = Rake::Task[:child]
     assert_includes task.prerequisites, "parent"
+  end
+
+  def test_task_order_only_prerequisites
+    t = task(a: 'b') {
+      :aaa
+    } | 'c'
+    b, c = task('b'), task('c')
+    assert_equal ['b'], t.prerequisites
+    assert_equal ['c'], t.order_only_prerequisites
+    assert_equal [b, c], t.prerequisite_tasks
+  end
+
+  def test_task_order_only_prerequisites_key
+    t = task 'a' => 'b', order_only: ['c']
+    b, c = task('b'), task('c')
+    assert_equal ['b'], t.prerequisites
+    assert_equal ['c'], t.order_only_prerequisites
+    assert_equal [b, c], t.prerequisite_tasks
   end
 end

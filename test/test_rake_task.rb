@@ -2,7 +2,7 @@
 require File.expand_path("../helper", __FILE__)
 require "fileutils"
 
-class TestRakeTask < Rake::TestCase
+class TestRakeTask < Rake::TestCase # :nodoc:
   include Rake
 
   def setup
@@ -117,6 +117,33 @@ class TestRakeTask < Rake::TestCase
     assert_equal ["t1", "t1"], runlist
   end
 
+  def test_can_triple_invoke_after_exception_with_reenable
+    raise_exception = true
+    invoked         = 0
+
+    t1 = task(:t1) do |t|
+      invoked += 1
+      next if !raise_exception
+
+      raise_exception = false
+      raise 'Some error'
+    end
+
+    assert_raises(RuntimeError) { t1.invoke }
+    assert_equal 1, invoked
+
+    t1.reenable
+
+    # actually invoke second time
+    t1.invoke
+    assert_equal 2, invoked
+
+    # recognize already invoked and
+    # don't raise pre-reenable exception
+    t1.invoke
+    assert_equal 2, invoked
+  end
+
   def test_clear
     desc "a task"
     t = task("t", ["b"] => "a") {}
@@ -172,7 +199,8 @@ class TestRakeTask < Rake::TestCase
     task :tfind
     assert_equal "tfind", Task[:tfind].name
     ex = assert_raises(RuntimeError) { Task[:leaves] }
-    assert_equal "Don't know how to build task 'leaves' (see --tasks)", ex.message
+    assert_equal "Don't know how to build task 'leaves'" \
+      " (See the list of available tasks with `rake --tasks`)", ex.message
   end
 
   def test_defined
@@ -469,5 +497,10 @@ class TestRakeTask < Rake::TestCase
     if defined?(::DidYouMean::SpellChecker) && defined?(::DidYouMean::Formatter)
       assert_match(/Did you mean\?  test/, error.message)
     end
+  end
+
+  def test_prereqs
+    t = task(a: %w[b c d e])
+    assert_equal %w[b c d e], t.prereqs
   end
 end

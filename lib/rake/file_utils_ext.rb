@@ -23,19 +23,18 @@ module Rake
       opts = FileUtils.options_of name
       default_options = []
       if opts.include?("verbose")
-        default_options << ":verbose => FileUtilsExt.verbose_flag"
+        default_options << "verbose: FileUtilsExt.verbose_flag"
       end
       if opts.include?("noop")
-        default_options << ":noop => FileUtilsExt.nowrite_flag"
+        default_options << "noop: FileUtilsExt.nowrite_flag"
       end
 
       next if default_options.empty?
       module_eval(<<-EOS, __FILE__, __LINE__ + 1)
-      def #{name}( *args, &block )
-        super(
-          *rake_merge_option(args,
-            #{default_options.join(', ')}
-            ), &block)
+      def #{name}(*args, **options, &block)
+        super(*args,
+            #{default_options.join(', ')},
+            **options, &block)
       end
       EOS
     end
@@ -111,16 +110,6 @@ module Rake
       else
         yield
       end
-    end
-
-    # Merge the given options with the default values.
-    def rake_merge_option(args, defaults)
-      if Hash === args.last
-        defaults.update(args.last)
-        args.pop
-      end
-      args.push defaults
-      args
     end
 
     # Send the message to the default rake output (which is $stderr).

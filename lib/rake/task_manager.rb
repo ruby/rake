@@ -15,13 +15,13 @@ module Rake
     end
 
     def create_rule(*args, &block) # :nodoc:
-      pattern, args, deps = resolve_args(args)
+      pattern, args, deps, order_only = resolve_args(args)
       pattern = Regexp.new(Regexp.quote(pattern) + "$") if String === pattern
-      @rules << [pattern, args, deps, block]
+      @rules << [pattern, args, deps, order_only, block]
     end
 
     def define_task(task_class, *args, &block) # :nodoc:
-      task_name, arg_names, deps = resolve_args(args)
+      task_name, arg_names, deps, order_only = resolve_args(args)
 
       original_scope = @scope
       if String === task_name and
@@ -31,15 +31,15 @@ module Rake
       end
 
       task_name = task_class.scope_name(@scope, task_name)
-      deps = [deps] unless deps.respond_to?(:to_ary)
-      deps = deps.map { |d| Rake.from_pathname(d).to_s }
       task = intern(task_class, task_name)
       task.set_arg_names(arg_names) unless arg_names.empty?
       if Rake::TaskManager.record_task_metadata
         add_location(task)
         task.add_description(get_description(task))
       end
-      task.enhance(deps, &block)
+      task.enhance(Task.format_deps(deps), &block)
+      task | order_only unless order_only.nil?
+      task
     ensure
       @scope = original_scope
     end
@@ -60,7 +60,8 @@ module Rake
     end
 
     def generate_message_for_undefined_task(task_name)
-      message = "Don't know how to build task '#{task_name}' (see --tasks)"
+      message = "Don't know how to build task '#{task_name}' "\
+                "(See the list of available tasks with `#{Rake.application.name} --tasks`)"
       message + generate_did_you_mean_suggestions(task_name)
     end
 
@@ -82,8 +83,8 @@ module Rake
       define_task(Rake::FileTask, task_name)
     end
 
-    # Resolve the arguments for a task/rule.  Returns a triplet of
-    # [task_name, arg_name_list, prerequisites].
+    # Resolve the arguments for a task/rule.  Returns a tuple of
+    # [task_name, arg_name_list, prerequisites, order_only_prerequisites].
     def resolve_args(args)
       if args.last.is_a?(Hash)
         deps = args.pop
@@ -108,7 +109,7 @@ module Rake
       else
         arg_names = args
       end
-      [task_name, arg_names, []]
+      [task_name, arg_names, [], nil]
     end
     private :resolve_args_without_dependencies
 
@@ -117,11 +118,17 @@ module Rake
     #
     # The patterns recognized by this argument resolving function are:
     #
+    #   task :t, order_only: [:e]
     #   task :t => [:d]
+    #   task :t => [:d], order_only: [:e]
     #   task :t, [a] => [:d]
+    #   task :t, [a] => [:d], order_only: [:e]
     #
     def resolve_args_with_dependencies(args, hash) # :nodoc:
-      fail "Task Argument Error" if hash.size != 1
+      fail "Task Argument Error" if
+        hash.size != 1 &&
+        (hash.size != 2 || !hash.key?(:order_only))
+      order_only = hash.delete(:order_only)
       key, value = hash.map { |k, v| [k, v] }.first
       if args.empty?
         task_name = key
@@ -129,11 +136,11 @@ module Rake
         deps = value || []
       else
         task_name = args.shift
-        arg_names = key
-        deps = value
+        arg_names = key || args.shift|| []
+        deps = value || []
       end
       deps = [deps] unless deps.respond_to?(:to_ary)
-      [task_name, arg_names, deps]
+      [task_name, arg_names, deps, order_only]
     end
     private :resolve_args_with_dependencies
 
@@ -144,9 +151,10 @@ module Rake
     def enhance_with_matching_rule(task_name, level=0)
       fail Rake::RuleRecursionOverflowError,
         "Rule Recursion Too Deep" if level >= 16
-      @rules.each do |pattern, args, extensions, block|
+      @rules.each do |pattern, args, extensions, order_only, block|
         if pattern && pattern.match(task_name)
           task = attempt_rule(task_name, pattern, args, extensions, block, level)
+          task | order_only unless order_only.nil?
           return task if task
         end
       end
@@ -292,8 +300,8 @@ module Rake
         when /^\./
           source = task_name.sub(task_pattern, ext)
           source == ext ? task_name.ext(ext) : source
-        when String
-          ext
+        when String, Symbol
+          ext.to_s
         when Proc, Method
           if ext.arity == 1
             ext.call(task_name)

@@ -28,10 +28,10 @@ module Rake
       end
     end
 
-    def cleanup(file_name, opts={})
+    def cleanup(file_name, **opts)
       begin
         opts = { verbose: Rake.application.options.trace }.merge(opts)
-        rm_r file_name, opts
+        rm_r file_name, **opts
       rescue StandardError => ex
         puts "Failed to remove #{file_name}: #{ex}" unless file_already_gone?(file_name)
       end

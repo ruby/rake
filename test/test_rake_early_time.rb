@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 
-class TestRakeEarlyTime < Rake::TestCase
+class TestRakeEarlyTime < Rake::TestCase # :nodoc:
   def test_create
     early = Rake::EarlyTime.instance
     assert early <= Time.now

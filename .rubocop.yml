@@ -4,6 +4,7 @@ AllCops:
   Exclude:
     - doc/**/*.rb
     - rake.gemspec
+    - bin/*
 
 Metrics/LineLength:
   Enabled: true

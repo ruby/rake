@@ -2,8 +2,8 @@
 require File.expand_path("../helper", __FILE__)
 require "pathname"
 
-class TestRakeFileList < Rake::TestCase
-  FileList = Rake::FileList
+class TestRakeFileList < Rake::TestCase # :nodoc:
+  FileList = Rake::FileList # :nodoc:
 
   def setup
     super
@@ -212,7 +212,6 @@ class TestRakeFileList < Rake::TestCase
   end
 
   def test_exclude_curly_bracket_pattern
-    skip "brace pattern matches not supported" unless defined? File::FNM_EXTGLOB
     fl = FileList["*"].exclude("{abc,xyz}.c")
     assert_equal %w[abc.h abc.x cfiles existing x.c xyzzy.txt], fl
   end
@@ -497,13 +496,15 @@ class TestRakeFileList < Rake::TestCase
     assert_equal ["a", "b", "c"], d
   end
 
-  def test_dup_and_clone_replicate_taint
-    a = FileList["a", "b", "c"]
-    a.taint
-    c = a.clone
-    d = a.dup
-    assert c.tainted?, "Clone should be tainted"
-    assert d.tainted?, "Dup should be tainted"
+  if RUBY_VERSION < '2.7'
+    def test_dup_and_clone_replicate_taint
+      a = FileList["a", "b", "c"]
+      a.taint
+      c = a.clone
+      d = a.dup
+      assert c.tainted?, "Clone should be tainted"
+      assert d.tainted?, "Dup should be tainted"
+    end
   end
 
   def test_duped_items_will_thaw

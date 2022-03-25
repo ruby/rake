@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 
-class TestRakeRakeTestLoader < Rake::TestCase
+class TestRakeRakeTestLoader < Rake::TestCase # :nodoc:
 
   def setup
     super
@@ -24,7 +24,7 @@ class TestRakeRakeTestLoader < Rake::TestCase
     $:.replace orig_loaded_features
   end
 
-  def test_load_error_from_require
+  def test_load_error_from_missing_test_file
     out, err = capture_io do
       ARGV.replace %w[no_such_test_file.rb]
 
@@ -43,6 +43,24 @@ class TestRakeRakeTestLoader < Rake::TestCase
        \n\n\Z/x
 
     assert_match expected, err
+  end
+
+  def test_load_error_raised_implicitly
+    File.write("error_test.rb", "require 'superkalifragilisticoespialidoso'")
+    out, err = capture_io do
+      ARGV.replace %w[error_test.rb]
+
+      exc = assert_raises(LoadError) do
+        load @loader
+      end
+      if RUBY_ENGINE == "jruby"
+        assert_equal "no such file to load -- superkalifragilisticoespialidoso", exc.message
+      else
+        assert_equal "cannot load such file -- superkalifragilisticoespialidoso", exc.message
+      end
+    end
+    assert_empty out
+    assert_empty err
   end
 
   def test_load_error_raised_explicitly

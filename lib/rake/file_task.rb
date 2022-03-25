@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require "rake/task.rb"
+require "rake/task"
 require "rake/early_time"
 
 module Rake
@@ -14,14 +14,18 @@ module Rake
     # Is this file task needed?  Yes if it doesn't exist, or if its time stamp
     # is out of date.
     def needed?
-      ! File.exist?(name) || out_of_date?(timestamp) || @application.options.build_all
+      begin
+        out_of_date?(File.mtime(name)) || @application.options.build_all
+      rescue Errno::ENOENT
+        true
+      end
     end
 
     # Time stamp for file task.
     def timestamp
-      if File.exist?(name)
-        File.mtime(name.to_s)
-      else
+      begin
+        File.mtime(name)
+      rescue Errno::ENOENT
         Rake::LATE
       end
     end

@@ -2,7 +2,7 @@
 require File.expand_path("../helper", __FILE__)
 require "open3"
 
-class TestBacktraceSuppression < Rake::TestCase
+class TestBacktraceSuppression < Rake::TestCase # :nodoc:
   def test_bin_rake_suppressed
     paths = ["something/bin/rake:12"]
 
@@ -13,7 +13,6 @@ class TestBacktraceSuppression < Rake::TestCase
 
   def test_system_dir_suppressed
     path = RbConfig::CONFIG["rubylibprefix"]
-    skip if path.nil?
     path = File.expand_path path
 
     paths = [path + ":12"]
@@ -25,7 +24,6 @@ class TestBacktraceSuppression < Rake::TestCase
 
   def test_near_system_dir_isnt_suppressed
     path = RbConfig::CONFIG["rubylibprefix"]
-    skip if path.nil?
     path = File.expand_path path
 
     paths = [" " + path + ":12"]
@@ -36,7 +34,7 @@ class TestBacktraceSuppression < Rake::TestCase
   end
 end
 
-class TestRakeBacktrace < Rake::TestCase
+class TestRakeBacktrace < Rake::TestCase # :nodoc:
   include RubyRunner
 
   def setup

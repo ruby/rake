@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 
-class TestRakeTaskArguments < Rake::TestCase
+class TestRakeTaskArguments < Rake::TestCase # :nodoc:
   def teardown
     ENV.delete("rev")
     ENV.delete("VER")

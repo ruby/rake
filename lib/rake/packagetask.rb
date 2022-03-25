@@ -79,6 +79,9 @@ module Rake
     # Zip command for zipped archives.  The default is 'zip'.
     attr_accessor :zip_command
 
+    # True if parent directory should be omited (default is false)
+    attr_accessor :without_parent_dir
+
     # Create a Package Task with the given name and version.  Use +:noversion+
     # as the version to build a package without a version or to provide a
     # fully-versioned package name.
@@ -102,6 +105,7 @@ module Rake
       @need_zip = false
       @tar_command = "tar"
       @zip_command = "zip"
+      @without_parent_dir = false
     end
 
     # Create the tasks defined by this task library.
@@ -132,9 +136,8 @@ module Rake
           task package: ["#{package_dir}/#{file}"]
           file "#{package_dir}/#{file}" =>
             [package_dir_path] + package_files do
-            chdir(package_dir) do
-              sh @tar_command, "#{flag}cvf", file, package_name
-            end
+            chdir(working_dir) { sh @tar_command, "#{flag}cvf", file, target_dir }
+            mv "#{package_dir_path}/#{target_dir}", package_dir if without_parent_dir
           end
         end
       end
@@ -143,9 +146,8 @@ module Rake
         task package: ["#{package_dir}/#{zip_file}"]
         file "#{package_dir}/#{zip_file}" =>
           [package_dir_path] + package_files do
-          chdir(package_dir) do
-            sh @zip_command, "-r", zip_file, package_name
-          end
+          chdir(working_dir) { sh @zip_command, "-r", zip_file, target_dir }
+          mv "#{package_dir_path}/#{zip_file}", package_dir if without_parent_dir
         end
       end
 
@@ -205,6 +207,15 @@ module Rake
 
     def zip_file
       "#{package_name}.zip"
+    end
+
+    def working_dir
+      without_parent_dir ? package_dir_path : package_dir
+    end
+
+    # target directory relative to working_dir
+    def target_dir
+      without_parent_dir ? "." : package_name
     end
   end
 

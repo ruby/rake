@@ -3,7 +3,7 @@ require File.expand_path("../helper", __FILE__)
 
 TESTING_REQUIRE = []
 
-class TestRakeApplicationOptions < Rake::TestCase
+class TestRakeApplicationOptions < Rake::TestCase # :nodoc:
 
   def setup
     super
@@ -62,6 +62,28 @@ class TestRakeApplicationOptions < Rake::TestCase
     flags("--describe=X") do |opts|
       assert_equal :describe, opts.show_tasks
       assert_equal(/X/.to_s, opts.show_task_pattern.to_s)
+    end
+  end
+
+  def test_directory
+    pwd = Dir.pwd
+    [["--directory"], "--directory=", ["-C"], "-C"].each do |flag|
+      Dir.mktmpdir do |dir|
+        begin
+          flags(flag.dup << dir) do
+            assert_equal(File.realpath(dir), @app.original_dir)
+          end
+        ensure
+          Dir.chdir(pwd)
+        end
+        begin
+          assert_raises(Errno::ENOENT) do
+            flags(flag.dup << dir+"/nonexistent")
+          end
+        ensure
+          Dir.chdir(pwd)
+        end
+      end
     end
   end
 

@@ -2,7 +2,7 @@
 require File.expand_path("../helper", __FILE__)
 require "fileutils"
 
-class TestRakeRules < Rake::TestCase
+class TestRakeRules < Rake::TestCase # :nodoc:
   include Rake
 
   SRCFILE    = "abc.c"
@@ -78,6 +78,17 @@ class TestRakeRules < Rake::TestCase
     end
     Task[OBJFILE].invoke
     assert_equal [OBJFILE], @runs
+  end
+
+  def test_rule_prereqs_can_be_created_by_symbol
+    task :nonfile do |t|
+      @runs << t.name
+    end
+    rule ".o" => :nonfile do |t|
+      @runs << t.name
+    end
+    Task[OBJFILE].invoke
+    assert_equal ["nonfile", OBJFILE], @runs
   end
 
   def test_plain_strings_as_dependents_refer_to_files

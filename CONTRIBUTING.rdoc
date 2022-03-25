@@ -3,7 +3,7 @@
 Rake is currently hosted at github. The github web page is
 https://github.com/ruby/rake . The public git clone URL is
 
-  git://github.com/ruby/rake.git
+  https://github.com/ruby/rake.git
 
 = Running the Rake Test Suite
 
@@ -12,11 +12,18 @@ If you wish to run the unit and functional tests that come with Rake:
 * +cd+ into the top project directory of rake.
 * Install gem dependency using bundler:
 
-    bundle install  # Install bundler, minitest and rdoc
+    $ bundle install  # Install bundler, minitest and rdoc
 
-* Type one of the following:
+* Run the test suite
 
-    rake            # If you have run rake's tests
+    $ rake
+
+= Rubocop
+
+Rake uses Rubocop to enforce a consistent style on new changes being
+proposed. You can check your code with Rubocop using:
+
+  $ ./bin/rubocop
 
 = Issues and Bug Reports
 

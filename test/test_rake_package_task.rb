@@ -2,7 +2,7 @@
 require File.expand_path("../helper", __FILE__)
 require "rake/packagetask"
 
-class TestRakePackageTask < Rake::TestCase
+class TestRakePackageTask < Rake::TestCase # :nodoc:
 
   def test_initialize
     touch "install.rb"
@@ -76,6 +76,18 @@ class TestRakePackageTask < Rake::TestCase
     pkg = Rake::PackageTask.new "a", :noversion
 
     assert_equal "a", pkg.package_name
+  end
+
+  def test_without_parent_dir
+    pkg = Rake::PackageTask.new("foo", :noversion)
+
+    assert_equal "pkg", pkg.working_dir
+    assert_equal "foo", pkg.target_dir
+
+    pkg.without_parent_dir = true
+
+    assert_equal "pkg/foo", pkg.working_dir
+    assert_equal ".", pkg.target_dir
   end
 
 end

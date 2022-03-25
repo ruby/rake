@@ -1,0 +1,27 @@
+name: ubuntu
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ 'ubuntu-latest', 'macos-latest', 'windows-latest' ]
+        ruby: [ 3.1, '3.0', 2.7, 2.6, 2.5, 2.4, 2.3, 2.2, jruby, jruby-head, truffleruby, ruby-head ]
+        exclude:
+          - os: windows-latest
+            ruby: truffleruby
+          - os: windows-latest
+            ruby: jruby-head
+          - os: windows-latest
+            ruby: jruby
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+    - name: Install dependencies
+      run: gem install minitest
+    - name: Run test
+      run: ruby -Ilib exe/rake

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 
-class TestRakeApplication < Rake::TestCase
+class TestRakeApplication < Rake::TestCase # :nodoc:
 
   def setup
     super
@@ -77,9 +77,6 @@ class TestRakeApplication < Rake::TestCase
   end
 
   def test_display_exception_details_cause
-    skip "Exception#cause not implemented" unless
-      Exception.method_defined? :cause
-
     begin
       raise "cause a"
     rescue

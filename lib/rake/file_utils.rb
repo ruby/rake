@@ -35,7 +35,7 @@ module FileUtils
   #
   #   # check exit status after command runs
   #   sh %{grep pattern file} do |ok, res|
-  #     if ! ok
+  #     if !ok
   #       puts "pattern not found (status = #{res.exitstatus})"
   #     end
   #   end
@@ -97,12 +97,11 @@ module FileUtils
   # Example:
   #   ruby %{-pe '$_.upcase!' <README}
   #
-  def ruby(*args, &block)
-    options = (Hash === args.last) ? args.pop : {}
+  def ruby(*args, **options, &block)
     if args.length > 1
-      sh(*([RUBY] + args + [options]), &block)
+      sh(RUBY, *args, **options, &block)
     else
-      sh("#{RUBY} #{args.first}", options, &block)
+      sh("#{RUBY} #{args.first}", **options, &block)
     end
   end
 
@@ -110,17 +109,15 @@ module FileUtils
 
   #  Attempt to do a normal file link, but fall back to a copy if the link
   #  fails.
-  def safe_ln(*args)
-    if ! LN_SUPPORTED[0]
-      cp(*args)
-    else
+  def safe_ln(*args, **options)
+    if LN_SUPPORTED[0]
       begin
-        ln(*args)
+        return options.empty? ? ln(*args) : ln(*args, **options)
       rescue StandardError, NotImplementedError
         LN_SUPPORTED[0] = false
-        cp(*args)
       end
     end
+    options.empty? ? cp(*args) : cp(*args, **options)
   end
 
   # Split a file path into individual directory names.

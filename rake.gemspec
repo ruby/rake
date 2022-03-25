@@ -1,6 +1,5 @@
 # frozen_string_literal: true
-$LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
-require 'rake/version'
+require_relative 'lib/rake/version'
 
 Gem::Specification.new do |s|
   s.name = "rake".freeze
@@ -23,20 +22,79 @@ Rake has the following features:
   s.homepage = "https://github.com/ruby/rake".freeze
   s.licenses = ["MIT".freeze]
 
-  s.files = %x[git ls-files -z].split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) } -
-            %w[.rubocop.yml .travis.yml appveyor.yml]
+  s.metadata = {
+    "bug_tracker_uri"   => "https://github.com/ruby/rake/issues",
+    "changelog_uri"     => "https://github.com/ruby/rake/blob/v#{s.version}/History.rdoc",
+    "documentation_uri" => "https://ruby.github.io/rake",
+    "source_code_uri"   => "https://github.com/ruby/rake/tree/v#{s.version}",
+  }
+
+  s.files = [
+    "History.rdoc",
+    "MIT-LICENSE",
+    "README.rdoc",
+    "doc/command_line_usage.rdoc",
+    "doc/example/Rakefile1",
+    "doc/example/Rakefile2",
+    "doc/example/a.c",
+    "doc/example/b.c",
+    "doc/example/main.c",
+    "doc/glossary.rdoc",
+    "doc/jamis.rb",
+    "doc/proto_rake.rdoc",
+    "doc/rake.1",
+    "doc/rakefile.rdoc",
+    "doc/rational.rdoc",
+    "exe/rake",
+    "lib/rake.rb",
+    "lib/rake/application.rb",
+    "lib/rake/backtrace.rb",
+    "lib/rake/clean.rb",
+    "lib/rake/cloneable.rb",
+    "lib/rake/cpu_counter.rb",
+    "lib/rake/default_loader.rb",
+    "lib/rake/dsl_definition.rb",
+    "lib/rake/early_time.rb",
+    "lib/rake/ext/core.rb",
+    "lib/rake/ext/string.rb",
+    "lib/rake/file_creation_task.rb",
+    "lib/rake/file_list.rb",
+    "lib/rake/file_task.rb",
+    "lib/rake/file_utils.rb",
+    "lib/rake/file_utils_ext.rb",
+    "lib/rake/invocation_chain.rb",
+    "lib/rake/invocation_exception_mixin.rb",
+    "lib/rake/late_time.rb",
+    "lib/rake/linked_list.rb",
+    "lib/rake/loaders/makefile.rb",
+    "lib/rake/multi_task.rb",
+    "lib/rake/name_space.rb",
+    "lib/rake/packagetask.rb",
+    "lib/rake/phony.rb",
+    "lib/rake/private_reader.rb",
+    "lib/rake/promise.rb",
+    "lib/rake/pseudo_status.rb",
+    "lib/rake/rake_module.rb",
+    "lib/rake/rake_test_loader.rb",
+    "lib/rake/rule_recursion_overflow_error.rb",
+    "lib/rake/scope.rb",
+    "lib/rake/task.rb",
+    "lib/rake/task_argument_error.rb",
+    "lib/rake/task_arguments.rb",
+    "lib/rake/task_manager.rb",
+    "lib/rake/tasklib.rb",
+    "lib/rake/testtask.rb",
+    "lib/rake/thread_history_display.rb",
+    "lib/rake/thread_pool.rb",
+    "lib/rake/trace_output.rb",
+    "lib/rake/version.rb",
+    "lib/rake/win32.rb",
+    "rake.gemspec"
+  ]
   s.bindir = "exe"
   s.executables = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
   s.require_paths = ["lib".freeze]
 
-  s.required_ruby_version = Gem::Requirement.new(">= 2.0.0".freeze)
-  s.rubygems_version = "2.6.1".freeze
-  s.required_rubygems_version = Gem::Requirement.new(">= 1.3.2".freeze)
+  s.required_ruby_version = Gem::Requirement.new(">= 2.2".freeze)
   s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
-
-  s.add_development_dependency(%q<bundler>.freeze)
-  s.add_development_dependency(%q<minitest>.freeze)
-  s.add_development_dependency(%q<rdoc>.freeze)
-  s.add_development_dependency(%q<coveralls>.freeze)
-  s.add_development_dependency(%q<rubocop>.freeze)
 end

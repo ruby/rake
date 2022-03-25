@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 
-class TestRakeTaskManager < Rake::TestCase
+class TestRakeTaskManager < Rake::TestCase # :nodoc:
 
   def setup
     super
@@ -25,7 +25,17 @@ class TestRakeTaskManager < Rake::TestCase
       @tm["bad"]
     end
 
-    assert_equal "Don't know how to build task 'bad' (see --tasks)", e.message
+    assert_equal "Don't know how to build task 'bad' (See the list of available tasks with `rake --tasks`)", e.message
+  end
+
+  def test_undefined_task_with_custom_application
+    Rake.application.init("myrake", nil)
+
+    e = assert_raises RuntimeError do
+      @tm["bad"]
+    end
+
+    assert_equal "Don't know how to build task 'bad' (See the list of available tasks with `myrake --tasks`)", e.message
   end
 
   def test_name_lookup

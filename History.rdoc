@@ -1,3 +1,89 @@
+=== 13.0.6
+
+* Additional fix for #389
+  Pull request #390 by hsbt
+
+=== 13.0.5
+
+* Fixed the regression of #388
+  Pull request #389 by hsbt
+
+=== 13.0.4
+
+* Fix rake test loader swallowing useful error information.
+  Pull request #367 by deivid-rodriguez
+* Add -C/--directory option the same as GNU make.
+  Pull request #376 by nobu
+
+=== 13.0.3
+
+* Fix breaking change of execution order on TestTask.
+  Pull request #368 by ysakasin
+
+=== 13.0.2
+
+==== Enhancements
+
+* Fix tests to work with current FileUtils
+  Pull Request #358 by jeremyevans
+* Simplify default rake test loader
+  Pull Request #357 by deivid-rodriguez
+* Update rdoc
+  Pull Request #366 by bahasalien
+* Update broken links to rake articles from Avdi in README
+  Pull Request #360 by svl7
+
+=== 13.0.1
+
+==== Bug fixes
+
+* Fixed bug: Reenabled task raises previous exception on second invokation 
+  Pull Request #271 by thorsteneckel
+* Fix an incorrectly resolved arg pattern
+  Pull Request #327 by mjbellantoni
+
+=== 13.0.0
+
+==== Enhancements
+
+* Follows recent changes on keyword arguments in ruby 2.7.
+  Pull Request #326 by nobu
+* Make `PackageTask` be able to omit parent directory while packing files 
+  Pull Request #310 by tonytonyjan
+* Add order only dependency
+  Pull Request #269 by take-cheeze
+
+==== Compatibility changes
+
+* Drop old ruby versions(< 2.2)
+
+=== 12.3.3
+
+==== Bug fixes
+
+* Use the application's name in error message if a task is not found.
+  Pull Request #303 by tmatilai
+
+==== Enhancements:
+
+* Use File.open explicitly.
+
+=== 12.3.2
+
+==== Bug fixes
+
+* Fixed test fails caused by 2.6 warnings.
+  Pull Request #297 by hsbt
+
+==== Enhancements:
+
+* Rdoc improvements.
+  Pull Request #293 by colby-swandale
+* Improve multitask performance.
+  Pull Request #273 by jsm
+* Add alias `prereqs`.
+  Pull Request #268 by take-cheeze
+
 === 12.3.1
 
 ==== Bug fixes
