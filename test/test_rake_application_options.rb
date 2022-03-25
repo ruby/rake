@@ -200,6 +200,8 @@ class TestRakeApplicationOptions < Rake::TestCase # :nodoc:
   end
 
   def test_missing_require
+    skip if jruby?
+
     ex = assert_raises(LoadError) do
       flags(["--require", "test/missing"]) do |opts|
       end
