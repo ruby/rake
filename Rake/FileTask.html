@@ -115,7 +115,11 @@
           <div class="method-source-code" id="needed-3F-source">
             <pre><span class="ruby-comment"># File lib/rake/file_task.rb, line 16</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">needed?</span>
-  <span class="ruby-operator">!</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">name</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">out_of_date?</span>(<span class="ruby-identifier">timestamp</span>) <span class="ruby-operator">||</span> <span class="ruby-ivar">@application</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">build_all</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">out_of_date?</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">mtime</span>(<span class="ruby-identifier">name</span>)) <span class="ruby-operator">||</span> <span class="ruby-ivar">@application</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">build_all</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">ENOENT</span>
+    <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
         </div>
@@ -134,11 +138,11 @@
           <p>Time stamp for file task.</p>
 
           <div class="method-source-code" id="timestamp-source">
-            <pre><span class="ruby-comment"># File lib/rake/file_task.rb, line 21</span>
+            <pre><span class="ruby-comment"># File lib/rake/file_task.rb, line 25</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">timestamp</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">name</span>)
-    <span class="ruby-constant">File</span>.<span class="ruby-identifier">mtime</span>(<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>)
-  <span class="ruby-keyword">else</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-constant">File</span>.<span class="ruby-identifier">mtime</span>(<span class="ruby-identifier">name</span>)
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">ENOENT</span>
     <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">LATE</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
