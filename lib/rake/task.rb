@@ -114,7 +114,7 @@ module Rake
     # Enhance a task with prerequisites or actions.  Returns self.
     def enhance(deps=nil, &block)
       @prerequisites |= deps if deps
-      @actions << block if block_given?
+      @actions << TaskAction.new(&block) if block_given?
       self
     end
 
@@ -180,6 +180,11 @@ module Rake
     def clear_args
       @arg_names = nil
       self
+    end
+
+    # List of results for all invocations of a rake task.
+    def results
+      @actions.flat_map { |act| act.results }
     end
 
     # Invoke the task if it is needed.  Prerequisites are invoked first.
@@ -275,11 +280,9 @@ module Rake
       end
       application.trace "** Execute #{name}" if application.options.trace
       application.enhance_with_matching_rule(name) if @actions.empty?
-      if opts = Hash.try_convert(args) and !opts.empty?
-        @actions.each { |act| act.call(self, args, **opts) }
-      else
-        @actions.each { |act| act.call(self, args) }
-      end
+      opts = Hash.try_convert(args)
+
+      @actions.each { |act| act.call(self, args, opts) }
     end
 
     # Is this task needed?
