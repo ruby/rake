@@ -496,7 +496,7 @@ class TestRakeFileList < Rake::TestCase # :nodoc:
     assert_equal ["a", "b", "c"], d
   end
 
-  if RUBY_VERSION < '2.7'
+  if RUBY_VERSION < "2.7"
     def test_dup_and_clone_replicate_taint
       a = FileList["a", "b", "c"]
       a.taint

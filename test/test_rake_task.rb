@@ -126,7 +126,7 @@ class TestRakeTask < Rake::TestCase # :nodoc:
       next if !raise_exception
 
       raise_exception = false
-      raise 'Some error'
+      raise "Some error"
     end
 
     assert_raises(RuntimeError) { t1.invoke }

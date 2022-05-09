@@ -171,20 +171,20 @@ class TestRakeTestTask < Rake::TestCase # :nodoc:
   end
 
   def test_task_order_only_prerequisites
-    t = task(a: 'b') {
+    t = task(a: "b") {
       :aaa
-    } | 'c'
-    b, c = task('b'), task('c')
-    assert_equal ['b'], t.prerequisites
-    assert_equal ['c'], t.order_only_prerequisites
+    } | "c"
+    b, c = task("b"), task("c")
+    assert_equal ["b"], t.prerequisites
+    assert_equal ["c"], t.order_only_prerequisites
     assert_equal [b, c], t.prerequisite_tasks
   end
 
   def test_task_order_only_prerequisites_key
-    t = task 'a' => 'b', order_only: ['c']
-    b, c = task('b'), task('c')
-    assert_equal ['b'], t.prerequisites
-    assert_equal ['c'], t.order_only_prerequisites
+    t = task "a" => "b", order_only: ["c"]
+    b, c = task("b"), task("c")
+    assert_equal ["b"], t.prerequisites
+    assert_equal ["c"], t.order_only_prerequisites
     assert_equal [b, c], t.prerequisite_tasks
   end
 end

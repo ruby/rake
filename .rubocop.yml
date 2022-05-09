@@ -6,10 +6,6 @@ AllCops:
     - rake.gemspec
     - bin/*
 
-Metrics/LineLength:
-  Enabled: true
-  Max: 120
-
 Style/HashSyntax:
   Enabled: true
 
@@ -23,8 +19,9 @@ Style/MultilineIfThen:
 Style/MethodDefParentheses:
   Enabled: true
 
-Style/BracesAroundHashParameters:
+Layout/LineLength:
   Enabled: true
+  Max: 120
 
 Layout/IndentationWidth:
   Enabled: true
@@ -35,7 +32,7 @@ Layout/Tab:
 Layout/EmptyLines:
   Enabled: true
 
-Layout/TrailingBlankLines:
+Layout/TrailingEmptyLines:
   Enabled: true
 
 Layout/TrailingWhitespace:

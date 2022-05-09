@@ -276,9 +276,9 @@ module Rake
       application.trace "** Execute #{name}" if application.options.trace
       application.enhance_with_matching_rule(name) if @actions.empty?
       if opts = Hash.try_convert(args) and !opts.empty?
-        @actions.each { |act| act.call(self, args, **opts)}
+        @actions.each { |act| act.call(self, args, **opts) }
       else
-        @actions.each { |act| act.call(self, args)}
+        @actions.each { |act| act.call(self, args) }
       end
     end
 
