@@ -12,7 +12,7 @@ If you wish to run the unit and functional tests that come with Rake:
 * +cd+ into the top project directory of rake.
 * Install gem dependency using bundler:
 
-    $ bundle install  # Install bundler, minitest and rdoc
+    $ bundle install  # Install bundler, minitest, etc.
 
 * Run the test suite
 
