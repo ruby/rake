@@ -6,5 +6,5 @@ group :development do
   gem "bundler"
   gem "minitest"
   gem "coveralls"
-  gem "rubocop", "~> 0.81.0"
+  gem "rubocop", "~> 1.12.1"
 end

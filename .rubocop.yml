@@ -1,6 +1,7 @@
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.4
   DisabledByDefault: true
+  SuggestExtensions: false
   Exclude:
     - doc/**/*.rb
     - rake.gemspec
@@ -26,7 +27,7 @@ Layout/LineLength:
 Layout/IndentationWidth:
   Enabled: true
 
-Layout/Tab:
+Layout/IndentationStyle:
   Enabled: true
 
 Layout/EmptyLines:
