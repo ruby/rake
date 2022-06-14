@@ -6,6 +6,7 @@ AllCops:
     - doc/**/*.rb
     - rake.gemspec
     - bin/*
+    - vendor/**/*
 
 Style/HashSyntax:
   Enabled: true
