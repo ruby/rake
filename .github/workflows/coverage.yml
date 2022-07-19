@@ -11,7 +11,7 @@ jobs:
       with:
         ruby-version: '3.0'
     - name: Install dependencies
-      run: gem install minitest
+      run: gem install minitest -v "5.15.0"
     - name: Run test
       env:
         COVERALLS: "yes"

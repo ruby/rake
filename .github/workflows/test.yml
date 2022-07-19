@@ -22,6 +22,6 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
     - name: Install dependencies
-      run: gem install minitest
+      run: gem install minitest -v "5.15.0"
     - name: Run test
       run: ruby -Ilib exe/rake
