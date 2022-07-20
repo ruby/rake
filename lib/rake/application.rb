@@ -124,7 +124,7 @@ module Rake
 
       yield
 
-      thread_pool.join
+      thread_pool.join if defined?(@thread_pool)
       if options.job_stats
         stats = thread_pool.statistics
         puts "Maximum active threads: #{stats[:max_active_threads]} + main"
