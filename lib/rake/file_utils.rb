@@ -60,8 +60,6 @@ module FileUtils
 
   def create_shell_runner(cmd) # :nodoc:
     show_command = sh_show_command cmd
-    show_command = show_command[0, 42] + "..." unless $trace
-
     lambda do |ok, status|
       ok or
         fail "Command failed with status (#{status.exitstatus}): " +

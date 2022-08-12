@@ -313,6 +313,49 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
     assert_equal expected_cmd, show_cmd
   end
 
+  def test_sh_if_a_command_exits_with_error_status_its_full_output_is_printed
+    verbose false do
+      standard_output = 'Some output'
+      standard_error  = 'Some error'
+      shell_command = "ruby -e\"puts '#{standard_output}';STDERR.puts '#{standard_error}';exit false\""
+      actual_both = capture_subprocess_io do
+        begin
+          sh shell_command
+        rescue
+        else
+          flunk
+        end
+      end
+      actual = actual_both.join
+      assert_match standard_output, actual
+      assert_match standard_error,  actual
+    end
+  end
+
+  def test_sh_if_a_command_exits_with_error_status_sh_echoes_it_fully
+    verbose true do
+      assert_echoes_fully
+    end
+    verbose false do
+      assert_echoes_fully
+    end
+  end
+
+  def assert_echoes_fully
+    long_string = '1234567890' * 10
+    shell_command = "ruby -e\"'#{long_string}';exit false\""
+    capture_subprocess_io do
+      begin
+        sh shell_command
+      rescue => ex
+        assert_match 'Command failed with status', ex.message
+        assert_match shell_command, ex.message
+      else
+        flunk
+      end
+    end
+  end
+
   def test_ruby_with_multiple_arguments
     skip if jruby9? # https://github.com/jruby/jruby/issues/3653
 
