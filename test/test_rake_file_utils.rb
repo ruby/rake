@@ -315,8 +315,8 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
 
   def test_sh_if_a_command_exits_with_error_status_its_full_output_is_printed
     verbose false do
-      standard_output = 'Some output'
-      standard_error  = 'Some error'
+      standard_output = "Some output"
+      standard_error  = "Some error"
       shell_command = "ruby -e\"puts '#{standard_output}';STDERR.puts '#{standard_error}';exit false\""
       actual_both = capture_subprocess_io do
         begin
@@ -342,13 +342,13 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   end
 
   def assert_echoes_fully
-    long_string = '1234567890' * 10
+    long_string = "1234567890" * 10
     shell_command = "ruby -e\"'#{long_string}';exit false\""
     capture_subprocess_io do
       begin
         sh shell_command
       rescue => ex
-        assert_match 'Command failed with status', ex.message
+        assert_match "Command failed with status", ex.message
         assert_match shell_command, ex.message
       else
         flunk
