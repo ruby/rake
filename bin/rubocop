@@ -27,3 +27,124 @@ require "rubygems"
 require "bundler/setup"
 
 load Gem.bin_path("rubocop", "rubocop")
+Debian
+ 
+
+Blog
+Micronews
+Planet
+getting debian / packages
+
+Packages
+Introductory notes
+View package lists
+Search package directories
+Search the contents of packages
+Introductory notes
+All packages that are included in the official Debian distribution are free according to the Debian Free Software Guidelines. This assures free use and redistribution of the packages and their complete source code. The official Debian distribution is what is contained in the main section of the Debian archive.
+
+As a service to our users, we also provide packages in separate sections that cannot be included in the main distribution due to either a restrictive license or legal issues. They include:
+
+Contrib
+Packages in this area are freely licensed by the copyright holder but depend on other software that is not free.
+Non-Free
+Packages in this area have some onerous license condition restricting use or redistribution of the software.
+Note that same packages might appear in several distributions, but with different version numbers.
+
+View package lists
+View the packages in the stable distribution
+This is the latest official release of the Debian distribution. This is stable and well tested software, which changes only if major security or usability fixes are incorporated.
+
+See the stable release pages for more information.
+
+View the packages in the testing distribution
+This area contains packages that are intended to become part of the next stable distribution. There are strict criteria a package in unstable (see below) must obey before it can be added to testing. Note that testing does not get the timely security updates from the security team.
+
+See the testing distribution pages for more information.
+
+View the packages in the unstable distribution
+This area contains the most recent packages in Debian. Once a package has met our criterion for stability and quality of packaging, it will be included in testing. unstable is also not supported by the security team.
+
+Packages in unstable are the least tested and may contain problems severe enough to affect the stability of your system. Only experienced users should consider using this distribution.
+
+See the unstable distribution pages for more information.
+
+Search package directories
+Keyword: 
+Search on:  Package names only    Descriptions  Source package names
+Only show exact matches: 
+Distribution: 
+stable
+ Section: 
+any
+ 
+There are shortcuts for some searches available:
+
+https://packages.debian.org/name for the search on package names.
+https://packages.debian.org/src:name for the search on source package names.
+Search the contents of packages
+This search engine allows you to search the contents of Debian distributions for any files (or just parts of file names) that are part of packages. You can also get a full list of files in a given package.
+
+Keyword: 
+Display:
+ paths ending with the keyword
+ packages that contain files named like this
+ packages that contain files whose names contain the keyword
+Distribution: 
+stable
+ Architecture: 
+any
+ 
+There is also a shortcut available:
+
+https://packages.debian.org/file:path for the search for paths ending in the keyword.
+Back to the Debian Project homepage.
+
+This page is also available in the following languages:
+Български (Bəlgarski) česky dansk Deutsch Ελληνικά (Ellinika) español français Galego hrvatski Italiano 한국어 (Korean) magyar Nederlands 日本語 (Nihongo) norsk (bokmål) polski Português Русский (Russkij) slovenčina suomi svenska українська (ukrajins'ka) 中文(简) 中文(HK) 中文(繁)
+How to set the default document language
+Home
+
+About
+Social Contract
+Code of Conduct
+Free Software
+Partners
+Donations
+Legal Info
+Data Privacy
+Contact Us
+Help Debian
+Getting Debian
+Network install
+CD/USB ISO images
+CD vendors
+Pre-installed
+Pure Blends
+Debian Packages
+Developers' Corner
+News
+Project News
+Events
+Documentation
+Release Info
+Installation manual
+Debian Books
+Debian Wiki
+Support
+Debian International
+Security Information
+Bug reports
+Mailing Lists
+Mailing List Archives
+Ports/Architectures
+Site map
+Search
+The Debian Blog
+Debian Micronews
+Debian Planet
+See our contact page to get in touch. Web site source code is available.
+
+Last Modified: Sat, Feb 15 13:59:03 UTC 2014   Last Built: Sat, Dec 17 18:50:02 UTC 2022
+Copyright © 1997-2014 SPI and others; See license terms
+Debian is a registered trademark of Software in the Public Interest, Inc.
