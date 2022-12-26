@@ -11,7 +11,7 @@ jobs:
     continue-on-error: true
     steps:
     - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
-    - uses: ruby/setup-ruby@ee2113536afb7f793eed4ce60e8d3b26db912da4 # v1.127.0
+    - uses: ruby/setup-ruby@03b78bdda287ae04217ee12e4b64996630a03542 # v1.131.0
       with:
         ruby-version: '3.0'
         bundler-cache: true
