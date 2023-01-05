@@ -1,9 +1,19 @@
-version: 2
-updates:
-  - package-ecosystem: 'github-actions'
-    directory: '/'
-    schedule:
-      interval: 'weekly'
+name: Greetings
+
+on: [pull_request_target, issues]
+
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+    - uses: actions/first-interaction@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        issue-message: "Message that will be displayed on users' first issue"
+        pr-message: "Message that will be displayed on users' first pull request"
 Skip to content
 Search or jump to…
 Pull requests
@@ -106,7 +116,7 @@ jobs:	jobs:
       run: ruby -Ilib exe/rake	      run: ruby -Ilib exe/rake
 0 comments on commit 5096dd6
 @zakwarlord7
- HomeCore 3.1.2Std-lib 3.1.2Downloads
+HomeCore 3.1.2Std-lib 3.1.2Downloads
   
 Home Classes Methods
 In Files
@@ -1482,7 +1492,8 @@ This page was generated for Ruby 3.1.2
 
 Ruby-doc.org is provided by James Britt and Neurogami. Maximum R+D.
 
-Generated with Ruby-doc Rdoc Generator 0.42.0.Add heading textAdd bold text, <Ctrl+b>Add italic text, <Ctrl+i>
+Generated with Ruby-doc Rdoc Generator 0.42.0.
+Add heading textAdd bold text, <Ctrl+b>Add italic text, <Ctrl+i>
 Add a quote, <Ctrl+Shift+.>Add code, <Ctrl+e>Add a link, <Ctrl+k>
 Add a bulleted list, <Ctrl+Shift+8>Add a numbered list, <Ctrl+Shift+7>Add a task list, <Ctrl+Shift+l>
 Directly mention a user or team
