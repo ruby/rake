@@ -104,10 +104,12 @@
        </header>
 
       <div id="method-i-ext" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">ext</span><span
-            class="method-args">(newext=&quot;&quot;)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">ext</span><span
+              class="method-args">(newext=&quot;&quot;)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -133,10 +135,12 @@
       </div>
 
       <div id="method-i-pathmap" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">pathmap</span><span
-            class="method-args">(spec=nil, &amp;block)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">pathmap</span><span
+              class="method-args">(spec=nil, &amp;block)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -167,7 +171,7 @@
 <p>A percent sign.</p>
 </dd></dl>
 
-<p>The <code>%d</code> specifier can also have a numeric prefix (e.g. &#39;%2d&#39;). If the number is positive, only return (up to) <code>n</code> directories in the path, starting from the left hand side.  If <code>n</code> is negative, return (up to) <code>n</code> directories from the right hand side of the path.</p>
+<p>The <code>%d</code> specifier can also have a numeric prefix (e.g. ‘%2d’). If the number is positive, only return (up to) <code>n</code> directories in the path, starting from the left hand side.  If <code>n</code> is negative, return (up to) <code>n</code> directories from the right hand side of the path.</p>
 
 <p>Examples:</p>
 
@@ -177,7 +181,7 @@
 
 <p>Also the <code>%d</code>, <code>%p</code>, <code>%f</code>, <code>%n</code>, <code>%x</code>, and <code>%X</code> operators can take a pattern/replacement argument to perform simple string substitutions on a particular part of the path.  The pattern and replacement are separated by a comma and are enclosed by curly braces.  The replacement spec comes after the % character but before the operator letter.  (e.g. “%{old,new}d”). Multiple replacement specs should be separated by semi-colons (e.g. “%{old,new;src,bin}d”).</p>
 
-<p>Regular expressions may be used for the pattern, and back refs may be used in the replacement text.  Curly braces, commas and semi-colons are excluded from both the pattern and replacement text (let&#39;s keep parsing reasonable).</p>
+<p>Regular expressions may be used for the pattern, and back refs may be used in the replacement text.  Curly braces, commas and semi-colons are excluded from both the pattern and replacement text (let’s keep parsing reasonable).</p>
 
 <p>For example:</p>
 
@@ -189,7 +193,7 @@
 <pre class="ruby"><span class="ruby-string">&quot;class/org/onestepback/proj/A.class&quot;</span>
 </pre>
 
-<p>If the replacement text is &#39;*&#39;, then a block may be provided to perform some arbitrary calculation for the replacement.</p>
+<p>If the replacement text is ‘*’, then a block may be provided to perform some arbitrary calculation for the replacement.</p>
 
 <p>For example:</p>
 
@@ -250,10 +254,12 @@
       </div>
 
       <div id="method-i-pathmap_explode" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">pathmap_explode</span><span
-            class="method-args">()</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">pathmap_explode</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -277,10 +283,12 @@
       </div>
 
       <div id="method-i-pathmap_partial" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">pathmap_partial</span><span
-            class="method-args">(n)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">pathmap_partial</span><span
+              class="method-args">(n)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -309,14 +317,16 @@
       </div>
 
       <div id="method-i-pathmap_replace" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">pathmap_replace</span><span
-            class="method-args">(patterns, &amp;block)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">pathmap_replace</span><span
+              class="method-args">(patterns, &amp;block)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
-          <p>Perform the pathmap replacement operations on the given path. The patterns take the form &#39;pat1,rep1;pat2,rep2…&#39;.</p>
+          <p>Perform the pathmap replacement operations on the given path. The patterns take the form ‘pat1,rep1;pat2,rep2…’.</p>
 
 <p>This <a href="String.html"><code>String</code></a> extension comes from Rake</p>
 
@@ -351,7 +361,7 @@
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.1.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

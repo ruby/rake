@@ -33,7 +33,7 @@
     <ul>
       <li><a href="CONTRIBUTING_rdoc.html#label-Source+Repository">Source Repository</a>
       <li><a href="CONTRIBUTING_rdoc.html#label-Running+the+Rake+Test+Suite">Running the Rake Test Suite</a>
-      <li><a href="CONTRIBUTING_rdoc.html#label-Rubocop">Rubocop</a>
+      <li><a href="CONTRIBUTING_rdoc.html#label-RuboCop">RuboCop</a>
       <li><a href="CONTRIBUTING_rdoc.html#label-Issues+and+Bug+Reports">Issues and Bug Reports</a>
     </ul>
   </li>
@@ -485,14 +485,14 @@
 <ul>
 
   <li class="method">
-    <a href="Rake/FileList.html#method-c-5B-5D">::[]</a>
-    &mdash;
-    <span class="container">Rake::FileList</span>
-
-  <li class="method">
     <a href="Rake/Task.html#method-c-5B-5D">::[]</a>
     &mdash;
     <span class="container">Rake::Task</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-c-5B-5D">::[]</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
 
   <li class="method">
     <a href="Rake.html#method-c-add_rakelib">::add_rakelib</a>
@@ -565,9 +565,9 @@
     <span class="container">Rake::LinkedList</span>
 
   <li class="method">
-    <a href="Rake/Application.html#method-c-new">::new</a>
+    <a href="Rake/TestTask.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">Rake::Application</span>
+    <span class="container">Rake::TestTask</span>
 
   <li class="method">
     <a href="Rake/FileList.html#method-c-new">::new</a>
@@ -575,29 +575,14 @@
     <span class="container">Rake::FileList</span>
 
   <li class="method">
-    <a href="Rake/LinkedList.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Rake::LinkedList</span>
-
-  <li class="method">
     <a href="Rake/LinkedList/EmptyLinkedList.html#method-c-new">::new</a>
     &mdash;
     <span class="container">Rake::LinkedList::EmptyLinkedList</span>
 
   <li class="method">
-    <a href="Rake/NameSpace.html#method-c-new">::new</a>
+    <a href="Rake/LinkedList.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">Rake::NameSpace</span>
-
-  <li class="method">
-    <a href="Rake/PackageTask.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Rake::PackageTask</span>
-
-  <li class="method">
-    <a href="Rake/RuleRecursionOverflowError.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Rake::RuleRecursionOverflowError</span>
+    <span class="container">Rake::LinkedList</span>
 
   <li class="method">
     <a href="Rake/Task.html#method-c-new">::new</a>
@@ -605,14 +590,29 @@
     <span class="container">Rake::Task</span>
 
   <li class="method">
+    <a href="Rake/RuleRecursionOverflowError.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Rake::RuleRecursionOverflowError</span>
+
+  <li class="method">
+    <a href="Rake/PackageTask.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Rake::PackageTask</span>
+
+  <li class="method">
+    <a href="Rake/Application.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Rake::Application</span>
+
+  <li class="method">
+    <a href="Rake/NameSpace.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">Rake::NameSpace</span>
+
+  <li class="method">
     <a href="Rake/TaskArguments.html#method-c-new">::new</a>
     &mdash;
     <span class="container">Rake::TaskArguments</span>
-
-  <li class="method">
-    <a href="Rake/TestTask.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Rake::TestTask</span>
 
   <li class="method">
     <a href="Rake.html#method-c-original_dir">::original_dir</a>
@@ -670,9 +670,9 @@
     <span class="container">Rake::LinkedList</span>
 
   <li class="method">
-    <a href="Rake/NameSpace.html#method-i-5B-5D">#[]</a>
+    <a href="Rake/TaskManager.html#method-i-5B-5D">#[]</a>
     &mdash;
-    <span class="container">Rake::NameSpace</span>
+    <span class="container">Rake::TaskManager</span>
 
   <li class="method">
     <a href="Rake/TaskArguments.html#method-i-5B-5D">#[]</a>
@@ -680,9 +680,9 @@
     <span class="container">Rake::TaskArguments</span>
 
   <li class="method">
-    <a href="Rake/TaskManager.html#method-i-5B-5D">#[]</a>
+    <a href="Rake/NameSpace.html#method-i-5B-5D">#[]</a>
     &mdash;
-    <span class="container">Rake::TaskManager</span>
+    <span class="container">Rake::NameSpace</span>
 
   <li class="method">
     <a href="Rake/FileList.html#method-i-add">#add</a>
@@ -805,14 +805,14 @@
     <span class="container">Rake::DSL</span>
 
   <li class="method">
-    <a href="Rake/LinkedList.html#method-i-each">#each</a>
-    &mdash;
-    <span class="container">Rake::LinkedList</span>
-
-  <li class="method">
     <a href="Rake/TaskArguments.html#method-i-each">#each</a>
     &mdash;
     <span class="container">Rake::TaskArguments</span>
+
+  <li class="method">
+    <a href="Rake/LinkedList.html#method-i-each">#each</a>
+    &mdash;
+    <span class="container">Rake::LinkedList</span>
 
   <li class="method">
     <a href="Rake/FileList.html#method-i-egrep">#egrep</a>
@@ -820,14 +820,14 @@
     <span class="container">Rake::FileList</span>
 
   <li class="method">
-    <a href="Rake/LinkedList.html#method-i-empty-3F">#empty?</a>
-    &mdash;
-    <span class="container">Rake::LinkedList</span>
-
-  <li class="method">
     <a href="Rake/LinkedList/EmptyLinkedList.html#method-i-empty-3F">#empty?</a>
     &mdash;
     <span class="container">Rake::LinkedList::EmptyLinkedList</span>
+
+  <li class="method">
+    <a href="Rake/LinkedList.html#method-i-empty-3F">#empty?</a>
+    &mdash;
+    <span class="container">Rake::LinkedList</span>
 
   <li class="method">
     <a href="Rake/Task.html#method-i-enhance">#enhance</a>
@@ -865,14 +865,14 @@
     <span class="container">Rake::FileList</span>
 
   <li class="method">
-    <a href="String.html#method-i-ext">#ext</a>
-    &mdash;
-    <span class="container">String</span>
-
-  <li class="method">
     <a href="Rake/FileList.html#method-i-ext">#ext</a>
     &mdash;
     <span class="container">Rake::FileList</span>
+
+  <li class="method">
+    <a href="String.html#method-i-ext">#ext</a>
+    &mdash;
+    <span class="container">String</span>
 
   <li class="method">
     <a href="Rake/TaskArguments.html#method-i-extras">#extras</a>
@@ -935,14 +935,14 @@
     <span class="container">Rake::FileList</span>
 
   <li class="method">
-    <a href="Rake/Application.html#method-i-init">#init</a>
-    &mdash;
-    <span class="container">Rake::Application</span>
-
-  <li class="method">
     <a href="Rake/PackageTask.html#method-i-init">#init</a>
     &mdash;
     <span class="container">Rake::PackageTask</span>
+
+  <li class="method">
+    <a href="Rake/Application.html#method-i-init">#init</a>
+    &mdash;
+    <span class="container">Rake::Application</span>
 
   <li class="method">
     <a href="Rake/LinkedList.html#method-i-inspect">#inspect</a>
@@ -1000,14 +1000,14 @@
     <span class="container">Rake::TaskManager</span>
 
   <li class="method">
-    <a href="Rake/InvocationChain.html#method-i-member-3F">#member?</a>
-    &mdash;
-    <span class="container">Rake::InvocationChain</span>
-
-  <li class="method">
     <a href="Rake/InvocationChain/EmptyInvocationChain.html#method-i-member-3F">#member?</a>
     &mdash;
     <span class="container">Rake::InvocationChain::EmptyInvocationChain</span>
+
+  <li class="method">
+    <a href="Rake/InvocationChain.html#method-i-member-3F">#member?</a>
+    &mdash;
+    <span class="container">Rake::InvocationChain</span>
 
   <li class="method">
     <a href="Rake/RuleRecursionOverflowError.html#method-i-message">#message</a>
@@ -1035,11 +1035,6 @@
     <span class="container">Rake::DSL</span>
 
   <li class="method">
-    <a href="Rake/FileCreationTask.html#method-i-needed-3F">#needed?</a>
-    &mdash;
-    <span class="container">Rake::FileCreationTask</span>
-
-  <li class="method">
     <a href="Rake/FileTask.html#method-i-needed-3F">#needed?</a>
     &mdash;
     <span class="container">Rake::FileTask</span>
@@ -1048,6 +1043,11 @@
     <a href="Rake/Task.html#method-i-needed-3F">#needed?</a>
     &mdash;
     <span class="container">Rake::Task</span>
+
+  <li class="method">
+    <a href="Rake/FileCreationTask.html#method-i-needed-3F">#needed?</a>
+    &mdash;
+    <span class="container">Rake::FileCreationTask</span>
 
   <li class="method">
     <a href="Rake/TaskArguments.html#method-i-new_scope">#new_scope</a>
@@ -1080,14 +1080,14 @@
     <span class="container">Rake::PackageTask</span>
 
   <li class="method">
-    <a href="String.html#method-i-pathmap">#pathmap</a>
-    &mdash;
-    <span class="container">String</span>
-
-  <li class="method">
     <a href="Rake/FileList.html#method-i-pathmap">#pathmap</a>
     &mdash;
     <span class="container">Rake::FileList</span>
+
+  <li class="method">
+    <a href="String.html#method-i-pathmap">#pathmap</a>
+    &mdash;
+    <span class="container">String</span>
 
   <li class="method">
     <a href="String.html#method-i-pathmap_explode">#pathmap_explode</a>
@@ -1235,14 +1235,14 @@
     <span class="container">Rake::DSL</span>
 
   <li class="method">
-    <a href="Rake/NameSpace.html#method-i-tasks">#tasks</a>
-    &mdash;
-    <span class="container">Rake::NameSpace</span>
-
-  <li class="method">
     <a href="Rake/TaskManager.html#method-i-tasks">#tasks</a>
     &mdash;
     <span class="container">Rake::TaskManager</span>
+
+  <li class="method">
+    <a href="Rake/NameSpace.html#method-i-tasks">#tasks</a>
+    &mdash;
+    <span class="container">Rake::NameSpace</span>
 
   <li class="method">
     <a href="Rake/TaskManager.html#method-i-tasks_in_scope">#tasks_in_scope</a>
@@ -1260,6 +1260,11 @@
     <span class="container">Rake::PackageTask</span>
 
   <li class="method">
+    <a href="Rake/Task.html#method-i-timestamp">#timestamp</a>
+    &mdash;
+    <span class="container">Rake::Task</span>
+
+  <li class="method">
     <a href="Rake/FileCreationTask.html#method-i-timestamp">#timestamp</a>
     &mdash;
     <span class="container">Rake::FileCreationTask</span>
@@ -1268,11 +1273,6 @@
     <a href="Rake/FileTask.html#method-i-timestamp">#timestamp</a>
     &mdash;
     <span class="container">Rake::FileTask</span>
-
-  <li class="method">
-    <a href="Rake/Task.html#method-i-timestamp">#timestamp</a>
-    &mdash;
-    <span class="container">Rake::Task</span>
 
   <li class="method">
     <a href="Rake/FileList.html#method-i-to_a">#to_a</a>
@@ -1295,14 +1295,14 @@
     <span class="container">Rake::TaskArguments</span>
 
   <li class="method">
-    <a href="Rake/FileList.html#method-i-to_s">#to_s</a>
-    &mdash;
-    <span class="container">Rake::FileList</span>
-
-  <li class="method">
     <a href="Rake/InvocationChain.html#method-i-to_s">#to_s</a>
     &mdash;
     <span class="container">Rake::InvocationChain</span>
+
+  <li class="method">
+    <a href="Rake/FileList.html#method-i-to_s">#to_s</a>
+    &mdash;
+    <span class="container">Rake::FileList</span>
 
   <li class="method">
     <a href="Rake/InvocationChain/EmptyInvocationChain.html#method-i-to_s">#to_s</a>
@@ -1379,7 +1379,7 @@
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.1.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

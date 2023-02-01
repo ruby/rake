@@ -108,10 +108,12 @@
        </header>
 
       <div id="method-i-ruby" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">ruby</span><span
-            class="method-args">(*args, **options, &amp;block)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">ruby</span><span
+              class="method-args">(*args, **options, &amp;block)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -123,7 +125,7 @@
 </pre>
 
           <div class="method-source-code" id="ruby-source">
-            <pre><span class="ruby-comment"># File lib/rake/file_utils.rb, line 100</span>
+            <pre><span class="ruby-comment"># File lib/rake/file_utils.rb, line 98</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ruby</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">**</span><span class="ruby-identifier">options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">sh</span>(<span class="ruby-constant">RUBY</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">**</span><span class="ruby-identifier">options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
@@ -138,17 +140,19 @@
       </div>
 
       <div id="method-i-safe_ln" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">safe_ln</span><span
-            class="method-args">(*args, **options)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">safe_ln</span><span
+              class="method-args">(*args, **options)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
           <p>Attempt to do a normal file link, but fall back to a copy if the link fails.</p>
 
           <div class="method-source-code" id="safe_ln-source">
-            <pre><span class="ruby-comment"># File lib/rake/file_utils.rb, line 112</span>
+            <pre><span class="ruby-comment"># File lib/rake/file_utils.rb, line 110</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">safe_ln</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">**</span><span class="ruby-identifier">options</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-constant">LN_SUPPORTED</span>[<span class="ruby-value">0</span>]
     <span class="ruby-keyword">begin</span>
@@ -166,10 +170,12 @@
       </div>
 
       <div id="method-i-sh" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">sh</span><span
-            class="method-args">(*cmd, &amp;block)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">sh</span><span
+              class="method-args">(*cmd, &amp;block)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -219,10 +225,12 @@
       </div>
 
       <div id="method-i-split_all" class="method-detail ">
-        <div class="method-heading">
-          <span class="method-name">split_all</span><span
-            class="method-args">(path)</span>
-          <span class="method-click-advice">click to toggle source</span>
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">split_all</span><span
+              class="method-args">(path)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
 
         <div class="method-description">
@@ -234,7 +242,7 @@
 </pre>
 
           <div class="method-source-code" id="split_all-source">
-            <pre><span class="ruby-comment"># File lib/rake/file_utils.rb, line 128</span>
+            <pre><span class="ruby-comment"># File lib/rake/file_utils.rb, line 126</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">split_all</span>(<span class="ruby-identifier">path</span>)
   <span class="ruby-identifier">head</span>, <span class="ruby-identifier">tail</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">split</span>(<span class="ruby-identifier">path</span>)
   <span class="ruby-keyword">return</span> [<span class="ruby-identifier">tail</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">head</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;.&quot;</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">tail</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;/&quot;</span>
@@ -255,7 +263,7 @@
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.3.1.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
