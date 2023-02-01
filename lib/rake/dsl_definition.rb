@@ -158,7 +158,7 @@ module Rake
     #
     # Example:
     #   desc "Run the Unit Tests"
-    #   task test: [:build]
+    #   task test: [:build] do
     #     # ... run tests
     #   end
     #
