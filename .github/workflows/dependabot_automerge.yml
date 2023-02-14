@@ -19,8 +19,9 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           running-workflow-name: wait_for_checks
           check-regexp: test
-          repo-token: ${{ secrets.MATZBOT_GITHUB_TOKEN }}
           wait-interval: 10
+        env:
+          REPO_TOKEN: ${{ secrets.MATZBOT_GITHUB_TOKEN }}
   dependabot:
     needs: [wait_for_checks]
     name: Dependabot auto-merge
