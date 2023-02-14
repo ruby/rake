@@ -12,15 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
-       - name: Wait for check is finished
-         uses: lewagon/wait-on-check-action@v1.2.0
-         id: wait_for_checks
-         with:
-             ref: ${{ github.event.pull_request.head.sha || github.sha }}
-             running-workflow-name: wait_for_checks
-             check-regexp: test
-             repo-token: ${{ secrets.MATZBOT_GITHUB_TOKEN }}
-             wait-interval: 10
+      - name: Wait for check is finished
+        uses: lewagon/wait-on-check-action@v1.2.0
+        id: wait_for_checks
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          running-workflow-name: wait_for_checks
+          check-regexp: test
+          repo-token: ${{ secrets.MATZBOT_GITHUB_TOKEN }}
+          wait-interval: 10
   dependabot:
     needs: [wait_for_checks]
     name: Dependabot auto-merge
