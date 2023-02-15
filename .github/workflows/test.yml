@@ -6,12 +6,20 @@ permissions:  # added using https://github.com/step-security/secure-workflows
   contents: read
 
 jobs:
+  ruby-versions:
+    uses: ruby/actions/.github/workflows/ruby_versions.yml@master
+    with:
+      min_version: 2.2
+      engine: cruby-jruby
+      versions: '["truffleruby"]'
+
   test:
+    needs: ruby-versions
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ 'ubuntu-latest', 'macos-latest', 'windows-latest' ]
-        ruby: [ 3.2, 3.1, '3.0', 2.7, 2.6, 2.5, 2.4, 2.3, 2.2, jruby, jruby-head, truffleruby, ruby-head ]
+        ruby: ${{ fromJson(needs.ruby-versions.outputs.versions) }}
         exclude:
           - os: windows-latest
             ruby: truffleruby
