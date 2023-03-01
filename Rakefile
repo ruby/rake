@@ -26,16 +26,7 @@ RDoc::Task.new do |doc|
   doc.main   = "README.rdoc"
   doc.title  = "Rake -- Ruby Make"
   doc.rdoc_files = FileList.new %w[lib MIT-LICENSE doc/**/*.rdoc *.rdoc]
-  doc.rdoc_dir = "html"
-end
-
-task ghpages: :rdoc do
-  %x[git checkout gh-pages]
-  require "fileutils"
-  FileUtils.rm_rf "/tmp/html"
-  FileUtils.mv "html", "/tmp"
-  FileUtils.rm_rf "*"
-  FileUtils.cp_r Dir.glob("/tmp/html/*"), "."
+  doc.rdoc_dir = "_site" # for github pages
 end
 
 task default: :test
