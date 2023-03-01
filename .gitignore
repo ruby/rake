@@ -10,5 +10,6 @@
 /TAGS
 /coverage
 /html
+/_site
 /pkg
 Gemfile.lock
