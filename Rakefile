@@ -10,8 +10,11 @@ lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 begin
+  old_verbose, $VERBOSE = $VERBOSE, nil
   require "bundler/gem_tasks"
 rescue LoadError
+ensure
+  $VERBOSE = old_verbose
 end
 
 require "rake/testtask"
