@@ -237,6 +237,8 @@ module Rake
     def display_exception_message_details(ex) # :nodoc:
       if ex.instance_of?(RuntimeError)
         trace ex.message
+      elsif ex.respond_to?(:detailed_message)
+        trace "#{ex.class.name}: #{ex.detailed_message(highlight: false)}"
       else
         trace "#{ex.class.name}: #{ex.message}"
       end

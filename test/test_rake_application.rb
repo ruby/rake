@@ -60,6 +60,31 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     assert_match __method__.to_s, err
   end
 
+  def test_display_exception_details_with_detailed_message
+    error_class = Class.new(StandardError) do
+      def detailed_message(**)
+        "detailed_message!!"
+      end
+    end
+
+    begin
+      raise error_class
+    rescue error_class => ex
+    end
+
+    out, err = capture_io do
+      @app.set_default_options # reset trace output IO
+
+      @app.display_error_message ex
+    end
+
+    assert_empty out
+
+    assert_match "rake aborted!", err
+    assert_match "detailed_message!!", err
+    assert_match __method__.to_s, err
+  end
+
   def test_display_exception_details_bad_encoding
     begin
       raise "El Niño is coming!".dup.force_encoding("US-ASCII")
