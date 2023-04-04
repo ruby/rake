@@ -94,7 +94,7 @@ module Rake
           # Backward compatibility for capistrano
           args = handle_options
         end
-        load_debug_at_stop
+        load_debug_at_stop_feature
         collect_command_line_tasks(args)
       end
     end
@@ -118,7 +118,7 @@ module Rake
       }
     rescue LoadError
     end
-    private :load_debug_at_stop
+    private :load_debug_at_stop_feature
 
     # Find the rakefile and then load it and any pending imports.
     def load_rakefile
