@@ -94,9 +94,31 @@ module Rake
           # Backward compatibility for capistrano
           args = handle_options
         end
+        load_debug_at_stop_feature
         collect_command_line_tasks(args)
       end
     end
+
+    def load_debug_at_stop_feature
+      return unless ENV["RAKE_DEBUG"]
+      require "debug/session"
+      DEBUGGER__::start no_sigint_hook: true, nonstop: true
+      Rake::Task.prepend Module.new {
+        def execute(*)
+          exception = DEBUGGER__::SESSION.capture_exception_frames(/(exe|bin|lib)\/rake/) do
+            super
+          end
+
+          if exception
+            STDERR.puts exception.message
+            DEBUGGER__::SESSION.enter_postmortem_session exception
+            raise exception
+          end
+        end
+      }
+    rescue LoadError
+    end
+    private :load_debug_at_stop_feature
 
     # Find the rakefile and then load it and any pending imports.
     def load_rakefile
