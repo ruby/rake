@@ -100,7 +100,7 @@ module Rake
     end
 
     def load_debug_at_stop_feature
-      return unless ['1', 'true'].include?(ENV["RAKE_DEBUG"])
+      return unless ENV["RAKE_DEBUG"]
       require 'debug/session'
       DEBUGGER__::start no_sigint_hook: true, nonstop: true
       Rake::Task.prepend Module.new {
