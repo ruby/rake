@@ -1,32 +1,33 @@
 # frozen_string_literal: true
-require_relative 'lib/rake/version'
+
+require_relative "lib/rake/version"
 
 Gem::Specification.new do |s|
-  s.name = "rake".freeze
+  s.name = "rake"
   s.version = Rake::VERSION
-  s.authors = ["Hiroshi SHIBATA".freeze, "Eric Hodel".freeze, "Jim Weirich".freeze]
-  s.email = ["hsbt@ruby-lang.org".freeze, "drbrain@segment7.net".freeze, "".freeze]
+  s.authors = ["Hiroshi SHIBATA", "Eric Hodel", "Jim Weirich"]
+  s.email = ["hsbt@ruby-lang.org", "drbrain@segment7.net", ""]
 
-  s.summary = "Rake is a Make-like program implemented in Ruby".freeze
-  s.description = <<-DESCRIPTION
-Rake is a Make-like program implemented in Ruby. Tasks and dependencies are
-specified in standard Ruby syntax.
-Rake has the following features:
-  * Rakefiles (rake's version of Makefiles) are completely defined in standard Ruby syntax.
-    No XML files to edit. No quirky Makefile syntax to worry about (is that a tab or a space?)
-  * Users can specify tasks with prerequisites.
-  * Rake supports rule patterns to synthesize implicit tasks.
-  * Flexible FileLists that act like arrays but know about manipulating file names and paths.
-  * Supports parallel execution of tasks.
+  s.summary = "Rake is a Make-like program implemented in Ruby"
+  s.description = <<~DESCRIPTION
+    Rake is a Make-like program implemented in Ruby. Tasks and dependencies are
+    specified in standard Ruby syntax.
+    Rake has the following features:
+      * Rakefiles (rake's version of Makefiles) are completely defined in standard Ruby syntax.
+        No XML files to edit. No quirky Makefile syntax to worry about (is that a tab or a space?)
+      * Users can specify tasks with prerequisites.
+      * Rake supports rule patterns to synthesize implicit tasks.
+      * Flexible FileLists that act like arrays but know about manipulating file names and paths.
+      * Supports parallel execution of tasks.
   DESCRIPTION
-  s.homepage = "https://github.com/ruby/rake".freeze
-  s.licenses = ["MIT".freeze]
+  s.homepage = "https://github.com/ruby/rake"
+  s.licenses = ["MIT"]
 
   s.metadata = {
-    "bug_tracker_uri"   => "https://github.com/ruby/rake/issues",
-    "changelog_uri"     => "https://github.com/ruby/rake/blob/v#{s.version}/History.rdoc",
+    "bug_tracker_uri" => "https://github.com/ruby/rake/issues",
+    "changelog_uri" => "https://github.com/ruby/rake/blob/v#{s.version}/History.rdoc",
     "documentation_uri" => "https://ruby.github.io/rake",
-    "source_code_uri"   => "https://github.com/ruby/rake/tree/v#{s.version}",
+    "source_code_uri" => "https://github.com/ruby/rake/tree/v#{s.version}"
   }
 
   s.files = [
@@ -93,8 +94,8 @@ Rake has the following features:
   ]
   s.bindir = "exe"
   s.executables = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  s.require_paths = ["lib".freeze]
+  s.require_paths = ["lib"]
 
-  s.required_ruby_version = Gem::Requirement.new(">= 2.2".freeze)
-  s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
+  s.required_ruby_version = Gem::Requirement.new(">= 2.3")
+  s.rdoc_options = ["--main", "README.rdoc"]
 end
