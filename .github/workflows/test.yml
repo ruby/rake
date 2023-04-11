@@ -9,7 +9,7 @@ jobs:
   ruby-versions:
     uses: ruby/actions/.github/workflows/ruby_versions.yml@master
     with:
-      min_version: 2.2
+      min_version: 2.3
       engine: cruby-jruby
       versions: '["truffleruby"]'
 

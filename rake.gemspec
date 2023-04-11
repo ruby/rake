@@ -95,6 +95,6 @@ Rake has the following features:
   s.executables = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
   s.require_paths = ["lib".freeze]
 
-  s.required_ruby_version = Gem::Requirement.new(">= 2.2".freeze)
+  s.required_ruby_version = Gem::Requirement.new(">= 2.3".freeze)
   s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
 end
