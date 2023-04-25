@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module RakefileDefinitions
   include FileUtils
 
@@ -19,9 +20,7 @@ task :work do
   end
 end
 
-# TODO: remove `disabled_' when DeprecatedObjectDSL removed
-task :obj
-task :disabled_obj do
+task :obj do
   begin
     Object.new.instance_eval { task :xyzzy }
     puts "BAD:D  Rake DSL are polluting objects"
@@ -51,6 +50,16 @@ end
     RAKEFILE
   end
 
+  def rakefile_test_task_verbose
+    rakefile <<-RAKEFILE
+    require "rake/testtask"
+
+    Rake::TestTask.new(:unit) do |t|
+      t.verbose = true
+    end
+    RAKEFILE
+  end
+
   def rakefile_chains
     rakefile <<-DEFAULT
 task :default => "play.app"
@@ -67,6 +76,24 @@ file 'base' do
   touch 'base'
 end
     DEFAULT
+  end
+
+  def rakefile_file_chains
+    rakefile <<-RAKEFILE
+file "fileA" do |t|
+  sh "echo contentA >\#{t.name}"
+end
+
+file "fileB" => "fileA" do |t|
+  sh "(cat fileA; echo transformationB) >\#{t.name}"
+end
+
+file "fileC" => "fileB" do |t|
+  sh "(cat fileB; echo transformationC) >\#{t.name}"
+end
+
+task default: "fileC"
+    RAKEFILE
   end
 
   def rakefile_comments
@@ -90,6 +117,18 @@ desc "override comment for t4"
 file :t4 do
 end
     COMMENTS
+  end
+
+  def rakefile_override
+    rakefile <<-OVERRIDE
+    task :t1 do
+      puts :foo
+    end
+
+    task :t1 do
+      puts :bar
+    end
+    OVERRIDE
   end
 
   def rakefile_default
@@ -138,16 +177,16 @@ task :clean do
 end
     DRYRUN
 
-    FileUtils.touch 'temp_main'
-    FileUtils.touch 'temp_two'
+    FileUtils.touch "temp_main"
+    FileUtils.touch "temp_two"
   end
 
   def rakefile_extra
-    rakefile 'task :default'
+    rakefile "task :default"
 
-    FileUtils.mkdir_p 'rakelib'
+    FileUtils.mkdir_p "rakelib"
 
-    open File.join('rakelib', 'extra.rake'), 'w' do |io|
+    open File.join("rakelib", "extra.rake"), "w" do |io|
       io << <<-EXTRA_RAKE
 # Added for testing
 
@@ -216,7 +255,7 @@ import "deps.mf"
 puts "FIRST"
     IMPORTS
 
-    open 'deps.mf', 'w' do |io|
+    open "deps.mf", "w" do |io|
       io << <<-DEPS
 default: other
       DEPS
@@ -341,14 +380,14 @@ end
   end
 
   def rakefile_nosearch
-    FileUtils.touch 'dummy'
+    FileUtils.touch "dummy"
   end
 
   def rakefile_rakelib
-    FileUtils.mkdir_p 'rakelib'
+    FileUtils.mkdir_p "rakelib"
 
-    Dir.chdir 'rakelib' do
-      open 'test1.rb', 'w' do |io|
+    Dir.chdir "rakelib" do
+      open "test1.rb", "w" do |io|
         io << <<-TEST1
 task :default do
   puts "TEST1"
@@ -356,7 +395,7 @@ end
         TEST1
       end
 
-      open 'test2.rake', 'w' do |io|
+      open "test2.rake", "w" do |io|
         io << <<-TEST1
 task :default do
   puts "TEST2"
@@ -367,15 +406,15 @@ end
   end
 
   def rakefile_rbext
-    open 'rakefile.rb', 'w' do |io|
+    open "rakefile.rb", "w" do |io|
       io << 'task :default do puts "OK" end'
     end
   end
 
   def rakefile_unittest
-    rakefile '# Empty Rakefile for Unit Test'
+    rakefile "# Empty Rakefile for Unit Test"
 
-    readme = File.join 'subdir', 'README'
+    readme = File.join "subdir", "README"
     FileUtils.mkdir_p File.dirname readme
 
     FileUtils.touch readme
@@ -438,14 +477,14 @@ end
 
 task :default => :test
     TEST_SIGNAL
-    open 'a_test.rb', 'w' do |io|
+    open "a_test.rb", "w" do |io|
       io << 'puts "ATEST"' << "\n"
-      io << '$stdout.flush' << "\n"
+      io << "$stdout.flush" << "\n"
       io << 'Process.kill("TERM", $$)' << "\n"
     end
-    open 'b_test.rb', 'w' do |io|
+    open "b_test.rb", "w" do |io|
       io << 'puts "BTEST"' << "\n"
-      io << '$stdout.flush' << "\n"
+      io << "$stdout.flush" << "\n"
     end
   end
 
@@ -458,7 +497,7 @@ Rake::TestTask.new(:test) do |t|
   t.test_files = ['a_test.rb']
 end
     TEST_TASK
-    open 'a_test.rb', 'w' do |io|
+    open "a_test.rb", "w" do |io|
       io << "require 'minitest/autorun'\n"
       io << "class ExitTaskTest < Minitest::Test\n"
       io << "  def test_exit\n"
@@ -469,7 +508,7 @@ end
   end
 
   def rakefile_stand_alone_filelist
-    open 'stand_alone_filelist.rb', 'w' do |io|
+    open "stand_alone_filelist.rb", "w" do |io|
       io << "require 'rake/file_list'\n"
       io << "FL = Rake::FileList['*.rb']\n"
       io << "puts FL\n"

@@ -1,5 +1,6 @@
-require 'rake'
-require 'rake/tasklib'
+# frozen_string_literal: true
+require "rake"
+require "rake/tasklib"
 
 module Rake
 
@@ -50,6 +51,7 @@ module Rake
 
     # Request that the tests be run with the warning flag set.
     # E.g. warning=true implies "ruby -w" used to run the tests.
+    # (default is true)
     attr_accessor :warning
 
     # Glob pattern to match test files. (default is 'test/test*.rb')
@@ -69,6 +71,9 @@ module Rake
     # Description of the test task. (default is 'Run tests')
     attr_accessor :description
 
+    # Task prerequisites.
+    attr_accessor :deps
+
     # Explicitly define the list of test files to be included in a
     # test.  +list+ is expected to be an array of file names (a
     # FileList is acceptable).  If both +pattern+ and +test_files+ are
@@ -85,20 +90,27 @@ module Rake
       @options = nil
       @test_files = nil
       @verbose = false
-      @warning = false
+      @warning = true
       @loader = :rake
       @ruby_opts = []
       @description = "Run tests" + (@name == :test ? "" : " for #{@name}")
+      @deps = []
+      if @name.is_a?(Hash)
+        @deps = @name.values.first
+        @name = @name.keys.first
+      end
       yield self if block_given?
-      @pattern = 'test/test*.rb' if @pattern.nil? && @test_files.nil?
+      @pattern = "test/test*.rb" if @pattern.nil? && @test_files.nil?
       define
     end
 
     # Create the tasks defined by this task lib.
     def define
       desc @description
-      task @name do
+      task @name => Array(deps) do
         FileUtilsExt.verbose(@verbose) do
+          puts "Use TESTOPTS=\"--verbose\" to pass --verbose" \
+            ", etc. to runners." if ARGV.include? "--verbose"
           args =
             "#{ruby_opts_string} #{run_code} " +
             "#{file_list_string} #{option_list}"
@@ -106,8 +118,16 @@ module Rake
             if !ok && status.respond_to?(:signaled?) && status.signaled?
               raise SignalException.new(status.termsig)
             elsif !ok
-              fail "Command failed with status (#{status.exitstatus}): " +
-                "[ruby #{args}]"
+              status  = "Command failed with status (#{status.exitstatus})"
+              details = ": [ruby #{args}]"
+              message =
+                if Rake.application.options.trace or @verbose
+                  status + details
+                else
+                  status
+                end
+
+              fail message
             end
           end
         end
@@ -116,10 +136,10 @@ module Rake
     end
 
     def option_list # :nodoc:
-      (ENV['TESTOPTS'] ||
-        ENV['TESTOPT'] ||
-        ENV['TEST_OPTS'] ||
-        ENV['TEST_OPT'] ||
+      (ENV["TESTOPTS"] ||
+        ENV["TESTOPT"] ||
+        ENV["TEST_OPTS"] ||
+        ENV["TEST_OPT"] ||
         @options ||
         "")
     end
@@ -136,27 +156,18 @@ module Rake
     end
 
     def file_list_string # :nodoc:
-      file_list.map { |fn| "\"#{fn}\"" }.join(' ')
+      file_list.map { |fn| "\"#{fn}\"" }.join(" ")
     end
 
     def file_list # :nodoc:
-      if ENV['TEST']
-        FileList[ENV['TEST']]
+      if ENV["TEST"]
+        FileList[ENV["TEST"]]
       else
         result = []
         result += @test_files.to_a if @test_files
-        result << @pattern if @pattern
+        result += FileList[@pattern].to_a if @pattern
         result
       end
-    end
-
-    def fix # :nodoc:
-      case ruby_version
-      when '1.8.2'
-        "\"#{find_file 'rake/ruby182_test_unit_fix'}\""
-      else
-        nil
-      end || ''
     end
 
     def ruby_version # :nodoc:
@@ -168,45 +179,10 @@ module Rake
       when :direct
         "-e \"ARGV.each{|f| require f}\""
       when :testrb
-        "-S testrb #{fix}"
+        "-S testrb"
       when :rake
-        "#{rake_include_arg} \"#{rake_loader}\""
+        "#{__dir__}/rake_test_loader.rb"
       end
-    end
-
-    def rake_loader # :nodoc:
-      find_file('rake/rake_test_loader') or
-        fail "unable to find rake test loader"
-    end
-
-    def find_file(fn) # :nodoc:
-      $LOAD_PATH.each do |path|
-        file_path = File.join(path, "#{fn}.rb")
-        return file_path if File.exist? file_path
-      end
-      nil
-    end
-
-    def rake_include_arg # :nodoc:
-      spec = Gem.loaded_specs['rake']
-      if spec.respond_to?(:default_gem?) && spec.default_gem?
-        ""
-      else
-        "-I\"#{rake_lib_dir}\""
-      end
-    end
-
-    def rake_lib_dir # :nodoc:
-      find_dir('rake') or
-        fail "unable to find rake lib"
-    end
-
-    def find_dir(fn) # :nodoc:
-      $LOAD_PATH.each do |path|
-        file_path = File.join(path, "#{fn}.rb")
-        return path if File.exist? file_path
-      end
-      nil
     end
 
   end

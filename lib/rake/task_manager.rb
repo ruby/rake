@@ -1,13 +1,10 @@
+# frozen_string_literal: true
 module Rake
 
   # The TaskManager module is a mixin for managing tasks.
   module TaskManager
     # Track the last comment made in the Rakefile.
     attr_accessor :last_description
-
-    # TODO: Remove in Rake 11
-
-    alias :last_comment :last_description # :nodoc: Backwards compatibility
 
     def initialize # :nodoc:
       super
@@ -18,31 +15,31 @@ module Rake
     end
 
     def create_rule(*args, &block) # :nodoc:
-      pattern, args, deps = resolve_args(args)
-      pattern = Regexp.new(Regexp.quote(pattern) + '$') if String === pattern
-      @rules << [pattern, args, deps, block]
+      pattern, args, deps, order_only = resolve_args(args)
+      pattern = Regexp.new(Regexp.quote(pattern) + "$") if String === pattern
+      @rules << [pattern, args, deps, order_only, block]
     end
 
     def define_task(task_class, *args, &block) # :nodoc:
-      task_name, arg_names, deps = resolve_args(args)
+      task_name, arg_names, deps, order_only = resolve_args(args)
 
       original_scope = @scope
       if String === task_name and
-         not task_class.ancestors.include? Rake::FileTask then
+         not task_class.ancestors.include? Rake::FileTask
         task_name, *definition_scope = *(task_name.split(":").reverse)
         @scope = Scope.make(*(definition_scope + @scope.to_a))
       end
 
       task_name = task_class.scope_name(@scope, task_name)
-      deps = [deps] unless deps.respond_to?(:to_ary)
-      deps = deps.map { |d| Rake.from_pathname(d).to_s }
       task = intern(task_class, task_name)
       task.set_arg_names(arg_names) unless arg_names.empty?
       if Rake::TaskManager.record_task_metadata
         add_location(task)
         task.add_description(get_description(task))
       end
-      task.enhance(deps, &block)
+      task.enhance(Task.format_deps(deps), &block)
+      task | order_only unless order_only.nil?
+      task
     ensure
       @scope = original_scope
     end
@@ -59,7 +56,26 @@ module Rake
       self.lookup(task_name, scopes) or
         enhance_with_matching_rule(task_name) or
         synthesize_file_task(task_name) or
-        fail "Don't know how to build task '#{task_name}' (see --tasks)"
+        fail generate_message_for_undefined_task(task_name)
+    end
+
+    def generate_message_for_undefined_task(task_name)
+      message = "Don't know how to build task '#{task_name}' "\
+                "(See the list of available tasks with `#{Rake.application.name} --tasks`)"
+      message + generate_did_you_mean_suggestions(task_name)
+    end
+
+    def generate_did_you_mean_suggestions(task_name)
+      return "" unless defined?(::DidYouMean::SpellChecker)
+
+      suggestions = ::DidYouMean::SpellChecker.new(dictionary: @tasks.keys).correct(task_name.to_s)
+      if ::DidYouMean.respond_to?(:formatter)# did_you_mean v1.2.0 or later
+        ::DidYouMean.formatter.message_for(suggestions)
+      elsif defined?(::DidYouMean::Formatter) # before did_you_mean v1.2.0
+        ::DidYouMean::Formatter.new(suggestions).to_s
+      else
+        ""
+      end
     end
 
     def synthesize_file_task(task_name) # :nodoc:
@@ -67,8 +83,8 @@ module Rake
       define_task(Rake::FileTask, task_name)
     end
 
-    # Resolve the arguments for a task/rule.  Returns a triplet of
-    # [task_name, arg_name_list, prerequisites].
+    # Resolve the arguments for a task/rule.  Returns a tuple of
+    # [task_name, arg_name_list, prerequisites, order_only_prerequisites].
     def resolve_args(args)
       if args.last.is_a?(Hash)
         deps = args.pop
@@ -93,7 +109,7 @@ module Rake
       else
         arg_names = args
       end
-      [task_name, arg_names, []]
+      [task_name, arg_names, [], nil]
     end
     private :resolve_args_without_dependencies
 
@@ -102,11 +118,17 @@ module Rake
     #
     # The patterns recognized by this argument resolving function are:
     #
+    #   task :t, order_only: [:e]
     #   task :t => [:d]
+    #   task :t => [:d], order_only: [:e]
     #   task :t, [a] => [:d]
+    #   task :t, [a] => [:d], order_only: [:e]
     #
     def resolve_args_with_dependencies(args, hash) # :nodoc:
-      fail "Task Argument Error" if hash.size != 1
+      fail "Task Argument Error" if
+        hash.size != 1 &&
+        (hash.size != 2 || !hash.key?(:order_only))
+      order_only = hash.delete(:order_only)
       key, value = hash.map { |k, v| [k, v] }.first
       if args.empty?
         task_name = key
@@ -114,11 +136,11 @@ module Rake
         deps = value || []
       else
         task_name = args.shift
-        arg_names = key
-        deps = value
+        arg_names = key || args.shift|| []
+        deps = value || []
       end
       deps = [deps] unless deps.respond_to?(:to_ary)
-      [task_name, arg_names, deps]
+      [task_name, arg_names, deps, order_only]
     end
     private :resolve_args_with_dependencies
 
@@ -129,9 +151,10 @@ module Rake
     def enhance_with_matching_rule(task_name, level=0)
       fail Rake::RuleRecursionOverflowError,
         "Rule Recursion Too Deep" if level >= 16
-      @rules.each do |pattern, args, extensions, block|
-        if pattern.match(task_name)
-          task = attempt_rule(task_name, args, extensions, block, level)
+      @rules.each do |pattern, args, extensions, order_only, block|
+        if pattern && pattern.match(task_name)
+          task = attempt_rule(task_name, pattern, args, extensions, block, level)
+          task | order_only unless order_only.nil?
           return task if task
         end
       end
@@ -171,10 +194,10 @@ module Rake
       task_name = task_name.to_s
       if task_name =~ /^rake:/
         scopes = Scope.make
-        task_name = task_name.sub(/^rake:/, '')
+        task_name = task_name.sub(/^rake:/, "")
       elsif task_name =~ /^(\^+)/
         scopes = initial_scope.trim($1.size)
-        task_name = task_name.sub(/^(\^+)/, '')
+        task_name = task_name.sub(/^(\^+)/, "")
       else
         scopes = initial_scope
       end
@@ -245,8 +268,8 @@ module Rake
     end
 
     # Attempt to create a rule given the list of prerequisites.
-    def attempt_rule(task_name, args, extensions, block, level)
-      sources = make_sources(task_name, extensions)
+    def attempt_rule(task_name, task_pattern, args, extensions, block, level)
+      sources = make_sources(task_name, task_pattern, extensions)
       prereqs = sources.map { |source|
         trace_rule level, "Attempting Rule #{task_name} => #{source}"
         if File.exist?(source) || Rake::Task.task_defined?(source)
@@ -260,14 +283,14 @@ module Rake
           return nil
         end
       }
-      task = FileTask.define_task(task_name, {args => prereqs}, &block)
+      task = FileTask.define_task(task_name, { args => prereqs }, &block)
       task.sources = prereqs
       task
     end
 
     # Make a list of sources from the list of file name extensions /
     # translation procs.
-    def make_sources(task_name, extensions)
+    def make_sources(task_name, task_pattern, extensions)
       result = extensions.map { |ext|
         case ext
         when /%/
@@ -275,9 +298,10 @@ module Rake
         when %r{/}
           ext
         when /^\./
-          task_name.ext(ext)
-        when String
-          ext
+          source = task_name.sub(task_pattern, ext)
+          source == ext ? task_name.ext(ext) : source
+        when String, Symbol
+          ext.to_s
         when Proc, Method
           if ext.arity == 1
             ext.call(task_name)

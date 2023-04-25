@@ -1,8 +1,9 @@
-require File.expand_path('../helper', __FILE__)
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
 
-class TestRakeNameSpace < Rake::TestCase
+class TestRakeNameSpace < Rake::TestCase # :nodoc:
 
-  class TM
+  class TM # :nodoc:
     include Rake::TaskManager
   end
 
@@ -37,15 +38,15 @@ class TestRakeNameSpace < Rake::TestCase
     end
 
     assert_equal ["n:nn:z", "n:x", "n:y"],
-      ns.tasks.map { |tsk| tsk.name }
-    assert_equal ["n:nn:z"], nns.tasks.map { |t| t.name }
+      ns.tasks.map(&:name)
+    assert_equal ["n:nn:z"], nns.tasks.map(&:name)
   end
 
   def test_scope
     mgr = TM.new
 
-    scope = Rake::LinkedList.new 'b'
-    scope = scope.conj 'a'
+    scope = Rake::LinkedList.new "b"
+    scope = scope.conj "a"
 
     ns = Rake::NameSpace.new mgr, scope
 

@@ -1,8 +1,9 @@
-require File.expand_path('../helper', __FILE__)
-require 'fileutils'
-require 'pathname'
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
+require "fileutils"
+require "pathname"
 
-class TestRakeDirectoryTask < Rake::TestCase
+class TestRakeDirectoryTask < Rake::TestCase # :nodoc:
   include Rake
 
   def test_directory
@@ -19,7 +20,7 @@ class TestRakeDirectoryTask < Rake::TestCase
     assert_equal "DESC",   Task["a/b/c"].comment
 
     verbose(false) {
-      Task['a/b'].invoke
+      Task["a/b"].invoke
     }
 
     assert File.exist?("a/b")
@@ -29,20 +30,20 @@ class TestRakeDirectoryTask < Rake::TestCase
   def test_directory_colon
     directory "a:b"
 
-    assert_equal FileCreationTask, Task['a:b'].class
+    assert_equal FileCreationTask, Task["a:b"].class
   end unless Rake::Win32.windows?
 
   if Rake::Win32.windows?
     def test_directory_win32
       desc "WIN32 DESC"
-      directory 'c:/a/b/c'
-      assert_equal FileTask, Task['c:'].class
-      assert_equal FileCreationTask, Task['c:/a'].class
-      assert_equal FileCreationTask, Task['c:/a/b'].class
-      assert_equal FileCreationTask, Task['c:/a/b/c'].class
-      assert_nil             Task['c:/'].comment
-      assert_equal "WIN32 DESC",   Task['c:/a/b/c'].comment
-      assert_nil             Task['c:/a/b'].comment
+      directory "c:/a/b/c"
+      assert_equal FileTask, Task["c:"].class
+      assert_equal FileCreationTask, Task["c:/a"].class
+      assert_equal FileCreationTask, Task["c:/a/b"].class
+      assert_equal FileCreationTask, Task["c:/a/b/c"].class
+      assert_nil             Task["c:/"].comment
+      assert_equal "WIN32 DESC",   Task["c:/a/b/c"].comment
+      assert_nil             Task["c:/a/b"].comment
     end
   end
 
@@ -68,7 +69,7 @@ class TestRakeDirectoryTask < Rake::TestCase
     assert_equal FileCreationTask, Task["a/b/c"].class
 
     verbose(false) {
-      Task['a/b/c'].invoke
+      Task["a/b/c"].invoke
     }
 
     assert File.directory?("a/b/c")

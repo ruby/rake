@@ -1,6 +1,7 @@
-require File.expand_path('../helper', __FILE__)
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
 
-class TestRakeLateTime < Rake::TestCase
+class TestRakeLateTime < Rake::TestCase # :nodoc:
   def test_late_time_comparisons
     late = Rake::LATE
     assert_equal late, late
@@ -13,6 +14,6 @@ class TestRakeLateTime < Rake::TestCase
   end
 
   def test_to_s
-    assert_equal '<LATE TIME>', Rake::LATE.to_s
+    assert_equal "<LATE TIME>", Rake::LATE.to_s
   end
 end

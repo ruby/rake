@@ -1,7 +1,8 @@
-require File.expand_path('../helper', __FILE__)
-require 'fileutils'
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
+require "fileutils"
 
-class TestRakeRules < Rake::TestCase
+class TestRakeRules < Rake::TestCase # :nodoc:
   include Rake
 
   SRCFILE    = "abc.c"
@@ -10,6 +11,7 @@ class TestRakeRules < Rake::TestCase
   OBJFILE    = "abc.o"
   FOOFILE    = "foo"
   DOTFOOFILE = ".foo"
+  MINFILE    = "abc.min.o"
 
   def setup
     super
@@ -22,8 +24,8 @@ class TestRakeRules < Rake::TestCase
     create_file(FTNFILE)
     delete_file(SRCFILE)
     delete_file(OBJFILE)
-    rule(/\.o$/ => ['.c']) do @runs << :C end
-    rule(/\.o$/ => ['.f']) do @runs << :F end
+    rule(/\.o$/ => [".c"]) do @runs << :C end
+    rule(/\.o$/ => [".f"]) do @runs << :F end
     t = Task[OBJFILE]
     t.invoke
     Task[OBJFILE].invoke
@@ -34,15 +36,15 @@ class TestRakeRules < Rake::TestCase
     create_file(FTNFILE)
     delete_file(SRCFILE)
     delete_file(OBJFILE)
-    rule(/\.o$/ => ['.f']) do @runs << :F end
-    rule(/\.o$/ => ['.c']) do @runs << :C end
+    rule(/\.o$/ => [".f"]) do @runs << :F end
+    rule(/\.o$/ => [".c"]) do @runs << :C end
     Task[OBJFILE].invoke
     assert_equal [:F], @runs
   end
 
   def test_create_with_source
     create_file(SRCFILE)
-    rule(/\.o$/ => ['.c']) do |t|
+    rule(/\.o$/ => [".c"]) do |t|
       @runs << t.name
       assert_equal OBJFILE, t.name
       assert_equal SRCFILE, t.source
@@ -53,7 +55,7 @@ class TestRakeRules < Rake::TestCase
 
   def test_single_dependent
     create_file(SRCFILE)
-    rule(/\.o$/ => '.c') do |t|
+    rule(/\.o$/ => ".c") do |t|
       @runs << t.name
     end
     Task[OBJFILE].invoke
@@ -62,7 +64,7 @@ class TestRakeRules < Rake::TestCase
 
   def test_rule_can_be_created_by_string
     create_file(SRCFILE)
-    rule '.o' => ['.c'] do |t|
+    rule ".o" => [".c"] do |t|
       @runs << t.name
     end
     Task[OBJFILE].invoke
@@ -71,16 +73,27 @@ class TestRakeRules < Rake::TestCase
 
   def test_rule_prereqs_can_be_created_by_string
     create_file(SRCFILE)
-    rule '.o' => '.c' do |t|
+    rule ".o" => ".c" do |t|
       @runs << t.name
     end
     Task[OBJFILE].invoke
     assert_equal [OBJFILE], @runs
   end
 
+  def test_rule_prereqs_can_be_created_by_symbol
+    task :nonfile do |t|
+      @runs << t.name
+    end
+    rule ".o" => :nonfile do |t|
+      @runs << t.name
+    end
+    Task[OBJFILE].invoke
+    assert_equal ["nonfile", OBJFILE], @runs
+  end
+
   def test_plain_strings_as_dependents_refer_to_files
     create_file(SRCFILE)
-    rule '.o' => SRCFILE do |t|
+    rule ".o" => SRCFILE do |t|
       @runs << t.name
     end
     Task[OBJFILE].invoke
@@ -89,8 +102,8 @@ class TestRakeRules < Rake::TestCase
 
   def test_file_names_beginning_with_dot_can_be_tricked_into_referring_to_file
     verbose(false) do
-      create_file('.foo')
-      rule '.o' => "./.foo" do |t|
+      create_file(".foo")
+      rule ".o" => "./.foo" do |t|
         @runs << t.name
       end
       Task[OBJFILE].invoke
@@ -102,7 +115,7 @@ class TestRakeRules < Rake::TestCase
     verbose(false) do
 
       create_file(".foo")
-      rule '.o' => lambda { ".foo" } do |t|
+      rule ".o" => lambda { ".foo" } do |t|
         @runs << "#{t.name} - #{t.source}"
       end
       Task[OBJFILE].invoke
@@ -113,7 +126,7 @@ class TestRakeRules < Rake::TestCase
   def test_file_names_containing_percent_can_be_wrapped_in_lambda
     verbose(false) do
       create_file("foo%x")
-      rule '.o' => lambda { "foo%x" } do |t|
+      rule ".o" => lambda { "foo%x" } do |t|
         @runs << "#{t.name} - #{t.source}"
       end
       Task[OBJFILE].invoke
@@ -124,7 +137,7 @@ class TestRakeRules < Rake::TestCase
   def test_non_extension_rule_name_refers_to_file
     verbose(false) do
       create_file("abc.c")
-      rule "abc" => '.c' do |t|
+      rule "abc" => ".c" do |t|
         @runs << t.name
       end
       Task["abc"].invoke
@@ -135,7 +148,7 @@ class TestRakeRules < Rake::TestCase
   def test_pathmap_automatically_applies_to_name
     verbose(false) do
       create_file("zzabc.c")
-      rule ".o" => 'zz%{x,a}n.c' do |t|
+      rule ".o" => "zz%{x,a}n.c" do |t|
         @runs << "#{t.name} - #{t.source}"
       end
       Task["xbc.o"].invoke
@@ -146,7 +159,7 @@ class TestRakeRules < Rake::TestCase
   def test_plain_strings_are_just_filenames
     verbose(false) do
       create_file("plainname")
-      rule ".o" => 'plainname' do |t|
+      rule ".o" => "plainname" do |t|
         @runs << "#{t.name} - #{t.source}"
       end
       Task["xbc.o"].invoke
@@ -158,7 +171,7 @@ class TestRakeRules < Rake::TestCase
     create_file(SRCFILE)
     create_file(SRCFILE2)
     delete_file(OBJFILE)
-    rule '.o' => '.c' do |t|
+    rule ".o" => ".c" do |t|
       @runs << t.source
     end
     file OBJFILE => [SRCFILE2]
@@ -168,16 +181,16 @@ class TestRakeRules < Rake::TestCase
 
   def test_close_matches_on_name_do_not_trigger_rule
     create_file("x.c")
-    rule '.o' => ['.c'] do |t|
+    rule ".o" => [".c"] do |t|
       @runs << t.name
     end
-    assert_raises(RuntimeError) { Task['x.obj'].invoke }
-    assert_raises(RuntimeError) { Task['x.xyo'].invoke }
+    assert_raises(RuntimeError) { Task["x.obj"].invoke }
+    assert_raises(RuntimeError) { Task["x.xyo"].invoke }
   end
 
   def test_rule_rebuilds_obj_when_source_is_newer
     create_timed_files(OBJFILE, SRCFILE)
-    rule(/\.o$/ => ['.c']) do
+    rule(/\.o$/ => [".c"]) do
       @runs << :RULE
     end
     Task[OBJFILE].invoke
@@ -204,15 +217,15 @@ class TestRakeRules < Rake::TestCase
   end
 
   def test_rule_with_two_sources_builds_both_sources
-    task 'x.aa'
-    task 'x.bb'
-    rule '.a' => '.aa' do
+    task "x.aa"
+    task "x.bb"
+    rule ".a" => ".aa" do
       @runs << "A"
     end
-    rule '.b' => '.bb' do
+    rule ".b" => ".bb" do
       @runs << "B"
     end
-    rule ".c" => ['.a', '.b'] do
+    rule ".c" => [".a", ".b"] do
       @runs << "C"
     end
     Task["x.c"].invoke
@@ -262,25 +275,25 @@ class TestRakeRules < Rake::TestCase
     rule %r(classes/.*\.class) => [
       proc { |fn| fn.pathmap("%{classes,src}d/%n.java") }
     ] do |task|
-      assert_equal task.name, 'classes/jw/X.class'
-      assert_equal task.source, 'src/jw/X.java'
+      assert_equal task.name, "classes/jw/X.class"
+      assert_equal task.source, "src/jw/X.java"
       @runs << :RULE
     end
-    Task['classes/jw/X.class'].invoke
+    Task["classes/jw/X.class"].invoke
     assert_equal [:RULE], @runs
   ensure
-    rm_r("src", :verbose=>false) rescue nil
+    rm_r("src", verbose: false) rescue nil
   end
 
   def test_proc_returning_lists_are_flattened_into_prereqs
     ran = false
     mkdir_p("flatten")
     create_file("flatten/a.txt")
-    task 'flatten/b.data' do |t|
+    task "flatten/b.data" do |t|
       ran = true
-      touch t.name, :verbose => false
+      touch t.name, verbose: false
     end
-    rule '.html' =>
+    rule ".html" =>
       proc { |fn|
       [
         fn.ext("txt"),
@@ -288,27 +301,27 @@ class TestRakeRules < Rake::TestCase
       ]
     } do |task|
     end
-    Task['flatten/a.html'].invoke
+    Task["flatten/a.html"].invoke
     assert ran, "Should have triggered flattened dependency"
   ensure
-    rm_r("flatten", :verbose=>false) rescue nil
+    rm_r("flatten", verbose: false) rescue nil
   end
 
   def test_recursive_rules_will_work_as_long_as_they_terminate
     actions = []
     create_file("abc.xml")
-    rule '.y' => '.xml' do actions << 'y' end
-    rule '.c' => '.y' do actions << 'c'end
-    rule '.o' => '.c' do actions << 'o'end
-    rule '.exe' => '.o' do actions << 'exe'end
+    rule ".y" => ".xml" do actions << "y" end
+    rule ".c" => ".y" do actions << "c"end
+    rule ".o" => ".c" do actions << "o"end
+    rule ".exe" => ".o" do actions << "exe"end
     Task["abc.exe"].invoke
-    assert_equal ['y', 'c', 'o', 'exe'], actions
+    assert_equal ["y", "c", "o", "exe"], actions
   end
 
   def test_recursive_rules_that_dont_terminate_will_overflow
     create_file("a.a")
-    prev = 'a'
-    ('b'..'z').each do |letter|
+    prev = "a"
+    ("b".."z").each do |letter|
       rule ".#{letter}" => ".#{prev}" do |t| puts "#{t.name}" end
       prev = letter
     end
@@ -320,43 +333,54 @@ class TestRakeRules < Rake::TestCase
 
   def test_rules_with_bad_dependents_will_fail
     rule "a" => [1] do |t| puts t.name end
-    assert_raises(RuntimeError) do Task['a'].invoke end
+    assert_raises(RuntimeError) do Task["a"].invoke end
   end
 
   def test_string_rule_with_args
     delete_file(OBJFILE)
     create_file(SRCFILE)
-    rule '.o', [:a] => SRCFILE do |t, args|
-      assert_equal 'arg', args.a
+    rule ".o", [:a] => SRCFILE do |t, args|
+      assert_equal "arg", args.a
     end
-    Task[OBJFILE].invoke('arg')
+    Task[OBJFILE].invoke("arg")
   end
 
   def test_regex_rule_with_args
     delete_file(OBJFILE)
     create_file(SRCFILE)
     rule(/.o$/, [:a] => SRCFILE) do |t, args|
-      assert_equal 'arg', args.a
+      assert_equal "arg", args.a
     end
-    Task[OBJFILE].invoke('arg')
+    Task[OBJFILE].invoke("arg")
+  end
+
+  # for https://github.com/ruby/rake/pull/182
+  def test_single_dependent_with_nil_args
+    create_file(SRCFILE)
+    rule nil => ".cpp" do |t| p t.name end
+    rule(/\.o$/ => ".c") do |t|
+      @runs << t.name
+    end
+    Task[OBJFILE].invoke
+    assert_equal [OBJFILE], @runs
   end
 
   def test_string_rule_with_args_and_lambda_prereq
     delete_file(OBJFILE)
     create_file(SRCFILE)
-    rule '.o', [:a] => [lambda{SRCFILE}]do |t, args|
-      assert_equal 'arg', args.a
+    rule ".o", [:a] => [lambda { SRCFILE }]do |t, args|
+      assert_equal "arg", args.a
     end
-    Task[OBJFILE].invoke('arg')
+    Task[OBJFILE].invoke("arg")
   end
 
   def test_regex_rule_with_args_and_lambda_prereq
     delete_file(OBJFILE)
     create_file(SRCFILE)
-    rule(/.o$/, [:a] => [lambda{SRCFILE}]) do |t, args|
-      assert_equal 'arg', args.a
+    rule(/.o$/, [:a] => [lambda { SRCFILE }]) do |t, args|
+      assert_equal "arg", args.a
     end
-    Task[OBJFILE].invoke('arg')
+    Task[OBJFILE].invoke("arg")
   end
 
   def test_rule_with_method_prereq
@@ -365,7 +389,7 @@ class TestRakeRules < Rake::TestCase
     def obj.find_prereq
       ".foo"
     end
-    rule '.o' => obj.method(:find_prereq) do |t|
+    rule ".o" => obj.method(:find_prereq) do |t|
       @runs << "#{t.name} - #{t.source}"
     end
     Task[OBJFILE].invoke
@@ -378,11 +402,22 @@ class TestRakeRules < Rake::TestCase
     def obj.find_prereq(task_name)
       task_name.ext(".c")
     end
-    rule '.o' => obj.method(:find_prereq) do |t|
+    rule ".o" => obj.method(:find_prereq) do |t|
       @runs << "#{t.name} - #{t.source}"
     end
     Task[OBJFILE].invoke
     assert_equal ["#{OBJFILE} - abc.c"], @runs
+  end
+
+  def test_works_with_chained_extensions_in_rules
+    create_file(OBJFILE)
+    rule(".min.o" => [".o"]) do |t|
+      @runs << t.name
+      assert_equal OBJFILE, t.source
+      assert_equal MINFILE, t.name
+    end
+    Task[MINFILE].invoke
+    assert_equal [MINFILE], @runs
   end
 
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 ##
 # The NameSpace class will lookup task names in the scope defined by a
 # +namespace+ command.
@@ -35,4 +36,3 @@ class Rake::NameSpace
   end
 
 end
-

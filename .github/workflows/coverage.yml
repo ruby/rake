@@ -1,0 +1,21 @@
+name: coverage
+
+on: [push, pull_request]
+
+permissions:  # added using https://github.com/step-security/secure-workflows
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+    - uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+      with:
+        ruby-version: '3.0'
+    - name: Install dependencies
+      run: gem install minitest -v "5.15.0"
+    - name: Run test
+      env:
+        COVERALLS: "yes"
+      run: ruby -Ilib exe/rake

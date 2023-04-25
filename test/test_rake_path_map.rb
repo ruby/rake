@@ -1,6 +1,7 @@
-require File.expand_path('../helper', __FILE__)
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
 
-class TestRakePathMap < Rake::TestCase
+class TestRakePathMap < Rake::TestCase  # :nodoc:
 
   def test_returns_self_with_no_args
     assert_equal "abc.rb", "abc.rb".pathmap

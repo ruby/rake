@@ -1,9 +1,10 @@
+# frozen_string_literal: true
 module Rake
   class Scope < LinkedList # :nodoc: all
 
     # Path for the scope.
     def path
-      map { |item| item.to_s }.reverse.join(":")
+      map(&:to_s).reverse.join(":")
     end
 
     # Path for the scope + the named path.
@@ -15,7 +16,7 @@ module Rake
     # this trim beyond the toplevel scope.
     def trim(n)
       result = self
-      while n > 0 && ! result.empty?
+      while n > 0 && !result.empty?
         result = result.tail
         n -= 1
       end

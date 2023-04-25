@@ -1,6 +1,7 @@
-require File.expand_path('../helper', __FILE__)
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
 
-class TestRakeTaskWithArguments < Rake::TestCase
+class TestRakeTaskWithArguments < Rake::TestCase # :nodoc:
   include Rake
 
   def setup
@@ -28,7 +29,7 @@ class TestRakeTaskWithArguments < Rake::TestCase
   end
 
   def test_name_and_needs
-    t = task(:t => [:pre])
+    t = task(t: [:pre])
     assert_equal "t", t.name
     assert_equal [], t.arg_names
     assert_equal ["pre"], t.prerequisites
@@ -48,7 +49,7 @@ class TestRakeTaskWithArguments < Rake::TestCase
 
   def test_tasks_can_access_arguments_as_hash
     t = task :t, :a, :b, :c do |tt, args|
-      assert_equal({:a => 1, :b => 2, :c => 3}, args.to_hash)
+      assert_equal({ a: 1, b: 2, c: 3 }, args.to_hash)
       assert_equal 1, args[:a]
       assert_equal 2, args[:b]
       assert_equal 3, args[:c]
@@ -74,15 +75,43 @@ class TestRakeTaskWithArguments < Rake::TestCase
     t.enhance do |t2, args|
       notes << :d
       assert_equal t, t2
-      assert_equal({:x => 1}, args.to_hash)
+      assert_equal({ x: 1 }, args.to_hash)
     end
     t.invoke(1)
     assert_equal [:a, :b, :c, :d], notes
   end
 
+  def test_actions_adore_keywords
+    # https://github.com/ruby/rake/pull/174#issuecomment-263460761
+    skip if jruby9?
+    eval <<-RUBY, binding, __FILE__, __LINE__+1
+    notes = []
+    t = task :t, [:reqr, :ovrd, :dflt] # required, overridden-optional, default-optional
+    verify = lambda do |name, expecteds, actuals|
+      notes << name
+      assert_equal expecteds.length, actuals.length
+      expecteds.zip(actuals) { |e, a| assert_equal e, a, "(TEST \#{name})" }
+    end
+
+    t.enhance { |dflt: 'd', **| verify.call :a, ['d'], [dflt] }
+    t.enhance { |ovrd: '-', **| verify.call :b, ['o'], [ovrd] }
+    t.enhance { |reqr:    , **| verify.call :c, ['r'], [reqr] }
+
+    t.enhance { |t2, dflt: 'd', **| verify.call :d, [t,'d'], [t2,dflt] }
+    t.enhance { |t2, ovrd: 'd', **| verify.call :e, [t,'o'], [t2,ovrd] }
+    t.enhance { |t2, reqr:    , **| verify.call :f, [t,'r'], [t2,reqr] }
+
+    t.enhance { |t2, dflt: 'd', reqr:, **| verify.call :g, [t,'d','r'], [t2,dflt,reqr] }
+    t.enhance { |t2, ovrd: '-', reqr:, **| verify.call :h, [t,'o','r'], [t2,ovrd,reqr] }
+
+    t.invoke('r', 'o')
+    assert_equal [*:a..:h], notes
+    RUBY
+  end
+
   def test_arguments_are_passed_to_block
     t = task(:t, :a, :b) { |tt, args|
-      assert_equal({ :a => 1, :b => 2 }, args.to_hash)
+      assert_equal({ a: 1, b: 2 }, args.to_hash)
     }
     t.invoke(1, 2)
   end
@@ -111,7 +140,7 @@ class TestRakeTaskWithArguments < Rake::TestCase
   end
 
   def test_block_with_no_parameters_is_ok
-    t = task(:t) { }
+    t = task(:t) {}
     t.invoke(1, 2)
   end
 
@@ -155,7 +184,7 @@ class TestRakeTaskWithArguments < Rake::TestCase
     task(:pre, :rev) { |t, args|
       assert_equal({}, args.to_hash)
     }
-    t = task(:t  => [:pre])
+    t = task(t: [:pre])
     t.invoke("bill", "1.2")
   end
 

@@ -1,5 +1,6 @@
-require 'rake/file_task'
-require 'rake/early_time'
+# frozen_string_literal: true
+require "rake/file_task"
+require "rake/early_time"
 
 module Rake
 
@@ -11,7 +12,7 @@ module Rake
   class FileCreationTask < FileTask
     # Is this file task needed?  Yes if it doesn't exist.
     def needed?
-      ! File.exist?(name)
+      !File.exist?(name)
     end
 
     # Time stamp for file creation task.  This time stamp is earlier

@@ -1,6 +1,7 @@
-require File.expand_path('../helper', __FILE__)
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
 
-class TestRakeScope < Rake::TestCase
+class TestRakeScope < Rake::TestCase # :nodoc:
   include Rake
 
   def test_path_against_empty_scope

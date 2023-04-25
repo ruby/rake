@@ -1,4 +1,5 @@
-require 'rake'
+# frozen_string_literal: true
+require "rake"
 
 module Rake
 
@@ -6,19 +7,6 @@ module Rake
   class TaskLib
     include Cloneable
     include Rake::DSL
-
-    # Make a symbol by pasting two strings together.
-    #
-    # NOTE: DEPRECATED! This method is kinda stupid. I don't know why
-    # I didn't just use string interpolation. But now other task
-    # libraries depend on this so I can't remove it without breaking
-    # other people's code. So for now it stays for backwards
-    # compatibility. BUT DON'T USE IT.
-    #--
-    # TODO: Remove in Rake 11
-    def paste(a, b)             # :nodoc:
-      (a.to_s + b.to_s).intern
-    end
   end
 
 end

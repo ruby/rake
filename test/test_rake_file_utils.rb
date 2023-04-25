@@ -1,17 +1,18 @@
-require File.expand_path('../helper', __FILE__)
-require 'fileutils'
-require 'stringio'
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
+require "fileutils"
+require "stringio"
 
-class TestRakeFileUtils < Rake::TestCase
+class TestRakeFileUtils < Rake::TestCase # :nodoc:
   def setup
     super
-    @rake_test_sh = ENV['RAKE_TEST_SH']
+    @rake_test_sh = ENV["RAKE_TEST_SH"]
   end
 
   def teardown
     FileUtils::LN_SUPPORTED[0] = true
     RakeFileUtils.verbose_flag = Rake::FileUtilsExt::DEFAULT
-    ENV['RAKE_TEST_SH'] = @rake_test_sh
+    ENV["RAKE_TEST_SH"] = @rake_test_sh
 
     super
   end
@@ -38,15 +39,31 @@ class TestRakeFileUtils < Rake::TestCase
     refute File.exist?("b")
   end
 
+  def test_rm_nowrite
+    create_file("a")
+    nowrite(true) {
+      rm_rf "a"
+    }
+    assert File.exist?("a")
+    nowrite(false) {
+      rm_rf "a", noop: true
+    }
+    assert File.exist?("a")
+    nowrite(true) {
+      rm_rf "a", noop: false
+    }
+    refute File.exist?("a")
+  end
+
   def test_ln
     open("a", "w") { |f| f.puts "TEST_LN" }
 
-    Rake::FileUtilsExt.safe_ln("a", "b", :verbose => false)
+    Rake::FileUtilsExt.safe_ln("a", "b", verbose: false)
 
-    assert_equal "TEST_LN\n", File.read('b')
+    assert_equal "TEST_LN\n", File.read("b")
   end
 
-  class BadLink
+  class BadLink # :nodoc:
     include Rake::FileUtilsExt
     attr_reader :cp_args
 
@@ -69,16 +86,16 @@ class TestRakeFileUtils < Rake::TestCase
     FileUtils::LN_SUPPORTED[0] = true
     c = BadLink.new(StandardError)
     c.safe_ln "a", "b"
-    assert_equal ['a', 'b'], c.cp_args
+    assert_equal ["a", "b"], c.cp_args
     c.safe_ln "x", "y"
-    assert_equal ['x', 'y'], c.cp_args
+    assert_equal ["x", "y"], c.cp_args
   end
 
   def test_safe_ln_failover_to_cp_on_not_implemented_error
     FileUtils::LN_SUPPORTED[0] = true
     c = BadLink.new(NotImplementedError)
     c.safe_ln "a", "b"
-    assert_equal ['a', 'b'], c.cp_args
+    assert_equal ["a", "b"], c.cp_args
   end
 
   def test_safe_ln_fails_on_script_error
@@ -135,18 +152,57 @@ class TestRakeFileUtils < Rake::TestCase
   def test_sh_with_a_single_string_argument
     check_expansion
 
-    ENV['RAKE_TEST_SH'] = 'someval'
+    ENV["RAKE_TEST_SH"] = "someval"
     verbose(false) {
       sh %{#{RUBY} check_expansion.rb #{env_var} someval}
     }
   end
 
-  def test_sh_with_multiple_arguments
-    check_no_expansion
-    ENV['RAKE_TEST_SH'] = 'someval'
+  def test_sh_with_env
+    check_environment
+
+    env = {
+      "RAKE_TEST_SH" => "someval"
+    }
 
     verbose(false) {
-      sh RUBY, 'check_no_expansion.rb', env_var, 'someval'
+      sh env, RUBY, "check_environment.rb", "RAKE_TEST_SH", "someval"
+    }
+  end
+
+  def test_sh_with_multiple_arguments
+    skip if jruby9? # https://github.com/jruby/jruby/issues/3653
+
+    check_no_expansion
+    ENV["RAKE_TEST_SH"] = "someval"
+
+    verbose(false) {
+      sh RUBY, "check_no_expansion.rb", env_var, "someval"
+    }
+  end
+
+  def test_sh_with_spawn_options
+    skip "JRuby does not support spawn options" if jruby?
+
+    echocommand
+
+    r, w = IO.pipe
+
+    verbose(false) {
+      sh RUBY, "echocommand.rb", out: w
+    }
+
+    w.close
+
+    assert_equal "echocommand.rb\n", r.read
+  end
+
+  def test_sh_with_hash_option
+    skip "JRuby does not support spawn options" if jruby?
+    check_expansion
+
+    verbose(false) {
+      sh "#{RUBY} check_expansion.rb", { chdir: "." }, verbose: false
     }
   end
 
@@ -180,15 +236,19 @@ class TestRakeFileUtils < Rake::TestCase
   def test_sh_noop
     shellcommand
 
-    verbose(false) { sh %{shellcommand.rb 1}, :noop=>true }
+    verbose(false) { sh %{shellcommand.rb 1}, noop: true }
     assert true, "should not fail"
   end
 
   def test_sh_bad_option
+    # Skip on JRuby because option checking is performed by spawn via system
+    # now.
+    skip "JRuby does not support spawn options" if jruby?
+
     shellcommand
 
     ex = assert_raises(ArgumentError) {
-      verbose(false) { sh %{shellcommand.rb}, :bad_option=>true }
+      verbose(false) { sh %{shellcommand.rb}, bad_option: true }
     }
     assert_match(/bad_option/, ex.message)
   end
@@ -198,7 +258,7 @@ class TestRakeFileUtils < Rake::TestCase
 
     _, err = capture_io do
       verbose(true) {
-        sh %{shellcommand.rb}, :noop=>true
+        sh %{shellcommand.rb}, noop: true
       }
     end
 
@@ -210,11 +270,11 @@ class TestRakeFileUtils < Rake::TestCase
 
     _, err = capture_io do
       verbose(false) {
-        sh %{shellcommand.rb}, :noop=>true
+        sh %{shellcommand.rb}, noop: true
       }
     end
 
-    assert_equal '', err
+    assert_equal "", err
   end
 
   def test_sh_verbose_flag_nil
@@ -223,14 +283,14 @@ class TestRakeFileUtils < Rake::TestCase
     RakeFileUtils.verbose_flag = nil
 
     assert_silent do
-      sh %{shellcommand.rb}, :noop=>true
+      sh %{shellcommand.rb}, noop: true
     end
   end
 
   def test_ruby_with_a_single_string_argument
     check_expansion
 
-    ENV['RAKE_TEST_SH'] = 'someval'
+    ENV["RAKE_TEST_SH"] = "someval"
 
     verbose(false) {
       replace_ruby {
@@ -239,34 +299,93 @@ class TestRakeFileUtils < Rake::TestCase
     }
   end
 
+  def test_sh_show_command
+    env = {
+      "RAKE_TEST_SH" => "someval"
+    }
+
+    cmd = [env, RUBY, "some_file.rb", "some argument"]
+
+    show_cmd = send :sh_show_command, cmd
+
+    expected_cmd = "RAKE_TEST_SH=someval #{RUBY} some_file.rb some argument"
+
+    assert_equal expected_cmd, show_cmd
+  end
+
+  def test_sh_if_a_command_exits_with_error_status_its_full_output_is_printed
+    verbose false do
+      standard_output = "Some output"
+      standard_error  = "Some error"
+      shell_command = "ruby -e\"puts '#{standard_output}';STDERR.puts '#{standard_error}';exit false\""
+      actual_both = capture_subprocess_io do
+        begin
+          sh shell_command
+        rescue
+        else
+          flunk
+        end
+      end
+      actual = actual_both.join
+      assert_match standard_output, actual
+      assert_match standard_error,  actual
+    end
+  end
+
+  def test_sh_if_a_command_exits_with_error_status_sh_echoes_it_fully
+    verbose true do
+      assert_echoes_fully
+    end
+    verbose false do
+      assert_echoes_fully
+    end
+  end
+
+  def assert_echoes_fully
+    long_string = "1234567890" * 10
+    shell_command = "ruby -e\"'#{long_string}';exit false\""
+    capture_subprocess_io do
+      begin
+        sh shell_command
+      rescue => ex
+        assert_match "Command failed with status", ex.message
+        assert_match shell_command, ex.message
+      else
+        flunk
+      end
+    end
+  end
+
   def test_ruby_with_multiple_arguments
+    skip if jruby9? # https://github.com/jruby/jruby/issues/3653
+
     check_no_expansion
 
-    ENV['RAKE_TEST_SH'] = 'someval'
+    ENV["RAKE_TEST_SH"] = "someval"
     verbose(false) {
       replace_ruby {
-        ruby 'check_no_expansion.rb', env_var, 'someval'
+        ruby "check_no_expansion.rb", env_var, "someval"
       }
     }
   end
 
   def test_split_all
-    assert_equal ['a'], Rake::FileUtilsExt.split_all('a')
-    assert_equal ['..'], Rake::FileUtilsExt.split_all('..')
-    assert_equal ['/'], Rake::FileUtilsExt.split_all('/')
-    assert_equal ['a', 'b'], Rake::FileUtilsExt.split_all('a/b')
-    assert_equal ['/', 'a', 'b'], Rake::FileUtilsExt.split_all('/a/b')
-    assert_equal ['..', 'a', 'b'], Rake::FileUtilsExt.split_all('../a/b')
+    assert_equal ["a"], Rake::FileUtilsExt.split_all("a")
+    assert_equal [".."], Rake::FileUtilsExt.split_all("..")
+    assert_equal ["/"], Rake::FileUtilsExt.split_all("/")
+    assert_equal ["a", "b"], Rake::FileUtilsExt.split_all("a/b")
+    assert_equal ["/", "a", "b"], Rake::FileUtilsExt.split_all("/a/b")
+    assert_equal ["..", "a", "b"], Rake::FileUtilsExt.split_all("../a/b")
   end
 
   def command(name, text)
-    open name, 'w', 0750 do |io|
+    open name, "w", 0750 do |io|
       io << text
     end
   end
 
   def check_no_expansion
-    command 'check_no_expansion.rb', <<-CHECK_EXPANSION
+    command "check_no_expansion.rb", <<-CHECK_EXPANSION
 if ARGV[0] != ARGV[1]
   exit 0
 else
@@ -275,14 +394,34 @@ end
     CHECK_EXPANSION
   end
 
+  def check_environment
+    command "check_environment.rb", <<-CHECK_ENVIRONMENT
+if ENV[ARGV[0]] != ARGV[1]
+  exit 1
+else
+  exit 0
+end
+    CHECK_ENVIRONMENT
+  end
+
   def check_expansion
-    command 'check_expansion.rb', <<-CHECK_EXPANSION
+    command "check_expansion.rb", <<-CHECK_EXPANSION
 if ARGV[0] != ARGV[1]
   exit 1
 else
   exit 0
 end
     CHECK_EXPANSION
+  end
+
+  def echocommand
+    command "echocommand.rb", <<-ECHOCOMMAND
+#!/usr/bin/env ruby
+
+puts "echocommand.rb"
+
+exit 0
+    ECHOCOMMAND
   end
 
   def replace_ruby
@@ -296,7 +435,7 @@ end
   end
 
   def shellcommand
-    command 'shellcommand.rb', <<-SHELLCOMMAND
+    command "shellcommand.rb", <<-SHELLCOMMAND
 #!/usr/bin/env ruby
 
 exit((ARGV[0] || "0").to_i)
@@ -304,7 +443,7 @@ exit((ARGV[0] || "0").to_i)
   end
 
   def env_var
-    windows? ? '%RAKE_TEST_SH%' : '$RAKE_TEST_SH'
+    windows? ? "%RAKE_TEST_SH%" : "$RAKE_TEST_SH"
   end
 
   def windows?

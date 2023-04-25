@@ -1,57 +1,60 @@
-require File.expand_path('../helper', __FILE__)
-require 'rake/packagetask'
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
+require "rake/packagetask"
 
-class TestRakePackageTask < Rake::TestCase
+class TestRakePackageTask < Rake::TestCase # :nodoc:
 
   def test_initialize
-    touch 'install.rb'
-    touch 'a.c'
-    touch 'b.c'
-    mkdir 'CVS'
-    touch 'a.rb~'
+    touch "install.rb"
+    touch "a.c"
+    touch "b.c"
+    mkdir "CVS"
+    touch "a.rb~"
 
     pkg = Rake::PackageTask.new("pkgr", "1.2.3") { |p|
       p.package_files << "install.rb"
-      p.package_files.include '*.c'
+      p.package_files.include "*.c"
       p.package_files.exclude(/\bCVS\b/)
       p.package_files.exclude(/~$/)
-      p.package_dir = 'pkg'
+      p.package_dir = "pkg"
       p.need_tar = true
       p.need_tar_gz = true
       p.need_tar_bz2 = true
+      p.need_tar_xz = true
       p.need_zip = true
     }
 
     assert_equal "pkg", pkg.package_dir
 
-    assert_includes pkg.package_files, 'a.c'
+    assert_includes pkg.package_files, "a.c"
 
-    assert_equal 'pkgr', pkg.name
-    assert_equal '1.2.3', pkg.version
+    assert_equal "pkgr", pkg.name
+    assert_equal "1.2.3", pkg.version
     assert Rake::Task[:package]
-    assert Rake::Task['pkg/pkgr-1.2.3.tgz']
-    assert Rake::Task['pkg/pkgr-1.2.3.tar.gz']
-    assert Rake::Task['pkg/pkgr-1.2.3.tar.bz2']
-    assert Rake::Task['pkg/pkgr-1.2.3.zip']
-    assert Rake::Task['pkg/pkgr-1.2.3']
+    assert Rake::Task["pkg/pkgr-1.2.3.tgz"]
+    assert Rake::Task["pkg/pkgr-1.2.3.tar.gz"]
+    assert Rake::Task["pkg/pkgr-1.2.3.tar.bz2"]
+    assert Rake::Task["pkg/pkgr-1.2.3.tar.xz"]
+    assert Rake::Task["pkg/pkgr-1.2.3.zip"]
+    assert Rake::Task["pkg/pkgr-1.2.3"]
     assert Rake::Task[:clobber_package]
     assert Rake::Task[:repackage]
   end
 
   def test_initialize_no_version
     e = assert_raises RuntimeError do
-      Rake::PackageTask.new 'pkgr'
+      Rake::PackageTask.new "pkgr"
     end
 
-    assert_equal 'Version required (or :noversion)', e.message
+    assert_equal "Version required (or :noversion)", e.message
   end
 
   def test_initialize_noversion
-    pkg = Rake::PackageTask.new 'pkgr', :noversion
+    pkg = Rake::PackageTask.new "pkgr", :noversion
 
-    assert_equal 'pkg',  pkg.package_dir
-    assert_equal 'pkgr', pkg.name
-    assert_equal nil,    pkg.version
+    assert_equal "pkg",  pkg.package_dir
+    assert_equal "pkgr", pkg.name
+    assert_nil pkg.version
   end
 
   def test_clone
@@ -64,16 +67,27 @@ class TestRakePackageTask < Rake::TestCase
   end
 
   def test_package_name
-    pkg = Rake::PackageTask.new 'a', '1'
+    pkg = Rake::PackageTask.new "a", "1"
 
-    assert_equal 'a-1', pkg.package_name
+    assert_equal "a-1", pkg.package_name
   end
 
   def test_package_name_noversion
-    pkg = Rake::PackageTask.new 'a', :noversion
+    pkg = Rake::PackageTask.new "a", :noversion
 
-    assert_equal 'a', pkg.package_name
+    assert_equal "a", pkg.package_name
+  end
+
+  def test_without_parent_dir
+    pkg = Rake::PackageTask.new("foo", :noversion)
+
+    assert_equal "pkg", pkg.working_dir
+    assert_equal "foo", pkg.target_dir
+
+    pkg.without_parent_dir = true
+
+    assert_equal "pkg/foo", pkg.working_dir
+    assert_equal ".", pkg.target_dir
   end
 
 end
-

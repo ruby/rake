@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Rake
 
   # Based on a script at:
@@ -14,7 +15,7 @@ module Rake
     end
 
     begin
-      require 'etc'
+      require "etc"
     rescue LoadError
     else
       if Etc.respond_to?(:nprocessors)
@@ -30,31 +31,22 @@ unless Rake::CpuCounter.method_defined?(:count)
   Rake::CpuCounter.class_eval <<-'end;', __FILE__, __LINE__+1
     require 'rbconfig'
 
-    # TODO: replace with IO.popen using array-style arguments in Rake 11
-    require 'open3'
-
     def count
-      if defined?(Java::Java)
+      if RUBY_PLATFORM == 'java'
         count_via_java_runtime
       else
         case RbConfig::CONFIG['host_os']
-        when /darwin9/
-          count_via_hwprefs_cpu_count
-        when /darwin/
-          count_via_hwprefs_thread_count || count_via_sysctl
         when /linux/
           count_via_cpuinfo
-        when /bsd/
+        when /darwin|bsd/
           count_via_sysctl
         when /mswin|mingw/
           count_via_win32
         else
           # Try everything
           count_via_win32 ||
-            count_via_sysctl ||
-            count_via_hwprefs_thread_count ||
-            count_via_hwprefs_cpu_count ||
-            count_via_cpuinfo
+          count_via_sysctl ||
+          count_via_cpuinfo
         end
       end
     end
@@ -80,14 +72,6 @@ unless Rake::CpuCounter.method_defined?(:count)
       nil
     end
 
-    def count_via_hwprefs_thread_count
-      run 'hwprefs', 'thread_count'
-    end
-
-    def count_via_hwprefs_cpu_count
-      run 'hwprefs', 'cpu_count'
-    end
-
     def count_via_sysctl
       run 'sysctl', '-n', 'hw.ncpu'
     end
@@ -95,10 +79,8 @@ unless Rake::CpuCounter.method_defined?(:count)
     def run(command, *args)
       cmd = resolve_command(command)
       if cmd
-        Open3.popen3 cmd, *args do |inn, out, err,|
-          inn.close
-          err.read
-          out.read.to_i
+        IO.popen [cmd, *args] do |io|
+          io.read.to_i
         end
       else
         nil
@@ -117,8 +99,8 @@ unless Rake::CpuCounter.method_defined?(:count)
     end
 
     def in_path_command(command)
-      Open3.popen3 'which', command do |_, out,|
-        out.eof? ? nil : command
+      IO.popen ['which', command] do |io|
+        io.eof? ? nil : command
       end
     end
   end;

@@ -1,12 +1,12 @@
-require 'shellwords'
-require 'optparse'
+# frozen_string_literal: true
+require "optparse"
 
-require 'rake/task_manager'
-require 'rake/file_list'
-require 'rake/thread_pool'
-require 'rake/thread_history_display'
-require 'rake/trace_output'
-require 'rake/win32'
+require "rake/task_manager"
+require "rake/file_list"
+require "rake/thread_pool"
+require "rake/thread_history_display"
+require "rake/trace_output"
+require "rake/win32"
 
 module Rake
 
@@ -35,17 +35,20 @@ module Rake
     # List of the top level task names (task names from the command line).
     attr_reader :top_level_tasks
 
+    # Override the detected TTY output state (mostly for testing)
+    attr_writer :tty_output
+
     DEFAULT_RAKEFILES = [
-      'rakefile',
-      'Rakefile',
-      'rakefile.rb',
-      'Rakefile.rb'
+      "rakefile",
+      "Rakefile",
+      "rakefile.rb",
+      "Rakefile.rb"
     ].freeze
 
     # Initialize a Rake::Application object.
     def initialize
       super
-      @name = 'rake'
+      @name = "rake"
       @rakefiles = DEFAULT_RAKEFILES.dup
       @rakefile = nil
       @pending_imports = []
@@ -54,11 +57,13 @@ module Rake
       @default_loader = Rake::DefaultLoader.new
       @original_dir = Dir.pwd
       @top_level_tasks = []
-      add_loader('rb', DefaultLoader.new)
-      add_loader('rf', DefaultLoader.new)
-      add_loader('rake', DefaultLoader.new)
+      add_loader("rb", DefaultLoader.new)
+      add_loader("rf", DefaultLoader.new)
+      add_loader("rake", DefaultLoader.new)
       @tty_output = STDOUT.tty?
-      @terminal_columns = ENV['RAKE_COLUMNS'].to_i
+      @terminal_columns = ENV["RAKE_COLUMNS"].to_i
+
+      set_default_options
     end
 
     # Run the Rake application.  The run method performs the following
@@ -71,22 +76,49 @@ module Rake
     # If you wish to build a custom rake command, you should call
     # +init+ on your application.  Then define any tasks.  Finally,
     # call +top_level+ to run your top level tasks.
-    def run
+    def run(argv = ARGV)
       standard_exception_handling do
-        init
+        init "rake", argv
         load_rakefile
         top_level
       end
     end
 
     # Initialize the command line parameters and app name.
-    def init(app_name='rake')
+    def init(app_name="rake", argv = ARGV)
       standard_exception_handling do
         @name = app_name
-        args = handle_options
+        begin
+          args = handle_options argv
+        rescue ArgumentError
+          # Backward compatibility for capistrano
+          args = handle_options
+        end
+        load_debug_at_stop_feature
         collect_command_line_tasks(args)
       end
     end
+
+    def load_debug_at_stop_feature
+      return unless ENV["RAKE_DEBUG"]
+      require "debug/session"
+      DEBUGGER__::start no_sigint_hook: true, nonstop: true
+      Rake::Task.prepend Module.new {
+        def execute(*)
+          exception = DEBUGGER__::SESSION.capture_exception_frames(/(exe|bin|lib)\/rake/) do
+            super
+          end
+
+          if exception
+            STDERR.puts exception.message
+            DEBUGGER__::SESSION.enter_postmortem_session exception
+            raise exception
+          end
+        end
+      }
+    rescue LoadError
+    end
+    private :load_debug_at_stop_feature
 
     # Find the rakefile and then load it and any pending imports.
     def load_rakefile
@@ -114,7 +146,7 @@ module Rake
 
       yield
 
-      thread_pool.join
+      thread_pool.join if defined?(@thread_pool)
       if options.job_stats
         stats = thread_pool.statistics
         puts "Maximum active threads: #{stats[:max_active_threads]} + main"
@@ -162,7 +194,7 @@ module Rake
       args = []
 
       begin
-        /((?:[^\\,]|\\.)*?)\s*(?:,\s*(.*))?$/ =~ remaining_args
+        /\s*((?:[^\\,]|\\.)*?)\s*(?:,\s*(.*))?$/ =~ remaining_args
 
         remaining_args = $2
         args << $1.gsub(/\\(.)/, '\1')
@@ -202,13 +234,22 @@ module Rake
     end
 
     def display_exception_details(ex) # :nodoc:
-      seen = Thread.current[:rake_display_exception_details_seen] ||= []
-      return if seen.include? ex
-      seen << ex
+      display_exception_details_seen << ex
 
       display_exception_message_details(ex)
       display_exception_backtrace(ex)
-      display_exception_details(ex.cause) if has_cause?(ex)
+      display_cause_details(ex.cause) if has_cause?(ex)
+    end
+
+    def display_cause_details(ex) # :nodoc:
+      return if display_exception_details_seen.include? ex
+
+      trace "\nCaused by:"
+      display_exception_details(ex)
+    end
+
+    def display_exception_details_seen # :nodoc:
+      Thread.current[:rake_display_exception_details_seen] ||= []
     end
 
     def has_cause?(ex) # :nodoc:
@@ -218,6 +259,8 @@ module Rake
     def display_exception_message_details(ex) # :nodoc:
       if ex.instance_of?(RuntimeError)
         trace ex.message
+      elsif ex.respond_to?(:detailed_message)
+        trace "#{ex.class.name}: #{ex.detailed_message(highlight: false)}"
       else
         trace "#{ex.class.name}: #{ex.message}"
       end
@@ -257,7 +300,7 @@ module Rake
         if File.exist?(fn)
           others = FileList.glob(fn, File::FNM_CASEFOLD)
           return others.size == 1 ? others.first : fn
-        elsif fn == ''
+        elsif fn == ""
           return fn
         end
       end
@@ -267,11 +310,6 @@ module Rake
     # True if we are outputting to TTY, false otherwise
     def tty_output? # :nodoc:
       @tty_output
-    end
-
-    # Override the detected TTY output state (mostly for testing)
-    def tty_output=(tty_output_state) # :nodoc:
-      @tty_output = tty_output_state
     end
 
     # We will truncate output if we are outputting to a TTY or if we've been
@@ -345,7 +383,7 @@ module Rake
     end
 
     def unix? # :nodoc:
-      RbConfig::CONFIG['host_os'] =~
+      RbConfig::CONFIG["host_os"] =~
         /(aix|darwin|linux|(net|free|open)bsd|cygwin|solaris|irix|hpux)/i
     end
 
@@ -378,7 +416,7 @@ module Rake
 
     def sort_options(options) # :nodoc:
       options.sort_by { |opt|
-        opt.select { |o| o =~ /^-/ }.map { |o| o.downcase }.sort.reverse
+        opt.select { |o| o.is_a?(String) && o =~ /^-/ }.map(&:downcase).sort.reverse
       }
     end
     private :sort_options
@@ -388,38 +426,45 @@ module Rake
     def standard_rake_options # :nodoc:
       sort_options(
         [
-          ['--all', '-A',
+          ["--all", "-A",
             "Show all tasks, even uncommented ones (in combination with -T or -D)",
             lambda { |value|
               options.show_all_tasks = value
             }
           ],
-          ['--backtrace=[OUT]',
+          ["--backtrace=[OUT]",
             "Enable full backtrace.  OUT can be stderr (default) or stdout.",
             lambda { |value|
               options.backtrace = true
-              select_trace_output(options, 'backtrace', value)
+              select_trace_output(options, "backtrace", value)
             }
           ],
-          ['--build-all', '-B',
+          ["--build-all", "-B",
            "Build all prerequisites, including those which are up-to-date.",
            lambda { |value|
              options.build_all = true
            }
           ],
-          ['--comments',
+          ["--comments",
             "Show commented tasks only",
             lambda { |value|
               options.show_all_tasks = !value
             }
           ],
-          ['--describe', '-D [PATTERN]',
+          ["--describe", "-D [PATTERN]",
             "Describe the tasks (matching optional PATTERN), then exit.",
             lambda { |value|
               select_tasks_to_show(options, :describe, value)
             }
           ],
-          ['--dry-run', '-n',
+          ["--directory", "-C [DIRECTORY]",
+            "Change to DIRECTORY before doing anything.",
+            lambda { |value|
+              Dir.chdir value
+              @original_dir = Dir.pwd
+            }
+          ],
+          ["--dry-run", "-n",
             "Do a dry run without executing actions.",
             lambda { |value|
               Rake.verbose(true)
@@ -428,31 +473,31 @@ module Rake
               options.trace = true
             }
           ],
-          ['--execute', '-e CODE',
+          ["--execute", "-e CODE",
             "Execute some Ruby code and exit.",
             lambda { |value|
               eval(value)
               exit
             }
           ],
-          ['--execute-print', '-p CODE',
+          ["--execute-print", "-p CODE",
             "Execute some Ruby code, print the result, then exit.",
             lambda { |value|
               puts eval(value)
               exit
             }
           ],
-          ['--execute-continue',  '-E CODE',
+          ["--execute-continue",  "-E CODE",
             "Execute some Ruby code, " +
             "then continue with normal task processing.",
             lambda { |value| eval(value) }
           ],
-          ['--jobs',  '-j [NUMBER]',
+          ["--jobs",  "-j [NUMBER]",
             "Specifies the maximum number of tasks to execute in parallel. " +
             "(default is number of CPU cores + 4)",
             lambda { |value|
-              if value.nil? || value == ''
-                value = FIXNUM_MAX
+              if value.nil? || value == ""
+                value = Float::INFINITY
               elsif value =~ /^\d+$/
                 value = value.to_i
               else
@@ -462,7 +507,7 @@ module Rake
               options.thread_pool_size = value - 1
             }
           ],
-          ['--job-stats [LEVEL]',
+          ["--job-stats [LEVEL]",
             "Display job statistics. " +
             "LEVEL=history displays a complete job list",
             lambda { |value|
@@ -473,42 +518,42 @@ module Rake
               end
             }
           ],
-          ['--libdir', '-I LIBDIR',
+          ["--libdir", "-I LIBDIR",
             "Include LIBDIR in the search path for required modules.",
             lambda { |value| $:.push(value) }
           ],
-          ['--multitask', '-m',
+          ["--multitask", "-m",
             "Treat all tasks as multitasks.",
             lambda { |value| options.always_multitask = true }
           ],
-          ['--no-search', '--nosearch',
-            '-N', "Do not search parent directories for the Rakefile.",
+          ["--no-search", "--nosearch",
+            "-N", "Do not search parent directories for the Rakefile.",
             lambda { |value| options.nosearch = true }
           ],
-          ['--prereqs', '-P',
+          ["--prereqs", "-P",
             "Display the tasks and dependencies, then exit.",
             lambda { |value| options.show_prereqs = true }
           ],
-          ['--quiet', '-q',
+          ["--quiet", "-q",
             "Do not log messages to standard output.",
             lambda { |value| Rake.verbose(false) }
           ],
-          ['--rakefile', '-f [FILENAME]',
+          ["--rakefile", "-f [FILENAME]",
             "Use FILENAME as the rakefile to search for.",
             lambda { |value|
-              value ||= ''
+              value ||= ""
               @rakefiles.clear
               @rakefiles << value
             }
           ],
-          ['--rakelibdir', '--rakelib', '-R RAKELIBDIR',
+          ["--rakelibdir", "--rakelib", "-R RAKELIBDIR",
             "Auto-import any .rake files in RAKELIBDIR. " +
             "(default is 'rakelib')",
             lambda { |value|
               options.rakelib = value.split(File::PATH_SEPARATOR)
             }
           ],
-          ['--require', '-r MODULE',
+          ["--require", "-r MODULE",
             "Require MODULE before executing rakefile.",
             lambda { |value|
               begin
@@ -522,11 +567,11 @@ module Rake
               end
             }
           ],
-          ['--rules',
+          ["--rules",
             "Trace the rules resolution.",
             lambda { |value| options.trace_rules = true }
           ],
-          ['--silent', '-s',
+          ["--silent", "-s",
             "Like --quiet, but also suppresses the " +
             "'in directory' announcement.",
             lambda { |value|
@@ -534,59 +579,60 @@ module Rake
               options.silent = true
             }
           ],
-          ['--suppress-backtrace PATTERN',
+          ["--suppress-backtrace PATTERN",
             "Suppress backtrace lines matching regexp PATTERN. " +
             "Ignored if --trace is on.",
             lambda { |value|
               options.suppress_backtrace_pattern = Regexp.new(value)
             }
           ],
-          ['--system',  '-g',
+          ["--system",  "-g",
             "Using system wide (global) rakefiles " +
             "(usually '~/.rake/*.rake').",
             lambda { |value| options.load_system = true }
           ],
-          ['--no-system', '--nosystem', '-G',
+          ["--no-system", "--nosystem", "-G",
             "Use standard project Rakefile search paths, " +
             "ignore system wide rakefiles.",
             lambda { |value| options.ignore_system = true }
           ],
-          ['--tasks', '-T [PATTERN]',
+          ["--tasks", "-T [PATTERN]",
             "Display the tasks (matching optional PATTERN) " +
-            "with descriptions, then exit.",
+            "with descriptions, then exit. " +
+            "-AT combination displays all the tasks, including those without descriptions.",
             lambda { |value|
               select_tasks_to_show(options, :tasks, value)
             }
           ],
-          ['--trace=[OUT]', '-t',
+          ["--trace=[OUT]", "-t",
             "Turn on invoke/execute tracing, enable full backtrace. " +
             "OUT can be stderr (default) or stdout.",
             lambda { |value|
               options.trace = true
               options.backtrace = true
-              select_trace_output(options, 'trace', value)
+              select_trace_output(options, "trace", value)
               Rake.verbose(true)
             }
           ],
-          ['--verbose', '-v',
+          ["--verbose", "-v",
             "Log message to standard output.",
             lambda { |value| Rake.verbose(true) }
           ],
-          ['--version', '-V',
+          ["--version", "-V",
             "Display the program version.",
             lambda { |value|
-              puts "rake, version #{RAKEVERSION}"
+              puts "rake, version #{Rake::VERSION}"
               exit
             }
           ],
-          ['--where', '-W [PATTERN]',
+          ["--where", "-W [PATTERN]",
             "Describe the tasks (matching optional PATTERN), then exit.",
             lambda { |value|
               select_tasks_to_show(options, :lines, value)
               options.show_all_tasks = true
             }
           ],
-          ['--no-deprecation-warnings', '-X',
+          ["--no-deprecation-warnings", "-X",
             "Disable the deprecation warnings.",
             lambda { |value|
               options.ignore_deprecate = true
@@ -597,7 +643,7 @@ module Rake
 
     def select_tasks_to_show(options, show_tasks, value) # :nodoc:
       options.show_tasks = show_tasks
-      options.show_task_pattern = Regexp.new(value || '')
+      options.show_task_pattern = Regexp.new(value || "")
       Rake::TaskManager.record_task_metadata = true
     end
     private :select_tasks_to_show
@@ -605,9 +651,9 @@ module Rake
     def select_trace_output(options, trace_option, value) # :nodoc:
       value = value.strip unless value.nil?
       case value
-      when 'stdout'
+      when "stdout"
         options.trace_output = $stdout
-      when 'stderr', nil
+      when "stderr", nil
         options.trace_output = $stderr
       else
         fail CommandLineOptionError,
@@ -619,9 +665,8 @@ module Rake
     # Read and handle the command line options.  Returns the command line
     # arguments that we didn't understand, which should (in theory) be just
     # task names and env vars.
-    def handle_options # :nodoc:
-      options.rakelib = ['rakelib']
-      options.trace_output = $stderr
+    def handle_options(argv) # :nodoc:
+      set_default_options
 
       OptionParser.new do |opts|
         opts.banner = "#{Rake.application.name} [-f rakefile] {options} targets..."
@@ -634,8 +679,8 @@ module Rake
         end
 
         standard_rake_options.each { |args| opts.on(*args) }
-        opts.environment('RAKEOPT')
-      end.parse(ARGV)
+        opts.environment("RAKEOPT")
+      end.parse(argv)
     end
 
     # Similar to the regular Ruby +require+ command, but will check
@@ -673,7 +718,7 @@ module Rake
 
     def raw_load_rakefile # :nodoc:
       rakefile, location = find_rakefile_location
-      if (! options.ignore_system) &&
+      if (!options.ignore_system) &&
           (options.load_system || rakefile.nil?) &&
           system_dir && File.directory?(system_dir)
         print_rakefile_directory(location)
@@ -687,7 +732,7 @@ module Rake
         Dir.chdir(location)
         print_rakefile_directory(location)
         Rake.load_rakefile(File.expand_path(@rakefile)) if
-          @rakefile && @rakefile != ''
+          @rakefile && @rakefile != ""
         options.rakelib.each do |rlib|
           glob("#{rlib}/*.rake") do |name|
             add_import name
@@ -698,7 +743,7 @@ module Rake
     end
 
     def glob(path, &block) # :nodoc:
-      FileList.glob(path.gsub("\\", '/')).each(&block)
+      FileList.glob(path.tr("\\", "/")).each(&block)
     end
     private :glob
 
@@ -706,8 +751,8 @@ module Rake
     def system_dir # :nodoc:
       @system_dir ||=
         begin
-          if ENV['RAKE_SYSTEM']
-            ENV['RAKE_SYSTEM']
+          if ENV["RAKE_SYSTEM"]
+            ENV["RAKE_SYSTEM"]
           else
             standard_system_dir
           end
@@ -721,7 +766,7 @@ module Rake
       end
     else
       def standard_system_dir #:nodoc:
-        File.join(File.expand_path('~'), '.rake')
+        File.join(File.expand_path("~"), ".rake")
       end
     end
     private :standard_system_dir
@@ -780,11 +825,31 @@ module Rake
       re = /^#{@rakefile}$/
       re = /#{re.source}/i if windows?
 
-      backtrace.find { |str| str =~ re } || ''
+      backtrace.find { |str| str =~ re } || ""
     end
 
-  private
-    FIXNUM_MAX = (2**(0.size * 8 - 2) - 1) # :nodoc:
+    def set_default_options # :nodoc:
+      options.always_multitask           = false
+      options.backtrace                  = false
+      options.build_all                  = false
+      options.dryrun                     = false
+      options.ignore_deprecate           = false
+      options.ignore_system              = false
+      options.job_stats                  = false
+      options.load_system                = false
+      options.nosearch                   = false
+      options.rakelib                    = %w[rakelib]
+      options.show_all_tasks             = false
+      options.show_prereqs               = false
+      options.show_task_pattern          = nil
+      options.show_tasks                 = nil
+      options.silent                     = false
+      options.suppress_backtrace_pattern = nil
+      options.thread_pool_size           = Rake.suggested_thread_count
+      options.trace                      = false
+      options.trace_output               = $stderr
+      options.trace_rules                = false
+    end
 
   end
 end

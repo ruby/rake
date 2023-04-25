@@ -1,4 +1,5 @@
-require 'rake/application'
+# frozen_string_literal: true
+require "rake/application"
 
 module Rake
 
@@ -32,6 +33,34 @@ module Rake
     def add_rakelib(*files)
       application.options.rakelib ||= []
       application.options.rakelib.concat(files)
+    end
+
+    # Make +block_application+ the default rake application inside a block so
+    # you can load rakefiles into a different application.
+    #
+    # This is useful when you want to run rake tasks inside a library without
+    # running rake in a sub-shell.
+    #
+    # Example:
+    #
+    #   Dir.chdir 'other/directory'
+    #
+    #   other_rake = Rake.with_application do |rake|
+    #     rake.load_rakefile
+    #   end
+    #
+    #   puts other_rake.tasks
+
+    def with_application(block_application = Rake::Application.new)
+      orig_application = Rake.application
+
+      Rake.application = block_application
+
+      yield block_application
+
+      block_application
+    ensure
+      Rake.application = orig_application
     end
   end
 

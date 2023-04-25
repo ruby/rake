@@ -1,6 +1,7 @@
-require File.expand_path('../helper', __FILE__)
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
 
-class TestLinkedList < Rake::TestCase
+class TestLinkedList < Rake::TestCase # :nodoc:
   include Rake
 
   def test_empty_list

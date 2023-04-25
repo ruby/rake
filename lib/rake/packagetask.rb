@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 # Define a package task library to aid in the definition of
 # redistributable package files.
 
-require 'rake'
-require 'rake/tasklib'
+require "rake"
+require "rake/tasklib"
 
 module Rake
 
@@ -63,6 +64,9 @@ module Rake
     # is false).
     attr_accessor :need_tar_bz2
 
+    # True if a xz'd tar file (tar.xz) should be produced (default is false)
+    attr_accessor :need_tar_xz
+
     # True if a zip file should be produced (default is false)
     attr_accessor :need_zip
 
@@ -74,6 +78,9 @@ module Rake
 
     # Zip command for zipped archives.  The default is 'zip'.
     attr_accessor :zip_command
+
+    # True if parent directory should be omitted (default is false)
+    attr_accessor :without_parent_dir
 
     # Create a Package Task with the given name and version.  Use +:noversion+
     # as the version to build a package without a version or to provide a
@@ -90,13 +97,15 @@ module Rake
       @name = name
       @version = version
       @package_files = Rake::FileList.new
-      @package_dir = 'pkg'
+      @package_dir = "pkg"
       @need_tar = false
       @need_tar_gz = false
       @need_tar_bz2 = false
+      @need_tar_xz = false
       @need_zip = false
-      @tar_command = 'tar'
-      @zip_command = 'zip'
+      @tar_command = "tar"
+      @zip_command = "zip"
+      @without_parent_dir = false
     end
 
     # Create the tasks defined by this task library.
@@ -108,38 +117,37 @@ module Rake
       task :package
 
       desc "Force a rebuild of the package files"
-      task :repackage => [:clobber_package, :package]
+      task repackage: [:clobber_package, :package]
 
       desc "Remove package products"
       task :clobber_package do
         rm_r package_dir rescue nil
       end
 
-      task :clobber => [:clobber_package]
+      task clobber: [:clobber_package]
 
       [
         [need_tar, tgz_file, "z"],
         [need_tar_gz, tar_gz_file, "z"],
-        [need_tar_bz2, tar_bz2_file, "j"]
-      ].each do |(need, file, flag)|
+        [need_tar_bz2, tar_bz2_file, "j"],
+        [need_tar_xz, tar_xz_file, "J"]
+      ].each do |need, file, flag|
         if need
-          task :package => ["#{package_dir}/#{file}"]
+          task package: ["#{package_dir}/#{file}"]
           file "#{package_dir}/#{file}" =>
             [package_dir_path] + package_files do
-            chdir(package_dir) do
-              sh @tar_command, "#{flag}cvf", file, package_name
-            end
+            chdir(working_dir) { sh @tar_command, "#{flag}cvf", file, target_dir }
+            mv "#{package_dir_path}/#{target_dir}", package_dir if without_parent_dir
           end
         end
       end
 
       if need_zip
-        task :package => ["#{package_dir}/#{zip_file}"]
+        task package: ["#{package_dir}/#{zip_file}"]
         file "#{package_dir}/#{zip_file}" =>
           [package_dir_path] + package_files do
-          chdir(package_dir) do
-            sh @zip_command, "-r", zip_file, package_name
-          end
+          chdir(working_dir) { sh @zip_command, "-r", zip_file, target_dir }
+          mv "#{package_dir_path}/#{zip_file}", package_dir if without_parent_dir
         end
       end
 
@@ -189,10 +197,25 @@ module Rake
       "#{package_name}.tar.bz2"
     end
 
+    # The package name with .tar.xz added
+
+    def tar_xz_file
+      "#{package_name}.tar.xz"
+    end
+
     # The package name with .zip added
 
     def zip_file
       "#{package_name}.zip"
+    end
+
+    def working_dir
+      without_parent_dir ? package_dir_path : package_dir
+    end
+
+    # target directory relative to working_dir
+    def target_dir
+      without_parent_dir ? "." : package_name
     end
   end
 

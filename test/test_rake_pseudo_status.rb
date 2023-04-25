@@ -1,6 +1,7 @@
-require File.expand_path('../helper', __FILE__)
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
 
-class TestRakePseudoStatus < Rake::TestCase
+class TestRakePseudoStatus < Rake::TestCase # :nodoc:
   def test_with_zero_exit_status
     s = Rake::PseudoStatus.new
     assert_equal 0, s.exitstatus

@@ -223,9 +223,7 @@ behaviour can now accept a second parameter:
 The first argument of the block "t" is always bound to the current
 task object.  The second argument "args" is an open-struct like object
 that allows access to the task arguments.  Extra command line
-arguments to a task are ignored.  Missing command line arguments are
-picked up from matching environment variables.  If there are no
-matching environment variables, they are given the nil value.
+arguments to a task are ignored.
 
 If you wish to specify default values for the arguments, you can use
 the with_defaults method in the task body.  Here is the above example
@@ -412,7 +410,7 @@ display a list of tasks that have a description.  If you use +desc+ to
 describe your major tasks, you have a semi-automatic way of generating
 a summary of your Rake file.
 
-  traken$ rake -T
+  $ rake -T
   (in /home/.../rake)
   rake clean            # Remove any temporary products.
   rake clobber          # Remove any generated file.

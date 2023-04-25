@@ -1,6 +1,7 @@
-require File.expand_path('../helper', __FILE__)
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
 
-class TestRakeTopLevelFunctions < Rake::TestCase
+class TestRakeTopLevelFunctions < Rake::TestCase # :nodoc:
 
   def setup
     super
@@ -26,19 +27,19 @@ class TestRakeTopLevelFunctions < Rake::TestCase
     namespace("xyz", &block)
 
     expected = [
-      [[:in_namespace, 'xyz'], block]
+      [[:in_namespace, "xyz"], block]
     ]
 
     assert_equal expected, @app.called
   end
 
   def test_import
-    import('x', 'y', 'z')
+    import("x", "y", "z")
 
     expected = [
-      [[:add_import, 'x'], nil],
-      [[:add_import, 'y'], nil],
-      [[:add_import, 'z'], nil],
+      [[:add_import, "x"], nil],
+      [[:add_import, "y"], nil],
+      [[:add_import, "z"], nil],
     ]
 
     assert_equal expected, @app.called

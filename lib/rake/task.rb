@@ -1,4 +1,5 @@
-require 'rake/invocation_exception_mixin'
+# frozen_string_literal: true
+require "rake/invocation_exception_mixin"
 
 module Rake
 
@@ -14,6 +15,10 @@ module Rake
   class Task
     # List of prerequisites for a task.
     attr_reader :prerequisites
+    alias prereqs prerequisites
+
+    # List of order only prerequisites for a task.
+    attr_reader :order_only_prerequisites
 
     # List of actions attached to a task.
     attr_reader :actions
@@ -28,6 +33,10 @@ module Rake
     # task (only valid if the task was defined with the detect
     # location option set).
     attr_reader :locations
+
+    # Has this task already been invoked?  Already invoked tasks
+    # will be skipped unless you reenable them.
+    attr_reader :already_invoked
 
     # Return task name
     def to_s
@@ -50,11 +59,15 @@ module Rake
 
     # List of prerequisite tasks
     def prerequisite_tasks
-      prerequisites.map { |pre| lookup_prerequisite(pre) }
+      (prerequisites + order_only_prerequisites).map { |pre| lookup_prerequisite(pre) }
     end
 
     def lookup_prerequisite(prerequisite_name) # :nodoc:
-      application[prerequisite_name, @scope]
+      scoped_prerequisite_task = application[prerequisite_name, @scope]
+      if scoped_prerequisite_task == self
+        unscoped_prerequisite_task = application[prerequisite_name]
+      end
+      unscoped_prerequisite_task || scoped_prerequisite_task
     end
     private :lookup_prerequisite
 
@@ -94,6 +107,8 @@ module Rake
       @scope           = app.current_scope
       @arg_names       = nil
       @locations       = []
+      @invocation_exception = nil
+      @order_only_prerequisites = []
     end
 
     # Enhance a task with prerequisites or actions.  Returns self.
@@ -131,13 +146,15 @@ module Rake
     # is invoked again.
     def reenable
       @already_invoked = false
+      @invocation_exception = nil
     end
 
-    # Clear the existing prerequisites and actions of a rake task.
+    # Clear the existing prerequisites, actions, comments, and arguments of a rake task.
     def clear
       clear_prerequisites
       clear_actions
       clear_comments
+      clear_args
       self
     end
 
@@ -159,6 +176,12 @@ module Rake
       self
     end
 
+    # Clear the existing arguments on a rake task.
+    def clear_args
+      @arg_names = nil
+      self
+    end
+
     # Invoke the task if it is needed.  Prerequisites are invoked first.
     def invoke(*args)
       task_args = TaskArguments.new(arg_names, args)
@@ -167,20 +190,39 @@ module Rake
 
     # Same as invoke, but explicitly pass a call chain to detect
     # circular dependencies.
-    def invoke_with_call_chain(task_args, invocation_chain) # :nodoc:
-      new_chain = InvocationChain.append(self, invocation_chain)
+    #
+    # If multiple tasks depend on this
+    # one in parallel, they will all fail if the first execution of
+    # this task fails.
+    def invoke_with_call_chain(task_args, invocation_chain)
+      new_chain = Rake::InvocationChain.append(self, invocation_chain)
       @lock.synchronize do
-        if application.options.trace
-          application.trace "** Invoke #{name} #{format_trace_flags}"
+        begin
+          if application.options.trace
+            application.trace "** Invoke #{name} #{format_trace_flags}"
+          end
+
+          if @already_invoked
+            if @invocation_exception
+              if application.options.trace
+                application.trace "** Previous invocation of #{name} failed #{format_trace_flags}"
+              end
+              raise @invocation_exception
+            else
+              return
+            end
+          end
+
+          @already_invoked = true
+
+          invoke_prerequisites(task_args, new_chain)
+          execute(task_args) if needed?
+        rescue Exception => ex
+          add_chain_to(ex, new_chain)
+          @invocation_exception = ex
+          raise ex
         end
-        return if @already_invoked
-        @already_invoked = true
-        invoke_prerequisites(task_args, new_chain)
-        execute(task_args) if needed?
       end
-    rescue Exception => ex
-      add_chain_to(ex, new_chain)
-      raise ex
     end
     protected :invoke_with_call_chain
 
@@ -211,7 +253,8 @@ module Rake
           r.invoke_with_call_chain(prereq_args, invocation_chain)
         end
       end
-      futures.each { |f| f.value }
+      # Iterate in reverse to improve performance related to thread waiting and switching
+      futures.reverse_each(&:value)
     end
 
     # Format the trace flags for display.
@@ -232,13 +275,10 @@ module Rake
       end
       application.trace "** Execute #{name}" if application.options.trace
       application.enhance_with_matching_rule(name) if @actions.empty?
-      @actions.each do |act|
-        case act.arity
-        when 1
-          act.call(self)
-        else
-          act.call(self, args)
-        end
+      if opts = Hash.try_convert(args) and !opts.empty?
+        @actions.each { |act| act.call(self, args, **opts) }
+      else
+        @actions.each { |act| act.call(self, args) }
       end
     end
 
@@ -258,7 +298,7 @@ module Rake
     def add_description(description)
       return unless description
       comment = description.strip
-      add_comment(comment) if comment && ! comment.empty?
+      add_comment(comment) if comment && !comment.empty?
     end
 
     def comment=(comment) # :nodoc:
@@ -296,23 +336,23 @@ module Rake
     private :transform_comments
 
     # Get the first sentence in a string. The sentence is terminated
-    # by the first period or the end of the line. Decimal points do
-    # not count as periods.
+    # by the first period, exclamation mark, or the end of the line.
+    # Decimal points do not count as periods.
     def first_sentence(string)
-      string.split(/\.[ \t]|\.$|\n/).first
+      string.split(/(?<=\w)(\.|!)[ \t]|(\.$|!)|\n/).first
     end
     private :first_sentence
 
     # Set the names of the arguments for this task. +args+ should be
     # an array of symbols, one for each argument name.
     def set_arg_names(args)
-      @arg_names = args.map { |a| a.to_sym }
+      @arg_names = args.map(&:to_sym)
     end
 
     # Return a string describing the internal state of a task.  Useful for
     # debugging.
     def investigation
-      result = "------------------------------\n"
+      result = "------------------------------\n".dup
       result << "Investigating #{name}\n"
       result << "class: #{self.class}\n"
       result <<  "task needed: #{needed?}\n"
@@ -323,10 +363,22 @@ module Rake
       prereqs.each do |p|
         result << "--#{p.name} (#{p.timestamp})\n"
       end
-      latest_prereq = prerequisite_tasks.map { |pre| pre.timestamp }.max
+      latest_prereq = prerequisite_tasks.map(&:timestamp).max
       result <<  "latest-prerequisite time: #{latest_prereq}\n"
       result << "................................\n\n"
       return result
+    end
+
+    # Format dependencies parameter to pass to task.
+    def self.format_deps(deps)
+      deps = [deps] unless deps.respond_to?(:to_ary)
+      deps.map { |d| Rake.from_pathname(d).to_s }
+    end
+
+    # Add order only dependencies.
+    def |(deps)
+      @order_only_prerequisites |= Task.format_deps(deps) - @prerequisites
+      self
     end
 
     # ----------------------------------------------------------------
@@ -374,7 +426,6 @@ module Rake
       # this kind of task.  Generic tasks will accept the scope as
       # part of the name.
       def scope_name(scope, task_name)
-#        (scope + [task_name]).join(':')
         scope.path_with_task_name(task_name)
       end
 

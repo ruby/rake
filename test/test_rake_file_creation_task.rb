@@ -1,12 +1,11 @@
-require File.expand_path('../helper', __FILE__)
-require 'fileutils'
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
+require "fileutils"
 
-######################################################################
-class TestRakeFileCreationTask < Rake::TestCase
+class TestRakeFileCreationTask < Rake::TestCase # :nodoc:
   include Rake
-  include Rake::DSL
 
-  DUMMY_DIR = 'dummy_dir'
+  DUMMY_DIR = "dummy_dir"
 
   def setup
     super
@@ -21,7 +20,7 @@ class TestRakeFileCreationTask < Rake::TestCase
     FileUtils.rm_rf fc_task.name
     assert fc_task.needed?, "file should be needed"
     FileUtils.mkdir fc_task.name
-    assert_equal nil, fc_task.prerequisites.map { |n| Task[n].timestamp }.max
+    assert_nil fc_task.prerequisites.map { |n| Task[n].timestamp }.max
     assert ! fc_task.needed?, "file should not be needed"
   end
 

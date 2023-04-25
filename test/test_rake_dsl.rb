@@ -1,6 +1,7 @@
-require File.expand_path('../helper', __FILE__)
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
 
-class TestRakeDsl < Rake::TestCase
+class TestRakeDsl < Rake::TestCase # :nodoc:
 
   def setup
     super

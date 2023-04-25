@@ -1,4 +1,5 @@
-require 'rake/ext/core'
+# frozen_string_literal: true
+require "rake/ext/core"
 
 class String
 
@@ -10,9 +11,9 @@ class String
     # +ext+ is a user added method for the String class.
     #
     # This String extension comes from Rake
-    def ext(newext='')
-      return self.dup if ['.', '..'].include? self
-      if newext != ''
+    def ext(newext="")
+      return self.dup if [".", ".."].include? self
+      if newext != ""
         newext = "." + newext unless newext =~ /^\./
       end
       self.chomp(File.extname(self)) << newext
@@ -26,8 +27,8 @@ class String
     def pathmap_explode
       head, tail = File.split(self)
       return [self] if head == self
-      return [tail] if head == '.' || tail == '/'
-      return [head, tail] if head == '/'
+      return [tail] if head == "." || tail == "/"
+      return [head, tail] if head == "/"
       return head.pathmap_explode + [tail]
     end
     protected :pathmap_explode
@@ -57,15 +58,15 @@ class String
     # This String extension comes from Rake
     def pathmap_replace(patterns, &block)
       result = self
-      patterns.split(';').each do |pair|
-        pattern, replacement = pair.split(',')
+      patterns.split(";").each do |pair|
+        pattern, replacement = pair.split(",")
         pattern = Regexp.new(pattern)
-        if replacement == '*' && block_given?
+        if replacement == "*" && block_given?
           result = result.sub(pattern, &block)
         elsif replacement
           result = result.sub(pattern, replacement)
         else
-          result = result.sub(pattern, '')
+          result = result.sub(pattern, "")
         end
       end
       result
@@ -136,32 +137,32 @@ class String
     # This String extension comes from Rake
     def pathmap(spec=nil, &block)
       return self if spec.nil?
-      result = ''
+      result = "".dup
       spec.scan(/%\{[^}]*\}-?\d*[sdpfnxX%]|%-?\d+d|%.|[^%]+/) do |frag|
         case frag
-        when '%f'
+        when "%f"
           result << File.basename(self)
-        when '%n'
+        when "%n"
           result << File.basename(self).ext
-        when '%d'
+        when "%d"
           result << File.dirname(self)
-        when '%x'
+        when "%x"
           result << File.extname(self)
-        when '%X'
+        when "%X"
           result << self.ext
-        when '%p'
+        when "%p"
           result << self
-        when '%s'
+        when "%s"
           result << (File::ALT_SEPARATOR || File::SEPARATOR)
-        when '%-'
+        when "%-"
           # do nothing
-        when '%%'
+        when "%%"
           result << "%"
         when /%(-?\d+)d/
           result << pathmap_partial($1.to_i)
         when /^%\{([^}]*)\}(\d*[dpfnxX])/
           patterns, operator = $1, $2
-          result << pathmap('%' + operator).pathmap_replace(patterns, &block)
+          result << pathmap("%" + operator).pathmap_replace(patterns, &block)
         when /^%/
           fail ArgumentError, "Unknown pathmap specifier #{frag} in '#{spec}'"
         else

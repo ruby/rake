@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Rake
   module TraceOutput # :nodoc: all
 
@@ -13,7 +14,7 @@ module Rake
       else
         output = strings.map { |s|
           next if s.nil?
-          s =~ /#{sep}$/ ? s : s + sep
+          s.end_with?(sep) ? s : s + sep
         }.join
       end
       out.print(output)

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Rake
 
   ##
@@ -17,7 +18,8 @@ module Rake
       @hash = {}
       @values = values
       names.each_with_index { |name, i|
-        @hash[name.to_sym] = values[i] unless values[i].nil?
+        next if values[i].nil? || values[i] == ""
+        @hash[name.to_sym] = values[i]
       }
     end
 
@@ -67,20 +69,29 @@ module Rake
 
     # Returns a Hash of arguments and their values
     def to_hash
-      @hash
+      @hash.dup
     end
 
     def to_s # :nodoc:
-      @hash.inspect
+      inspect
     end
 
     def inspect # :nodoc:
-      to_s
+      inspection = @hash.map do |k,v|
+        "#{k.to_s}: #{v.to_s}"
+      end.join(", ")
+
+      "#<#{self.class} #{inspection}>"
     end
 
     # Returns true if +key+ is one of the arguments
     def has_key?(key)
       @hash.has_key?(key)
+    end
+    alias key? has_key?
+
+    def fetch(*args, &block)
+      @hash.fetch(*args, &block)
     end
 
     protected

@@ -1,8 +1,9 @@
-require File.expand_path('../helper', __FILE__)
-require 'fileutils'
-require 'pathname'
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
+require "fileutils"
+require "pathname"
 
-class TestRakeFileTask < Rake::TestCase
+class TestRakeFileTask < Rake::TestCase # :nodoc:
   include Rake
 
   def setup
@@ -28,7 +29,7 @@ class TestRakeFileTask < Rake::TestCase
 
     open(ftask.name, "w") { |f| f.puts "HI" }
 
-    assert_equal nil, ftask.prerequisites.map { |n| Task[n].timestamp }.max
+    assert_nil ftask.prerequisites.map { |n| Task[n].timestamp }.max
     assert ! ftask.needed?, "file should not be needed"
   ensure
     File.delete(ftask.name) rescue nil
@@ -76,7 +77,7 @@ class TestRakeFileTask < Rake::TestCase
     create_timed_files(OLDFILE, NEWFILE)
 
     file NEWFILE => [:obj] do |t| @runs << t.name end
-    task :obj => [OLDFILE] do |t| @runs << t.name end
+    task obj: [OLDFILE] do |t| @runs << t.name end
     file OLDFILE           do |t| @runs << t.name end
 
     Task[:obj].invoke
@@ -96,11 +97,11 @@ class TestRakeFileTask < Rake::TestCase
   end
 
   def test_needed_eh_build_all
-    create_file 'a'
+    create_file "a"
 
-    file 'a'
+    file "a"
 
-    a_task = Task['a']
+    a_task = Task["a"]
 
     refute a_task.needed?
 
@@ -108,30 +109,30 @@ class TestRakeFileTask < Rake::TestCase
 
     assert a_task.needed?
   ensure
-    delete_file 'a'
+    delete_file "a"
   end
 
   def test_needed_eh_dependency
-    create_file 'a', Time.now
-    create_file 'b', Time.now - 60
+    create_file "a", Time.now
+    create_file "b", Time.now - 60
 
-    create_file 'c', Time.now
-    create_file 'd', Time.now - 60
+    create_file "c", Time.now
+    create_file "d", Time.now - 60
 
-    file 'b' => 'a'
+    file "b" => "a"
 
-    b_task = Task['b']
+    b_task = Task["b"]
 
     assert b_task.needed?
 
-    file 'c' => 'd'
+    file "c" => "d"
 
-    c_task = Task['c']
+    c_task = Task["c"]
 
     refute c_task.needed?
   ensure
-    delete_file 'old'
-    delete_file 'new'
+    delete_file "old"
+    delete_file "new"
   end
 
   def test_needed_eh_exists
@@ -150,26 +151,26 @@ class TestRakeFileTask < Rake::TestCase
   end
 
   def test_source_is_first_prerequisite
-    t = file :f => ["preqA", "preqB"]
+    t = file f: ["preqA", "preqB"]
     assert_equal "preqA", t.source
   end
 
   def test_sources_is_all_prerequisites
-    t = file :f => ["preqA", "preqB"]
+    t = file f: ["preqA", "preqB"]
     assert_equal ["preqA", "preqB"], t.sources
   end
 
   def test_task_can_be_pathname
-      name = "dummy"
-      file Pathname.new name
+    name = "dummy"
+    file Pathname.new name
 
-      ftask = Task[name]
+    ftask = Task[name]
 
-      assert_equal name.to_s, ftask.name
+    assert_equal name.to_s, ftask.name
   end
 
   def test_prerequisite_can_be_pathname
-    t = file :f => Pathname.new("preq")
+    t = file f: Pathname.new("preq")
     assert_equal "preq", t.source
   end
 

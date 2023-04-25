@@ -1,8 +1,9 @@
-require File.expand_path('../helper', __FILE__)
-require 'fileutils'
-require 'open3'
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
+require "fileutils"
+require "open3"
 
-class TestRakeFunctional < Rake::TestCase
+class TestRakeFunctional < Rake::TestCase # :nodoc:
   include RubyRunner
 
   def setup
@@ -11,9 +12,9 @@ class TestRakeFunctional < Rake::TestCase
     if @verbose
       puts
       puts
-      puts '-' * 80
+      puts "-" * 80
       puts @__name__
-      puts '-' * 80
+      puts "-" * 80
     end
   end
 
@@ -28,7 +29,7 @@ class TestRakeFunctional < Rake::TestCase
   def test_rake_error_on_bad_task
     rakefile_default
 
-    rake '-t', 'xyz'
+    rake "-t", "xyz"
 
     assert_match(/rake aborted/, @err)
   end
@@ -44,13 +45,21 @@ class TestRakeFunctional < Rake::TestCase
   def test_env_available_at_task_scope
     rakefile_default
 
-    rake 'TESTTASKSCOPE=1', 'task_scope'
+    rake "TESTTASKSCOPE=1", "task_scope"
 
     assert_match(/^TASKSCOPE$/, @out)
   end
 
+  def test_task_override
+    rakefile_override
+
+    rake "t1"
+
+    assert_match(/foo\nbar\n/, @out)
+  end
+
   def test_multi_desc
-    ENV['RAKE_COLUMNS'] = '80'
+    ENV["RAKE_COLUMNS"] = "80"
     rakefile_multidesc
 
     rake "-T"
@@ -91,7 +100,7 @@ class TestRakeFunctional < Rake::TestCase
   def test_system
     rake_system_dir
 
-    rake '-g', "sys1"
+    rake "-g", "sys1"
 
     assert_match %r{^SYS1}, @out
   end
@@ -99,7 +108,7 @@ class TestRakeFunctional < Rake::TestCase
   def test_system_excludes_rakelib_files_too
     rake_system_dir
 
-    rake '-g', "sys1", '-T', 'extra'
+    rake "-g", "sys1", "-T", "extra"
 
     refute_match %r{extra:extra}, @out
   end
@@ -108,12 +117,14 @@ class TestRakeFunctional < Rake::TestCase
     rake_system_dir
     rakefile_extra
 
-    rake '-T', 'extra', '--trace'
+    rake "-T", "extra", "--trace"
 
     assert_match %r{extra:extra}, @out
   end
 
   def test_implicit_system
+    skip if jruby9?
+
     rake_system_dir
     Dir.chdir @tempdir
 
@@ -126,7 +137,7 @@ class TestRakeFunctional < Rake::TestCase
     rake_system_dir
     rakefile_extra
 
-    rake '-G', "sys1"
+    rake "-G", "sys1"
 
     assert_match %r{^Don't know how to build task}, @err # emacs wart: '
   end
@@ -150,7 +161,7 @@ class TestRakeFunctional < Rake::TestCase
 
   def test_nosearch_without_rakefile_and_no_system_fails
     rakefile_nosearch
-    ENV['RAKE_SYSTEM'] = 'not_exist'
+    ENV["RAKE_SYSTEM"] = "not_exist"
 
     rake "--nosearch"
 
@@ -238,7 +249,7 @@ class TestRakeFunctional < Rake::TestCase
 
     rake
 
-    FileUtils.rm_f 'temp_one'
+    FileUtils.rm_f "temp_one"
 
     rake "--dry-run"
 
@@ -251,7 +262,7 @@ class TestRakeFunctional < Rake::TestCase
 
     rake
 
-    FileUtils.rm_f 'temp_one'
+    FileUtils.rm_f "temp_one"
 
     rake "--trace"
 
@@ -263,7 +274,7 @@ class TestRakeFunctional < Rake::TestCase
 
     rake
 
-    assert File.exist?(File.join(@tempdir, 'dynamic_deps')),
+    assert File.exist?(File.join(@tempdir, "dynamic_deps")),
            "'dynamic_deps' file should exist"
     assert_match(/^FIRST$\s+^DYNAMIC$\s+^STATIC$\s+^OTHER$/, @out)
   end
@@ -281,8 +292,28 @@ class TestRakeFunctional < Rake::TestCase
 
     rake
 
-    assert File.exist?(File.join(@tempdir, 'play.app')),
+    assert File.exist?(File.join(@tempdir, "play.app")),
            "'play.app' file should exist"
+  end
+
+  def dryrun_tasks
+    @err.split("\n").select { |line|
+      line.match(/^\*\* Execute/)
+    }.map { |line|
+      line.gsub(/^\*\* Execute \(dry run\) /, "")
+    }
+  end
+
+  def test_update_midway_through_chaining_to_file_task
+    rakefile_file_chains
+
+    rake "-n"
+    assert_equal(%w{fileA fileB fileC default}, dryrun_tasks)
+    rake
+    sleep 1 # Ensure the timestamp is on a new second
+    FileUtils.touch("fileA")
+    rake "-n"
+    assert_equal(%w{fileB fileC default}, dryrun_tasks)
   end
 
   def test_file_creation_task
@@ -298,7 +329,7 @@ class TestRakeFunctional < Rake::TestCase
   def test_dash_f_with_no_arg_foils_rakefile_lookup
     rakefile_rakelib
 
-    rake '-I', 'rakelib', '-rtest1', '-f'
+    rake "-I", "rakelib", "-rtest1", "-f"
 
     assert_match(/^TEST1$/, @out)
   end
@@ -306,7 +337,7 @@ class TestRakeFunctional < Rake::TestCase
   def test_dot_rake_files_can_be_loaded_with_dash_r
     rakefile_rakelib
 
-    rake '-I', 'rakelib', '-rtest2', '-f'
+    rake "-I", "rakelib", "-rtest2", "-f"
 
     assert_empty @err
     assert_match(/^TEST2$/, @out)
@@ -384,6 +415,20 @@ class TestRakeFunctional < Rake::TestCase
     assert_match(/custom test task description/, @out)
   end
 
+  def test_test_task_when_verbose_unless_verbose_passed_not_prompt_testopts
+    rakefile_test_task_verbose
+    rake "unit"
+    exp = /TESTOPTS="--verbose" to pass --verbose/
+    refute_match exp, @out
+  end
+
+  def test_test_task_when_verbose_passed_prompts_testopts
+    rakefile_test_task
+    rake "--verbose", "unit"
+    exp = /TESTOPTS="--verbose" to pass --verbose/
+    assert_match exp, @out
+  end
+
   def test_comment_before_task_acts_like_desc
     rakefile_comments
 
@@ -425,12 +470,14 @@ class TestRakeFunctional < Rake::TestCase
   end
 
   def test_file_list_is_requirable_separately
-    ruby '-rrake/file_list', '-e', 'puts Rake::FileList["a"].size'
+    skip if jruby9? # https://github.com/jruby/jruby/issues/3655
+
+    ruby "-rrake/file_list", "-e", 'puts Rake::FileList["a"].size'
     assert_equal "1\n", @out
   end
 
   def can_detect_signals?
-    system RUBY, '-e', 'Process.kill "TERM", $$'
+    system RUBY, "-e", 'Process.kill "TERM", $$'
     status = $?
     if @verbose
       puts "    SIG status = #{$?.inspect}"
@@ -443,7 +490,7 @@ class TestRakeFunctional < Rake::TestCase
   end
 
   def test_signal_propagation_in_tests
-    if can_detect_signals?
+    if !jruby? && can_detect_signals?
       rakefile_test_signal
       rake
       assert_match(/ATEST/, @out)
@@ -476,7 +523,7 @@ class TestRakeFunctional < Rake::TestCase
   # predicate function can be used to skip tests or assertions as
   # needed.
   def uncertain_exit_status?
-    RUBY_VERSION < "1.9" || defined?(JRUBY_VERSION)
+    defined?(JRUBY_VERSION)
   end
 
 end

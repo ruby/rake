@@ -1,9 +1,10 @@
-require File.expand_path('../helper', __FILE__)
-require 'rake/private_reader'
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
+require "rake/private_reader"
 
-class TestPrivateAttrs < Rake::TestCase
+class TestPrivateAttrs < Rake::TestCase # :nodoc:
 
-  class Sample
+  class Sample # :nodoc:
     include Rake::PrivateReader
 
     private_reader :reader, :a

@@ -1,18 +1,19 @@
-require File.expand_path('../helper', __FILE__)
+# frozen_string_literal: true
+require File.expand_path("../helper", __FILE__)
 
-class TestRake < Rake::TestCase
+class TestRake < Rake::TestCase # :nodoc:
   def test_each_dir_parent
-    assert_equal ['a'], alldirs('a')
-    assert_equal ['a/b', 'a'], alldirs('a/b')
-    assert_equal ['/a/b', '/a', '/'], alldirs('/a/b')
+    assert_equal ["a"], alldirs("a")
+    assert_equal ["a/b", "a"], alldirs("a/b")
+    assert_equal ["/a/b", "/a", "/"], alldirs("/a/b")
     if File.dirname("c:/foo") == "c:"
       # Under Unix
-      assert_equal ['c:/a/b', 'c:/a', 'c:'], alldirs('c:/a/b')
-      assert_equal ['c:a/b', 'c:a'], alldirs('c:a/b')
+      assert_equal ["c:/a/b", "c:/a", "c:"], alldirs("c:/a/b")
+      assert_equal ["c:a/b", "c:a"], alldirs("c:a/b")
     else
       # Under Windows
-      assert_equal ['c:/a/b', 'c:/a', 'c:/'], alldirs('c:/a/b')
-      assert_equal ['c:a/b', 'c:a'], alldirs('c:a/b')
+      assert_equal ["c:/a/b", "c:/a", "c:/"], alldirs("c:/a/b")
+      assert_equal ["c:a/b", "c:a"], alldirs("c:a/b")
     end
   end
 

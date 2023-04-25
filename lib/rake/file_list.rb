@@ -1,7 +1,7 @@
-require 'rake/cloneable'
-require 'rake/file_utils_ext'
-require 'rake/pathmap'
-
+# frozen_string_literal: true
+require "rake/cloneable"
+require "rake/file_utils_ext"
+require "rake/ext/string"
 
 module Rake
 
@@ -41,8 +41,7 @@ module Rake
 
     # List of array methods (that are not in +Object+) that need to be
     # delegated.
-    ARRAY_METHODS = (Array.instance_methods - Object.instance_methods).
-      map { |n| n.to_s }
+    ARRAY_METHODS = (Array.instance_methods - Object.instance_methods).map(&:to_s)
 
     # List of additional methods that must be delegated.
     MUST_DEFINE = %w[inspect <=>]
@@ -59,8 +58,7 @@ module Rake
       + - & |
     ]
 
-    DELEGATING_METHODS = (ARRAY_METHODS + MUST_DEFINE - MUST_NOT_DEFINE).
-      map { |s| s.to_s }.sort.uniq
+    DELEGATING_METHODS = (ARRAY_METHODS + MUST_DEFINE - MUST_NOT_DEFINE).map(&:to_s).sort.uniq
 
     # Now do the delegation.
     DELEGATING_METHODS.each do |sym|
@@ -84,6 +82,8 @@ module Rake
         }, __FILE__, ln
       end
     end
+
+    GLOB_PATTERN = %r{[*?\[\{]}
 
     # Create a file list from the globbable patterns given.  If you wish to
     # perform multiple includes or excludes at object build time, use the
@@ -149,7 +149,11 @@ module Rake
     #
     def exclude(*patterns, &block)
       patterns.each do |pat|
-        @exclude_patterns << Rake.from_pathname(pat)
+        if pat.respond_to? :to_ary
+          exclude(*pat.to_ary)
+        else
+          @exclude_patterns << Rake.from_pathname(pat)
+        end
       end
       @exclude_procs << block if block_given?
       resolve_exclude unless @pending
@@ -190,7 +194,7 @@ module Rake
       result = @items * other
       case result
       when Array
-        FileList.new.import(result)
+        self.class.new.import(result)
       else
         result
       end
@@ -215,7 +219,7 @@ module Rake
 
     def resolve_add(fn) # :nodoc:
       case fn
-      when %r{[*?\[\{]}
+      when GLOB_PATTERN
         add_matching(fn)
       else
         self << fn
@@ -236,7 +240,7 @@ module Rake
     #   FileList['a.c', 'b.c'].sub(/\.c$/, '.o')  => ['a.o', 'b.o']
     #
     def sub(pat, rep)
-      inject(FileList.new) { |res, fn| res << fn.sub(pat, rep) }
+      inject(self.class.new) { |res, fn| res << fn.sub(pat, rep) }
     end
 
     # Return a new FileList with the results of running +gsub+ against each
@@ -247,7 +251,7 @@ module Rake
     #      => ['lib\\test\\file', 'x\\y']
     #
     def gsub(pat, rep)
-      inject(FileList.new) { |res, fn| res << fn.gsub(pat, rep) }
+      inject(self.class.new) { |res, fn| res << fn.gsub(pat, rep) }
     end
 
     # Same as +sub+ except that the original file list is modified.
@@ -265,8 +269,8 @@ module Rake
     # Apply the pathmap spec to each of the included file names, returning a
     # new file list with the modified paths.  (See String#pathmap for
     # details.)
-    def pathmap(spec=nil)
-      collect { |fn| fn.pathmap(spec) }
+    def pathmap(spec=nil, &block)
+      collect { |fn| fn.pathmap(spec, &block) }
     end
 
     # Return a new FileList with <tt>String#ext</tt> method applied to
@@ -277,7 +281,7 @@ module Rake
     #    array.collect { |item| item.ext(newext) }
     #
     # +ext+ is a user added method for the Array class.
-    def ext(newext='')
+    def ext(newext="")
       collect { |fn| fn.ext(newext) }
     end
 
@@ -290,7 +294,7 @@ module Rake
       matched = 0
       each do |fn|
         begin
-          open(fn, "r", *options) do |inf|
+          File.open(fn, "r", *options) do |inf|
             count = 0
             inf.each do |line|
               count += 1
@@ -314,14 +318,14 @@ module Rake
     # Return a new file list that only contains file names from the current
     # file list that exist on the file system.
     def existing
-      select { |fn| File.exist?(fn) }
+      select { |fn| File.exist?(fn) }.uniq
     end
 
     # Modify the current file list so that it contains only file name that
     # exist on the file system.
     def existing!
       resolve
-      @items = @items.select { |fn| File.exist?(fn) }
+      @items = @items.select { |fn| File.exist?(fn) }.uniq
       self
     end
 
@@ -331,20 +335,20 @@ module Rake
       resolve
       result = @items.partition(&block)
       [
-        FileList.new.import(result[0]),
-        FileList.new.import(result[1]),
+        self.class.new.import(result[0]),
+        self.class.new.import(result[1]),
       ]
     end
 
     # Convert a FileList to a string by joining all elements with a space.
     def to_s
       resolve
-      self.join(' ')
+      self.join(" ")
     end
 
     # Add matching glob patterns.
     def add_matching(pattern)
-      FileList.glob(pattern).each do |fn|
+      self.class.glob(pattern).each do |fn|
         self << fn unless excluded_from_list?(fn)
       end
     end
@@ -362,8 +366,11 @@ module Rake
         case pat
         when Regexp
           fn =~ pat
-        when /[*?]/
-          File.fnmatch?(pat, fn, File::FNM_PATHNAME)
+        when GLOB_PATTERN
+          flags = File::FNM_PATHNAME
+          # Ruby <= 1.9.3 does not support File::FNM_EXTGLOB
+          flags |= File::FNM_EXTGLOB if defined? File::FNM_EXTGLOB
+          File.fnmatch?(pat, fn, flags)
         else
           fn == pat
         end
@@ -378,7 +385,7 @@ module Rake
       /~$/
     ]
     DEFAULT_IGNORE_PROCS = [
-      proc { |fn| fn =~ /(^|[\/\\])core$/ && ! File.directory?(fn) }
+      proc { |fn| fn =~ /(^|[\/\\])core$/ && !File.directory?(fn) }
     ]
 
     def import(array) # :nodoc:
@@ -410,7 +417,7 @@ module Rake
     # Yield each file or directory component.
     def each_dir_parent(dir)    # :nodoc:
       old_length = nil
-      while dir != '.' && dir.length != old_length
+      while dir != "." && dir.length != old_length
         yield(dir)
         old_length = dir.length
         dir = File.dirname(dir)
