@@ -11,7 +11,6 @@ jobs:
     with:
       min_version: 2.3
       engine: cruby-jruby
-      versions: '["truffleruby"]'
 
   test:
     needs: ruby-versions
@@ -29,7 +28,7 @@ jobs:
             ruby: jruby
     steps:
     - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
-    - uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+    - uses: ruby/setup-ruby@d2b39ad0b52eca07d23f3aa14fdf2a3fcc1f411c # v1.148.0
       with:
         ruby-version: ${{ matrix.ruby }}
     - name: Install dependencies
