@@ -4,7 +4,7 @@ gemspec
 
 group :development do
   gem "bundler"
-  gem "minitest", "5.18.0"
+  gem "minitest"
   gem "coveralls"
-  gem "rubocop", "~> 1.52.0"
+  gem "rubocop"
 end
