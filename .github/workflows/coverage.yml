@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
-    - uses: ruby/setup-ruby@bc1dd263b68cb5626dbb55d5c89777d79372c484 # v1.151.0
+    - uses: ruby/setup-ruby@250fcd6a742febb1123a77a841497ccaa8b9e939 # v1.152.0
       with:
         ruby-version: '3.0'
     - name: Install dependencies
