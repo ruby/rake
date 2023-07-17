@@ -32,7 +32,7 @@ jobs:
         # Outputs to the './_site' directory by default
         run: bundle exec rake rdoc
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v2
 
   deploy:
     environment:
