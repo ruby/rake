@@ -29,4 +29,15 @@ RDoc::Task.new do |doc|
   doc.rdoc_dir = "_site" # for github pages
 end
 
+namespace :rdoc do
+  task :fix_links do
+    %w[_site/index.html _site/README_rdoc.html].each do |path|
+      fixed = File.read(path).gsub(%r{href="(doc/[^"]+?)\.rdoc"}, 'href="\1_rdoc.html"')
+      File.write(path, fixed)
+    end
+  end
+end
+
+task rdoc: ["rdoc:fix_links"]
+
 task default: :test
