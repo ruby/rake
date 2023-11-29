@@ -145,7 +145,7 @@ module Rake
     #
     # Example:
     #  rule '.o' => '.c' do |t|
-    #    sh 'cc', '-o', t.name, t.source
+    #    sh 'cc', '-c', '-o', t.name, t.source
     #  end
     #
     def rule(*args, &block) # :doc:
