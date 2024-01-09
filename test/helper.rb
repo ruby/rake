@@ -10,8 +10,7 @@ begin
 rescue Gem::LoadError
 end
 
-gem "minitest", "~> 5"
-require "minitest/autorun"
+require "test/unit"
 require "rake"
 require "tmpdir"
 
@@ -19,7 +18,7 @@ require_relative "support/file_creation"
 require_relative "support/ruby_runner"
 require_relative "support/rakefile_definitions"
 
-class Rake::TestCase < Minitest::Test
+class Rake::TestCase < Test::Unit::TestCase
   include FileCreation
 
   include Rake::DSL
