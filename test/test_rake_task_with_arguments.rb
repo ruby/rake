@@ -83,7 +83,7 @@ class TestRakeTaskWithArguments < Rake::TestCase # :nodoc:
 
   def test_actions_adore_keywords
     # https://github.com/ruby/rake/pull/174#issuecomment-263460761
-    skip if jruby9?
+    omit if jruby9?
     eval <<-RUBY, binding, __FILE__, __LINE__+1
     notes = []
     t = task :t, [:reqr, :ovrd, :dflt] # required, overridden-optional, default-optional

@@ -308,7 +308,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
   end
 
   def test_load_rakefile_not_found
-    skip if jruby9?
+    omit if jruby9?
 
     Dir.chdir @tempdir
     ENV["RAKE_SYSTEM"] = "not_exist"

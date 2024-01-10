@@ -171,7 +171,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   end
 
   def test_sh_with_multiple_arguments
-    skip if jruby9? # https://github.com/jruby/jruby/issues/3653
+    omit if jruby9? # https://github.com/jruby/jruby/issues/3653
 
     check_no_expansion
     ENV["RAKE_TEST_SH"] = "someval"
@@ -182,7 +182,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   end
 
   def test_sh_with_spawn_options
-    skip "JRuby does not support spawn options" if jruby?
+    omit "JRuby does not support spawn options" if jruby?
 
     echocommand
 
@@ -198,7 +198,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   end
 
   def test_sh_with_hash_option
-    skip "JRuby does not support spawn options" if jruby?
+    omit "JRuby does not support spawn options" if jruby?
     check_expansion
 
     verbose(false) {
@@ -243,7 +243,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   def test_sh_bad_option
     # Skip on JRuby because option checking is performed by spawn via system
     # now.
-    skip "JRuby does not support spawn options" if jruby?
+    omit "JRuby does not support spawn options" if jruby?
 
     shellcommand
 
@@ -395,7 +395,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   end
 
   def test_ruby_with_multiple_arguments
-    skip if jruby9? # https://github.com/jruby/jruby/issues/3653
+    omit if jruby9? # https://github.com/jruby/jruby/issues/3653
 
     check_no_expansion
 

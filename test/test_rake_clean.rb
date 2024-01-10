@@ -119,7 +119,7 @@ class TestRakeClean < Rake::TestCase # :nodoc:
     rescue
       file_name
     else
-      skip "Permission to delete files is different on this system"
+      omit "Permission to delete files is different on this system"
     end
   end
 

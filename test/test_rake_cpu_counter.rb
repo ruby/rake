@@ -11,7 +11,7 @@ class TestRakeCpuCounter < Rake::TestCase # :nodoc:
 
   def test_count
     num = @cpu_counter.count
-    skip "cannot count CPU" if num == nil
+    omit "cannot count CPU" if num == nil
     assert_kind_of Numeric, num
     assert_operator num, :>=, 1
   end

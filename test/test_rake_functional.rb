@@ -123,7 +123,7 @@ class TestRakeFunctional < Rake::TestCase # :nodoc:
   end
 
   def test_implicit_system
-    skip if jruby9?
+    omit if jruby9?
 
     rake_system_dir
     Dir.chdir @tempdir
@@ -470,7 +470,7 @@ class TestRakeFunctional < Rake::TestCase # :nodoc:
   end
 
   def test_file_list_is_requirable_separately
-    skip if jruby9? # https://github.com/jruby/jruby/issues/3655
+    omit if jruby9? # https://github.com/jruby/jruby/issues/3655
 
     ruby "-rrake/file_list", "-e", 'puts Rake::FileList["a"].size'
     assert_equal "1\n", @out
@@ -496,12 +496,12 @@ class TestRakeFunctional < Rake::TestCase # :nodoc:
       assert_match(/ATEST/, @out)
       refute_match(/BTEST/, @out)
     else
-      skip "Signal detect seems broken on this system"
+      omit "Signal detect seems broken on this system"
     end
   end
 
   def test_failing_test_sets_exit_status
-    skip if uncertain_exit_status?
+    omit if uncertain_exit_status?
     rakefile_failing_test_task
     rake
     assert @exit.exitstatus > 0, "should be non-zero"
@@ -520,7 +520,7 @@ class TestRakeFunctional < Rake::TestCase # :nodoc:
 
   # We are unable to accurately verify that Rake returns a proper
   # error exit status using popen3 in Ruby 1.8.7 and JRuby. This
-  # predicate function can be used to skip tests or assertions as
+  # predicate function can be used to omit tests or assertions as
   # needed.
   def uncertain_exit_status?
     defined?(JRUBY_VERSION)
