@@ -59,21 +59,25 @@ class TestRakeClean < Rake::TestCase # :nodoc:
   def test_cleanup_without_trace
     file_name = create_file
 
-    assert_output "", "" do
+    out, err = capture_output do
       with_trace false do
         Rake::Cleaner.cleanup(file_name)
       end
     end
+    assert_empty out
+    assert_empty err
   end
 
   def test_cleanup_opt_overrides_trace_silent
     file_name = create_file
 
-    assert_output "", "" do
+    out, err = capture_output do
       with_trace true do
         Rake::Cleaner.cleanup(file_name, verbose: false)
       end
     end
+    assert_empty out
+    assert_empty err
   end
 
   def test_cleanup_opt_overrides_trace_verbose
