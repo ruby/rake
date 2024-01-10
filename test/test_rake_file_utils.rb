@@ -282,9 +282,10 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
 
     RakeFileUtils.verbose_flag = nil
 
-    assert_silent do
+    out, _ = capture_output do
       sh %{shellcommand.rb}, noop: true
     end
+    assert_empty out
   end
 
   def test_ruby_with_a_single_string_argument
