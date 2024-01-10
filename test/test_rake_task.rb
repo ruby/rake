@@ -64,7 +64,7 @@ class TestRakeTask < Rake::TestCase # :nodoc:
   def test_dry_run_prevents_actions
     runlist = []
     t1 = task(:t1) { |t| runlist << t.name; 3321 }
-    _, err = capture_io {
+    _, err = capture_output {
       Rake.application.set_default_options # reset trace output IO
       Rake.application.options.dryrun = true
 
@@ -80,7 +80,7 @@ class TestRakeTask < Rake::TestCase # :nodoc:
 
   def test_tasks_can_be_traced
     t1 = task(:t1)
-    _, err = capture_io {
+    _, err = capture_output {
       Rake.application.set_default_options # reset trace output IO
       Rake.application.options.trace = true
 

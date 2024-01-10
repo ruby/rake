@@ -46,7 +46,7 @@ class TestRakeTopLevelFunctions < Rake::TestCase # :nodoc:
   end
 
   def test_when_writing
-    out, = capture_io do
+    out, = capture_output do
       when_writing("NOTWRITING") do
         puts "WRITING"
       end
@@ -56,7 +56,7 @@ class TestRakeTopLevelFunctions < Rake::TestCase # :nodoc:
 
   def test_when_not_writing
     Rake::FileUtilsExt.nowrite_flag = true
-    _, err = capture_io do
+    _, err = capture_output do
       when_writing("NOTWRITING") do
         puts "WRITING"
       end

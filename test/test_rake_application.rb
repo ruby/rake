@@ -48,7 +48,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     rescue => ex
     end
 
-    out, err = capture_io do
+    out, err = capture_output do
       @app.set_default_options # reset trace output IO
 
       @app.display_error_message ex
@@ -72,7 +72,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     rescue error_class => ex
     end
 
-    out, err = capture_io do
+    out, err = capture_output do
       @app.set_default_options # reset trace output IO
 
       @app.display_error_message ex
@@ -91,7 +91,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     rescue => ex
     end
 
-    out, err = capture_io do
+    out, err = capture_output do
       @app.set_default_options # reset trace output IO
 
       @app.display_error_message ex
@@ -111,7 +111,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
       end
     end
 
-    out, err = capture_io do
+    out, err = capture_output do
       @app.set_default_options # reset trace output IO
 
       @app.display_error_message ex
@@ -129,7 +129,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     @app.options.show_task_pattern = //
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "t")
-    out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
+    out, = capture_output do @app.instance_eval { display_tasks_and_comments } end
     assert_match(/^rake t/, out)
     assert_match(/# COMMENT/, out)
   end
@@ -142,7 +142,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     @app.last_description = numbers
     @app.define_task(Rake::Task, "t")
 
-    out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
+    out, = capture_output do @app.instance_eval { display_tasks_and_comments } end
 
     assert_match(/^rake t/, out)
     assert_match(/# #{numbers[0, 65]}\.\.\./, out)
@@ -156,7 +156,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     @app.last_description = "something short"
     @app.define_task(Rake::Task, task_name)
 
-    out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
+    out, = capture_output do @app.instance_eval { display_tasks_and_comments } end
 
     # Ensure the entire task name is output and we end up showing no description
     assert_match(/rake #{task_name}  # .../, out)
@@ -171,7 +171,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     @app.last_description = "something short"
     @app.define_task(Rake::Task, task_name)
 
-    out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
+    out, = capture_output do @app.instance_eval { display_tasks_and_comments } end
 
     # Ensure the entire task name is output and we end up showing no description
     assert_match(/rake #{task_name}  # #{description}/, out)
@@ -183,7 +183,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     @app.tty_output = false
     @app.last_description = "1234567890" * 8
     @app.define_task(Rake::Task, "t")
-    out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
+    out, = capture_output do @app.instance_eval { display_tasks_and_comments } end
     assert_match(/^rake t/, out)
     assert_match(/# #{@app.last_description}/, out)
   end
@@ -197,7 +197,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     @app.last_description = numbers
     @app.define_task(Rake::Task, "t")
 
-    out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
+    out, = capture_output do @app.instance_eval { display_tasks_and_comments } end
 
     assert_match(/^rake t/, out)
     assert_match(/# #{numbers[0, 65]}\.\.\./, out)
@@ -208,7 +208,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     @app.options.show_task_pattern = //
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "t")
-    out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
+    out, = capture_output do @app.instance_eval { display_tasks_and_comments } end
     assert_match(/^rake t$/, out)
     assert_match(/^ {4}COMMENT$/, out)
   end
@@ -219,7 +219,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "t")
     @app["t"].locations << "HERE:1"
-    out, = capture_io do @app.instance_eval { display_tasks_and_comments } end
+    out, = capture_output do @app.instance_eval { display_tasks_and_comments } end
     assert_match(/^rake t +[^:]+:\d+ *$/, out)
   end
 
@@ -251,7 +251,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
   def test_load_rakefile_doesnt_print_rakefile_directory_from_same_dir
     rakefile_unittest
 
-    _, err = capture_io do
+    _, err = capture_output do
       @app.instance_eval do
         # pretend we started from the unittest dir
         @original_dir = File.expand_path(".")
@@ -283,7 +283,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     app = Rake::Application.new
     app.options.rakelib = []
 
-    _, err = capture_io do
+    _, err = capture_output do
       app.instance_eval do
         raw_load_rakefile
       end
@@ -296,7 +296,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     rakefile_unittest
     Dir.chdir "subdir"
 
-    _, err = capture_io do
+    _, err = capture_output do
       @app.instance_eval do
         handle_options []
         options.silent = true
@@ -455,7 +455,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
 
     rakefile_default
 
-    out, err = capture_io do
+    out, err = capture_output do
       @app.run %w[--rakelib=""]
     end
 
@@ -468,7 +468,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     ran = false
     @app.last_description = "COMMENT"
     @app.define_task(Rake::Task, "default")
-    out, = capture_io { @app.run %w[-f -s --tasks --rakelib=""] }
+    out, = capture_output { @app.run %w[-f -s --tasks --rakelib=""] }
     assert @app.options.show_tasks
     assert ! ran
     assert_match(/rake default/, out)
@@ -482,7 +482,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     t.enhance([:a, :b])
     @app.define_task(Rake::Task, "a")
     @app.define_task(Rake::Task, "b")
-    out, = capture_io { @app.run %w[-f -s --prereqs --rakelib=""] }
+    out, = capture_output { @app.run %w[-f -s --prereqs --rakelib=""] }
     assert @app.options.show_prereqs
     assert ! ran
     assert_match(/rake a$/, out)
@@ -492,7 +492,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
 
   def test_bad_run
     @app.intern(Rake::Task, "default").enhance { fail }
-    _, err = capture_io {
+    _, err = capture_output {
       assert_raises(SystemExit) { @app.run %w[-f -s --rakelib=""] }
     }
     assert_match(/see full trace/i, err)
@@ -500,7 +500,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
 
   def test_bad_run_with_trace
     @app.intern(Rake::Task, "default").enhance { fail }
-    _, err = capture_io {
+    _, err = capture_output {
       @app.set_default_options
       assert_raises(SystemExit) { @app.run %w[-f -s -t] }
     }
@@ -509,7 +509,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
 
   def test_bad_run_with_backtrace
     @app.intern(Rake::Task, "default").enhance { fail }
-    _, err = capture_io {
+    _, err = capture_output {
       assert_raises(SystemExit) {
         @app.run %w[-f -s --backtrace]
       }
@@ -523,7 +523,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     @app.intern(Rake::Task, "default").enhance {
       raise CustomError, "intentional"
     }
-    _, err = capture_io {
+    _, err = capture_output {
       assert_raises(SystemExit) {
         @app.run %w[-f -s]
       }
@@ -535,7 +535,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     @app.intern(Rake::Task, "default").enhance {
       fail "intentional"
     }
-    _, err = capture_io {
+    _, err = capture_output {
       assert_raises(SystemExit) {
         @app.run %w[-f -s]
       }
@@ -558,7 +558,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
         raise custom_error, "Secondary Error"
       end
     }
-    _ ,err = capture_io {
+    _ ,err = capture_output {
       assert_raises(SystemExit) {
         @app.run %w[-f -s]
       }
@@ -572,12 +572,12 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
   def test_run_with_bad_options
     @app.intern(Rake::Task, "default").enhance { fail }
     assert_raises(SystemExit) {
-      capture_io { @app.run %w[-f -s --xyzzy] }
+      capture_output { @app.run %w[-f -s --xyzzy] }
     }
   end
 
   def test_standard_exception_handling_invalid_option
-    out, err = capture_io do
+    out, err = capture_output do
       e = assert_raises SystemExit do
         @app.standard_exception_handling do
           raise OptionParser::InvalidOption, "blah"
@@ -592,7 +592,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
   end
 
   def test_standard_exception_handling_other
-    out, err = capture_io do
+    out, err = capture_output do
       @app.set_default_options # reset trace output IO
 
       e = assert_raises SystemExit do
@@ -610,7 +610,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
   end
 
   def test_standard_exception_handling_system_exit
-    out, err = capture_io do
+    out, err = capture_output do
       e = assert_raises SystemExit do
         @app.standard_exception_handling do
           exit 0
@@ -625,7 +625,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
   end
 
   def test_standard_exception_handling_system_exit_nonzero
-    out, err = capture_io do
+    out, err = capture_output do
       e = assert_raises SystemExit do
         @app.standard_exception_handling do
           exit 5

@@ -107,7 +107,7 @@ class TestRakeApplicationOptions < Rake::TestCase # :nodoc:
 
   def test_execute_and_print
     $xyzzy = 0
-    out, = capture_io do
+    out, = capture_output do
       flags('--execute-print=$xyzzy="pugh"', '-p $xyzzy="pugh"') do
         assert_equal "pugh", $xyzzy
         assert_equal :exit, @exit
@@ -119,7 +119,7 @@ class TestRakeApplicationOptions < Rake::TestCase # :nodoc:
   end
 
   def test_help
-    out, = capture_io do
+    out, = capture_output do
       flags "--help", "-H", "-h"
     end
 
@@ -386,7 +386,7 @@ class TestRakeApplicationOptions < Rake::TestCase # :nodoc:
   end
 
   def test_verbose
-    capture_io do
+    capture_output do
       flags("--verbose", "-v") do |opts|
         assert Rake::FileUtilsExt.verbose_flag, "verbose should be true"
         assert ! opts.silent, "opts should not be silent"
@@ -395,7 +395,7 @@ class TestRakeApplicationOptions < Rake::TestCase # :nodoc:
   end
 
   def test_version
-    out, _ = capture_io do
+    out, _ = capture_output do
       flags "--version", "-V"
     end
 
@@ -405,7 +405,7 @@ class TestRakeApplicationOptions < Rake::TestCase # :nodoc:
   end
 
   def test_bad_option
-    _, err = capture_io do
+    _, err = capture_output do
       ex = assert_raises(OptionParser::InvalidOption) do
         flags("--bad-option")
       end

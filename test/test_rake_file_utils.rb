@@ -129,7 +129,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   def test_file_utils_methods_are_available_at_top_level
     create_file("a")
 
-    capture_io do
+    capture_output do
       rm_rf "a"
     end
 
@@ -256,7 +256,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   def test_sh_verbose
     shellcommand
 
-    _, err = capture_io do
+    _, err = capture_output do
       verbose(true) {
         sh %{shellcommand.rb}, noop: true
       }
@@ -268,7 +268,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   def test_sh_verbose_false
     shellcommand
 
-    _, err = capture_io do
+    _, err = capture_output do
       verbose(false) {
         sh %{shellcommand.rb}, noop: true
       }

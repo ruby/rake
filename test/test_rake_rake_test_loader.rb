@@ -25,7 +25,7 @@ class TestRakeRakeTestLoader < Rake::TestCase # :nodoc:
   end
 
   def test_load_error_from_missing_test_file
-    out, err = capture_io do
+    out, err = capture_output do
       ARGV.replace %w[no_such_test_file.rb]
 
       assert_raises SystemExit do
@@ -47,7 +47,7 @@ class TestRakeRakeTestLoader < Rake::TestCase # :nodoc:
 
   def test_load_error_raised_implicitly
     File.write("error_test.rb", "require 'superkalifragilisticoespialidoso'")
-    out, err = capture_io do
+    out, err = capture_output do
       ARGV.replace %w[error_test.rb]
 
       exc = assert_raises(LoadError) do
@@ -65,7 +65,7 @@ class TestRakeRakeTestLoader < Rake::TestCase # :nodoc:
 
   def test_load_error_raised_explicitly
     File.write("error_test.rb", "raise LoadError, 'explicitly raised'")
-    out, err = capture_io do
+    out, err = capture_output do
       ARGV.replace %w[error_test.rb]
 
       exc = assert_raises(LoadError) do

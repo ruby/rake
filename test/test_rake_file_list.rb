@@ -383,7 +383,7 @@ class TestRakeFileList < Rake::TestCase # :nodoc:
   def test_egrep_with_output
     files = FileList["*.txt"]
 
-    out, = capture_io do
+    out, = capture_output do
       files.egrep(/XYZZY/)
     end
 
@@ -404,7 +404,7 @@ class TestRakeFileList < Rake::TestCase # :nodoc:
   def test_egrep_with_error
     files = FileList["*.txt"]
 
-    _, err = capture_io do
+    _, err = capture_output do
       files.egrep(/XYZZY/) do |fn, ln, line |
         raise "_EGREP_FAILURE_"
       end

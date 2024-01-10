@@ -65,7 +65,7 @@ class TestRakeWin32 < Rake::TestCase # :nodoc:
     rake.options.trace = true
     rake.instance_variable_set(:@rakefile, "Rakefile")
 
-    _, err = capture_io {
+    _, err = capture_output {
       rake.set_default_options # reset trace output IO
 
       rake.display_error_message(ex)
