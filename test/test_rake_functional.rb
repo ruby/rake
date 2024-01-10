@@ -442,7 +442,7 @@ class TestRakeFunctional < Rake::TestCase # :nodoc:
 
     rake "-T"
 
-    refute_match("t2", @out)
+    refute_match(/t2/, @out)
   end
 
   def test_comment_after_desc_is_ignored
