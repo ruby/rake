@@ -14,7 +14,7 @@ jobs:
       with:
         ruby-version: '3.0'
     - name: Install dependencies
-      run: gem install test-unit
+      run: gem install test-unit coveralls
     - name: Run test
       env:
         COVERALLS: "yes"
