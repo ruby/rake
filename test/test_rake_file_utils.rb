@@ -129,7 +129,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   def test_file_utils_methods_are_available_at_top_level
     create_file("a")
 
-    capture_io do
+    capture_output do
       rm_rf "a"
     end
 
@@ -171,7 +171,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   end
 
   def test_sh_with_multiple_arguments
-    skip if jruby9? # https://github.com/jruby/jruby/issues/3653
+    omit if jruby9? # https://github.com/jruby/jruby/issues/3653
 
     check_no_expansion
     ENV["RAKE_TEST_SH"] = "someval"
@@ -182,7 +182,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   end
 
   def test_sh_with_spawn_options
-    skip "JRuby does not support spawn options" if jruby?
+    omit "JRuby does not support spawn options" if jruby?
 
     echocommand
 
@@ -198,7 +198,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   end
 
   def test_sh_with_hash_option
-    skip "JRuby does not support spawn options" if jruby?
+    omit "JRuby does not support spawn options" if jruby?
     check_expansion
 
     verbose(false) {
@@ -243,7 +243,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   def test_sh_bad_option
     # Skip on JRuby because option checking is performed by spawn via system
     # now.
-    skip "JRuby does not support spawn options" if jruby?
+    omit "JRuby does not support spawn options" if jruby?
 
     shellcommand
 
@@ -256,7 +256,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   def test_sh_verbose
     shellcommand
 
-    _, err = capture_io do
+    _, err = capture_output do
       verbose(true) {
         sh %{shellcommand.rb}, noop: true
       }
@@ -268,7 +268,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   def test_sh_verbose_false
     shellcommand
 
-    _, err = capture_io do
+    _, err = capture_output do
       verbose(false) {
         sh %{shellcommand.rb}, noop: true
       }
@@ -282,9 +282,10 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
 
     RakeFileUtils.verbose_flag = nil
 
-    assert_silent do
+    out, _ = capture_output do
       sh %{shellcommand.rb}, noop: true
     end
+    assert_empty out
   end
 
   def test_ruby_with_a_single_string_argument
@@ -341,6 +342,43 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
     end
   end
 
+  # https://github.com/seattlerb/minitest/blob/21d9e804b63c619f602f3f4ece6c71b48974707a/lib/minitest/assertions.rb#L188
+  def _synchronize
+    yield
+  end
+
+  # https://github.com/seattlerb/minitest/blob/21d9e804b63c619f602f3f4ece6c71b48974707a/lib/minitest/assertions.rb#L546
+  def capture_subprocess_io
+    _synchronize do
+      begin
+        require "tempfile"
+
+        captured_stdout = Tempfile.new("out")
+        captured_stderr = Tempfile.new("err")
+
+        orig_stdout = $stdout.dup
+        orig_stderr = $stderr.dup
+        $stdout.reopen captured_stdout
+        $stderr.reopen captured_stderr
+
+        yield
+
+        $stdout.rewind
+        $stderr.rewind
+
+        return captured_stdout.read, captured_stderr.read
+      ensure
+        $stdout.reopen orig_stdout
+        $stderr.reopen orig_stderr
+
+        orig_stdout.close
+        orig_stderr.close
+        captured_stdout.close!
+        captured_stderr.close!
+      end
+    end
+  end
+
   def assert_echoes_fully
     long_string = "1234567890" * 10
     shell_command = "ruby -e\"'#{long_string}';exit false\""
@@ -357,7 +395,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   end
 
   def test_ruby_with_multiple_arguments
-    skip if jruby9? # https://github.com/jruby/jruby/issues/3653
+    omit if jruby9? # https://github.com/jruby/jruby/issues/3653
 
     check_no_expansion
 

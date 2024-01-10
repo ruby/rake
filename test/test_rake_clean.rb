@@ -19,7 +19,7 @@ class TestRakeClean < Rake::TestCase # :nodoc:
   def test_cleanup
     file_name = create_undeletable_file
 
-    out, _ = capture_io do
+    out, _ = capture_output do
       Rake::Cleaner.cleanup(file_name, verbose: false)
     end
     assert_match(/failed to remove/i, out)
@@ -31,7 +31,7 @@ class TestRakeClean < Rake::TestCase # :nodoc:
   def test_cleanup_ignores_missing_files
     file_name = File.join(@tempdir, "missing_directory", "no_such_file")
 
-    out, _ = capture_io do
+    out, _ = capture_output do
       Rake::Cleaner.cleanup(file_name, verbose: false)
     end
     refute_match(/failed to remove/i, out)
@@ -40,7 +40,7 @@ class TestRakeClean < Rake::TestCase # :nodoc:
   def test_cleanup_trace
     file_name = create_file
 
-    out, err = capture_io do
+    out, err = capture_output do
       with_trace true do
         Rake::Cleaner.cleanup(file_name)
       end
@@ -59,27 +59,31 @@ class TestRakeClean < Rake::TestCase # :nodoc:
   def test_cleanup_without_trace
     file_name = create_file
 
-    assert_output "", "" do
+    out, err = capture_output do
       with_trace false do
         Rake::Cleaner.cleanup(file_name)
       end
     end
+    assert_empty out
+    assert_empty err
   end
 
   def test_cleanup_opt_overrides_trace_silent
     file_name = create_file
 
-    assert_output "", "" do
+    out, err = capture_output do
       with_trace true do
         Rake::Cleaner.cleanup(file_name, verbose: false)
       end
     end
+    assert_empty out
+    assert_empty err
   end
 
   def test_cleanup_opt_overrides_trace_verbose
     file_name = create_file
 
-    out, err = capture_io do
+    out, err = capture_output do
       with_trace false do
         Rake::Cleaner.cleanup(file_name, verbose: true)
       end
@@ -115,7 +119,7 @@ class TestRakeClean < Rake::TestCase # :nodoc:
     rescue
       file_name
     else
-      skip "Permission to delete files is different on this system"
+      omit "Permission to delete files is different on this system"
     end
   end
 
@@ -132,7 +136,7 @@ class TestRakeClean < Rake::TestCase # :nodoc:
     old, Rake.application.options.trace =
       Rake.application.options.trace, value
 
-    # FileUtils caches the $stderr object, which breaks capture_io et. al.
+    # FileUtils caches the $stderr object, which breaks capture_output et. al.
     # We hack it here where it's convenient to do so.
     Rake::Cleaner.instance_variable_set :@fileutils_output, nil
     yield

@@ -12,7 +12,7 @@ class TestThreadHistoryDisplay < Rake::TestCase # :nodoc:
   end
 
   def test_banner
-    out, _ = capture_io do
+    out, _ = capture_output do
       @display.show
     end
     assert_match(/Job History/i, out)
@@ -20,7 +20,7 @@ class TestThreadHistoryDisplay < Rake::TestCase # :nodoc:
 
   def test_item_queued
     @stats << event(:item_queued,  item_id: 123)
-    out, _ = capture_io do
+    out, _ = capture_output do
       @display.show
     end
     assert_match(/^ *1000000 +A +item_queued +item_id:1$/, out)
@@ -28,7 +28,7 @@ class TestThreadHistoryDisplay < Rake::TestCase # :nodoc:
 
   def test_item_dequeued
     @stats << event(:item_dequeued,  item_id: 123)
-    out, _ = capture_io do
+    out, _ = capture_output do
       @display.show
     end
     assert_match(/^ *1000000 +A +item_dequeued +item_id:1$/, out)
@@ -37,7 +37,7 @@ class TestThreadHistoryDisplay < Rake::TestCase # :nodoc:
   def test_multiple_items
     @stats << event(:item_queued,  item_id: 123)
     @stats << event(:item_queued,  item_id: 124)
-    out, _ = capture_io do
+    out, _ = capture_output do
       @display.show
     end
     assert_match(/^ *1000000 +A +item_queued +item_id:1$/, out)
@@ -46,7 +46,7 @@ class TestThreadHistoryDisplay < Rake::TestCase # :nodoc:
 
   def test_waiting
     @stats << event(:waiting, item_id: 123)
-    out, _ = capture_io do
+    out, _ = capture_output do
       @display.show
     end
     assert_match(/^ *1000000 +A +waiting +item_id:1$/, out)
@@ -54,7 +54,7 @@ class TestThreadHistoryDisplay < Rake::TestCase # :nodoc:
 
   def test_continue
     @stats << event(:continue, item_id: 123)
-    out, _ = capture_io do
+    out, _ = capture_output do
       @display.show
     end
     assert_match(/^ *1000000 +A +continue +item_id:1$/, out)
@@ -65,7 +65,7 @@ class TestThreadHistoryDisplay < Rake::TestCase # :nodoc:
       :thread_deleted,
       deleted_thread: 123_456,
       thread_count: 12)
-    out, _ = capture_io do
+    out, _ = capture_output do
       @display.show
     end
     assert_match(
@@ -78,7 +78,7 @@ class TestThreadHistoryDisplay < Rake::TestCase # :nodoc:
       :thread_created,
       new_thread: 123_456,
       thread_count: 13)
-    out, _ = capture_io do
+    out, _ = capture_output do
       @display.show
     end
     assert_match(

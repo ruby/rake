@@ -40,7 +40,7 @@ class TestRakeBacktrace < Rake::TestCase # :nodoc:
   def setup
     super
 
-    skip "tmpdir is suppressed in backtrace" if
+    omit "tmpdir is suppressed in backtrace" if
       Rake::Backtrace::SUPPRESS_PATTERN =~ Dir.pwd
   end
 
