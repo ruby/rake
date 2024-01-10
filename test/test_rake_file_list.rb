@@ -519,7 +519,8 @@ class TestRakeFileList < Rake::TestCase # :nodoc:
     a = FileList["a", "b", "c"]
     a.freeze
     c = a.clone
-    assert_raises(TypeError, RuntimeError) do
+    error_class = defined?(FrozenError) ? FrozenError : RuntimeError
+    assert_raises(error_class) do
       c << "more"
     end
   end
