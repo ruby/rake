@@ -165,9 +165,7 @@ module Rake
 
     # Application options from the command line
     def options
-      return @options if @options
-
-      @options = Struct.new(
+      @options ||= Struct.new(
         :always_multitask, :backtrace, :build_all, :dryrun,
         :ignore_deprecate, :ignore_system, :job_stats, :load_system,
         :nosearch, :rakelib, :show_all_tasks, :show_prereqs,
