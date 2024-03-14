@@ -30,7 +30,6 @@ require "fileutils"
 require "singleton"
 require "monitor"
 require "optparse"
-require "ostruct"
 
 require "rake/ext/string"
 
