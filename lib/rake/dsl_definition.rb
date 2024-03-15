@@ -90,6 +90,7 @@ module Rake
     #   directory "testdata/doc"
     #
     def directory(*args, &block) # :doc:
+      args = args.flat_map { |arg| arg.is_a?(FileList) ? arg.to_a.flatten : arg }
       result = file_create(*args, &block)
       dir, _ = *Rake.application.resolve_args(args)
       dir = Rake.from_pathname(dir)

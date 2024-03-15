@@ -74,4 +74,16 @@ class TestRakeDirectoryTask < Rake::TestCase # :nodoc:
 
     assert File.directory?("a/b/c")
   end
+
+  def test_can_use_filelist
+    directory FileList["a", "b", "c"]
+
+    assert_equal FileCreationTask, Task["a"].class
+
+    verbose(false) {
+      Task["a"].invoke
+    }
+
+    assert File.directory?("a")
+  end
 end
