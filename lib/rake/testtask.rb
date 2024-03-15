@@ -109,8 +109,6 @@ module Rake
       desc @description
       task @name => Array(deps) do
         FileUtilsExt.verbose(@verbose) do
-          puts "Use TESTOPTS=\"--verbose\" to pass --verbose" \
-            ", etc. to runners." if ARGV.include? "--verbose"
           args =
             "#{ruby_opts_string} #{run_code} " +
             "#{file_list_string} #{option_list}"
