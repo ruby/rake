@@ -243,7 +243,7 @@ module Rake
       display_exception_details_seen << ex
 
       display_exception_message_details(ex)
-      display_exception_backtrace(ex)
+      display_exception_backtrace(ex) if ex.backtrace
       display_cause_details(ex.cause) if has_cause?(ex)
     end
 
