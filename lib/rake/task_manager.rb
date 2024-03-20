@@ -208,6 +208,8 @@ module Rake
     def lookup_in_scope(name, scope)
       loop do
         tn = scope.path_with_task_name(name)
+        # use lazy definitions if mixin LazyTaskDefinition is enabled
+        execute_lazy_definitions(tn) if respond_to?(:execute_lazy_definitions)
         task = @tasks[tn]
         return task if task
         break if scope.empty?
