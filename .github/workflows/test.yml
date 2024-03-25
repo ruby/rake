@@ -11,6 +11,7 @@ jobs:
     with:
       min_version: 2.3
       engine: cruby-jruby
+      versions: '["truffleruby"]'
 
   test:
     needs: ruby-versions
