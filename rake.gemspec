@@ -80,6 +80,7 @@ Gem::Specification.new do |s|
     "lib/rake/rule_recursion_overflow_error.rb",
     "lib/rake/scope.rb",
     "lib/rake/task.rb",
+    "lib/rake/task_action.rb",
     "lib/rake/task_argument_error.rb",
     "lib/rake/task_arguments.rb",
     "lib/rake/task_manager.rb",
