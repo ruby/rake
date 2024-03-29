@@ -239,6 +239,20 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
     assert true, "should not fail"
   end
 
+  def test_sh_chdir
+    omit "JRuby does not support spawn options" if jruby?
+
+    Dir.mkdir "chdir_test"
+    out, err = capture_output do
+      verbose(true) {
+        sh "echo ok", chdir: "chdir_test", verbose: true, noop: true
+      }
+    end
+
+    assert_equal "(cd chdir_test && echo ok)\n", err
+    assert_empty out
+  end
+
   def test_sh_bad_option
     # Skip on JRuby because option checking is performed by spawn via system
     # now.
