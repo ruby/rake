@@ -29,7 +29,7 @@ class Rake::TestCase < Test::Unit::TestCase
     include Rake::TaskManager
   end
 
-  RUBY = File.realpath(ENV["RUBY"] || Gem.ruby)
+  RUBY = (ENV["RUBY"] || Gem.ruby)
 
   def setup
     ARGV.clear
@@ -120,6 +120,10 @@ class Rake::TestCase < Test::Unit::TestCase
 
   def jruby9?
     jruby? && (JRUBY_VERSION >= "9.0.0.0")
+  end
+
+  def jruby90?
+    jruby? && JRUBY_VERSION.start_with?("9.0.")
   end
 
   include RakefileDefinitions
