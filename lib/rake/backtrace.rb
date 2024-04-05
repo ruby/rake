@@ -10,6 +10,7 @@ module Rake
       map { |f| File.expand_path(f) }.
       reject { |s| s.nil? || s =~ /^ *$/ }
     SUPPRESSED_PATHS_RE = SUPPRESSED_PATHS.map { |f| Regexp.quote(f) }.join("|")
+    SUPPRESSED_PATHS_RE << "|^<internal:\\w+>"
     SUPPRESSED_PATHS_RE << "|^org\\/jruby\\/\\w+\\.java" if
       Object.const_defined?(:RUBY_ENGINE) and RUBY_ENGINE == "jruby"
 
