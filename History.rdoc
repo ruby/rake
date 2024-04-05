@@ -1,3 +1,54 @@
+=== 13.2.1
+
+* Suppressed "internal:array:52:in 'Array#each'" from backtrace by @hsbt in #554
+* Bump actions/configure-pages from 4 to 5 by @dependabot in #553
+
+=== 13.2.0
+
+* Fix rule example to be correct by @zenspider in #525
+* Switch to use test-unit by @hsbt in #536
+* Removed redundant block by @hsbt in #537
+* Use Struct instead of OpenStruct. by @hsbt in #545
+* Accept FileList object as directory task's target by @gemmaro in #530
+* Fix exception when exception has nil backtrace by @janbiedermann in #451
+* Add TruffleRuby on CI by @andrykonchin in #551
+
+=== 13.1.0
+
+* Added dependabot.yml for actions by @hsbt in #416
+* Add Ruby 3.1 to the CI matrix by @petergoldstein in #415
+* (Performance) Remove unnecessary I/O syscalls for FileTasks by @da2x in #393
+* Skip test failure with JRuby by @hsbt in #418
+* Remove bin/rdoc by @tnir in #421
+* Remove bin/rake by @tnir in #422
+* Remove bin/bundle by @tnir in #425
+* Apply RuboCop linting for Ruby 2.3 by @tnir in #423
+* Update rubocop to work with Ruby 2.4 compatible by @tnir in #424
+* chore: fix typo in comments by @tnir in #429
+* Use 'test' as workflow name on Actions by @tnir in #427
+* docs: update CONTRIBUTING.rdoc by @tnir in #428
+* Add RuboCop job to Actions by @tnir in #426
+* Lock minitest-5.15.0 for Ruby 2.2 by @hsbt in #442
+* Eagerly require set in thread_pool.rb by @jeremyevans in #440
+* Avoid creating an unnecessary thread pool by @jeremyevans in #441
+* Add credit for maintenance in Rake 12/13 by @tnir in #443
+* Sh fully echoes commands which error exit by @MarkDBlackwell in #147
+* Correct RuboCop offenses by @deivid-rodriguez in #444
+* [StepSecurity] ci: Harden GitHub Actions by @step-security-bot in #450
+* Add ruby 3.2 to test matrix by @hanneskaeufler in #458
+* Missing 'do' on example by @zzak in #467
+* Try to use dependabot automerge by @hsbt in #470
+* Rewrite auto-merge feature for dependabot by @hsbt in #471
+* Update bundler in Dependabot by @ono-max in #472
+* Fix grammar in help text by @mebezac in #381
+* Try to use ruby/ruby/.github/workflows/ruby_versions.yml@master by @hsbt in #475
+* Use GitHub Pages Action for generating rdoc page by @hsbt in #477
+* Support #detailed_message when task failed by @ksss in #486
+* Debug at stop when task fail by @ksss in #489
+* Drop to support Ruby 2.2 by @hsbt in #492
+* Bump up setup-ruby by @hsbt in #497
+* Update development dependencies by @hsbt in #505
+
 === 13.0.6
 
 * Additional fix for #389
@@ -37,7 +88,7 @@
 
 ==== Bug fixes
 
-* Fixed bug: Reenabled task raises previous exception on second invokation 
+* Fixed bug: Reenabled task raises previous exception on second invokation
   Pull Request #271 by thorsteneckel
 * Fix an incorrectly resolved arg pattern
   Pull Request #327 by mjbellantoni
@@ -48,7 +99,7 @@
 
 * Follows recent changes on keyword arguments in ruby 2.7.
   Pull Request #326 by nobu
-* Make `PackageTask` be able to omit parent directory while packing files 
+* Make `PackageTask` be able to omit parent directory while packing files
   Pull Request #310 by tonytonyjan
 * Add order only dependency
   Pull Request #269 by take-cheeze
