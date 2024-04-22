@@ -57,6 +57,7 @@ require "rake/early_time"
 require "rake/late_time"
 require "rake/name_space"
 require "rake/task_manager"
+require "rake/lazy_task_definition"
 require "rake/application"
 require "rake/backtrace"
 

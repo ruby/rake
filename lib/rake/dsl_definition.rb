@@ -186,6 +186,12 @@ module Rake
         Rake.application.add_import(fn)
       end
     end
+
+    # Associate a block to the current scope and 
+    # execute it only when a lookup for a task is performed in the same scope.
+    def lazy(&block)
+      Rake.application.register_lazy_definition(&block)
+    end
   end
   extend FileUtilsExt
 end
