@@ -516,6 +516,20 @@ class TestRakeFunctional < Rake::TestCase # :nodoc:
     assert_equal 0, @exit.exitstatus unless uncertain_exit_status?
   end
 
+  # Test that SIGTERM is handled gracefully
+  def test_sigterm_handling
+    if !jruby? && can_detect_signals?
+      rakefile_with_long_running_task
+      Thread.new { rake }
+      sleep 0.5
+      Process.kill("TERM", @pid)
+      _, status = Process.wait2(@pid)
+      assert_equal(143, status.exitstatus, "Process should exit with status 143")
+    else
+      omit "Signal detection seems broken on this system"
+    end
+  end
+
   private
 
   # We are unable to accurately verify that Rake returns a proper
