@@ -21,6 +21,13 @@ jobs:
         os: [ 'ubuntu-latest', 'macos-latest', 'windows-latest' ]
         ruby: ${{ fromJson(needs.ruby-versions.outputs.versions) }}
         exclude:
+          - os: macos-latest
+            ruby: 2.3
+          - os: macos-latest
+            ruby: 2.4
+          - os: macos-latest
+            ruby: 2.5
+          - os: macos-latest
           - os: windows-latest
             ruby: truffleruby
           - os: windows-latest
