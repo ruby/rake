@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "rake/promise"
+require_relative "promise"
 require "set"
 
 module Rake

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 require "optparse"
 
-require "rake/task_manager"
-require "rake/file_list"
-require "rake/thread_pool"
-require "rake/thread_history_display"
-require "rake/trace_output"
-require "rake/win32"
+require_relative "task_manager"
+require_relative "file_list"
+require_relative "thread_pool"
+require_relative "thread_history_display"
+require_relative "trace_output"
+require_relative "win32"
 
 module Rake
 

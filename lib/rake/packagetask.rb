@@ -2,8 +2,8 @@
 # Define a package task library to aid in the definition of
 # redistributable package files.
 
-require "rake"
-require "rake/tasklib"
+require_relative "../rake"
+require_relative "tasklib"
 
 module Rake
 

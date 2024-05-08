@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "rake/file_list"
+require_relative "file_list"
 
 # Load the test files from the command line.
 argv = ARGV.select do |argument|

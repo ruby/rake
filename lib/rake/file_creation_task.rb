@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require "rake/file_task"
-require "rake/early_time"
+require_relative "file_task"
+require_relative "early_time"
 
 module Rake
 

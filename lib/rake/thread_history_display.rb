@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require "rake/private_reader"
+require_relative "private_reader"
 
 module Rake
 
