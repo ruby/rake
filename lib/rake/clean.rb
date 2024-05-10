@@ -12,7 +12,7 @@
 #            The intent of this task is to return a project to its
 #            pristine, just unpacked state.
 
-require "rake"
+require_relative "../rake"
 
 # :stopdoc:
 

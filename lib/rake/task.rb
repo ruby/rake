@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require "rake/invocation_exception_mixin"
+require_relative "invocation_exception_mixin"
 
 module Rake
 

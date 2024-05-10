@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require "rake/file_utils"
+require_relative "file_utils"
 
 module Rake
   #

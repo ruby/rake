@@ -1,7 +1,7 @@
 # frozen_string_literal: true
-require "rake/cloneable"
-require "rake/file_utils_ext"
-require "rake/ext/string"
+require_relative "cloneable"
+require_relative "file_utils_ext"
+require_relative "ext/string"
 
 module Rake
 

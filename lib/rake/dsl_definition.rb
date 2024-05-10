@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 # Rake DSL functions.
-require "rake/file_utils_ext"
+require_relative "file_utils_ext"
 
 module Rake
 
