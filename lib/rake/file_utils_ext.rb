@@ -60,7 +60,7 @@ module Rake
           FileUtilsExt.verbose_flag = oldvalue
         end
       end
-      FileUtilsExt.verbose_flag
+      FileUtilsExt.verbose_flag != DEFAULT && FileUtilsExt.verbose_flag
     end
 
     # Get/set the nowrite flag controlling output from the FileUtils
