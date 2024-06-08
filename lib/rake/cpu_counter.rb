@@ -58,11 +58,20 @@ unless Rake::CpuCounter.method_defined?(:count)
     end
 
     def count_via_win32
-      require 'win32ole'
-      wmi = WIN32OLE.connect("winmgmts://")
-      cpu = wmi.ExecQuery("select NumberOfCores from Win32_Processor") # TODO count hyper-threaded in this
-      cpu.to_enum.first.NumberOfCores
-    rescue StandardError, LoadError
+      # Get-CimInstance introduced in PowerShell 3 or earlier: https://learn.microsoft.com/en-us/previous-versions/powershell/module/cimcmdlets/get-ciminstance?view=powershell-3.0
+      result = run_win32(
+        'powershell -command "Get-CimInstance -ClassName Win32_Processor -Property NumberOfCores ' \
+        '| Select-Object -Property NumberOfCores"'
+      )
+      if !result || $?.exitstatus != 0
+        # fallback to deprecated wmic for older systems
+        result = run_win32("wmic cpu get NumberOfCores")
+      end
+
+      # powershell: "\nNumberOfCores\n-------------\n            4\n\n\n"
+      # wmic:       "NumberOfCores  \n\n4              \n\n\n\n"
+      result.scan(/\d+/).map(&:to_i).reduce(:+) if result
+    rescue StandardError
       nil
     end
 
@@ -85,6 +94,12 @@ unless Rake::CpuCounter.method_defined?(:count)
       else
         nil
       end
+    end
+
+    def run_win32(command, *args)
+      IO.popen(command, &:read)
+    rescue Errno::ENOENT
+      nil
     end
 
     def resolve_command(command)
