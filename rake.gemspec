@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
 
   s.metadata = {
     "bug_tracker_uri" => "https://github.com/ruby/rake/issues",
-    "changelog_uri" => "https://github.com/ruby/rake/blob/v#{s.version}/History.rdoc",
+    "changelog_uri" => "https://github.com/ruby/rake/releases",
     "documentation_uri" => "https://ruby.github.io/rake",
     "source_code_uri" => "https://github.com/ruby/rake/tree/v#{s.version}"
   }
