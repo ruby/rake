@@ -94,6 +94,8 @@ module Rake
           # Backward compatibility for capistrano
           args = handle_options
         end
+
+        setup_signal_handling
         load_debug_at_stop_feature
         collect_command_line_tasks(args)
       end
@@ -855,6 +857,13 @@ module Rake
       options.trace                      = false
       options.trace_output               = $stderr
       options.trace_rules                = false
+    end
+
+    def setup_signal_handling
+      Signal.trap("TERM") do
+        puts "SIGTERM received, exiting..."
+        exit 128 + Signal.list["TERM"] # 143
+      end
     end
 
   end
