@@ -218,7 +218,7 @@ module Rake
     rescue OptionParser::InvalidOption => ex
       $stderr.puts ex.message
       exit(false)
-    rescue Exception => ex
+    rescue AllExceptionsExceptOnesWeMustNotRescue => ex
       # Exit with error message
       display_error_message(ex)
       exit_because_of_exception(ex)
