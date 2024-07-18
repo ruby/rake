@@ -80,6 +80,16 @@ class TestRakeRules < Rake::TestCase # :nodoc:
     assert_equal [OBJFILE], @runs
   end
 
+  def test_rule_prereqs_can_be_created_by_pathname
+    create_file(SRCFILE)
+    create_file(FOOFILE)
+    rule ".o" => [".c", Pathname(FOOFILE)] do |t|
+      @runs << t.name
+    end
+    Task[OBJFILE].invoke
+    assert_equal [OBJFILE], @runs
+  end
+
   def test_rule_prereqs_can_be_created_by_symbol
     task :nonfile do |t|
       @runs << t.name
