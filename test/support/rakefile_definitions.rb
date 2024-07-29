@@ -514,4 +514,18 @@ end
       io << "puts FL\n"
     end
   end
+
+  def rakefile_with_long_running_task
+    rakefile <<-TEST_TASK
+  require 'rake/testtask'
+
+  task :default => :test
+  Rake::TestTask.new(:test) do |t|
+  t.test_files = ['a_test.rb']
+  end
+    TEST_TASK
+    open "a_test.rb", "w" do |io|
+       io << "sleep 20"
+     end
+  end
 end
