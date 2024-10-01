@@ -416,42 +416,42 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   end
 
   def check_no_expansion
-    command "check_no_expansion.rb", <<-CHECK_EXPANSION
-if ARGV[0] != ARGV[1]
-  exit 0
-else
-  exit 1
-end
+    command "check_no_expansion.rb", <<~CHECK_EXPANSION
+      if ARGV[0] != ARGV[1]
+        exit 0
+      else
+        exit 1
+      end
     CHECK_EXPANSION
   end
 
   def check_environment
-    command "check_environment.rb", <<-CHECK_ENVIRONMENT
-if ENV[ARGV[0]] != ARGV[1]
-  exit 1
-else
-  exit 0
-end
+    command "check_environment.rb", <<~CHECK_ENVIRONMENT
+      if ENV[ARGV[0]] != ARGV[1]
+        exit 1
+      else
+        exit 0
+      end
     CHECK_ENVIRONMENT
   end
 
   def check_expansion
-    command "check_expansion.rb", <<-CHECK_EXPANSION
-if ARGV[0] != ARGV[1]
-  exit 1
-else
-  exit 0
-end
+    command "check_expansion.rb", <<~CHECK_EXPANSION
+      if ARGV[0] != ARGV[1]
+        exit 1
+      else
+        exit 0
+      end
     CHECK_EXPANSION
   end
 
   def echocommand
-    command "echocommand.rb", <<-ECHOCOMMAND
-#!/usr/bin/env ruby
+    command "echocommand.rb", <<~ECHOCOMMAND
+      #!/usr/bin/env ruby
 
-puts "echocommand.rb"
+      puts "echocommand.rb"
 
-exit 0
+      exit 0
     ECHOCOMMAND
   end
 
@@ -466,10 +466,10 @@ exit 0
   end
 
   def shellcommand
-    command "shellcommand.rb", <<-SHELLCOMMAND
-#!/usr/bin/env ruby
+    command "shellcommand.rb", <<~SHELLCOMMAND
+      #!/usr/bin/env ruby
 
-exit((ARGV[0] || "0").to_i)
+      exit((ARGV[0] || "0").to_i)
     SHELLCOMMAND
   end
 
