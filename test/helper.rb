@@ -96,10 +96,10 @@ class Rake::TestCase < Test::Unit::TestCase
     FileUtils.mkdir_p @system_dir
 
     open File.join(@system_dir, "sys1.rake"), "w" do |io|
-      io << <<-SYS
-task "sys1" do
-  puts "SYS1"
-end
+      io << <<~SYS
+        task "sys1" do
+          puts "SYS1"
+        end
       SYS
     end
 
