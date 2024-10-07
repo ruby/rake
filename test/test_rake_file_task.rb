@@ -27,7 +27,7 @@ class TestRakeFileTask < Rake::TestCase # :nodoc:
     assert ftask.needed?, "file should be needed"
     assert_equal Rake::LATE, ftask.timestamp
 
-    open(ftask.name, "w") { |f| f.puts "HI" }
+    File.write(ftask.name, "HI\n")
 
     assert_nil ftask.prerequisites.map { |n| Task[n].timestamp }.max
     assert ! ftask.needed?, "file should not be needed"

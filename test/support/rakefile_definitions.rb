@@ -186,18 +186,16 @@ module RakefileDefinitions
 
     FileUtils.mkdir_p "rakelib"
 
-    open File.join("rakelib", "extra.rake"), "w" do |io|
-      io << <<~EXTRA_RAKE
-        # Added for testing
+    File.write File.join("rakelib", "extra.rake"), <<~EXTRA_RAKE
+      # Added for testing
 
-        namespace :extra do
-          desc "An Extra Task"
-          task :extra do
-            puts "Read all about it"
-          end
+      namespace :extra do
+        desc "An Extra Task"
+        task :extra do
+          puts "Read all about it"
         end
-      EXTRA_RAKE
-    end
+      end
+    EXTRA_RAKE
   end
 
   def rakefile_file_creation
@@ -245,7 +243,7 @@ module RakefileDefinitions
       end
 
       file "dynamic_deps" do |t|
-        open(t.name, "w") do |f| f.puts "puts 'DYNAMIC'" end
+        File.write t.name, "puts 'DYNAMIC'\n"
       end
 
       import "dynamic_deps"
@@ -255,15 +253,11 @@ module RakefileDefinitions
       puts "FIRST"
     IMPORTS
 
-    open "deps.mf", "w" do |io|
-      io << <<~DEPS
-        default: other
-      DEPS
-    end
+    File.write "deps.mf", <<~DEPS
+      default: other
+    DEPS
 
-    open "static_deps", "w" do |f|
-      f.puts 'puts "STATIC"'
-    end
+    File.write "static_deps", "puts 'STATIC'\n"
   end
 
   def rakefile_regenerate_imports
@@ -271,23 +265,19 @@ module RakefileDefinitions
       task :default
 
       task :regenerate do
-        open("deps", "w") do |f|
-          f << <<~CONTENT
-      file "deps" => :regenerate
-      puts "REGENERATED"
-          CONTENT
-        end
+        File.write "deps", <<~CONTENT
+          file "deps" => :regenerate
+          puts "REGENERATED"
+        CONTENT
       end
 
       import "deps"
     REGENERATE_IMPORTS
 
-    open "deps", "w" do |f|
-      f << <<~CONTENT
-        file "deps" => :regenerate
-        puts "INITIAL"
-      CONTENT
-    end
+    File.write "deps", <<~CONTENT
+      file "deps" => :regenerate
+      puts "INITIAL"
+    CONTENT
   end
 
   def rakefile_multidesc
@@ -387,28 +377,22 @@ module RakefileDefinitions
     FileUtils.mkdir_p "rakelib"
 
     Dir.chdir "rakelib" do
-      open "test1.rb", "w" do |io|
-        io << <<~TEST1
-          task :default do
-            puts "TEST1"
-          end
-        TEST1
-      end
+      File.write "test1.rb", <<~TEST1
+        task :default do
+          puts "TEST1"
+        end
+      TEST1
 
-      open "test2.rake", "w" do |io|
-        io << <<~TEST1
-          task :default do
-            puts "TEST2"
-          end
-        TEST1
-      end
+      File.write "test2.rake", <<~TEST2
+        task :default do
+          puts "TEST2"
+        end
+      TEST2
     end
   end
 
   def rakefile_rbext
-    open "rakefile.rb", "w" do |io|
-      io << 'task :default do puts "OK" end'
-    end
+    File.write "rakefile.rb", 'task :default do puts "OK" end'
   end
 
   def rakefile_unittest
@@ -477,15 +461,15 @@ module RakefileDefinitions
 
       task :default => :test
     TEST_SIGNAL
-    open "a_test.rb", "w" do |io|
-      io << 'puts "ATEST"' << "\n"
-      io << "$stdout.flush" << "\n"
-      io << 'Process.kill("TERM", $$)' << "\n"
-    end
-    open "b_test.rb", "w" do |io|
-      io << 'puts "BTEST"' << "\n"
-      io << "$stdout.flush" << "\n"
-    end
+    File.write "a_test.rb", <<~A_TEST
+      puts "ATEST"
+      $stdout.flush
+      Process.kill("TERM", $$)
+    A_TEST
+    File.write "b_test.rb", <<~B_TEST
+      puts "BTEST"
+      $stdout.flush
+    B_TEST
   end
 
   def rakefile_failing_test_task
@@ -497,21 +481,21 @@ module RakefileDefinitions
         t.test_files = ['a_test.rb']
       end
     TEST_TASK
-    open "a_test.rb", "w" do |io|
-      io << "require 'minitest/autorun'\n"
-      io << "class ExitTaskTest < Minitest::Test\n"
-      io << "  def test_exit\n"
-      io << "    assert false, 'this should fail'\n"
-      io << "  end\n"
-      io << "end\n"
-    end
+    File.write "a_test.rb", <<~A_TEST
+      require 'minitest/autorun'
+      class ExitTaskTest < Minitest::Test
+        def test_exit
+          assert false, 'this should fail'
+        end
+      end
+    A_TEST
   end
 
   def rakefile_stand_alone_filelist
-    open "stand_alone_filelist.rb", "w" do |io|
-      io << "require 'rake/file_list'\n"
-      io << "FL = Rake::FileList['*.rb']\n"
-      io << "puts FL\n"
-    end
+    File.write "stand_alone_filelist.rb", <<~STAND_ALONE
+      require 'rake/file_list'
+      FL = Rake::FileList['*.rb']
+      puts FL
+    STAND_ALONE
   end
 end

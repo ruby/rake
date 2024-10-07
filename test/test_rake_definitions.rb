@@ -78,7 +78,7 @@ class TestRakeDefinitions < Rake::TestCase # :nodoc:
   def create_existing_file
     Dir.mkdir File.dirname(EXISTINGFILE) unless
       File.exist?(File.dirname(EXISTINGFILE))
-    open(EXISTINGFILE, "w") do |f| f.puts "HI" end unless
+    File.write(EXISTINGFILE, "HI") unless
       File.exist?(EXISTINGFILE)
   end
 

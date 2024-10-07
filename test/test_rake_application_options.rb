@@ -184,9 +184,9 @@ class TestRakeApplicationOptions < Rake::TestCase # :nodoc:
   def test_require
     $LOAD_PATH.unshift @tempdir
 
-    open "reqfile.rb",    "w" do |io| io << "TESTING_REQUIRE << 1" end
-    open "reqfile2.rb",   "w" do |io| io << "TESTING_REQUIRE << 2" end
-    open "reqfile3.rake", "w" do |io| io << "TESTING_REQUIRE << 3" end
+    File.write "reqfile.rb",    "TESTING_REQUIRE << 1"
+    File.write "reqfile2.rb",   "TESTING_REQUIRE << 2"
+    File.write "reqfile3.rake", "TESTING_REQUIRE << 3"
 
     flags(["--require", "reqfile"], "-rreqfile2", "-rreqfile3")
 

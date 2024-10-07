@@ -56,7 +56,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   end
 
   def test_ln
-    open("a", "w") { |f| f.puts "TEST_LN" }
+    File.write("a", "TEST_LN\n")
 
     Rake::FileUtilsExt.safe_ln("a", "b", verbose: false)
 
@@ -410,9 +410,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   end
 
   def command(name, text)
-    open name, "w", 0750 do |io|
-      io << text
-    end
+    File.write(name, text)
   end
 
   def check_no_expansion
