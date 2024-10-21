@@ -148,7 +148,7 @@ February 2014. This repository was originally hosted at
 with his passing, has been moved to {ruby/rake}[https://github.com/ruby/rake].
 
 You can view Jim's last commit here:
-https://github.com/jimweirich/rake/commit/336559f28f55bce418e2ebcc0a57548dcbac4025
+https://github.com/jimweirich/rake/tree/336559f28f55bce418e2ebcc0a57548dcbac4025
 
 You can {read more about Jim}[https://en.wikipedia.org/wiki/Jim_Weirich] at Wikipedia.
 
