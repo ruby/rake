@@ -23,10 +23,10 @@ class TestRakeFileList < Rake::TestCase # :nodoc:
     FileUtils.touch "abc.x"
     FileUtils.touch "existing"
 
-    open "xyzzy.txt", "w" do |io|
-      io.puts "x"
-      io.puts "XYZZY"
-    end
+    File.write "xyzzy.txt", <<~EOTEXT
+      x
+      XYZZY
+    EOTEXT
 
   end
 

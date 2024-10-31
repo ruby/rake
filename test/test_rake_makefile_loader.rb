@@ -8,24 +8,22 @@ class TestRakeMakefileLoader < Rake::TestCase  # :nodoc:
   def test_parse
     Dir.chdir @tempdir
 
-    open "sample.mf", "w" do |io|
-      io << <<~'SAMPLE_MF'
-        # Comments
-        a: a1 a2 a3 a4
-        b: b1 b2 b3 \
-           b4 b5 b6\
-        # Mid: Comment
-        b7
+    File.write "sample.mf", <<~'SAMPLE_MF'
+      # Comments
+      a: a1 a2 a3 a4
+      b: b1 b2 b3 \
+         b4 b5 b6\
+      # Mid: Comment
+      b7
 
-         a : a5 a6 a7
-        c: c1
-        d: d1 d2 \
+       a : a5 a6 a7
+      c: c1
+      d: d1 d2 \
 
-        e f : e1 f1
+      e f : e1 f1
 
-        g\ 0: g1 g\ 2 g\ 3 g4
-      SAMPLE_MF
-    end
+      g\ 0: g1 g\ 2 g\ 3 g4
+    SAMPLE_MF
 
     Task.clear
     loader = Rake::MakefileLoader.new
