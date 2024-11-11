@@ -338,7 +338,7 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
       load_rakefile
     end
 
-    assert_equal @system_dir, @app.system_dir
+    assert_equal "system", @app.system_dir
     assert_nil @app.rakefile
   rescue SystemExit
     flunk "failed to load rakefile"
