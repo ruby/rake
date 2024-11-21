@@ -21,6 +21,10 @@ class Rake::NameSpace
     @task_manager.lookup(name, @scope)
   end
 
+  def path
+    @scope.path
+  end
+
   ##
   # The scope of the namespace (a LinkedList)
 
@@ -33,6 +37,22 @@ class Rake::NameSpace
 
   def tasks
     @task_manager.tasks_in_scope(@scope)
+  end
+
+  def namespaces
+    @task_manager.namespaces_in_scope(@scope)
+  end
+
+  def clear
+    namespaces.each do |ns|
+      @task_manager.remove_namespace(ns.path)
+    end
+  end
+
+  class << self
+    def [](namespace_name)
+      Rake.application.lookup_namespace(namespace_name)
+    end
   end
 
 end
