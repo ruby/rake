@@ -755,14 +755,7 @@ module Rake
 
     # The directory path containing the system wide rakefiles.
     def system_dir # :nodoc:
-      @system_dir ||=
-        begin
-          if ENV["RAKE_SYSTEM"]
-            ENV["RAKE_SYSTEM"]
-          else
-            standard_system_dir
-          end
-        end
+      @system_dir ||= ENV["RAKE_SYSTEM"] || standard_system_dir
     end
 
     # The standard directory containing system wide rake files.
