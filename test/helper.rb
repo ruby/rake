@@ -91,17 +91,17 @@ class Rake::TestCase < Test::Unit::TestCase
   end
 
   def rake_system_dir
-    @system_dir = "system"
+    system_dir = "system"
 
-    FileUtils.mkdir_p @system_dir
+    FileUtils.mkdir_p system_dir
 
-    File.write File.join(@system_dir, "sys1.rake"), <<~SYS
+    File.write File.join(system_dir, "sys1.rake"), <<~SYS
       task "sys1" do
         puts "SYS1"
       end
     SYS
 
-    ENV["RAKE_SYSTEM"] = @system_dir
+    ENV["RAKE_SYSTEM"] = system_dir
   end
 
   def rakefile(contents)
