@@ -691,7 +691,7 @@ module Rake
 
     # Similar to the regular Ruby +require+ command, but will check
     # for *.rake files in addition to *.rb files.
-    def rake_require(file_name, paths=$LOAD_PATH, loaded=$") # :nodoc:
+    def rake_require(file_name, paths=$LOAD_PATH, loaded=$LOADED_FEATURES) # :nodoc:
       fn = file_name + ".rake"
       return false if loaded.include?(fn)
       paths.each do |path|
