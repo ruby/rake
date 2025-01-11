@@ -761,7 +761,7 @@ module Rake
     # The standard directory containing system wide rake files.
     if Win32.windows?
       def standard_system_dir #:nodoc:
-        Win32.win32_system_dir
+        File.join(Dir.home, "Rake")
       end
     else
       def standard_system_dir #:nodoc:
