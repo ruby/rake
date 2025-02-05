@@ -21,7 +21,7 @@ module RubyRunner
 
     Open3.popen3(RUBY, *option_list) do |inn, out, err, wait|
       inn.close
-
+      @pid = wait.pid
       @exit = wait ? wait.value : $?
       @out = out.read
       @err = err.read
