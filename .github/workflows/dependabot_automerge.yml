@@ -1,12 +1,16 @@
 # from https://github.com/gofiber/swagger/blob/main/.github/workflows/dependabot_automerge.yml
 name: Dependabot auto-merge
 on:
-  pull_request_target:
+  pull_request:
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   automerge:
     runs-on: ubuntu-latest
-    if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'ruby/rake'
     steps:
       - name: Dependabot metadata
         uses: dependabot/fetch-metadata@v2
@@ -22,5 +26,5 @@ jobs:
         if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-minor' || steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
         run: gh pr merge --auto --merge "$PR_URL"
         env:
-          PR_URL: ${{github.event.pull_request.html_url}}
+          PR_URL: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.MATZBOT_GITHUB_TOKEN }}
