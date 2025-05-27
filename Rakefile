@@ -29,4 +29,8 @@ RDoc::Task.new do |doc|
   doc.rdoc_dir = "_site" # for github pages
 end
 
+task :rdoc do
+  sh %{cp doc/_html/*.html _site/doc/.}
+end
+
 task default: :test
