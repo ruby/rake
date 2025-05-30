@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
-require "open3"
 
 class TestBacktraceSuppression < Rake::TestCase # :nodoc:
   def test_bin_rake_suppressed
