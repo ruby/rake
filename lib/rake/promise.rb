@@ -62,7 +62,7 @@ module Rake
       stat :will_execute, item_id: object_id
       begin
         @result = @block.call(*@args)
-      rescue Exception => e
+      rescue AllExceptionsExceptOnesWeMustNotRescue => e
         @error = e
       end
       stat :did_execute, item_id: object_id

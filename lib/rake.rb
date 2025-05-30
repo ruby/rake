@@ -21,7 +21,17 @@
 # IN THE SOFTWARE.
 #++
 
-module Rake; end
+module Rake
+  module AllExceptionsExceptOnesWeMustNotRescue
+    # These exceptions are dangerous to rescue as rescuing them
+    # would interfere with things we should not interfere with.
+    AVOID_RESCUING = [NoMemoryError, SignalException, Interrupt, SystemExit]
+
+    def self.===(exception)
+      AVOID_RESCUING.none? { |ar| ar === exception }
+    end
+  end
+end
 
 require_relative "rake/version"
 
