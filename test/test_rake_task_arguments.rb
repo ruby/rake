@@ -54,6 +54,13 @@ class TestRakeTaskArguments < Rake::TestCase # :nodoc:
     assert_equal 0,  h.fetch(:one)
   end
 
+  def test_deconstruct_keys
+    omit "No stable pattern matching until Ruby 3.1 (testing #{RUBY_VERSION})" if RUBY_VERSION < "3.1"
+
+    ta = Rake::TaskArguments.new([:a, :b, :c], [1, 2, 3])
+    assert_equal ta.deconstruct_keys([:a, :b]), { a: 1, b: 2 }
+  end
+
   def test_enumerable_behavior
     ta = Rake::TaskArguments.new([:a, :b, :c], [1, 2, 3])
     assert_equal [10, 20, 30], ta.map { |k, v| v * 10 }.sort
