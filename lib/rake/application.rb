@@ -765,7 +765,7 @@ module Rake
       end
     else
       def standard_system_dir #:nodoc:
-        File.join(File.expand_path("~"), ".rake")
+        File.join(Dir.home, ".rake")
       end
     end
     private :standard_system_dir
