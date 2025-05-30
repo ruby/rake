@@ -45,7 +45,7 @@ Gem::Specification.new do |s|
     "doc/proto_rake.rdoc",
     "doc/rake.1",
     "doc/rakefile.rdoc",
-    "doc/rational.rdoc",
+    "doc/rationale.rdoc",
     "exe/rake",
     "lib/rake.rb",
     "lib/rake/application.rb",
