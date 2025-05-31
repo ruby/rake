@@ -35,7 +35,7 @@ module Rake
       task.set_arg_names(arg_names) unless arg_names.empty?
       if Rake::TaskManager.record_task_metadata
         add_location(task)
-        task.add_description(get_description(task))
+        task.add_description(get_description)
       end
       task.enhance(Task.format_deps(deps), &block)
       task | order_only unless order_only.nil?
@@ -316,7 +316,7 @@ module Rake
     end
 
     # Return the current description, clearing it in the process.
-    def get_description(task)
+    def get_description
       desc = @last_description
       @last_description = nil
       desc

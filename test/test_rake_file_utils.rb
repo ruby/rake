@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 require File.expand_path("../helper", __FILE__)
 require "fileutils"
-require "stringio"
 
 class TestRakeFileUtils < Rake::TestCase # :nodoc:
   def setup
