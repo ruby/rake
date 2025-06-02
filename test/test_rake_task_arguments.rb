@@ -58,6 +58,7 @@ class TestRakeTaskArguments < Rake::TestCase # :nodoc:
     omit "No stable pattern matching until Ruby 3.1 (testing #{RUBY_VERSION})" if RUBY_VERSION < "3.1"
 
     ta = Rake::TaskArguments.new([:a, :b, :c], [1, 2, 3])
+    assert_equal ta.deconstruct_keys(nil), { a: 1, b: 2, c: 3 }
     assert_equal ta.deconstruct_keys([:a, :b]), { a: 1, b: 2 }
   end
 
