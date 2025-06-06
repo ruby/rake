@@ -7,6 +7,7 @@ require_relative "thread_pool"
 require_relative "thread_history_display"
 require_relative "trace_output"
 require_relative "win32"
+require_relative "console"
 
 module Rake
 
@@ -644,6 +645,9 @@ module Rake
               options.ignore_deprecate = true
             }
           ],
+          ["--console", "-c", "Start an interactive Rake console (IRB)", lambda { |value|
+            Console.start
+          }],
         ])
     end
 
