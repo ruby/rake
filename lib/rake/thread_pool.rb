@@ -108,19 +108,13 @@ module Rake
       false
     end
 
-    def safe_thread_count
-      @threads_mon.synchronize do
-        @threads.count
-      end
-    end
-
     def start_thread # :nodoc:
       @threads_mon.synchronize do
         next unless @threads.count < @max_active_threads
 
         t = Thread.new do
           begin
-            while safe_thread_count <= @max_active_threads
+            loop do
               break unless process_queue_item
             end
           ensure
