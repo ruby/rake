@@ -153,6 +153,19 @@ Options are:
 [<tt>--no-deprecation-warnings</tt> (-X)]
     Do not display the deprecation warnings.
 
+== Environment Variables
+
+[<tt>RAKEOPT</tt>]
+    Command line options can be specified in the <tt>RAKEOPT</tt>
+    environment variable. These options will be processed as if they
+    were given on the command line. This is useful for setting default
+    options that you want to use with every rake invocation.
+
+    For example, setting:
+        export RAKEOPT="-s --trace"
+
+    would cause rake to run silently with tracing enabled by default.
+
 In addition, any command line option of the form
 <em>VAR</em>=<em>VALUE</em> will be added to the environment hash
 <tt>ENV</tt> and may be tested in the Rakefile.
