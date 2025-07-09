@@ -27,7 +27,8 @@ jobs:
             ruby: 2.4
           - os: macos-latest
             ruby: 2.5
-          - os: macos-latest
+          - os: windows-latest
+            ruby: 2.3
           - os: windows-latest
             ruby: truffleruby
           - os: windows-latest
