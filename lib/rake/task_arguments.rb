@@ -95,7 +95,7 @@ module Rake
     end
 
     def deconstruct_keys(keys)
-      @hash.slice(*keys)
+      keys ? @hash.slice(*keys) : to_hash
     end
 
     protected
