@@ -563,19 +563,19 @@ class TestRakeFileList < Rake::TestCase # :nodoc:
     assert_equal ["a", "b"], b
     assert_equal FileList,  b.class
 
-    b = a.sort_by { |it| it }
+    b = a.sort_by { |i| i }
     assert_equal ["a", "b"], b
     assert_equal FileList,  b.class
 
-    b = a.select { |it| it == "b" }
+    b = a.select { |i| i == "b" }
     assert_equal ["b"], b
     assert_equal FileList,  b.class
 
-    b = a.select { |it| it.size == 1 }
+    b = a.select { |i| i.size == 1 }
     assert_equal ["a", "b"], b
     assert_equal FileList,  b.class
 
-    b = a.reject { |it| it == "b" }
+    b = a.reject { |i| i == "b" }
     assert_equal ["a"], b
     assert_equal FileList,  b.class
 
@@ -583,7 +583,7 @@ class TestRakeFileList < Rake::TestCase # :nodoc:
     assert_equal ["a", "b"], b
     assert_equal FileList,  b.class
 
-    b = a.partition { |it| it == "b" }
+    b = a.partition { |i| i == "b" }
     assert_equal [["b"], ["a"]], b
     assert_equal Array, b.class
     assert_equal FileList,  b[0].class
