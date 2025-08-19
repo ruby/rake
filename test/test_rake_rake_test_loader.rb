@@ -53,7 +53,7 @@ class TestRakeRakeTestLoader < Rake::TestCase # :nodoc:
       exc = assert_raises(LoadError) do
         load @loader
       end
-      if RUBY_ENGINE == "jruby"
+      if RUBY_ENGINE == "jruby" && JRUBY_VERSION < "10.0.3"
         assert_equal "no such file to load -- superkalifragilisticoespialidoso", exc.message
       else
         assert_equal "cannot load such file -- superkalifragilisticoespialidoso", exc.message
