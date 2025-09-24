@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
     "bug_tracker_uri" => "https://github.com/ruby/rake/issues",
     "changelog_uri" => "https://github.com/ruby/rake/releases",
     "documentation_uri" => "https://ruby.github.io/rake",
-    "source_code_uri" => "#{s.homepage}/releases/v#{s.version}"
+    "source_code_uri" => s.homepage
   }
 
   s.files = [
