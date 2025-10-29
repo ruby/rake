@@ -54,7 +54,7 @@ class TestRakeRakeTestLoader < Rake::TestCase # :nodoc:
         load @loader
       end
 
-      assert_match /.* -- superkalifragilisticoespialidoso/, exc.message
+      assert_match(/.* -- superkalifragilisticoespialidoso/, exc.message)
     end
     assert_empty out
     assert_empty err
