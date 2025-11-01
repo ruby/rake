@@ -656,4 +656,37 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     loader
   end
 
+  def test_running_flag
+    was_running = false
+
+    @app.instance_eval do
+      app = self
+      intern(Rake::Task, "default").enhance do
+        was_running = app.running?
+      end
+    end
+
+    rakefile_default
+
+    assert !@app.running?
+    @app.run %w[--rakelib=""]
+    assert !@app.running?
+    assert was_running
+  end
+
+  def test_running_flag_false_after_abort
+    @app.instance_eval do
+      intern(Rake::Task, "default").enhance do
+        abort "Task execution failed"
+      end
+    end
+
+    rakefile_default
+
+    assert_raises(SystemExit) {
+      @app.run %w[--rakelib=""]
+    }
+
+    assert !@app.running?
+  end
 end
