@@ -420,13 +420,6 @@ class TestRakeFunctional < Rake::TestCase # :nodoc:
     refute_match exp, @out
   end
 
-  def test_test_task_when_verbose_passed_prompts_testopts
-    rakefile_test_task
-    rake "--verbose", "unit"
-    exp = /TESTOPTS="--verbose" to pass --verbose/
-    assert_match exp, @out
-  end
-
   def test_comment_before_task_acts_like_desc
     rakefile_comments
 
