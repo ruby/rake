@@ -181,7 +181,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   end
 
   def test_sh_with_spawn_options
-    omit "JRuby does not support spawn options" if jruby?
+    omit "JRuby does not support spawn options" if jruby90?
 
     echocommand
 
@@ -239,10 +239,24 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
     assert true, "should not fail"
   end
 
+  def test_sh_chdir
+    omit "JRuby does not support spawn options" if jruby90?
+
+    Dir.mkdir "chdir_test"
+    out, err = capture_output do
+      verbose(true) {
+        sh "echo ok", chdir: "chdir_test", verbose: true, noop: true
+      }
+    end
+
+    assert_equal "(cd chdir_test && echo ok)\n", err
+    assert_empty out
+  end
+
   def test_sh_bad_option
     # Skip on JRuby because option checking is performed by spawn via system
     # now.
-    omit "JRuby does not support spawn options" if jruby?
+    omit "JRuby does not support spawn options" if jruby90?
 
     shellcommand
 
@@ -387,7 +401,7 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   end
 
   def test_ruby_with_multiple_arguments
-    omit if jruby9? # https://github.com/jruby/jruby/issues/3653
+    omit if jruby90? # https://github.com/jruby/jruby/issues/3653
 
     check_no_expansion
 
