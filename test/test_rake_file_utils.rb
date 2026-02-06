@@ -107,12 +107,12 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   def test_verbose
     verbose true
     assert_equal true, verbose
-    assert_equal '-v', ENV['TESTOPTS']
+    assert_equal "-v", ENV["TESTOPTS"]
 
-    ENV['TESTOPTS'] = nil
+    ENV["TESTOPTS"] = nil
     verbose false
     assert_equal false, verbose
-    assert_equal nil, ENV['TESTOPTS']
+    assert_equal nil, ENV["TESTOPTS"]
 
     verbose(true) {
       assert_equal true, verbose
