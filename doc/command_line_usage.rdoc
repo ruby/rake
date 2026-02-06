@@ -6,10 +6,10 @@ Rake is invoked from the command line using:
 
 Options are:
 
-[<tt><em>name</em>=<em>value</em></tt>]
+[<tt>name=value</tt>]
     Set the environment variable <em>name</em> to <em>value</em>
     during the execution of the <b>rake</b> command.  You can access
-    the value by using ENV['<em>name</em>'].
+    the value by using <tt>ENV['name']</tt>.
 
 [<tt>--all</tt> (-A)]
     Used in combination with the -T and -D options, will force
@@ -110,7 +110,7 @@ Options are:
 [<tt>--silent (-s)</tt>]
     Like --quiet, but also suppresses the 'in directory' announcement.
 
-[<tt>--suppress-backtrace _pattern_ </tt>]
+[<tt>--suppress-backtrace</tt> _pattern_]
     Line matching the regular expression _pattern_ will be removed
     from the backtrace output. Note that the --backtrace option is the
     full backtrace without these lines suppressed.
