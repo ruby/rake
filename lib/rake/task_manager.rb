@@ -289,27 +289,29 @@ module Rake
     end
 
     # Make a list of sources from the list of file name extensions /
-    # translation procs.
-    def make_sources(task_name, task_pattern, extensions)
-      result = extensions.map { |ext|
-        case ext
+    # file paths / translation procs.
+    def make_sources(task_name, task_pattern, prereqs)
+      result = prereqs.map { |prereq|
+        case prereq
         when /%/
-          task_name.pathmap(ext)
+          task_name.pathmap(prereq)
         when %r{/}
-          ext
+          prereq
         when /^\./
-          source = task_name.sub(task_pattern, ext)
-          source == ext ? task_name.ext(ext) : source
+          source = task_name.sub(task_pattern, prereq)
+          source == prereq ? task_name.ext(prereq) : source
         when String, Symbol
-          ext.to_s
+          prereq.to_s
+        when Pathname
+          Rake.from_pathname(prereq)
         when Proc, Method
-          if ext.arity == 1
-            ext.call(task_name)
+          if prereq.arity == 1
+            prereq.call(task_name)
           else
-            ext.call
+            prereq.call
           end
         else
-          fail "Don't know how to handle rule dependent: #{ext.inspect}"
+          fail "Don't know how to handle rule dependent: #{prereq.inspect}"
         end
       }
       result.flatten
