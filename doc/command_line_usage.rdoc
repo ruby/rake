@@ -105,7 +105,7 @@ Options are:
     Require _name_ before executing the Rakefile.
 
 [<tt>--rules</tt>]
-    Trace the rules resolution.
+    Trace the resolution of rules used to create tasks.
 
 [<tt>--silent (-s)</tt>]
     Like --quiet, but also suppresses the 'in directory' announcement.
