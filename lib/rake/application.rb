@@ -189,25 +189,62 @@ module Rake
     end
 
     def parse_task_string(string) # :nodoc:
-      /^([^\[]+)(?:\[(.*)\])$/ =~ string.to_s
-
-      name           = $1
-      remaining_args = $2
-
-      return string, [] unless name
-      return name,   [] if     remaining_args.empty?
-
-      args = []
-
-      begin
-        /\s*((?:[^\\,]|\\.)*?)\s*(?:,\s*(.*))?$/ =~ remaining_args
-
-        remaining_args = $2
-        args << $1.gsub(/\\(.)/, '\1')
-      end while remaining_args
+      case string.to_s
+      when /^([^\[]+)(?:\[(.*)\])$/ # [one, two]
+        name = $1
+        args = parse_positional_args_string($2)
+      when /^([^\{]+)(?:\{(.*)\})$/ # [key: value]
+        name = $1
+        args = parse_named_args_string($2)
+        args = args.empty? ? [] : [args]
+      else
+        name = string
+        args = []
+      end
 
       return name, args
     end
+
+    def parse_positional_args_string(string) # :nodoc:
+      return [] if string.empty?
+
+      args = []
+      remaining_args = string
+
+      begin
+        /\s*(?<arg>(?:[^\\,]|\\.)*?)\s*(?:,\s*(?<remaining_args>.*))?$/ =~ remaining_args
+
+        args << arg.gsub(/\\(.)/, '\1')
+      end while remaining_args
+
+      args
+    end
+    private :parse_positional_args_string
+
+    def parse_named_args_string(string) # :nodoc:
+      return {} if string.empty?
+
+      args = {}
+      remaining_args = string
+
+      begin
+        /
+          \s*
+          (?<arg_name>(?:[^\\:]|\\.)*?)
+          \s*:\s*
+          (?<arg_value>(?:[^\\,]|\\.)*?)
+          \s*
+          (?:,\s*(?<remaining_args>.*))?
+        $/x =~ remaining_args
+
+        arg_name = arg_name.gsub(/\\(.)/, '\1').to_sym
+        arg_value = arg_value.gsub(/\\(.)/, '\1')
+        args[arg_name] = arg_value
+      end while remaining_args
+
+      args
+    end
+    private :parse_named_args_string
 
     # Provide standard exception handling for the given block.
     def standard_exception_handling # :nodoc:
