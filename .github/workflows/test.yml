@@ -10,8 +10,8 @@ jobs:
     uses: ruby/actions/.github/workflows/ruby_versions.yml@master
     with:
       min_version: 2.3
-      engine: cruby-jruby
-      versions: '["truffleruby"]'
+      engine: cruby
+      versions: '["truffleruby", "jruby"]'
 
   test:
     needs: ruby-versions
@@ -31,8 +31,6 @@ jobs:
             ruby: 2.3
           - os: windows-latest
             ruby: truffleruby
-          - os: windows-latest
-            ruby: jruby-head
           - os: windows-latest
             ruby: jruby
     steps:
