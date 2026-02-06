@@ -104,6 +104,8 @@ class TestRakeFileUtils < Rake::TestCase # :nodoc:
   end
 
   def test_verbose
+    RakeFileUtils.verbose_flag = Rake::FileUtilsExt::DEFAULT
+    assert_equal false, verbose
     verbose true
     assert_equal true, verbose
     verbose false
