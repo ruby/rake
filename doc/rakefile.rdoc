@@ -360,6 +360,19 @@ The following rule might be used for Java files ...
 *NOTE:* +java_compile+ is a hypothetical method that invokes the
 java compiler.
 
+=== Implicit File Tasks
+
+When a task is not defined but a file with that name exists, Rake
+automatically creates an implicit file task for it. For example:
+
+  $ rake hello_world       # Error: task not found
+  $ touch hello_world      # Create a file with the same name
+  $ rake hello_world       # Now succeeds automatically
+
+Use the <tt>--rules</tt> command line option to trace how rules are
+resolved when searching for tasks; note that creation of implicit file
+tasks is not traced.
+
 == Importing Dependencies
 
 Any ruby file (including other rakefiles) can be included with a
