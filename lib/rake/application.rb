@@ -146,7 +146,7 @@ module Rake
       thread_pool.gather_history if options.job_stats == :history
 
       yield
-
+    ensure
       thread_pool.join if defined?(@thread_pool)
       if options.job_stats
         stats = thread_pool.statistics
