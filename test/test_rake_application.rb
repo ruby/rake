@@ -365,6 +365,44 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     flunk "failed to find system rakefile"
   end
 
+  def test_load_from_calculated_system_rakefile_on_windows
+    rakefile_default
+    def @app.windows?
+      true
+    end
+
+    @app.instance_eval do
+      handle_options []
+      options.silent = true
+      options.load_system = true
+      options.rakelib = []
+      load_rakefile
+    end
+
+    assert_equal File.join(Dir.home, "Rake"), @app.system_dir
+  rescue SystemExit
+    flunk "failed to find system rakefile"
+  end
+
+  def test_load_from_calculated_system_rakefile_on_unix
+    rakefile_default
+    def @app.windows?
+      false
+    end
+
+    @app.instance_eval do
+      handle_options []
+      options.silent = true
+      options.load_system = true
+      options.rakelib = []
+      load_rakefile
+    end
+
+    assert_equal File.join(Dir.home, ".rake"), @app.system_dir
+  rescue SystemExit
+    flunk "failed to find system rakefile"
+  end
+
   def test_terminal_columns
     old_rake_columns = ENV["RAKE_COLUMNS"]
 
