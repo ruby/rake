@@ -63,6 +63,17 @@ class TestRakeTestTask < Rake::TestCase # :nodoc:
     ENV.delete "TEST"
   end
 
+  def test_file_list_env_test_multiple
+    ENV["TEST"] = "testfile.rb,othertestfile.rb"
+    tt = Rake::TestTask.new do |t|
+      t.pattern = "*"
+    end
+
+    assert_equal ["testfile.rb", "othertestfile.rb"], tt.file_list.to_a
+  ensure
+    ENV.delete "TEST"
+  end
+
   def test_libs_equals
     test_task = Rake::TestTask.new do |t|
       t.libs << ["A", "B"]

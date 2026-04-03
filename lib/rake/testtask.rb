@@ -159,7 +159,7 @@ module Rake
 
     def file_list # :nodoc:
       if ENV["TEST"]
-        FileList[ENV["TEST"]]
+        FileList[ENV["TEST"].split(",")]
       else
         result = []
         result += @test_files.to_a if @test_files
