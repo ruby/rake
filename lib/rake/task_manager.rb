@@ -302,6 +302,8 @@ module Rake
           source == ext ? task_name.ext(ext) : source
         when String, Symbol
           ext.to_s
+        when Pathname
+          Rake.from_pathname(ext)
         when Proc, Method
           if ext.arity == 1
             ext.call(task_name)
