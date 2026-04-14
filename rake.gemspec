@@ -70,6 +70,7 @@ Gem::Specification.new do |s|
     "lib/rake/loaders/makefile.rb",
     "lib/rake/multi_task.rb",
     "lib/rake/name_space.rb",
+    "lib/rake/options.rb",
     "lib/rake/packagetask.rb",
     "lib/rake/phony.rb",
     "lib/rake/private_reader.rb",
