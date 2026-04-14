@@ -754,12 +754,10 @@ module Rake
     end
 
     # The standard directory containing system wide rake files.
-    if Win32.windows?
-      def standard_system_dir #:nodoc:
+    def standard_system_dir #:nodoc:
+      if windows?
         File.join(Dir.home, "Rake")
-      end
-    else
-      def standard_system_dir #:nodoc:
+      else
         File.join(Dir.home, ".rake")
       end
     end
