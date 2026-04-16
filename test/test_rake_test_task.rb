@@ -191,6 +191,40 @@ class TestRakeTestTask < Rake::TestCase # :nodoc:
     assert_equal [b, c], t.prerequisite_tasks
   end
 
+  def test_option_list_verbose_without_testopts
+    tt = Rake::TestTask.new { |t| t.verbose = true }
+    assert_equal "-v", tt.option_list
+  end
+
+  def test_option_list_verbose_with_testopts
+    ENV["TESTOPTS"] = "--ci-reporter"
+    tt = Rake::TestTask.new { |t| t.verbose = true }
+    assert_equal "--ci-reporter -v", tt.option_list
+  ensure
+    ENV.delete "TESTOPTS"
+  end
+
+  def test_option_list_not_verbose_with_testopts
+    ENV["TESTOPTS"] = "--ci-reporter"
+    tt = Rake::TestTask.new { |t| t.verbose = false }
+    assert_equal "--ci-reporter", tt.option_list
+  ensure
+    ENV.delete "TESTOPTS"
+  end
+
+  def test_option_list_skips_duplicate_v
+    ENV["TESTOPTS"] = "-v --ci-reporter"
+    tt = Rake::TestTask.new { |t| t.verbose = true }
+    assert_equal "-v --ci-reporter", tt.option_list
+  ensure
+    ENV.delete "TESTOPTS"
+  end
+
+  def test_option_list_verbose_keyword_overrides
+    tt = Rake::TestTask.new { |t| t.verbose = false }
+    assert_equal "-v", tt.option_list(verbose: true)
+  end
+
   def test_task_order_only_prerequisites_key
     t = task "a" => "b", order_only: ["c"]
     b, c = task("b"), task("c")
