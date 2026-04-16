@@ -5,6 +5,21 @@ require "rake/testtask"
 class TestRakeTestTask < Rake::TestCase # :nodoc:
   include Rake
 
+  def setup
+    super
+    @_previous_testopts = ENV["TESTOPTS"]
+    ENV.delete "TESTOPTS"
+  end
+
+  def teardown
+    if @_previous_testopts.nil?
+      ENV.delete "TESTOPTS"
+    else
+      ENV["TESTOPTS"] = @_previous_testopts
+    end
+    super
+  end
+
   def test_initialize
     tt = Rake::TestTask.new do |t| end
     refute_nil tt
@@ -200,24 +215,18 @@ class TestRakeTestTask < Rake::TestCase # :nodoc:
     ENV["TESTOPTS"] = "--ci-reporter"
     tt = Rake::TestTask.new { |t| t.verbose = true }
     assert_equal "--ci-reporter -v", tt.option_list
-  ensure
-    ENV.delete "TESTOPTS"
   end
 
   def test_option_list_not_verbose_with_testopts
     ENV["TESTOPTS"] = "--ci-reporter"
     tt = Rake::TestTask.new { |t| t.verbose = false }
     assert_equal "--ci-reporter", tt.option_list
-  ensure
-    ENV.delete "TESTOPTS"
   end
 
   def test_option_list_skips_duplicate_v
     ENV["TESTOPTS"] = "-v --ci-reporter"
     tt = Rake::TestTask.new { |t| t.verbose = true }
     assert_equal "-v --ci-reporter", tt.option_list
-  ensure
-    ENV.delete "TESTOPTS"
   end
 
   def test_option_list_verbose_keyword_overrides
