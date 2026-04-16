@@ -108,10 +108,11 @@ module Rake
     def define
       desc @description
       task @name => Array(deps) do
-        FileUtilsExt.verbose(@verbose) do
+        effective_verbose = @verbose || FileUtilsExt.verbose_flag == true
+        FileUtilsExt.verbose(effective_verbose) do
           args =
             "#{ruby_opts_string} #{run_code} " +
-            "#{file_list_string} #{option_list}"
+            "#{file_list_string} #{option_list(verbose: effective_verbose)}"
           ruby args do |ok, status|
             if !ok && status.respond_to?(:signaled?) && status.signaled?
               raise SignalException.new(status.termsig)
@@ -133,13 +134,17 @@ module Rake
       self
     end
 
-    def option_list # :nodoc:
-      (ENV["TESTOPTS"] ||
+    def option_list(verbose: @verbose) # :nodoc:
+      opts = ENV["TESTOPTS"] ||
         ENV["TESTOPT"] ||
         ENV["TEST_OPTS"] ||
         ENV["TEST_OPT"] ||
         @options ||
-        "")
+        ""
+      if verbose && !opts.split.include?("-v")
+        opts = opts.empty? ? "-v" : "#{opts} -v"
+      end
+      opts
     end
 
     def ruby_opts_string # :nodoc:

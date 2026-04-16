@@ -5,6 +5,21 @@ require "rake/testtask"
 class TestRakeTestTask < Rake::TestCase # :nodoc:
   include Rake
 
+  def setup
+    super
+    @_previous_testopts = ENV["TESTOPTS"]
+    ENV.delete "TESTOPTS"
+  end
+
+  def teardown
+    if @_previous_testopts.nil?
+      ENV.delete "TESTOPTS"
+    else
+      ENV["TESTOPTS"] = @_previous_testopts
+    end
+    super
+  end
+
   def test_initialize
     tt = Rake::TestTask.new do |t| end
     refute_nil tt
@@ -189,6 +204,34 @@ class TestRakeTestTask < Rake::TestCase # :nodoc:
     assert_equal ["b"], t.prerequisites
     assert_equal ["c"], t.order_only_prerequisites
     assert_equal [b, c], t.prerequisite_tasks
+  end
+
+  def test_option_list_verbose_without_testopts
+    tt = Rake::TestTask.new { |t| t.verbose = true }
+    assert_equal "-v", tt.option_list
+  end
+
+  def test_option_list_verbose_with_testopts
+    ENV["TESTOPTS"] = "--ci-reporter"
+    tt = Rake::TestTask.new { |t| t.verbose = true }
+    assert_equal "--ci-reporter -v", tt.option_list
+  end
+
+  def test_option_list_not_verbose_with_testopts
+    ENV["TESTOPTS"] = "--ci-reporter"
+    tt = Rake::TestTask.new { |t| t.verbose = false }
+    assert_equal "--ci-reporter", tt.option_list
+  end
+
+  def test_option_list_skips_duplicate_v
+    ENV["TESTOPTS"] = "-v --ci-reporter"
+    tt = Rake::TestTask.new { |t| t.verbose = true }
+    assert_equal "-v --ci-reporter", tt.option_list
+  end
+
+  def test_option_list_verbose_keyword_overrides
+    tt = Rake::TestTask.new { |t| t.verbose = false }
+    assert_equal "-v", tt.option_list(verbose: true)
   end
 
   def test_task_order_only_prerequisites_key
