@@ -135,6 +135,8 @@ module Rake
           display_tasks_and_comments
         elsif options.show_prereqs
           display_prerequisites
+        elsif options.show_location
+          display_location
         else
           top_level_tasks.each { |task_name| invoke_task(task_name) }
         end
@@ -359,6 +361,12 @@ module Rake
       end
     end
 
+    # Display the location of the Rakefile.
+    def display_location
+      rakefile, location = find_rakefile_location
+      puts File.join(location, rakefile)
+    end
+
     def terminal_width # :nodoc:
       if @terminal_columns.nonzero?
         result = @terminal_columns
@@ -522,6 +530,10 @@ module Rake
           ["--libdir", "-I LIBDIR",
             "Include LIBDIR in the search path for required modules.",
             lambda { |value| $:.push(value) }
+          ],
+          ["--location", "-l",
+            "Display the location of Rakefile, then exit.",
+            lambda { |value| options.show_location = true }
           ],
           ["--multitask", "-m",
             "Treat all tasks as multitasks.",
@@ -832,6 +844,7 @@ module Rake
       options.nosearch                   = false
       options.rakelib                    = %w[rakelib]
       options.show_all_tasks             = false
+      options.show_location              = false
       options.show_prereqs               = false
       options.show_task_pattern          = nil
       options.show_tasks                 = nil
