@@ -7,7 +7,6 @@ require_relative "file_list"
 require_relative "thread_pool"
 require_relative "thread_history_display"
 require_relative "trace_output"
-require_relative "win32"
 
 module Rake
 
@@ -384,12 +383,11 @@ module Rake
     end
 
     def unix? # :nodoc:
-      RbConfig::CONFIG["host_os"] =~
-        /(aix|darwin|linux|(net|free|open)bsd|cygwin|solaris|irix|hpux)/i
+      Rake.unix?
     end
 
     def windows? # :nodoc:
-      Win32.windows?
+      Rake.windows?
     end
 
     def truncate(string, width) # :nodoc:
