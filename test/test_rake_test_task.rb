@@ -145,6 +145,14 @@ class TestRakeTestTask < Rake::TestCase # :nodoc:
     assert_equal globbed, test_task.file_list.to_a
   end
 
+  test "run code test-unit" do
+    test_task = Rake::TestTask.new do |t|
+      t.loader = :"test-unit"
+    end
+
+    assert_equal("-S test-unit", test_task.run_code)
+  end
+
   def test_run_code_rake
     spec = Gem::Specification.new "rake", 0
     spec.loaded_from = File.join Gem::Specification.dirs.last, "rake-0.gemspec"

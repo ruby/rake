@@ -181,8 +181,8 @@ module Rake
       case @loader
       when :direct
         "-e \"ARGV.each{|f| require f}\""
-      when :testrb
-        "-S testrb"
+      when :"test-unit"
+        "-S test-unit"
       when :rake
         "#{__dir__}/rake_test_loader.rb"
       end
