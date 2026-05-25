@@ -60,7 +60,7 @@ module Rake
     # Style of test loader to use.  Options are:
     #
     # * :rake -- Rake provided test loading script (default).
-    # * :testrb -- Ruby provided test loading script.
+    # * :"test-unit" -- test-unit provided test loading script.
     # * :direct -- Load tests using command line loader.
     #
     attr_accessor :loader
