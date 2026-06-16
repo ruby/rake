@@ -110,9 +110,12 @@ module Rake
       task @name => Array(deps) do
         effective_verbose = @verbose || FileUtilsExt.verbose_flag == true
         FileUtilsExt.verbose(effective_verbose) do
+          # The global verbose flag (e.g. set by --trace or -n) controls
+          # whether rake echoes the command, but it must not inject "-v"
+          # into the test runner's ARGV. Only the task's own @verbose does.
           args =
             "#{ruby_opts_string} #{run_code} " +
-            "#{file_list_string} #{option_list(verbose: effective_verbose)}"
+            "#{file_list_string} #{option_list(verbose: @verbose)}"
           ruby args do |ok, status|
             if !ok && status.respond_to?(:signaled?) && status.signaled?
               raise SignalException.new(status.termsig)
