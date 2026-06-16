@@ -20,6 +20,18 @@ class TestRakeTestTask < Rake::TestCase # :nodoc:
     super
   end
 
+  # Run the test task's action with the +ruby+ invocation stubbed out and
+  # return the command string that would have been executed.
+  def captured_test_command(test_task)
+    command = nil
+    test_task.define_singleton_method(:ruby) do |*args, **_opts, &_block|
+      command = args.first
+      nil
+    end
+    Rake::Task[test_task.name].execute
+    command
+  end
+
   def test_initialize
     tt = Rake::TestTask.new do |t| end
     refute_nil tt
@@ -240,6 +252,21 @@ class TestRakeTestTask < Rake::TestCase # :nodoc:
   def test_option_list_verbose_keyword_overrides
     tt = Rake::TestTask.new { |t| t.verbose = false }
     assert_equal "-v", tt.option_list(verbose: true)
+  end
+
+  def test_run_omits_v_for_global_verbose_only
+    # --trace and -n set the global verbose flag via Rake.verbose(true), but
+    # that must not leak "-v" into the test runner's ARGV. (issue #732)
+    Rake::FileUtilsExt.verbose_flag = true
+    tt = Rake::TestTask.new { |t| t.verbose = false }
+    refute_includes captured_test_command(tt).split, "-v"
+  ensure
+    Rake::FileUtilsExt.verbose_flag = false
+  end
+
+  def test_run_injects_v_for_task_verbose
+    tt = Rake::TestTask.new { |t| t.verbose = true }
+    assert_includes captured_test_command(tt).split, "-v"
   end
 
   def test_task_order_only_prerequisites_key
