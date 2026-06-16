@@ -141,8 +141,32 @@ class TestRakeTestTask < Rake::TestCase # :nodoc:
       # t.pettern is "test/test*.rb"
     end
 
-    assert_equal '-e "ARGV.each{|f| require f}"', test_task.run_code
+    assert_equal %q{-e "ARGV.each{|f| require f unless f.start_with?('-')}"}, test_task.run_code
     assert_equal globbed, test_task.file_list.to_a
+  end
+
+  def test_run_code_direct_skips_option_arguments
+    test_task = Rake::TestTask.new do |t|
+      t.loader = :direct
+      t.verbose = true
+    end
+
+    code = test_task.run_code[/\A-e "(.*)"\z/, 1]
+    refute_nil code
+
+    required = []
+    receiver = Object.new
+    receiver.define_singleton_method(:require) { |file| required << file }
+
+    saved_argv = ARGV.dup
+    begin
+      ARGV.replace(["test/foo_test.rb", "-v"])
+      receiver.instance_eval(code)
+    ensure
+      ARGV.replace(saved_argv)
+    end
+
+    assert_equal ["test/foo_test.rb"], required
   end
 
   test "run code test-unit" do

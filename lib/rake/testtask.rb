@@ -183,7 +183,7 @@ module Rake
     def run_code # :nodoc:
       case @loader
       when :direct
-        "-e \"ARGV.each{|f| require f}\""
+        "-e \"ARGV.each{|f| require f unless f.start_with?('-')}\""
       when :"test-unit"
         "-S test-unit"
       when :rake
