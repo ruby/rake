@@ -20,18 +20,6 @@ class TestRakeTestTask < Rake::TestCase # :nodoc:
     super
   end
 
-  # Run the test task's action with the +ruby+ invocation stubbed out and
-  # return the command string that would have been executed.
-  def captured_test_command(test_task)
-    command = nil
-    test_task.define_singleton_method(:ruby) do |*args, **_opts, &_block|
-      command = args.first
-      nil
-    end
-    Rake::Task[test_task.name].execute
-    command
-  end
-
   def test_initialize
     tt = Rake::TestTask.new do |t| end
     refute_nil tt
@@ -275,5 +263,19 @@ class TestRakeTestTask < Rake::TestCase # :nodoc:
     assert_equal ["b"], t.prerequisites
     assert_equal ["c"], t.order_only_prerequisites
     assert_equal [b, c], t.prerequisite_tasks
+  end
+
+  private
+
+  # Run the test task's action with the +ruby+ invocation stubbed out and
+  # return the command string that would have been executed.
+  def captured_test_command(test_task)
+    command = nil
+    test_task.define_singleton_method(:ruby) do |*args, **_opts, &_block|
+      command = args.first
+      nil
+    end
+    Rake::Task[test_task.name].execute
+    command
   end
 end
