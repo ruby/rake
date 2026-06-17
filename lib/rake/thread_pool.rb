@@ -47,7 +47,7 @@ module Rake
           stat :joining
           @join_cond.wait unless @threads.empty?
           stat :joined
-        rescue Exception => e
+        rescue AllExceptionsExceptOnesWeMustNotRescue => e
           stat :joined
           $stderr.puts e
           $stderr.print "Queue contains #{@queue.size} items. " +
