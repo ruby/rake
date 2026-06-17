@@ -302,6 +302,25 @@ class TestRakeFunctional < Rake::TestCase # :nodoc:
     }
   end
 
+  def test_file_timestamps_respected_despite_task_prerequisite
+    rakefile <<-RAKEFILE
+      task "some_task" do
+      end
+
+      file "A" => "some_task"
+      file "B" => "A" do |t|
+        touch t.name
+      end
+    RAKEFILE
+
+    FileUtils.touch("A")
+    FileUtils.touch("B")
+
+    rake "B"
+
+    assert(@err !~ /touch B/)
+  end
+
   def test_update_midway_through_chaining_to_file_task
     rakefile_file_chains
 
