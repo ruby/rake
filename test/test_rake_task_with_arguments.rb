@@ -60,6 +60,18 @@ class TestRakeTaskWithArguments < Rake::TestCase # :nodoc:
     t.invoke(1, 2, 3)
   end
 
+  def test_arguments_passed_as_hash
+    t = task :t, :a, :b do |tt, args|
+      assert_equal({ a: 1, b: 2 }, args.to_hash)
+      assert_equal 1, args[:a]
+      assert_equal 2, args[:b]
+      assert_equal 1, args.a
+      assert_equal 2, args.b
+    end
+
+    t.invoke({a: 1, b: 2})
+  end
+
   def test_actions_of_various_arity_are_ok_with_args
     notes = []
     t = task(:t, :x) do
