@@ -202,7 +202,8 @@ module Rake
 
     def <<(obj)
       resolve
-      @items << Rake.from_pathname(obj)
+      fn = Rake.from_pathname(obj)
+      @items << fn unless excluded_from_list?(fn)
       self
     end
 
