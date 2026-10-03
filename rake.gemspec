@@ -90,7 +90,6 @@ Gem::Specification.new do |s|
     "lib/rake/thread_pool.rb",
     "lib/rake/trace_output.rb",
     "lib/rake/version.rb",
-    "lib/rake/win32.rb",
     "rake.gemspec"
   ]
   s.bindir = "exe"

@@ -349,8 +349,8 @@ class TestRakeFileList < Rake::TestCase # :nodoc:
     assert_equal ".one", ".one".ext
     assert_equal ".", ".".ext("c")
     assert_equal "..", "..".ext("c")
-    # These only need to work in windows
-    if Rake::Win32.windows?
+    # These only need to work on Windows
+    if Rake.windows?
       assert_equal "one.x\\two.net", "one.x\\two.c".ext(".net")
       assert_equal "one.x\\two.net", "one.x\\two".ext(".net")
     end
