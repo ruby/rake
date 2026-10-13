@@ -100,6 +100,21 @@ class TestRakeFileList < Rake::TestCase # :nodoc:
     assert_equal ["a.rb"], fl
   end
 
+  def test_append_respects_exclude
+    fl = FileList.new
+    fl.exclude("abc.c")
+    fl << "abc.c"
+    assert_equal [], fl.to_a
+  end
+
+  def test_append_respects_default_ignore_patterns
+    fl = FileList.new
+    fl << "core"
+    fl << "x.bak"
+    fl << "keep.rb"
+    assert_equal ["keep.rb"], fl.to_a
+  end
+
   def test_add_many
     fl = FileList.new
     fl.include %w(a d c)
