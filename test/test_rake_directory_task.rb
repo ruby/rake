@@ -27,13 +27,15 @@ class TestRakeDirectoryTask < Rake::TestCase # :nodoc:
     refute File.exist?("a/b/c")
   end
 
-  def test_directory_colon
-    directory "a:b"
+  if Rake.unix?
+    def test_directory_colon
+      directory "a:b"
 
-    assert_equal FileCreationTask, Task["a:b"].class
-  end unless Rake::Win32.windows?
+      assert_equal FileCreationTask, Task["a:b"].class
+    end
+  end
 
-  if Rake::Win32.windows?
+  if Rake.windows?
     def test_directory_win32
       desc "WIN32 DESC"
       directory "c:/a/b/c"

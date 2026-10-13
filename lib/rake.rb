@@ -33,8 +33,6 @@ require "optparse"
 
 require_relative "rake/ext/string"
 
-require_relative "rake/win32"
-
 require_relative "rake/linked_list"
 require_relative "rake/cpu_counter"
 require_relative "rake/scope"
