@@ -528,6 +528,28 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     assert_match(/rake default\n( *(a|b)\n){2}/m, out)
   end
 
+  def test_display_prereqs_prepends_implicit_namespaces
+    @app.last_description = "COMMENT"
+    @app.define_task(Rake::Task, "setup")
+    @app.in_namespace(:tool) do
+      @app.define_task(Rake::Task, "setup")
+      nested_run = @app.define_task(Rake::Task, "run")
+      nested_run.enhance([:setup])
+      nested_test = @app.define_task(Rake::Task, "test")
+      nested_test.enhance(["tool:setup"])
+    end
+    out, = capture_output { @app.run %w[-f -s --prereqs --rakelib=""] }
+    assert @app.options.show_prereqs
+    assert_equal <<~OUTPUT, out
+      rake setup
+      rake tool:run
+          tool:setup
+      rake tool:setup
+      rake tool:test
+          tool:setup
+    OUTPUT
+  end
+
   def test_bad_run
     @app.intern(Rake::Task, "default").enhance { fail }
     _, err = capture_output {
