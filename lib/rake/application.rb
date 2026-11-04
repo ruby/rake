@@ -404,7 +404,11 @@ module Rake
 
     # Display the tasks and prerequisites
     def display_prerequisites # :nodoc:
-      tasks.each do |t|
+      displayable_tasks = tasks.select { |t|
+        t.name =~ options.show_prereq_pattern
+      }
+
+      displayable_tasks.each do |t|
         puts "#{name} #{t.name}"
         t.prerequisites.each { |pre| puts "    #{pre}" }
       end
@@ -531,9 +535,11 @@ module Rake
             "-N", "Do not search parent directories for the Rakefile.",
             lambda { |value| options.nosearch = true }
           ],
-          ["--prereqs", "-P",
-            "Display the tasks and dependencies, then exit.",
-            lambda { |value| options.show_prereqs = true }
+          ["--prereqs", "-P [PATTERN]",
+           "Display the tasks (matching optional PATTERN) and dependencies, then exit.",
+           lambda { |value|
+             select_prereqs_to_show(options, value)
+           }
           ],
           ["--quiet", "-q",
             "Do not log messages to standard output.",
@@ -641,6 +647,12 @@ module Rake
           ],
         ])
     end
+
+    def select_prereqs_to_show(options, value) # :nodoc:
+      options.show_prereqs = true
+      options.show_prereq_pattern = Regexp.new(value || "")
+    end
+    private :select_prereqs_to_show
 
     def select_tasks_to_show(options, show_tasks, value) # :nodoc:
       options.show_tasks = show_tasks
