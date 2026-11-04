@@ -406,7 +406,7 @@ module Rake
     def display_prerequisites # :nodoc:
       tasks.each do |t|
         puts "#{name} #{t.name}"
-        t.prerequisites.each { |pre| puts "    #{pre}" }
+        t.prerequisite_tasks.each { |pre| puts "    #{pre}" }
       end
     end
 
