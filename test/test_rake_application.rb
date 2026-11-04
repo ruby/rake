@@ -502,6 +502,29 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     assert_equal "DEFAULT\n", out
   end
 
+  def test_safe_run
+    ran = false
+    existing_ran = false
+
+    @app.options.silent = true
+
+    @app.instance_eval do
+      intern(Rake::Task, "default").enhance { ran = true }
+      intern(Rake::Task, "existing?").enhance { existing_ran = true }
+    end
+
+    rakefile_default
+
+    out, err = capture_output do
+      @app.run %w[--rakelib="" default existing? missing?]
+    end
+
+    assert ran
+    assert existing_ran
+    assert_empty err
+    assert_equal "DEFAULT\n", out
+  end
+
   def test_display_task_run
     ran = false
     @app.last_description = "COMMENT"

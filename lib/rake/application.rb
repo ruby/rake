@@ -179,6 +179,12 @@ module Rake
     # Invokes a task with arguments that are extracted from +task_string+
     def invoke_task(task_string) # :nodoc:
       name, args = parse_task_string(task_string)
+
+      if name.end_with?('?') && !lookup(name)
+        name = name[0..-2]
+        return unless lookup(name)
+      end
+
       t = self[name]
       t.invoke(*args)
     end
