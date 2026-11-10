@@ -8,6 +8,7 @@ module Rake
 
     def initialize # :nodoc:
       super
+      @namespaces = Hash.new
       @tasks = Hash.new
       @rules = Array.new
       @scope = Scope.make
@@ -48,6 +49,10 @@ module Rake
     # create a task of the current type.
     def intern(task_class, task_name)
       @tasks[task_name.to_s] ||= task_class.new(task_name, self)
+    end
+
+    def remove_task(task_name) # :nodoc:
+      @tasks.delete(task_name)
     end
 
     # Find a matching task for +task_name+.
@@ -178,6 +183,13 @@ module Rake
       }
     end
 
+    def namespaces_in_scope(scope)
+      prefix = scope.path
+      @namespaces.select { |name|
+        name.start_with?(prefix)
+      }.values
+    end
+
     # Clear all tasks in this application.
     def clear
       @tasks.clear
@@ -229,10 +241,22 @@ module Rake
       name ||= generate_name
       @scope = Scope.new(name, @scope)
       ns = NameSpace.new(self, @scope)
+      @namespaces[ns.path] = ns
       yield(ns)
       ns
     ensure
       @scope = @scope.tail
+    end
+
+    def lookup_namespace(name) # :nodoc:
+      @namespaces[name]
+    end
+
+    def remove_namespace(name) # :nodoc:
+      ns = @namespaces.delete(name)
+      if ns
+        ns.tasks.each { |t| remove_task(t.name) }
+      end
     end
 
     private
