@@ -420,6 +420,27 @@ class TestRakeFunctional < Rake::TestCase # :nodoc:
     refute_match exp, @out
   end
 
+  def test_test_task_with_rake_installed_under_path_with_space
+    spaced_root = File.join @tempdir, "rake with space"
+    FileUtils.mkdir_p spaced_root
+    FileUtils.cp_r @rake_lib, spaced_root
+    @ruby_options = ["-I#{File.join spaced_root, "lib"}", "-I."]
+
+    rakefile <<~TEST_TASK
+      require "rake/testtask"
+
+      Rake::TestTask.new(:test) do |t|
+        t.test_files = ["a_test.rb"]
+      end
+    TEST_TASK
+    File.write "a_test.rb", "puts 'ATEST'\n"
+
+    rake "test"
+
+    assert_match(/^ATEST$/, @out)
+    assert_predicate @exit, :success?, @err
+  end
+
   def test_comment_before_task_acts_like_desc
     rakefile_comments
 

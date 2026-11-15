@@ -187,7 +187,7 @@ module Rake
       when :"test-unit"
         "-S test-unit"
       when :rake
-        "#{__dir__}/rake_test_loader.rb"
+        "\"#{__dir__}/rake_test_loader.rb\""
       end
     end
 
