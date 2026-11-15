@@ -191,6 +191,16 @@ class TestRakeTestTask < Rake::TestCase # :nodoc:
     Gem.loaded_specs["rake"] = rake
   end
 
+  def test_run_code_rake_quotes_loader_path
+    test_task = Rake::TestTask.new do |t|
+      t.loader = :rake
+    end
+
+    loader = File.expand_path("../lib/rake/rake_test_loader.rb", __dir__)
+
+    assert_equal "\"#{loader}\"", test_task.run_code
+  end
+
   def test_test_files_equals
     tt = Rake::TestTask.new do |t|
       t.test_files = FileList["a.rb", "b.rb"]
