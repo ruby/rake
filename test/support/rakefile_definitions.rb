@@ -78,6 +78,20 @@ module RakefileDefinitions
     DEFAULT
   end
 
+  def rakefile_rule_with_proc
+    rakefile <<~RAKEFILE
+      task :default => "play.app"
+
+      rule ".app" => [->(name) { name.ext(".scpt") }] do |t|
+        cp t.source, t.name
+      end
+
+      file 'play.scpt' do
+        touch 'play.scpt'
+      end
+    RAKEFILE
+  end
+
   def rakefile_file_chains
     rakefile <<~RAKEFILE
       file "fileA" do |t|

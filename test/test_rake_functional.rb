@@ -294,6 +294,15 @@ class TestRakeFunctional < Rake::TestCase # :nodoc:
            "'play.app' file should exist"
   end
 
+  def test_rule_with_proc_prerequisite
+    rakefile_rule_with_proc
+
+    rake
+
+    assert File.exist?(File.join(@tempdir, "play.app")),
+           "'play.app' file should exist"
+  end
+
   def dryrun_tasks
     @err.split("\n").select { |line|
       line.match(/^\*\* Execute/)
