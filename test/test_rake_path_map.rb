@@ -124,6 +124,15 @@ class TestRakePathMap < Rake::TestCase  # :nodoc:
   def test_partial_directory_selection_works_with_patterns
     assert_equal "this/is/a/long",
       "this/is/a/really/long/path/ok.rb".pathmap("%{/really/,/}5d")
+    assert_equal "long/dir",
+      "this/is/a/really/long/path/ok.rb".pathmap("%{path,dir}-2d")
+  end
+
+  def test_pattern_with_count_on_non_directory_operator
+    ex = assert_raises(ArgumentError) do
+      "dir/abc.rb".pathmap("%{a,x}-2f")
+    end
+    assert_match(/unknown.*pathmap.*spec.*-2f/i, ex.message)
   end
 
   def test_pattern_with_invalid_operator

@@ -160,7 +160,7 @@ class String
           result << "%"
         when /%(-?\d+)d/
           result << pathmap_partial($1.to_i)
-        when /^%\{([^}]*)\}(\d*[dpfnxX])/
+        when /^%\{([^}]*)\}(-?\d+d|[dpfnxX])/
           patterns, operator = $1, $2
           result << pathmap("%" + operator).pathmap_replace(patterns, &block)
         when /^%/
