@@ -302,8 +302,6 @@ module Rake
           source == ext ? task_name.ext(ext) : source
         when String, Symbol
           ext.to_s
-        when Pathname
-          Rake.from_pathname(ext)
         when Proc, Method
           if ext.arity == 1
             ext.call(task_name)
@@ -311,7 +309,11 @@ module Rake
             ext.call
           end
         else
-          fail "Don't know how to handle rule dependent: #{ext.inspect}"
+          if ext.respond_to?(:to_path)
+            Rake.from_pathname(ext)
+          else
+            fail "Don't know how to handle rule dependent: #{ext.inspect}"
+          end
         end
       }
       result.flatten
