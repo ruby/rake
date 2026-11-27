@@ -15,7 +15,7 @@ module Rake
     # is out of date.
     def needed?
       begin
-        out_of_date?(File.mtime(name)) || @application.options.build_all
+        @application.options.build_all || out_of_date?(File.mtime(name))
       rescue Errno::ENOENT
         true
       end
@@ -36,11 +36,7 @@ module Rake
     def out_of_date?(stamp)
       all_prerequisite_tasks.any? { |prereq|
         prereq_task = application[prereq, @scope]
-        if prereq_task.instance_of?(Rake::FileTask)
-          prereq_task.timestamp > stamp || @application.options.build_all
-        else
-          prereq_task.timestamp > stamp
-        end
+        prereq_task.timestamp > stamp
       }
     end
 
