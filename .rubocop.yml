@@ -55,3 +55,7 @@ Layout/CaseIndentation:
 Layout/EndAlignment:
   Enabled: true
   EnforcedStyleAlignWith: variable
+
+# Exceptions should be rescued with `AllExceptionsExceptOnesWeMustNotRescue`
+Lint/RescueException:
+  Enabled: true
