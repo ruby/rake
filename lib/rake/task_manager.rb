@@ -152,10 +152,14 @@ module Rake
       fail Rake::RuleRecursionOverflowError,
         "Rule Recursion Too Deep" if level >= 16
       @rules.each do |pattern, args, extensions, order_only, block|
-        if pattern && pattern.match(task_name)
+        if pattern && (m = pattern.match(task_name))
           task = attempt_rule(task_name, pattern, args, extensions, block, level)
-          task | order_only unless order_only.nil?
-          return task if task
+
+          if task
+            task | order_only unless order_only.nil?
+            task.match_data = m
+            return task
+          end
         end
       end
       nil
