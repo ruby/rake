@@ -18,42 +18,76 @@ class TestRakeTaskArgumentParsing < Rake::TestCase # :nodoc:
     name, args = @app.parse_task_string("name[]")
     assert_equal "name", name
     assert_equal [], args
+
+    name, args = @app.parse_task_string("name{}")
+    assert_equal "name", name
+    assert_equal [], args
   end
 
   def test_one_argument
     name, args = @app.parse_task_string("name[one]")
     assert_equal "name", name
     assert_equal ["one"], args
+
+    name, args = @app.parse_task_string("name{one:1}")
+    assert_equal "name", name
+    assert_equal [{one: "1"}], args
   end
 
   def test_two_arguments
     name, args = @app.parse_task_string("name[one,two]")
     assert_equal "name", name
     assert_equal ["one", "two"], args
+
+    name, args = @app.parse_task_string("name{one:1,two:2}")
+    assert_equal "name", name
+    assert_equal [{one: "1", two: "2"}], args
   end
 
   def test_can_handle_spaces_between_args
     name, args = @app.parse_task_string("name[one, two,\tthree , \tfour]")
     assert_equal "name", name
     assert_equal ["one", "two", "three", "four"], args
+
+    name, args = @app.parse_task_string("name{one: 1, two:2,\tthree : 3, \tfour:4}")
+    assert_equal "name", name
+    assert_equal [{one: "1", two: "2", three: "3", four: "4"}], args
   end
 
   def test_can_handle_spaces_between_all_args
     name, args = @app.parse_task_string("name[ one , two ,\tthree , \tfour ]")
     assert_equal "name", name
     assert_equal ["one", "two", "three", "four"], args
+
+    name, args = @app.parse_task_string("name{ one : 1, two:2 ,\tthree  :  3 , \tfour: 4 }")
+    assert_equal "name", name
+    assert_equal [{one: "1", two: "2", three: "3", four: "4"}], args
   end
 
   def test_keeps_embedded_spaces
     name, args = @app.parse_task_string("name[a one ana, two]")
     assert_equal "name", name
     assert_equal ["a one ana", "two"], args
+
+    name, args = @app.parse_task_string("name{a one ana: has value, two:2}")
+    assert_equal "name", name
+    assert_equal [{:"a one ana" => "has value", two: "2"}], args
   end
 
   def test_can_handle_commas_in_args
     name, args = @app.parse_task_string("name[one, two, three_a\\, three_b, four]")
     assert_equal "name", name
     assert_equal ["one", "two", "three_a, three_b", "four"], args
+
+    name, args = @app.parse_task_string("name{one:1, two:2, three_a\\, three_b:3, four:4}")
+    assert_equal "name", name
+    assert_equal [{one: "1", two: "2", :"three_a, three_b" => "3", four: "4"}], args
+  end
+
+  def test_can_handle_colons_in_named_args
+    name, args = @app.parse_task_string("name{one:1, two:2, three_a\\: three_b:3, four:4}")
+    assert_equal "name", name
+    assert_equal [{one: "1", two: "2", :"three_a: three_b" => "3", four: "4"}], args
   end
 
   def test_treat_blank_arg_as_empty_string
