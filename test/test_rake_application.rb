@@ -419,8 +419,18 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     end
   end
 
-  def test_windows
-    assert ! (@app.windows? && @app.unix?)
+  if Rake.unix?
+    def test_unix_platform_detection
+      assert @app.unix?
+      refute @app.windows?
+    end
+  end
+
+  if Rake.windows?
+    def test_windows_platform_detection
+      assert @app.windows?
+      refute @app.unix?
+    end
   end
 
   def test_loading_imports

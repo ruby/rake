@@ -38,4 +38,11 @@ class TestRake < Rake::TestCase # :nodoc:
     assert_equal @tempdir, Rake.original_dir
   end
 
+  def test_platform_detection
+    # ensure that Rake's platform detection logic
+    # is mutually exclusive, and doesn't claim to
+    # be both Windows and Unix at the same time
+    assert ! (Rake.windows? && Rake.unix?)
+  end
+
 end

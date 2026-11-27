@@ -14,6 +14,17 @@ module Rake
       @application = app
     end
 
+    # True if running on a Windows system.
+    def windows?
+      RbConfig::CONFIG["host_os"] =~ %r!(msdos|mswin|djgpp|mingw|[Ww]indows)!
+    end
+
+    # True if running on a Unix system.
+    def unix?
+      RbConfig::CONFIG["host_os"] =~
+        /(aix|darwin|linux|(net|free|open)bsd|cygwin|solaris|irix|hpux)/i
+    end
+
     def suggested_thread_count # :nodoc:
       @cpu_count ||= Rake::CpuCounter.count
       @cpu_count + 4
