@@ -528,6 +528,28 @@ class TestRakeApplication < Rake::TestCase # :nodoc:
     assert_match(/rake default\n( *(a|b)\n){2}/m, out)
   end
 
+  def test_display_prereqs_with_pattern
+    @app.last_description = "COMMENT"
+    t = @app.define_task(Rake::Task, "ci")
+    t.enhance([:test, :rubocop])
+    @app.define_task(Rake::Task, "rubocop")
+    @app.define_task(Rake::Task, "test")
+    @app.define_task(Rake::Task, "test:system")
+    @app.in_namespace("ci") do
+      @app.in_namespace("artifacts") do
+        @app.define_task(Rake::Task, "export")
+      end
+    end
+    out, = capture_output { @app.run %w[-f -s -P ci --rakelib=""] }
+    assert @app.options.show_prereqs
+    assert_equal <<~OUTPUT, out
+      rake ci
+          test
+          rubocop
+      rake ci:artifacts:export
+    OUTPUT
+  end
+
   def test_bad_run
     @app.intern(Rake::Task, "default").enhance { fail }
     _, err = capture_output {
